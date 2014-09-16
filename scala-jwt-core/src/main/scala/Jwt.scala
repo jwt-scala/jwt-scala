@@ -74,7 +74,7 @@ trait JwtCore[H, C] {
       // Same as 2
       case 3 if parts(2).isEmpty => maybeKey.isEmpty && maybeAlgo.isEmpty
       // Signature => need to match
-      case 3 => parts(2) == JwtBase64.encodeString(JwtUtils.sign(parts(0) +"."+ parts(1), maybeKey, maybeAlgo))
+      case 3 => java.util.Arrays.equals(JwtBase64.decode(parts(2)), JwtUtils.sign(parts(0) +"."+ parts(1), maybeKey, maybeAlgo))
       // WTF?
       case _ => false
     }

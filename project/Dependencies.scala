@@ -7,11 +7,13 @@ object Dependencies {
     val scalatest = "2.2.1"
   }
 
-  val play     = "com.typesafe.play" %% "play"      % V.play
-  val playJson = "com.typesafe.play" %% "play-json" % V.play
+  object Libs {
+    val play     = "com.typesafe.play" %% "play"      % V.play
+    val playJson = "com.typesafe.play" %% "play-json" % V.play
 
-  val json4sNative = "org.json4s" %% "json4s-native"   % V.json4s
-  val json4sJackson = "org.json4s" %% "json4s-jackson" % V.json4s
+    val json4sNative = "org.json4s" %% "json4s-native"   % V.json4s
+    val json4sJackson = "org.json4s" %% "json4s-jackson" % V.json4s
 
-  val scalatest = "org.scalatest" % "scalatest_2.11" % V.scalatest % "test"
+    val scalatest = "org.scalatest" % "scalatest_2.11" % V.scalatest % "test"
+  }
 }

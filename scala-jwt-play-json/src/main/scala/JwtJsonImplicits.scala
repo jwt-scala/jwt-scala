@@ -34,6 +34,18 @@ trait JwtJsonImplicits {
     def writes(claim: JwtClaim) = Json.parse(claim.toJson)
   }
 
-  implicit val jwtHeaderReader = Json.reads[JwtHeader]
-  implicit val jwtHeaderWriter = Json.writes[JwtHeader]
+  implicit val jwtHeaderReader = new Reads[JwtHeader] {
+    def reads(json: JsValue) = json match {
+      case value: JsObject => JsSuccess(JwtHeader.apply(
+        algorithm = extractString(value, "alg"),
+        typ = extractString(value, "typ"),
+        contentType = extractString(value, "cty")
+      ))
+      case _ => JsError("error.expected.jsobject")
+    }
+  }
+
+  implicit val jwtHeaderWriter = new Writes[JwtHeader] {
+    def writes(header: JwtHeader) = Json.parse(header.toJson)
+  }
 }

@@ -16,23 +16,23 @@ class JwtBase64Spec extends UnitSpec {
   describe("JwtBase64") {
     it("should encode string") {
       values.foreach {
-        value => assertResult(value._2) { JwtBase64.encode(value._1) }
+        value => assertResult(value._2) { JwtBase64.encodeString(value._1) }
       }
     }
 
     it("should decode strings") {
       values.foreach {
-        value => assertResult(value._1) { JwtBase64.decode(value._2) }
+        value => assertResult(value._1) { JwtBase64.decodeString(value._2) }
       }
     }
 
     it("should be symmetrical") {
       values.foreach {
-        value => assertResult(value._1) { JwtBase64.decode(JwtBase64.encode(value._1)) }
+        value => assertResult(value._1) { JwtBase64.decodeString(JwtBase64.encodeString(value._1)) }
       }
 
       values.foreach {
-        value => assertResult(value._2) { JwtBase64.encode(JwtBase64.decode(value._2)) }
+        value => assertResult(value._2) { JwtBase64.encodeString(JwtBase64.decodeString(value._2)) }
       }
     }
   }

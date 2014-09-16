@@ -6,12 +6,13 @@ object JwtUtils {
   def stringify(arr: Array[Byte]): String = new String(arr, encoding)
   def bytify(str: String): Array[Byte] = str.getBytes(encoding)
 
-  def mapToJson(hash: Map[String, Any]): String = hash.map {
+  def seqToJson(hash: Seq[(String, Any)]): String = hash.map {
     case (key, value: String) => "\"" + key + "\":\"" + value + "\""
     case (key, value: Boolean) => "\"" + key + "\":" + (if (value) { "true" } else { "false" })
     case (key, value: Double) => "\"" + key + "\":" + value.toString
     case (key, value: Short) => "\"" + key + "\":" + value.toString
     case (key, value: Float) => "\"" + key + "\":" + value.toString
+    case (key, value: Long) => "\"" + key + "\":" + value.toString
     case (key, value: Int) => "\"" + key + "\":" + value.toString
     case (key, value: Any) => "\"" + key + "\":\"" + value.toString + "\""
   }.mkString("{", ",", "}")

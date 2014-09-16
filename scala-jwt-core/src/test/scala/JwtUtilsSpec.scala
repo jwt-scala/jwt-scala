@@ -6,19 +6,22 @@ class JwtUtilsSpec extends UnitSpec {
   val encoding = JwtUtils.encoding
 
   describe("JwtUtils") {
-    describe("mapToJson") {
-      it("should transform a map to a valid JSON") {
-        val values: Seq[(String, Map[String, Any])] = Seq(
-          """{"a":"b","c":1,"d":true}""" -> Map(
+    describe("seqToJson") {
+      it("should transform a seq of tuples to a valid JSON") {
+        val values: Seq[(String, Seq[(String, Any)])] = Seq(
+          """{"a":"b","c":1,"d":true,"e":2,"f":3.4,"g":5.6}""" -> Seq(
             "a" -> "b",
             "c" -> 1,
-            "d" -> true
+            "d" -> true,
+            "e" -> 2L,
+            "f" -> 3.4f,
+            "g" -> 5.6
           ),
-          "{}" -> Map()
+          "{}" -> Seq()
         )
 
         values.zipWithIndex.foreach {
-          case (value, index) => assertResult(value._1, "at index "+index) { JwtUtils.mapToJson(value._2) }
+          case (value, index) => assertResult(value._1, "at index "+index) { JwtUtils.seqToJson(value._2) }
         }
       }
     }
