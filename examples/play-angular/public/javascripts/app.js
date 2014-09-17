@@ -9,8 +9,6 @@ angular.module('app', ['ngAnimate'])
       },
 
       'responseError': function (rejection) {
-        console.log(rejection);
-
         if (rejection.status === 401) {
           // User isn't authenticated
           $rootScope.$emit('notification', 'warning', 'You need to be authenticated to access such API.')
@@ -54,11 +52,7 @@ angular.module('app', ['ngAnimate'])
       var token = response.headers("Authorization");
       var session = JWT.read(token);
 
-      console.log(token);
-      console.log(session);
-
       if (JWT.validate(session)) {
-        console.log('valid');
         JWT.keep(session);
         sync();
       } else {
@@ -97,7 +91,6 @@ angular.module('app', ['ngAnimate'])
   ctrl.loginForm = {};
 
   ctrl.login = function login() {
-    console.log('login', ctrl.loginForm);
     Authenticated.login(ctrl.loginForm).then(function () {
       ctrl.loginForm = {};
     }, function (error) {

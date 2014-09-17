@@ -3,9 +3,7 @@ package pdi.scala.jwt
 import play.api.Play
 /*import play.api.libs.json.{Json, JsValue, JsObject, Reads, Writes}*/
 import play.api.libs.json._
-import play.api.libs.json.Json._
 import play.api.libs.json.Json.JsValueWrapper
-import play.api.libs.functional.syntax._
 
 case class JwtSession(
   headerData: JsObject,
@@ -14,13 +12,15 @@ case class JwtSession(
 ) {
   def + (value: JsObject): JwtSession = this.copy(claimData = claimData.deepMerge(value))
 
-  def + [T](key: String, value: JsValue): JwtSession = this + new JsObject(Seq(key -> value))
+  def + (key: String, value: JsValue): JwtSession = this + new JsObject(Seq(key -> value))
 
   def + [T](key: String, value: T)(implicit writer: Writes[T]): JwtSession = this + (key, writer.writes(value))
 
-  def + (fields: (String, JsValueWrapper)*): JwtSession = this + Json.obj(fields: _*)
+  def ++ (fields: (String, JsValueWrapper)*): JwtSession = this + Json.obj(fields: _*)
 
-  def - (fieldNames: String*): JwtSession = this.copy(claimData = fieldNames.foldLeft(claimData) {
+  def - (fieldName: String): JwtSession = this.copy(claimData = claimData - fieldName)
+
+  def -- (fieldNames: String*): JwtSession = this.copy(claimData = fieldNames.foldLeft(claimData) {
     (data, fieldName) => (data - fieldName)
   })
 
@@ -40,7 +40,7 @@ case class JwtSession(
   def withClaim(claim: JwtClaim): JwtSession = this.copy(claimData = JwtSession.asJsObject(claim))
   def withHeader(header: JwtHeader): JwtSession = this.copy(headerData = JwtSession.asJsObject(header))
 
-  def refresh: JwtSession = JwtSession.MAX_AGE.map(sec => this + Json.obj("exp" -> 1, "aze" -> "aze")).getOrElse(this)
+  def refresh: JwtSession = JwtSession.MAX_AGE.map(sec => this + ("exp", JwtTime.now + 1000L * sec)).getOrElse(this)
 }
 
 object JwtSession {

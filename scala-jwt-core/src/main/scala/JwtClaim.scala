@@ -24,7 +24,10 @@ case class JwtClaim(
 
   def + (json: String): JwtClaim = this.copy(content = JwtUtils.mergeJson(this.content, json))
 
-  def + (fields: (String, Any)*): JwtClaim =
+  def + (key: String, value: Any): JwtClaim =
+    this.copy(content = JwtUtils.mergeJson(this.content, JwtUtils.seqToJson(Seq(key -> value))))
+
+  def ++ (fields: (String, Any)*): JwtClaim =
     this.copy(content = JwtUtils.mergeJson(this.content, JwtUtils.seqToJson(fields)))
 
   def by(issuer: String): JwtClaim = this.copy(issuer = Option(issuer))

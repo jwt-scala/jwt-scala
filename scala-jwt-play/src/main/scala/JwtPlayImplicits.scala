@@ -33,7 +33,7 @@ trait JwtPlayImplicits {
       withJwtSession(jwtSession + (key, value))
 
     def removingFromJwtSession(keys: String*)(implicit request: RequestHeader): Result =
-      withJwtSession(jwtSession - (keys: _*))
+      withJwtSession(jwtSession -- (keys: _*))
   }
 
   implicit class RichRequestHeader(request: RequestHeader) {
