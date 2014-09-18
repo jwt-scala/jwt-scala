@@ -10,7 +10,7 @@ import pdi.scala.jwt._
 import models.User
 
 object Application extends Controller with Secured {
-  val passwords = Seq("red", "blue", "green", "purple", "totoro")
+  val passwords = Seq("red", "blue", "green")
 
   def index = Action {
     Ok(views.html.index())
