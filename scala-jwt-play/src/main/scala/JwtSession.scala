@@ -1,7 +1,6 @@
 package pdi.scala.jwt
 
 import play.api.Play
-/*import play.api.libs.json.{Json, JsValue, JsObject, Reads, Writes}*/
 import play.api.libs.json._
 import play.api.libs.json.Json.JsValueWrapper
 
@@ -40,7 +39,7 @@ case class JwtSession(
   def withClaim(claim: JwtClaim): JwtSession = this.copy(claimData = JwtSession.asJsObject(claim))
   def withHeader(header: JwtHeader): JwtSession = this.copy(headerData = JwtSession.asJsObject(header))
 
-  def refresh: JwtSession = JwtSession.MAX_AGE.map(sec => this + ("exp", JwtTime.now + 1000L * sec)).getOrElse(this)
+  def refresh: JwtSession = JwtSession.MAX_AGE.map(millis => this + ("exp", JwtTime.now + millis)).getOrElse(this)
 }
 
 object JwtSession {
@@ -63,7 +62,7 @@ object JwtSession {
 
   def defaultHeader: JwtHeader = JwtHeader(algorithm = Option(ALGORITHM), typ = Option("JWT"))
   def defaultClaim: JwtClaim = MAX_AGE match {
-    case Some(seconds) => JwtClaim().expiresIn(1000 * seconds)
+    case Some(millis) => JwtClaim().expiresIn(millis)
     case _ => JwtClaim()
   }
 
@@ -72,17 +71,21 @@ object JwtSession {
     case _ => Json.obj()
   }
 
-  def apply: JwtSession = JwtSession.apply(defaultHeader, defaultClaim)
-
   def apply(jsClaim: JsObject): JwtSession =
     JwtSession.apply(asJsObject(defaultHeader), jsClaim)
 
-  def apply(fields: (String, JsValueWrapper)*): JwtSession = JwtSession.apply(Json.obj(fields: _*))
+  def apply(fields: (String, JsValueWrapper)*): JwtSession =
+    if (fields.isEmpty) {
+      JwtSession.apply(defaultHeader, defaultClaim)
+    } else {
+      JwtSession.apply(Json.obj(fields: _*))
+    }
 
   def apply(jsHeader: JsObject, jsClaim: JsObject): JwtSession =
     new JwtSession(jsHeader, jsClaim, None)
 
-  def apply(claim: JwtClaim): JwtSession = JwtSession.apply(defaultHeader, claim)
+  def apply(claim: JwtClaim): JwtSession =
+    JwtSession.apply(defaultHeader, claim)
 
   def apply(header: JwtHeader, claim: JwtClaim): JwtSession =
     new JwtSession(asJsObject(header), asJsObject(claim), None)
