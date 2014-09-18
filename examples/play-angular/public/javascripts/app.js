@@ -1,20 +1,29 @@
 angular.module('app', ['ngAnimate'])
 
 .config(['$provide', '$httpProvider', function ($provide, $httpProvider) {
+  // Creating a new HTTP interceptor to serve two purposes
+  // 1) Add the token inside the headers at every request from the client
+  // 2) Detect authorization failures (status 401 or 403) and provide default notifications to the user
   $provide.factory('AuthenticationInterceptor', ['$q', '$rootScope', function ($q, $rootScope) {
     return {
+      // Appending the token by reading it from the storage (localStorage by default)
       'request': function (config) {
-        config.headers['Authorization'] = JWT.get();
+        var token = JWT.get();
+        if (token) {
+          config.headers['Authorization'] = token;
+        }
         return config;
       },
 
+      // Sending events for notification if we detect an authentification problem
       'responseError': function (rejection) {
         if (rejection.status === 401) {
           // User isn't authenticated
-          $rootScope.$emit('notification', 'warning', 'You need to be authenticated to access such API.')
+          $rootScope.$emit('notification', 'warning', 'You need to be authenticated to access such API.');
+          $rootScope.logout();
         } else if (rejection.status === 403) {
           // User is authenticated but do not have permission to access this API
-          $rootScope.$emit('notification', 'warning', 'Sorry, you do not have access to this API... Maybe if your username was "admin"... who knows...')
+          $rootScope.$emit('notification', 'warning', 'Sorry, you do not have access to this API... Maybe if your username was "admin"... who knows...');
         }
 
         return $q.reject(rejection);
@@ -22,9 +31,11 @@ angular.module('app', ['ngAnimate'])
     }
   }]);
 
+  // Add the interceptor
   $httpProvider.interceptors.push('AuthenticationInterceptor');
 }])
 
+// Just some stuff to display notifications and the current user
 .run(['$rootScope', 'Authenticated', function ($rootScope, Authenticated) {
   $rootScope.$on('notification', function (e, severity, message) {
     $rootScope.notification = {severity: severity, message: message};
@@ -35,41 +46,58 @@ angular.module('app', ['ngAnimate'])
   };
 
   $rootScope.user = Authenticated.current
+  $rootScope.logout = Authenticated.logout
 }])
 
+// A singleton service to handle all authentification process
 .factory('Authenticated', ['$http', '$rootScope', function ($http, $rootScope) {
   var user = null;
   sync();
 
+  // Function to read the token from the storage
+  // and if present, assign it as the current authenticated user
   function sync() {
     var session = JWT.remember();
     user = session && session.claim && session.claim.user;
     $rootScope.authenticated = !!user;
   }
 
+  // Send a login to the server...
   function login (data) {
     return $http.post('/api/login', data).then(function (response) {
+      // If successful, read the new token from the header
       var token = response.headers("Authorization");
       var session = JWT.read(token);
 
+      // Validate it just in case the server would have send something fishy
       if (JWT.validate(session)) {
+        // Save it in the storage so that we don't lose
+        // if the user refresh the page
         JWT.keep(session);
+        // Synchronize if with the current session
         sync();
       } else {
+        // If not valid, let's just logout
         logout();
       }
     });
   }
 
+  // The logout step do need any HTTP request. After all, the server
+  // doesn't keep anything about the user, it's fully stateless.
+  // We just need to remove it from the storage and sync the current session.
+  // It's immediate.
   function logout() {
     JWT.forget();
     sync();
   }
 
+  // Test if a user is currently authenticated
   function isAuthenticated() {
     return !!user;
   }
 
+  // Return the current user
   function current() {
     return user;
   }
@@ -79,14 +107,13 @@ angular.module('app', ['ngAnimate'])
     logout: logout,
     isAuthenticated: isAuthenticated,
     current: current
-  }
+  };
 }])
 
+// Simple controller to make so dummy HTTP request to our server
+// and see if the user could actually do them or not
 .controller('HomeCtrl', ['$scope', '$http', 'Authenticated', function ($scope, $http, Authenticated) {
   var ctrl = this;
-  ctrl.notification = null;
-
-  ctrl.test = "test";
 
   ctrl.loginForm = {};
 
@@ -96,10 +123,6 @@ angular.module('app', ['ngAnimate'])
     }, function (error) {
       ctrl.notif('error', 'Invalid username or password!');
     });
-  };
-
-  ctrl.logout = function logout() {
-    Authenticated.logout();
   };
 
   function get(endpoint) {
