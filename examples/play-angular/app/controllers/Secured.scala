@@ -19,16 +19,16 @@ trait Secured {
 }
 
 object AuthenticatedAction extends ActionBuilder[AuthenticatedRequest] {
-  def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[SimpleResult]) =
-    request.jwtSession(request).getAs[User]("user") match {
+  def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]) =
+    request.jwtSession.getAs[User]("user") match {
       case Some(user) => block(new AuthenticatedRequest(user, request)).map(_.refreshJwtSession(request))
       case _ => Future.successful(Unauthorized)
     }
 }
 
 object AdminAction extends ActionBuilder[AuthenticatedRequest] {
-  def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[SimpleResult]) =
-    request.jwtSession(request).getAs[User]("user") match {
+  def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]) =
+    request.jwtSession.getAs[User]("user") match {
       case Some(user) if user.isAdmin => block(new AuthenticatedRequest(user, request)).map(_.refreshJwtSession(request))
       case Some(_) => Future.successful(Forbidden.refreshJwtSession(request))
       case _ => Future.successful(Unauthorized)
