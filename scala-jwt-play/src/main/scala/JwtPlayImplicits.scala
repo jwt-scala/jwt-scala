@@ -6,11 +6,14 @@ import play.api.libs.json.{Json, JsObject, JsString, Writes}
 import play.api.libs.json.Json.JsValueWrapper
 
 trait JwtPlayImplicits {
+  private def requestToJwtSession(request: RequestHeader): JwtSession =
+    request.headers.get(JwtSession.HEADER_NAME).map(JwtSession.deserialize).getOrElse(JwtSession())
+
   implicit class RichResult(result: Result) {
     def jwtSession(implicit request: RequestHeader): JwtSession =
       result.header.headers.get(JwtSession.HEADER_NAME) match {
-        case Some(header) => JwtSession.deserialize(header)
-        case None => request.headers.get(JwtSession.HEADER_NAME).map(JwtSession.deserialize).getOrElse(JwtSession())
+        case Some(token) => JwtSession.deserialize(token)
+        case None => requestToJwtSession(request)
       }
 
     def refreshJwtSession(implicit request: RequestHeader): Result = JwtSession.MAX_AGE match {
@@ -37,7 +40,6 @@ trait JwtPlayImplicits {
   }
 
   implicit class RichRequestHeader(request: RequestHeader) {
-    def jwtSession(implicit request: RequestHeader): JwtSession =
-      request.headers.get(JwtSession.HEADER_NAME).map(JwtSession.deserialize).getOrElse(JwtSession())
+    def jwtSession: JwtSession = requestToJwtSession(request)
   }
 }
