@@ -6,13 +6,20 @@ import play.api.libs.json.{Json, JsObject, JsString, Writes}
 import play.api.libs.json.Json.JsValueWrapper
 
 trait JwtPlayImplicits {
+  private def sanitizeHeader(header: String): String =
+    if (header.startsWith(JwtSession.TOKEN_PREFIX)) {
+      header.substring(JwtSession.TOKEN_PREFIX.length()).trim
+    } else {
+      header.trim
+    }
+
   private def requestToJwtSession(request: RequestHeader): JwtSession =
-    request.headers.get(JwtSession.HEADER_NAME).map(JwtSession.deserialize).getOrElse(JwtSession())
+    request.headers.get(JwtSession.HEADER_NAME).map(sanitizeHeader).map(JwtSession.deserialize).getOrElse(JwtSession())
 
   implicit class RichResult(result: Result) {
     def jwtSession(implicit request: RequestHeader): JwtSession =
       result.header.headers.get(JwtSession.HEADER_NAME) match {
-        case Some(token) => JwtSession.deserialize(token)
+        case Some(token) => JwtSession.deserialize(sanitizeHeader(token))
         case None => requestToJwtSession(request)
       }
 
@@ -21,7 +28,8 @@ trait JwtPlayImplicits {
       case _ => result.withJwtSession(jwtSession.refresh)
     }
 
-    def withJwtSession(session: JwtSession): Result = result.withHeaders(JwtSession.HEADER_NAME -> session.serialize)
+    def withJwtSession(session: JwtSession): Result =
+      result.withHeaders(JwtSession.HEADER_NAME -> (JwtSession.TOKEN_PREFIX + session.serialize))
 
     def withJwtSession(session: JsObject): Result = result.withJwtSession(JwtSession(session))
 

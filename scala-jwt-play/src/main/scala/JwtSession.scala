@@ -52,6 +52,9 @@ object JwtSession {
   lazy val ALGORITHM: String =
     Play.maybeApplication.flatMap(_.configuration.getString("session.algorithm")).getOrElse("HmacSHA256")
 
+  lazy val TOKEN_PREFIX: String =
+    Play.maybeApplication.flatMap(_.configuration.getString("session.tokenPrefix")).getOrElse("Bearer ")
+
   private def key =
     Play.maybeApplication.flatMap(_.configuration.getString("application.secret"))
 
