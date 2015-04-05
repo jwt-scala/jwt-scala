@@ -141,7 +141,7 @@ angular.module('app', ['ngAnimate'])
     get('/api/private');
   };
 
-  ctrl.adminCall = function privateCall() {
+  ctrl.adminCall = function adminCall() {
     get('/api/admin');
   };
 
