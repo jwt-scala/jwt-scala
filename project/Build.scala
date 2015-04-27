@@ -13,6 +13,9 @@ object ProjectBuild extends Build {
     version := "0.1.0",
     scalaVersion := "2.11.2",
     /*sourcesInBase := true,*/
+    resolvers := Seq(
+      "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"
+    ),
     libraryDependencies ++= Seq(Libs.scalatest)
   )
 
