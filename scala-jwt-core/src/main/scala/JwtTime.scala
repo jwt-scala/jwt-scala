@@ -1,4 +1,4 @@
-package pdi.scala.jwt
+package pdi.jwt
 
 object JwtTime extends JwtTimeImpl {
   def nowIsBetween(start: Option[Long], end: Option[Long]): Boolean = {

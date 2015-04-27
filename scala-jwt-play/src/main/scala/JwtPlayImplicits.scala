@@ -1,4 +1,4 @@
-package pdi.scala.jwt
+package pdi.jwt
 
 import play.api.Play
 import play.api.mvc.{Result, RequestHeader}

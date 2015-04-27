@@ -1,4 +1,4 @@
-package pdi.scala.jwt
+package pdi.jwt
 
 case class JwtClaim(
   content: String = "{}",

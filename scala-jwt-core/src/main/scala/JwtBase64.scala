@@ -1,4 +1,4 @@
-package pdi.scala.jwt
+package pdi.jwt
 
 object JwtBase64 extends JwtBase64Impl {
   def encode(value: String): Array[Byte] = encode(JwtUtils.bytify(value))

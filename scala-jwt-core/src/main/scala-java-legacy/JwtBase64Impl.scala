@@ -1,4 +1,4 @@
-package pdi.scala.jwt
+package pdi.jwt
 
 import org.apache.commons.codec.binary.Base64
 

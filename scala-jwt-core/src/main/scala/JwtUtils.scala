@@ -1,4 +1,4 @@
-package pdi.scala.jwt
+package pdi.jwt
 
 object JwtUtils {
   val encoding = "UTF-8"

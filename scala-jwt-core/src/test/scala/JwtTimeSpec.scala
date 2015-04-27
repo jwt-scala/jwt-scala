@@ -1,4 +1,4 @@
-package pdi.scala.jwt
+package pdi.jwt
 
 import org.scalatest._
 

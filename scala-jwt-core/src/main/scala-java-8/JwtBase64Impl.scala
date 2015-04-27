@@ -1,4 +1,4 @@
-package pdi.scala.jwt
+package pdi.jwt
 
 trait JwtBase64Impl {
   private lazy val encoder = java.util.Base64.getUrlEncoder()
