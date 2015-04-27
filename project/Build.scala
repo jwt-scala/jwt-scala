@@ -40,7 +40,7 @@ object ProjectBuild extends Build {
       libraryDependencies ++= Seq(Libs.json4sNative)
     )
     .aggregate(coreProject)
-    .dependsOn(coreProject)
+    .dependsOn(coreProject % "compile->compile;test->test")
 
   lazy val json4sJacksonProject = Project("json4s", file("scala-jwt-json4s"))
     .settings(CommonSettings: _*)
@@ -49,7 +49,7 @@ object ProjectBuild extends Build {
       libraryDependencies ++= Seq(Libs.json4sJackson)
     )
     .aggregate(coreProject)
-    .dependsOn(coreProject)
+    .dependsOn(coreProject % "compile->compile;test->test")
 
   lazy val playJsonProject = Project("play-json", file("scala-jwt-play-json"))
     .settings(CommonSettings: _*)
@@ -58,7 +58,7 @@ object ProjectBuild extends Build {
       libraryDependencies ++= Seq(Libs.playJson)
     )
     .aggregate(coreProject)
-    .dependsOn(coreProject)
+    .dependsOn(coreProject % "compile->compile;test->test")
 
   lazy val playProject = Project("play", file("scala-jwt-play"))
     .settings(CommonSettings: _*)
@@ -67,7 +67,7 @@ object ProjectBuild extends Build {
       libraryDependencies ++= Seq(Libs.play)
     )
     .aggregate(playJsonProject)
-    .dependsOn(playJsonProject)
+    .dependsOn(playJsonProject % "compile->compile;test->test")
 
   lazy val examplePlayAngularProject = Project("play-angular", file("examples/play-angular"))
     .settings(CommonSettings: _*)
