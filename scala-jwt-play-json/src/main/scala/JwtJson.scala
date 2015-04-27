@@ -22,11 +22,16 @@ object JwtJson extends JwtCore[JwtHeader, JwtClaim] {
       val jsHeader = Json.parse(tuple._1).as[JsObject]
       val jsClaim = Json.parse(tuple._2).as[JsObject]
 
-      val (notBefore, expiration) = (jsClaim \ "nbf", jsClaim \ "exp") match {
-        case (JsNumber(nbf), JsNumber(exp)) => (Option(nbf.toLong), Option(exp.toLong))
-        case (JsNumber(nbf), _) => (Option(nbf.toLong), None)
-        case (_, JsNumber(exp)) => (None, Option(exp.toLong))
-        case _ => (None, None)
+      // JWT is using second based timestamp
+      // but all our helpers are using millis
+      val notBefore = jsClaim \ "nbf" match {
+        case JsNumber(nbf) => Option(nbf.toLong * 1000)
+        case _ => None
+      }
+
+      val expiration = jsClaim \ "exp" match {
+        case JsNumber(exp) => Option(exp.toLong * 1000)
+        case _ => None
       }
 
       JwtTime.validateNowIsBetween(notBefore, expiration)
