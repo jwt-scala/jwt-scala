@@ -4,7 +4,8 @@ object Dependencies {
   object V {
     val play = "2.3.3"
     val json4s = "3.2.10"
-    val scalatest = "2.2.1"
+    val scalatest = "2.2.4"
+    val jmockit = "1.17"
   }
 
   object Libs {
@@ -15,5 +16,6 @@ object Dependencies {
     val json4sJackson = "org.json4s" %% "json4s-jackson" % V.json4s
 
     val scalatest = "org.scalatest" % "scalatest_2.11" % V.scalatest % "test"
+    val jmockit = "org.jmockit" % "jmockit" % V.jmockit % "test"
   }
 }

@@ -16,7 +16,7 @@ object ProjectBuild extends Build {
     resolvers := Seq(
       "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"
     ),
-    libraryDependencies ++= Seq(Libs.scalatest)
+    libraryDependencies ++= Seq(Libs.scalatest, Libs.jmockit)
   )
 
   lazy val coreProject = Project("core", file("scala-jwt-core"))
