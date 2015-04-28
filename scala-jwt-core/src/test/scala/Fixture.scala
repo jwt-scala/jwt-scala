@@ -86,6 +86,22 @@ trait Fixture {
     ),
 
     DataEntry (
+      "HmacSHA384",
+      """{"typ":"JWT","alg":"HmacSHA384"}""",
+      JwtHeader("HmacSHA384", "JWT"),
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIbWFjU0hBMzg0In0",
+      "W5LuS1ga9iyoUBFcm5gxI7OGLnouEomfIoq47KTmM62Xn3C5wBWLHi8hRVrte9Uz"
+    ),
+
+    DataEntry (
+      "HS384",
+      """{"typ":"JWT","alg":"HS384"}""",
+      JwtHeader("HS384", "JWT"),
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzM4NCJ9",
+      "tCjCk4PefnNV6E_PByT5xumMVm6KAt_asxP8DXwcDnwsldVJi_Y7SfTVJzvyuGBY"
+    ),
+
+    DataEntry (
       "HmacSHA512",
       """{"typ":"JWT","alg":"HmacSHA512"}""",
       JwtHeader("HmacSHA512", "JWT"),
