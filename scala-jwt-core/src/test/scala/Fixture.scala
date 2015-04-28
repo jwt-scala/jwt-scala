@@ -1,19 +1,39 @@
 package pdi.jwt
 
+import mockit.MockUp
+import mockit.Mock
+import java.time.Instant
+
 case class DataEntry(
   algo: String,
   header: String,
   headerClass: JwtHeader,
   header64: String,
   signature: String,
-  token: String = ""
+  token: String = "",
+  tokenUnsigned: String = ""
 )
 
 trait Fixture {
   val secretKey = Option("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow")
 
-  val claim = """{"iss":"joe","exp":1300819380,"http://example.com/is_root":true}"""
-  val claimClass = JwtClaim("""{"http://example.com/is_root":true}""", issuer = Option("joe"), expiration = Option(1300819380))
+  val expiration: Long = 1300819380
+  val expirationMillis: Long = expiration * 1000
+  val beforeExpirationMillis: Long = expirationMillis - 1
+  val afterExpirationMillis: Long = expirationMillis + 1
+
+  def mockInstant(now: Long) = {
+    new MockUp[Instant]() {
+      @Mock
+      def toEpochMilli: Long = now
+    }
+  }
+
+  def mockBeforeExpiration = mockInstant(beforeExpirationMillis)
+  def mockAfterExpiration = mockInstant(afterExpirationMillis)
+
+  val claim = s"""{"iss":"joe","exp":${expiration},"http://example.com/is_root":true}"""
+  val claimClass = JwtClaim("""{"http://example.com/is_root":true}""", issuer = Option("joe"), expiration = Option(expiration))
   val claim64 = "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ=="
 
   val data = Seq(
@@ -81,6 +101,9 @@ trait Fixture {
       "3M6Q4hImCsJj-c7mnN6NFnmnoDSv5n1UF8WUNFQ_pvFaRYGNKiHDg_ZJhUYapTGzp6w-0fsXfp6WVHHGy--MJA=="
     )
   ).map { d =>
-    d.copy(token = Seq(d.header64, claim64, d.signature).mkString("."))
+    d.copy(
+      token = Seq(d.header64, claim64, d.signature).mkString("."),
+      tokenUnsigned = Seq(d.header64, claim64, "").mkString(".")
+    )
   }
 }
