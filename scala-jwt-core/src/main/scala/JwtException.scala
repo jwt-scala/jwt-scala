@@ -6,6 +6,6 @@ class JwtLengthException(message: String) extends RuntimeException(message) with
 
 object JwtValidationException extends RuntimeException with JwtException
 
-class JwtExpirationException(message: String, expiration: Long) extends RuntimeException(message) with JwtException
+class JwtExpirationException(expiration: Long) extends RuntimeException("The token is expired since " + JwtTime.format(expiration)) with JwtException
 
-class JwtNotBeforeException(message: String, notBefore: Long) extends RuntimeException(message) with JwtException
+class JwtNotBeforeException(notBefore: Long) extends RuntimeException("The token will only be valid after " + JwtTime.format(notBefore)) with JwtException

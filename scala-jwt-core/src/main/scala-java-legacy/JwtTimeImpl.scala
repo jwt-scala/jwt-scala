@@ -7,5 +7,5 @@ trait JwtTimeImpl {
 
   def now: Long = Calendar.getInstance(TimeZoneUTC).getTimeInMillis
 
-  protected def format(time: Long): String = Calendar.getInstance(TimeZoneUTC).setTimeInMillis(time).toString
+  def format(time: Long): String = Calendar.getInstance(TimeZoneUTC).setTimeInMillis(time).toString
 }
