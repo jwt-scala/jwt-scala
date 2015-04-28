@@ -59,5 +59,5 @@ object JwtUtils {
   }
 
   def sign(data: String, key: Option[String], algorithm: Option[String]): Array[Byte] =
-    sign(data.getBytes(encoding), key, algorithm)
+    sign(bytify(data), key, algorithm)
 }
