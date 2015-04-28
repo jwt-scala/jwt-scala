@@ -1,9 +1,5 @@
 package pdi.jwt
 
-import mockit.MockUp
-import mockit.Mock
-import java.time.Instant
-
 case class DataEntry(
   algo: String,
   header: String,
@@ -14,7 +10,7 @@ case class DataEntry(
   tokenUnsigned: String = ""
 )
 
-trait Fixture {
+trait Fixture extends TimeFixture {
   val secretKey = Option("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow")
 
   val expiration: Long = 1300819380
@@ -22,15 +18,8 @@ trait Fixture {
   val beforeExpirationMillis: Long = expirationMillis - 1
   val afterExpirationMillis: Long = expirationMillis + 1
 
-  def mockInstant(now: Long) = {
-    new MockUp[Instant]() {
-      @Mock
-      def toEpochMilli: Long = now
-    }
-  }
-
-  def mockBeforeExpiration = mockInstant(beforeExpirationMillis)
-  def mockAfterExpiration = mockInstant(afterExpirationMillis)
+  def mockBeforeExpiration = mockTime(beforeExpirationMillis)
+  def mockAfterExpiration = mockTime(afterExpirationMillis)
 
   val claim = s"""{"iss":"joe","exp":${expiration},"http://example.com/is_root":true}"""
   val claimClass = JwtClaim("""{"http://example.com/is_root":true}""", issuer = Option("joe"), expiration = Option(expiration))
