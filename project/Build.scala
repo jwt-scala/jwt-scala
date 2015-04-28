@@ -30,7 +30,9 @@ object ProjectBuild extends Build {
       // unmanagedSourceDirectories in Java8 += baseDirectory.value / "src/main/scala-java-8",
       // unmanagedSourceDirectories in JavaLegacy += baseDirectory.value / "src/main/scala-java-legacy",
       // But it failed, so I ended up with that:
-      unmanagedSourceDirectories in Compile += baseDirectory.value / "src/main/scala-java-8"
+      unmanagedSourceDirectories in Compile += baseDirectory.value / "src/main/scala-java-legacy",
+      unmanagedSourceDirectories in Test += baseDirectory.value / "src/test/scala-java-legacy",
+      libraryDependencies ++= Seq(Libs.apacheCodec)
     )
 
   lazy val json4sNativeProject = Project("json4s", file("scala-jwt-json4s"))
