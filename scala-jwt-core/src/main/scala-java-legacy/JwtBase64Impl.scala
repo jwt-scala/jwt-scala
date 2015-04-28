@@ -3,8 +3,10 @@ package pdi.jwt
 import org.apache.commons.codec.binary.Base64
 
 trait JwtBase64Impl {
-  val codec = new Base64(true)
+  def encode(value: Array[Byte]): Array[Byte] = Base64.encodeBase64URLSafe(value)
+  def decode(value: Array[Byte]): Array[Byte] = Base64.decodeBase64(value)
 
-  def encode(value: Array[Byte]): Array[Byte] = codec.encode(value)
-  def decode(value: Array[Byte]): Array[Byte] = codec.decode(value)
+  def decode(value: String): Array[Byte] = Base64.decodeBase64(value)
+
+  def encodeString(value: Array[Byte]): String = Base64.encodeBase64URLSafeString(value)
 }

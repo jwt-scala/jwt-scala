@@ -7,10 +7,11 @@ class JwtBase64Spec extends UnitSpec {
 
   val values: Seq[(String, String)] = Seq(
     ("", ""),
-    ("a", "YQ=="),
-    ("1", "MQ=="),
-    ("""{"alg": "algo"}.{"user": 1, "admin": true, "value": "foo"}""", "eyJhbGciOiAiYWxnbyJ9LnsidXNlciI6IDEsICJhZG1pbiI6IHRydWUsICJ2YWx1ZSI6ICJmb28ifQ=="),
-    ("azeklZJEKL,93l,zae:km838{az:e}lekr[l874:e]aze", "YXpla2xaSkVLTCw5M2wsemFlOmttODM4e2F6OmV9bGVrcltsODc0OmVdYXpl")
+    ("a", "YQ"),
+    ("1", "MQ"),
+    ("""{"alg": "algo"}.{"user": 1, "admin": true, "value": "foo"}""", "eyJhbGciOiAiYWxnbyJ9LnsidXNlciI6IDEsICJhZG1pbiI6IHRydWUsICJ2YWx1ZSI6ICJmb28ifQ"),
+    ("azeklZJEKL,93l,zae:km838{az:e}lekr[l874:e]aze", "YXpla2xaSkVLTCw5M2wsemFlOmttODM4e2F6OmV9bGVrcltsODc0OmVdYXpl"),
+    ("""azeqsdwxcrtyfghvbnuyiopjhkml1234567890&é'(-è_çà)=$£ù%*µ,?;.:/!+-*/§äâêëûüîïÂÄÊËÎÏÜÛÔÖZRTYPQSDFGHJKLMWXCVBN<>#{}[]|`\^@¤""", "YXplcXNkd3hjcnR5ZmdodmJudXlpb3BqaGttbDEyMzQ1Njc4OTAmw6knKC3DqF_Dp8OgKT0kwqPDuSUqwrUsPzsuOi8hKy0qL8Knw6TDosOqw6vDu8O8w67Dr8OCw4TDisOLw47Dj8Ocw5vDlMOWWlJUWVBRU0RGR0hKS0xNV1hDVkJOPD4je31bXXxgXF5AwqQ")
   )
 
   describe("JwtBase64") {
