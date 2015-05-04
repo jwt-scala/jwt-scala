@@ -73,7 +73,7 @@ angular.module('app', ['ngAnimate'])
       if (JWT.validate(session)) {
         // Save it in the storage so that we don't lose
         // if the user refresh the page
-        JWT.keep(session);
+        JWT.keep(token);
         // Synchronize if with the current session
         sync();
       } else {
@@ -83,7 +83,7 @@ angular.module('app', ['ngAnimate'])
     });
   }
 
-  // The logout step do need any HTTP request. After all, the server
+  // The logout step doesn't need any HTTP request. After all, the server
   // doesn't keep anything about the user, it's fully stateless.
   // We just need to remove it from the storage and sync the current session.
   // It's immediate.
