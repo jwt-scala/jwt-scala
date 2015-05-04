@@ -5,9 +5,6 @@ import PlayKeys._
 import Dependencies._
 
 object ProjectBuild extends Build {
-  lazy val Java8 = config("java8").extend( Compile )
-  lazy val JavaLegacy = config("javaLegacy").extend( Compile )
-
   val CommonSettings = Seq(
     organization := "pdi",
     version := "0.1.0",
@@ -19,23 +16,38 @@ object ProjectBuild extends Build {
     libraryDependencies ++= Seq(Libs.scalatest, Libs.jmockit)
   )
 
-  lazy val coreProject = Project("core", file("scala-jwt-core"))
-    .configs(Java8, JavaLegacy)
+  lazy val coreLegacy = Project("coreLegacy", file("core/legacy"))
     .settings(CommonSettings: _*)
-    .settings( inConfig(Java8)(Defaults.configTasks): _* )
-    .settings( inConfig(JavaLegacy)(Defaults.configTasks): _* )
     .settings(
-      name := "core",
-      // What I would like to do...
-      // unmanagedSourceDirectories in Java8 += baseDirectory.value / "src/main/scala-java-8",
-      // unmanagedSourceDirectories in JavaLegacy += baseDirectory.value / "src/main/scala-java-legacy",
-      // But it failed, so I ended up with that:
-      unmanagedSourceDirectories in Compile += baseDirectory.value / "src/main/scala-java-legacy",
-      unmanagedSourceDirectories in Test += baseDirectory.value / "src/test/scala-java-legacy",
+      name := "coreLegacy",
       libraryDependencies ++= Seq(Libs.apacheCodec)
     )
 
-  lazy val json4sNativeProject = Project("json4s", file("scala-jwt-json4s"))
+  lazy val coreEdge = Project("coreEdge", file("core/edge"))
+    .settings(CommonSettings: _*)
+    .settings(
+      name := "coreEdge"
+    )
+
+  lazy val coreCommonLegacy = Project("coreCommonLegacy", file("core/common"))
+    .settings(CommonSettings: _*)
+    .settings(
+      name := "coreCommonLegacy",
+      target <<= target(_ / "legacy")
+    )
+    .aggregate(coreLegacy)
+    .dependsOn(coreLegacy % "compile->compile;test->test")
+
+  lazy val coreCommonEdge = Project("coreCommonEdge", file("core/common"))
+    .settings(CommonSettings: _*)
+    .settings(
+      name := "coreCommonEdge",
+      target <<= target(_ / "edge")
+    )
+    .aggregate(coreEdge)
+    .dependsOn(coreEdge % "compile->compile;test->test")
+
+  /*lazy val json4sNativeProject = Project("json4s", file("json4s"))
     .settings(CommonSettings: _*)
     .settings(
       name := "json4s",
@@ -44,39 +56,61 @@ object ProjectBuild extends Build {
     .aggregate(coreProject)
     .dependsOn(coreProject % "compile->compile;test->test")
 
-  lazy val json4sJacksonProject = Project("json4s", file("scala-jwt-json4s"))
+  lazy val json4sJacksonProject = Project("json4s", file("json4s"))
     .settings(CommonSettings: _*)
     .settings(
       name := "json4s",
       libraryDependencies ++= Seq(Libs.json4sJackson)
     )
     .aggregate(coreProject)
-    .dependsOn(coreProject % "compile->compile;test->test")
+    .dependsOn(coreProject % "compile->compile;test->test")*/
 
-  lazy val playJsonProject = Project("play-json", file("scala-jwt-play-json"))
+  lazy val playJsonLegacy = Project("playJsonLegacy", file("play-json"))
     .settings(CommonSettings: _*)
     .settings(
-      name := "play-json",
+      name := "playJsonLegacy",
+      target <<= target(_ / "legacy"),
       libraryDependencies ++= Seq(Libs.playJson)
     )
-    .aggregate(coreProject)
-    .dependsOn(coreProject % "compile->compile;test->test")
+    .aggregate(coreCommonLegacy)
+    .dependsOn(coreCommonLegacy % "compile->compile;test->test")
 
-  lazy val playProject = Project("play", file("scala-jwt-play"))
+  lazy val playJsonEdge = Project("playJsonEdge", file("play-json"))
     .settings(CommonSettings: _*)
     .settings(
-      name := "play",
+      name := "playJsonEdge",
+      target <<= target(_ / "edge"),
+      libraryDependencies ++= Seq(Libs.playJson)
+    )
+    .aggregate(coreCommonEdge)
+    .dependsOn(coreCommonEdge % "compile->compile;test->test")
+
+  lazy val playLegacy = Project("playLegacy", file("play"))
+    .settings(CommonSettings: _*)
+    .settings(
+      name := "playLegacy",
+      target <<= target(_ / "legacy"),
       libraryDependencies ++= Seq(Libs.play)
     )
-    .aggregate(playJsonProject)
-    .dependsOn(playJsonProject % "compile->compile;test->test")
+    .aggregate(playJsonLegacy)
+    .dependsOn(playJsonLegacy % "compile->compile;test->test")
 
-  lazy val examplePlayAngularProject = Project("play-angular", file("examples/play-angular"))
+  lazy val playEdge = Project("playEdge", file("play"))
     .settings(CommonSettings: _*)
     .settings(
-      name := "play-angular"
+      name := "playEdge",
+      target <<= target(_ / "edge"),
+      libraryDependencies ++= Seq(Libs.play)
+    )
+    .aggregate(playJsonEdge)
+    .dependsOn(playJsonEdge % "compile->compile;test->test")
+
+  lazy val examplePlayAngularProject = Project("playAngular", file("examples/play-angular"))
+    .settings(CommonSettings: _*)
+    .settings(
+      name := "playAngular"
     )
     .enablePlugins(play.PlayScala)
-    .aggregate(playProject)
-    .dependsOn(playProject)
+    .aggregate(playLegacy)
+    .dependsOn(playLegacy)
 }
