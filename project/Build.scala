@@ -7,16 +7,22 @@ import bintray.Plugin.bintraySettings
 import bintray.Plugin.bintrayPublishSettings
 
 object ProjectBuild extends Build {
+  val buildVersion = "0.0.3"
+
   val CommonSettings = Seq(
     organization := "pdi",
-    version := "0.0.3",
+    version := buildVersion,
     scalaVersion := "2.11.6",
     crossScalaVersions := Seq("2.10.5", "2.11.6"),
+    crossVersion := CrossVersion.binary,
     publishArtifact := false,
     resolvers ++= Seq(
       "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"
     ),
-    libraryDependencies ++= Seq(Libs.scalatest, Libs.jmockit)
+    libraryDependencies ++= Seq(Libs.scalatest, Libs.jmockit),
+    scalacOptions in (Compile, doc) ++= Seq("-unchecked", "-deprecation", "-diagrams", "-implicits", "-skip-packages", "samples"),
+    scalacOptions in (Compile, doc) ++= Opts.doc.title("JWT Scala API"),
+    scalacOptions in (Compile, doc) ++= Opts.doc.version(buildVersion)
   )
 
   val PublishSettings = bintraySettings ++ bintrayPublishSettings ++ Seq(
