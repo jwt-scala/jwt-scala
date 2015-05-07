@@ -1,0 +1,102 @@
+body {
+  font-size: 1.5em;
+}
+
+section {
+  max-width: 800px;
+  margin: 50px auto;
+  text-align: center;
+}
+
+.btn {
+  display: block;
+  color: rgb(255, 255, 255);
+  padding: 1em 2em;
+  border: 0;
+  margin: 1em auto;
+  font-size: 1em;
+  min-width: 50%;
+  cursor: pointer;
+  transition: 300ms opacity;
+}
+
+.btn:hover {
+  opacity: .8;
+}
+
+.btn.btn-login {
+  background-color: rgb(41, 128, 185);
+}
+
+.btn.btn-logout {
+  background-color: rgb(52, 73, 94);
+}
+
+.btn.btn-public {
+  background-color: rgb(39, 174, 96);
+}
+
+.btn.btn-private {
+  background-color: rgb(211, 84, 0);
+}
+
+.btn.btn-admin {
+  background-color: rgb(192, 57, 43);
+}
+
+input {
+  display: block;
+  padding: .5em;
+  margin: 1em auto;
+  min-width: 50%;
+  font-size: 1em;
+}
+
+.notification {
+  position: relative;
+  cursor: pointer;
+  border-width: 3px;
+  border-style: solid;
+  padding: 1em;
+  color: rgb(255, 255, 255);
+  border-radius: 10px;
+  -webkit-transition: 300ms background-color, 300ms border-color;
+  transition: 300ms background-color, 300ms border-color;
+}
+
+.notification::after {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  content: "✖";
+}
+
+.notification.success {
+  background-color: rgb(46, 204, 113);
+  border-color: rgb(22, 160, 133);
+}
+
+.notification.warning {
+  background-color: rgb(230, 126, 34);
+  border-color: rgb(211, 84, 0);
+}
+
+.notification.error {
+  background-color: rgb(231, 76, 60);
+  border-color: rgb(192, 57, 43);
+}
+
+.fade-if.ng-enter, .fade-if.ng-leave {
+  -webkit-transition: opacity cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+  transition: opacity cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+}
+
+.fade-if.ng-enter,
+.fade-if.ng-leave.ng-leave-active {
+  opacity:0;
+}
+
+.fade-if.ng-leave,
+.fade-if.ng-enter.ng-enter-active {
+  opacity:1;
+}
