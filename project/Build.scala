@@ -9,7 +9,7 @@ import bintray.Plugin.bintrayPublishSettings
 object ProjectBuild extends Build {
   val CommonSettings = Seq(
     organization := "pdi",
-    version := "0.0.2",
+    version := "0.0.3",
     scalaVersion := "2.11.6",
     crossScalaVersions := Seq("2.10.5", "2.11.6"),
     publishArtifact := false,
@@ -72,24 +72,6 @@ object ProjectBuild extends Build {
     )
     .aggregate(coreEdge)
     .dependsOn(coreEdge % "compile->compile;test->test")
-
-  /*lazy val json4sNativeProject = Project("json4s", file("json4s"))
-    .settings(CommonSettings: _*)
-    .settings(
-      name := "json4s",
-      libraryDependencies ++= Seq(Libs.json4sNative)
-    )
-    .aggregate(coreProject)
-    .dependsOn(coreProject % "compile->compile;test->test")
-
-  lazy val json4sJacksonProject = Project("json4s", file("json4s"))
-    .settings(CommonSettings: _*)
-    .settings(
-      name := "json4s",
-      libraryDependencies ++= Seq(Libs.json4sJackson)
-    )
-    .aggregate(coreProject)
-    .dependsOn(coreProject % "compile->compile;test->test")*/
 
   lazy val playJsonLegacy = Project("playJsonLegacy", file("play-json"))
     .settings(CommonSettings: _*)
