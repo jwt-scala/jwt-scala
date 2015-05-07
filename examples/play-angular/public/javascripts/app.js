@@ -63,7 +63,7 @@ angular.module('app', ['ngAnimate'])
   }
 
   // Send a login to the server...
-  function login (data) {
+  function login(data) {
     return $http.post('/api/login', data).then(function (response) {
       // If successful, read the new token from the header
       var token = response.headers("Authorization");
@@ -110,7 +110,7 @@ angular.module('app', ['ngAnimate'])
   };
 }])
 
-// Simple controller to make so dummy HTTP request to our server
+// Simple controller to make some dummy HTTP request to our server
 // and see if the user could actually do them or not
 .controller('HomeCtrl', ['$scope', '$http', 'Authenticated', function ($scope, $http, Authenticated) {
   var ctrl = this;
