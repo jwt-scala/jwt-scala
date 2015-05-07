@@ -39,7 +39,7 @@ case class JwtSession(
   def withClaim(claim: JwtClaim): JwtSession = this.copy(claimData = JwtSession.asJsObject(claim))
   def withHeader(header: JwtHeader): JwtSession = this.copy(headerData = JwtSession.asJsObject(header))
 
-  def refresh: JwtSession = JwtSession.MAX_AGE.map(millis => this + ("exp", JwtTime.now + millis)).getOrElse(this)
+  def refresh: JwtSession = JwtSession.MAX_AGE.map(sec => this + ("exp", JwtTime.nowSeconds + sec)).getOrElse(this)
 }
 
 object JwtSession {
@@ -47,7 +47,7 @@ object JwtSession {
     Play.maybeApplication.flatMap(_.configuration.getString("session.jwtName")).getOrElse("Authorization")
 
   lazy val MAX_AGE: Option[Long] =
-    Play.maybeApplication.flatMap(_.configuration.getMilliseconds("session.maxAge"))
+    Play.maybeApplication.flatMap(_.configuration.getMilliseconds("session.maxAge").map(_ / 1000))
 
   lazy val ALGORITHM: String =
     Play.maybeApplication.flatMap(_.configuration.getString("session.algorithm")).getOrElse("HmacSHA256")
@@ -65,7 +65,7 @@ object JwtSession {
 
   def defaultHeader: JwtHeader = JwtHeader(algorithm = Option(ALGORITHM), typ = Option("JWT"))
   def defaultClaim: JwtClaim = MAX_AGE match {
-    case Some(millis) => JwtClaim().expiresIn(millis)
+    case Some(seconds) => JwtClaim().expiresIn(seconds)
     case _ => JwtClaim()
   }
 

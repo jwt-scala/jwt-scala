@@ -1,10 +1,15 @@
 package pdi.jwt
 
 object JwtTime extends JwtTimeImpl {
+  def nowSeconds: Long = this.now / 1000
+
   def nowIsBetween(start: Option[Long], end: Option[Long]): Boolean = {
     val timeNow = now
     start.map(_ <= timeNow).getOrElse(true) && end.map(_ >= timeNow).getOrElse(true)
   }
+
+  def nowIsBetweenSeconds(start: Option[Long], end: Option[Long]): Boolean =
+    nowIsBetween(start.map(_ * 1000), end.map(_ * 1000))
 
   def validateNowIsBetween(start: Option[Long], end: Option[Long]): Boolean = {
     val timeNow = now
