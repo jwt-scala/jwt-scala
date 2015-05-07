@@ -3,36 +3,59 @@ import Keys._
 import play.Play.autoImport._
 import PlayKeys._
 import Dependencies._
+import bintray.Plugin.bintraySettings
+import bintray.Plugin.bintrayPublishSettings
 
 object ProjectBuild extends Build {
   val CommonSettings = Seq(
     organization := "pdi",
-    version := "0.1.0",
-    scalaVersion := "2.11.2",
-    /*sourcesInBase := true,*/
-    resolvers := Seq(
+    version := "0.0.2",
+    scalaVersion := "2.11.6",
+    crossScalaVersions := Seq("2.10.5", "2.11.6"),
+    publishArtifact := false,
+    resolvers ++= Seq(
       "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"
     ),
     libraryDependencies ++= Seq(Libs.scalatest, Libs.jmockit)
   )
 
+  val PublishSettings = bintraySettings ++ bintrayPublishSettings ++ Seq(
+    publishMavenStyle := true,
+    publishArtifact := true,
+    licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0")),
+    bintray.Keys.packageLabels in bintray.Keys.bintray := Seq("jwt", "scala", "authentication", "json", "web", "token"),
+    pomExtra := (
+      <scm>
+        <url>git@github.com:pauldijou/jwt-scala.git</url>
+        <connection>scm:git:git@github.com:pauldijou/jwt-scala.git</connection>
+      </scm>
+      <developers>
+        <developer>
+          <id>pdi</id>
+          <name>Paul Dijou</name>
+          <url>http://pauldijou.fr</url>
+        </developer>
+      </developers>)
+  )
+
   lazy val coreLegacy = Project("coreLegacy", file("core/legacy"))
     .settings(CommonSettings: _*)
     .settings(
-      name := "coreLegacy",
+      name := "core-legacy",
       libraryDependencies ++= Seq(Libs.apacheCodec)
     )
 
   lazy val coreEdge = Project("coreEdge", file("core/edge"))
     .settings(CommonSettings: _*)
     .settings(
-      name := "coreEdge"
+      name := "core-edge"
     )
 
   lazy val coreCommonLegacy = Project("coreCommonLegacy", file("core/common"))
     .settings(CommonSettings: _*)
+    .settings(PublishSettings: _*)
     .settings(
-      name := "coreCommonLegacy",
+      name := "jwt-core-legacy",
       target <<= target(_ / "legacy")
     )
     .aggregate(coreLegacy)
@@ -40,8 +63,9 @@ object ProjectBuild extends Build {
 
   lazy val coreCommonEdge = Project("coreCommonEdge", file("core/common"))
     .settings(CommonSettings: _*)
+    .settings(PublishSettings: _*)
     .settings(
-      name := "coreCommonEdge",
+      name := "jwt-core",
       target <<= target(_ / "edge")
     )
     .aggregate(coreEdge)
@@ -67,8 +91,9 @@ object ProjectBuild extends Build {
 
   lazy val playJsonLegacy = Project("playJsonLegacy", file("play-json"))
     .settings(CommonSettings: _*)
+    .settings(PublishSettings: _*)
     .settings(
-      name := "playJsonLegacy",
+      name := "jwt-play-json-legacy",
       target <<= target(_ / "legacy"),
       libraryDependencies ++= Seq(Libs.playJson)
     )
@@ -77,8 +102,9 @@ object ProjectBuild extends Build {
 
   lazy val playJsonEdge = Project("playJsonEdge", file("play-json"))
     .settings(CommonSettings: _*)
+    .settings(PublishSettings: _*)
     .settings(
-      name := "playJsonEdge",
+      name := "jwt-play-json",
       target <<= target(_ / "edge"),
       libraryDependencies ++= Seq(Libs.playJson)
     )
@@ -87,20 +113,24 @@ object ProjectBuild extends Build {
 
   lazy val playLegacy = Project("playLegacy", file("play"))
     .settings(CommonSettings: _*)
+    .settings(PublishSettings: _*)
     .settings(
-      name := "playLegacy",
+      name := "jwt-play-legacy",
       target <<= target(_ / "legacy"),
-      libraryDependencies ++= Seq(Libs.play)
+      libraryDependencies ++= Seq(Libs.play),
+      bintray.Keys.packageLabels in bintray.Keys.bintray ++= Seq("play", "play framework")
     )
     .aggregate(playJsonLegacy)
     .dependsOn(playJsonLegacy % "compile->compile;test->test")
 
   lazy val playEdge = Project("playEdge", file("play"))
     .settings(CommonSettings: _*)
+    .settings(PublishSettings: _*)
     .settings(
-      name := "playEdge",
+      name := "jwt-play",
       target <<= target(_ / "edge"),
-      libraryDependencies ++= Seq(Libs.play)
+      libraryDependencies ++= Seq(Libs.play),
+      bintray.Keys.packageLabels in bintray.Keys.bintray ++= Seq("play", "play framework")
     )
     .aggregate(playJsonEdge)
     .dependsOn(playJsonEdge % "compile->compile;test->test")
