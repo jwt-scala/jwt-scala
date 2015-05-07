@@ -40,15 +40,17 @@ object ProjectBuild extends Build {
 
   lazy val coreLegacy = Project("coreLegacy", file("core/legacy"))
     .settings(CommonSettings: _*)
+    .settings(PublishSettings: _*)
     .settings(
-      name := "core-legacy",
+      name := "jwt-core-legacy-impl",
       libraryDependencies ++= Seq(Libs.apacheCodec)
     )
 
   lazy val coreEdge = Project("coreEdge", file("core/edge"))
     .settings(CommonSettings: _*)
+    .settings(PublishSettings: _*)
     .settings(
-      name := "core-edge"
+      name := "jwt-core-impl"
     )
 
   lazy val coreCommonLegacy = Project("coreCommonLegacy", file("core/common"))
