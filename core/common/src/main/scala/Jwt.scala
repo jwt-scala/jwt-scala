@@ -36,7 +36,7 @@ trait JwtCore[H, C] {
     * @param key the secret key to use to sign the token. If none, the token will not be signed
     * @param algorithm the algorithm to use to sign the token. If none but there is a key, the default one will be used
     */
-  def encode(header: String, claim: String, key: Option[String] = None, algorithm: Option[String] = None): String = {
+  def encode(header: String, claim: String, key: Option[String] = None, algorithm: Option[JwtAlgorithm] = None): String = {
     val header64 = JwtBase64.encodeString(header)
     val claim64 = JwtBase64.encodeString(claim)
     Seq(
@@ -54,7 +54,7 @@ trait JwtCore[H, C] {
     * @param key the secret key to use to sign the token
     * @param algorithm the algorithm to use to sign the token
     */
-  def encode(header: String, claim: String, key: String, algorithm: String): String =
+  def encode(header: String, claim: String, key: String, algorithm: JwtAlgorithm): String =
     encode(header, claim, Option(key), Option(algorithm))
 
   /** An alias to `encode` if you want to use case classes for the header and the claim rather than strings, they will just be stringified to JSON format.
@@ -168,7 +168,7 @@ trait JwtCore[H, C] {
     maybeKey: Option[String]): Unit = {
 
     // First, let's valid the signature
-    val maybeAlgo = extractAlgorithm(header)
+    val maybeAlgo = extractAlgorithm(header).map(JwtAlgorithm.fromString)
 
     maybeSignature match {
       case Some(signature) if !java.util.Arrays.equals(JwtBase64.decode(signature), JwtUtils.sign(header64 +"."+ claim64, maybeKey, maybeAlgo)) => {

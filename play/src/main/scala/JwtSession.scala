@@ -49,8 +49,10 @@ object JwtSession {
   lazy val MAX_AGE: Option[Long] =
     Play.maybeApplication.flatMap(_.configuration.getMilliseconds("session.maxAge").map(_ / 1000))
 
-  lazy val ALGORITHM: String =
-    Play.maybeApplication.flatMap(_.configuration.getString("session.algorithm")).getOrElse("HmacSHA256")
+  lazy val ALGORITHM: JwtAlgorithm =
+    Play.maybeApplication
+      .flatMap(_.configuration.getString("session.algorithm").map(JwtAlgorithm.fromString))
+      .getOrElse(JwtAlgorithm.HmacSHA256)
 
   lazy val TOKEN_PREFIX: String =
     Play.maybeApplication.flatMap(_.configuration.getString("session.tokenPrefix")).getOrElse("Bearer ")
@@ -64,6 +66,7 @@ object JwtSession {
     }.getOrElse(JwtSession())
 
   def defaultHeader: JwtHeader = JwtHeader(algorithm = Option(ALGORITHM), typ = Option("JWT"))
+
   def defaultClaim: JwtClaim = MAX_AGE match {
     case Some(seconds) => JwtClaim().expiresIn(seconds)
     case _ => JwtClaim()

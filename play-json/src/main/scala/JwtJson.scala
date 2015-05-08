@@ -7,8 +7,10 @@ import play.api.libs.json._
 object JwtJson extends JwtCore[JwtHeader, JwtClaim] {
   def encode(header: JsObject, claim: JsObject, key: Option[String]): String =
     encode(Json.stringify(header), Json.stringify(claim), key, (header \ "alg" match {
-      case JsString(algo) => Option(algo)
-      case _ => None
+      case JsString(algo) => Option(JwtAlgorithm.fromString(algo))
+      case JsNull => None
+      case _ : JsUndefined => None
+      case _ => throw new JwtNonStringException("alg")
     }))
 
   def encode(header: JsObject, claim: JsObject, key: String): String =

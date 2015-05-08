@@ -30,34 +30,16 @@ object JwtUtils {
     } + "}"
   }
 
-  val algorithms = Seq("HmacMD5", "HmacSHA1", "HmacSHA224", "HmacSHA256", "HmacSHA384", "HmacSHA512")
-  val aliases = Map(
-    "HMD5"  -> "HmacMD5",
-    "HS1"   -> "HmacSHA1",
-    "HS224" -> "HmacSHA224",
-    "HS256" -> "HmacSHA256",
-    "HS384" -> "HmacSHA384",
-    "HS512" -> "HmacSHA512"
-  )
-
-  private def getAlgo(algo: String): String = if (algorithms.contains(algo)) {
-    algo
-  } else {
-    aliases.get(algo).getOrElse {
-      throw new UnsupportedOperationException(algo + " is an unknown or unimplemented algorithm key. Possible values are [" + algorithms.mkString(", ") + ", " + aliases.keys.mkString(", ") + "]")
+  def sign(data: Array[Byte], key: Option[String], algorithm: Option[JwtAlgorithm]): Array[Byte] =
+    (key, algorithm) match {
+      case (Some(keyValue), Some(algo)) => {
+        val mac = javax.crypto.Mac.getInstance(algo.name)
+        mac.init(new javax.crypto.spec.SecretKeySpec(keyValue.getBytes(encoding), algo.name))
+        mac.doFinal(data)
+      }
+      case _ => Array.empty[Byte]
     }
-  }
 
-  def sign(data: Array[Byte], key: Option[String], algorithm: Option[String]): Array[Byte] = (key, algorithm) match {
-    case (Some(keyValue), Some(algoValue)) => {
-      val algo = getAlgo(algoValue)
-      val mac = javax.crypto.Mac.getInstance(algo)
-      mac.init(new javax.crypto.spec.SecretKeySpec(keyValue.getBytes(encoding), algo))
-      mac.doFinal(data)
-    }
-    case _ => Array.empty[Byte]
-  }
-
-  def sign(data: String, key: Option[String], algorithm: Option[String]): Array[Byte] =
+  def sign(data: String, key: Option[String], algorithm: Option[JwtAlgorithm]): Array[Byte] =
     sign(bytify(data), key, algorithm)
 }
