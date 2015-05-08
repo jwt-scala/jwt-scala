@@ -9,7 +9,6 @@ trait JwtTimeImpl {
     *
     * @return Returns the number of millis since the 01.01.1970
     */
-  def now
   def now: Long = Calendar.getInstance(TimeZoneUTC).getTimeInMillis
 
   def format(time: Long): String = {
