@@ -20,13 +20,13 @@ class JwtSpec extends UnitSpec with Fixture {
 
     it("should decodeRawAll") {
       data foreach { d =>
-        assertResult(Success((d.header, claim, Some(d.signature))), d.algo) { Jwt.decodeRawAll(d.token) }
+        assertResult(Success((d.header, claim, Some(d.signature))), d.algo) { Jwt.decodeRawAll(d.token, secretKey) }
       }
     }
 
     it("should decodeRaw") {
       data foreach { d =>
-        assertResult(Success((claim)), d.algo) { Jwt.decodeRaw(d.token) }
+        assertResult(Success((claim)), d.algo) { Jwt.decodeRaw(d.token, secretKey) }
       }
     }
 

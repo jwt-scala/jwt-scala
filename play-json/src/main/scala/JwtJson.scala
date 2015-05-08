@@ -18,24 +18,8 @@ object JwtJson extends JwtCore[JwtHeader, JwtClaim] {
     encode(header, claim, None)
 
   def decodeAllJson(token: String, maybeKey: Option[String] = None): Try[(JsObject, JsObject, Option[String])] =
-    decodeRawAllValidated(token, maybeKey).map { tuple =>
-      val jsHeader = Json.parse(tuple._1).as[JsObject]
-      val jsClaim = Json.parse(tuple._2).as[JsObject]
-
-      // JWT is using second based timestamp
-      // but all our helpers are using millis
-      val notBefore = jsClaim \ "nbf" match {
-        case JsNumber(nbf) => Option(nbf.toLong * 1000)
-        case _ => None
-      }
-
-      val expiration = jsClaim \ "exp" match {
-        case JsNumber(exp) => Option(exp.toLong * 1000)
-        case _ => None
-      }
-
-      JwtTime.validateNowIsBetween(notBefore, expiration)
-      (jsHeader, jsClaim, tuple._3)
+    decodeRawAll(token, maybeKey).map { tuple =>
+      (Json.parse(tuple._1).as[JsObject], Json.parse(tuple._2).as[JsObject], tuple._3)
     }
 
   def decodeJson(token: String, maybeKey: Option[String] = None): Try[JsObject] =

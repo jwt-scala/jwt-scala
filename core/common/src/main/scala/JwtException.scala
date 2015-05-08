@@ -4,7 +4,7 @@ sealed trait JwtException
 
 class JwtLengthException(message: String) extends RuntimeException(message) with JwtException
 
-object JwtValidationException extends RuntimeException with JwtException
+class JwtValidationException(message: String) extends RuntimeException(message) with JwtException
 
 class JwtExpirationException(expiration: Long) extends RuntimeException("The token is expired since " + JwtTime.format(expiration)) with JwtException
 
