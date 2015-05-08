@@ -42,7 +42,7 @@ Low-level API mostly based on String and Map since there is no native support fo
 
 **build.sbt, Java 1.8+**
 ~~~
-resolvers += Resolver.bintrayRepo("pauldijou", "maven")
+resolvers += Resolver.jcenterRepo
 
 libraryDependencies ++= Seq(
   "pdi" %% "jwt-core" % "0.0.3"
@@ -51,7 +51,7 @@ libraryDependencies ++= Seq(
 
 **build.sbt, Java 1.6 and 1.7**
 ~~~
-resolvers += Resolver.bintrayRepo("pauldijou", "maven")
+resolvers += Resolver.jcenterRepo
 
 libraryDependencies ++= Seq(
   "pdi" %% "jwt-core-legacy" % "0.0.3"
@@ -66,7 +66,7 @@ Low-level API mostly based on String and Map since there is no native support fo
 
 **build.sbt, Java 1.8+**
 ~~~
-resolvers += Resolver.bintrayRepo("pauldijou", "maven")
+resolvers += Resolver.jcenterRepo
 
 libraryDependencies ++= Seq(
   "pdi" %% "jwt-play-json" % "0.0.3"
@@ -75,7 +75,7 @@ libraryDependencies ++= Seq(
 
 **build.sbt, Java 1.6 and 1.7**
 ~~~
-resolvers += Resolver.bintrayRepo("pauldijou", "maven")
+resolvers += Resolver.jcenterRepo
 
 libraryDependencies ++= Seq(
   "pdi" %% "jwt-play-json-legacy" % "0.0.3"
@@ -90,7 +90,7 @@ Low-level API mostly based on String and Map since there is no native support fo
 
 **build.sbt, Java 1.8+**
 ~~~
-resolvers += Resolver.bintrayRepo("pauldijou", "maven")
+resolvers += Resolver.jcenterRepo
 
 libraryDependencies ++= Seq(
   "pdi" %% "jwt-play" % "0.0.3"
@@ -99,7 +99,7 @@ libraryDependencies ++= Seq(
 
 **build.sbt, Java 1.6 and 1.7**
 ~~~
-resolvers += Resolver.bintrayRepo("pauldijou", "maven")
+resolvers += Resolver.jcenterRepo
 
 libraryDependencies ++= Seq(
   "pdi" %% "jwt-play-legacy" % "0.0.3"

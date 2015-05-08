@@ -6,7 +6,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.11.6"
 
-resolvers += Resolver.bintrayRepo("pauldijou", "maven")
+resolvers += Resolver.jcenterRepo
 
 libraryDependencies ++= Seq(
   "pdi" %% "jwt-play" % "0.0.3"
