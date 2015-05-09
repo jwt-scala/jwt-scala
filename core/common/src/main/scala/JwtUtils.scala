@@ -33,8 +33,8 @@ object JwtUtils {
   def sign(data: Array[Byte], key: Option[String], algorithm: Option[JwtAlgorithm]): Array[Byte] =
     (key, algorithm) match {
       case (Some(keyValue), Some(algo)) => {
-        val mac = javax.crypto.Mac.getInstance(algo.name)
-        mac.init(new javax.crypto.spec.SecretKeySpec(keyValue.getBytes(encoding), algo.name))
+        val mac = javax.crypto.Mac.getInstance(algo.fullName)
+        mac.init(new javax.crypto.spec.SecretKeySpec(keyValue.getBytes(encoding), algo.fullName))
         mac.doFinal(data)
       }
       case _ => Array.empty[Byte]
