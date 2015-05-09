@@ -5,6 +5,13 @@ import scala.util.Try
 import play.api.libs.json._
 
 object JwtJson extends JwtCore[JwtHeader, JwtClaim] {
+  protected def parseHeader(header: String): JwtHeader = jwtHeaderReader.reads(Json.parse(header)).get
+  protected def parseClaim(claim: String): JwtClaim = jwtClaimReader.reads(Json.parse(claim)).get
+
+  protected def extractAlgorithm(header: JwtHeader): Option[JwtAlgorithm] = header.algorithm
+  protected def extractExpiration(claim: JwtClaim): Option[Long] = claim.expiration
+  protected def extractNotBefore(claim: JwtClaim): Option[Long] = claim.notBefore
+
   def encode(header: JsObject, claim: JsObject, key: Option[String]): String =
     encode(Json.stringify(header), Json.stringify(claim), key, (header \ "alg" match {
       case JsString(algo) => Option(JwtAlgorithm.fromString(algo))
@@ -29,9 +36,4 @@ object JwtJson extends JwtCore[JwtHeader, JwtClaim] {
 
   def decodeJson(token: String, key: String): Try[JsObject] =
     decodeJson(token, Option(key))
-
-  def decodeAll(token: String, maybeKey: Option[String] = None): Try[(JwtHeader, JwtClaim, Option[String])] =
-    decodeAllJson(token, maybeKey).map { tuple =>
-      (jwtHeaderReader.reads(tuple._1).get, jwtClaimReader.reads(tuple._2).get, tuple._3)
-    }
 }

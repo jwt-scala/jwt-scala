@@ -6,8 +6,21 @@ import scala.util.Try
   * Default implementation of [[JwtCore]] using only Strings.
   */
 object Jwt extends JwtCore[String, String] {
-  def decodeAll(token: String, maybeKey: Option[String] = None): Try[(String, String, Option[String])] =
-    decodeRawAll(token, maybeKey)
+  protected def parseHeader(header: String): String = header
+  protected def parseClaim(claim: String): String = claim
+
+  private val extractAlgorithmRegex = "\"alg\":\"([a-zA-Z0-9]+)\"".r
+  protected def extractAlgorithm(header: String): Option[JwtAlgorithm] =
+    (extractAlgorithmRegex findFirstMatchIn header).map(_.group(1)).map(JwtAlgorithm.fromString)
+
+
+  private val extractExpirationRegex = "\"exp\":\"([0-9]+)\"".r
+  protected def extractExpiration(claim: String): Option[Long] =
+    (extractExpirationRegex findFirstMatchIn claim).map(_.group(1)).map(_.toLong)
+
+  private val extractNotBeforeRegex = "\"nbf\":\"([0-9]+)\"".r
+  protected def extractNotBefore(claim: String): Option[Long] =
+    (extractNotBeforeRegex findFirstMatchIn claim).map(_.group(1)).map(_.toLong)
 }
 
 /** Provide the main logic around Base64 encoding / decoding and signature using the correct algorithm.
@@ -28,6 +41,10 @@ object Jwt extends JwtCore[String, String] {
   *
   */
 trait JwtCore[H, C] {
+  // Abstract methods
+  protected def parseHeader(header: String): H
+  protected def parseClaim(claim: String): C
+
   /** Encode a JSON Web Token from its different parts. Both the header and the claim will be encoded to Base64 url-safe, then a signature will be eventually generated from it if you did pass a key and an algorithm, and finally, those three parts will be merged as a single string, using dots as separator.
     *
     * @return $token
@@ -99,7 +116,7 @@ trait JwtCore[H, C] {
     */
   def decodeRawAll(token: String, maybeKey: Option[String] = None): Try[(String, String, Option[String])] = Try {
     val (header64, header, claim64, claim, maybeSignature) = splitToken(token)
-    validate(header64, header, claim64, claim, maybeSignature, maybeKey)
+    validate(header64, parseHeader(header), claim64, parseClaim(claim), maybeSignature, maybeKey)
     (header, claim, maybeSignature)
   }
 
@@ -117,7 +134,12 @@ trait JwtCore[H, C] {
     * @param token $token
     * @param maybeKey $maybeKey
     */
-  def decodeAll(token: String, maybeKey: Option[String] = None): Try[(H, C, Option[String])]
+  def decodeAll(token: String, maybeKey: Option[String] = None): Try[(H, C, Option[String])] = Try {
+    val (header64, header, claim64, claim, maybeSignature) = splitToken(token)
+    val (h, c) = (parseHeader(header), parseClaim(claim))
+    validate(header64, h, claim64, c, maybeSignature, maybeKey)
+    (h, c, maybeSignature)
+  }
 
   /** An alias of `decodeAll` if you want to directly pass a string key rather than an Option
     *
@@ -144,31 +166,20 @@ trait JwtCore[H, C] {
   def decode(token: String, key: String): Try[C] = decode(token, Option(key))
 
   // Validate
-  private val extractAlgorithmRegex = "\"alg\":\"([a-zA-Z0-9]+)\"".r
-  private def extractAlgorithm(header: String): Option[String] = for {
-    extractAlgorithmRegex(algo) <- extractAlgorithmRegex findFirstIn header
-  } yield algo
+  protected def extractAlgorithm(header: H): Option[JwtAlgorithm]
+  protected def extractExpiration(claim: C): Option[Long]
+  protected def extractNotBefore(claim: C): Option[Long]
 
-  private val extractExpirationRegex = "\"exp\":\"([0-9]+)\"".r
-  private def extractExpiration(claim: String): Option[Long] = for {
-    extractExpirationRegex(expiration) <- extractExpirationRegex findFirstIn claim
-  } yield expiration.toLong
-
-  private val extractNotBeforeRegex = "\"nbf\":\"([0-9]+)\"".r
-  private def extractNotBefore(claim: String): Option[Long] = for {
-    extractNotBeforeRegex(notBefore) <- extractNotBeforeRegex findFirstIn claim
-  } yield notBefore.toLong
-
-  private def validate(
+  protected def validate(
     header64: String,
-    header: String,
+    header: H,
     claim64: String,
-    claim: String,
+    claim: C,
     maybeSignature: Option[String],
     maybeKey: Option[String]): Unit = {
 
     // First, let's valid the signature
-    val maybeAlgo = extractAlgorithm(header).map(JwtAlgorithm.fromString)
+    val maybeAlgo = extractAlgorithm(header)
 
     maybeSignature match {
       case Some(signature) if !java.util.Arrays.equals(JwtBase64.decode(signature), JwtUtils.sign(header64 +"."+ claim64, maybeKey, maybeAlgo)) => {
@@ -200,7 +211,7 @@ trait JwtCore[H, C] {
     */
   def validate(token: String, maybeKey: Option[String] = None): Unit = {
     val (header64, header, claim64, claim, maybeSignature) = splitToken(token)
-    validate(header64, header, claim64, claim, maybeSignature, maybeKey)
+    validate(header64, parseHeader(header), claim64, parseClaim(claim), maybeSignature, maybeKey)
   }
 
   /** An alias of `validate` in case you want to directly pass a string key.

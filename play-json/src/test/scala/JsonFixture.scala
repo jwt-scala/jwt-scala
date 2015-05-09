@@ -3,7 +3,7 @@ package pdi.jwt
 import play.api.libs.json.JsObject
 
 case class JsonDataEntry (
-  algo: String,
+  algo: JwtAlgorithm,
   header: String,
   headerClass: JwtHeader,
   header64: String,

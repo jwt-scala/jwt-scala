@@ -8,9 +8,17 @@ class JwtJsonSpec extends UnitSpec with JsonFixture {
   describe("JwtJson") {
     it("should encode") {
       dataJson foreach { d =>
-        assertResult(d.token, d.algo + " Option(key)") { JwtJson.encode(d.headerJson, claimJson, secretKey) }
-        assertResult(d.token, d.algo + " String key") { JwtJson.encode(d.headerJson, claimJson, secretKey.get) }
-        assertResult(d.tokenUnsigned, d.algo + " No key") { JwtJson.encode(d.headerJson, claimJson) }
+        assertResult(d.token, d.algo.fullName + " Option(key)") {
+          JwtJson.encode(d.headerJson, claimJson, secretKey)
+        }
+
+        assertResult(d.token, d.algo.fullName + " String key") {
+          JwtJson.encode(d.headerJson, claimJson, secretKey.get)
+        }
+
+        assertResult(d.tokenUnsigned, d.algo.fullName + " No key") {
+          JwtJson.encode(d.headerJson, claimJson)
+        }
       }
     }
 
@@ -18,7 +26,7 @@ class JwtJsonSpec extends UnitSpec with JsonFixture {
       val mock = mockBeforeExpiration
       dataJson foreach { d =>
         val success = Success(d.headerJson, claimJson, Option(d.signature))
-        assertResult(success, d.algo) { JwtJson.decodeAllJson(d.token, secretKey) }
+        assertResult(success, d.algo.fullName) { JwtJson.decodeAllJson(d.token, secretKey) }
       }
       mock.tearDown
     }
@@ -33,8 +41,8 @@ class JwtJsonSpec extends UnitSpec with JsonFixture {
       val mock = mockBeforeExpiration
       val success = Success(claimJson)
       dataJson foreach { d =>
-        assertResult(success, d.algo + " Option(key)") { JwtJson.decodeJson(d.token, secretKey) }
-        assertResult(success, d.algo + " String key") { JwtJson.decodeJson(d.token, secretKey.get) }
+        assertResult(success, d.algo.fullName + " Option(key)") { JwtJson.decodeJson(d.token, secretKey) }
+        assertResult(success, d.algo.fullName + " String key") { JwtJson.decodeJson(d.token, secretKey.get) }
       }
       mock.tearDown
     }
@@ -52,7 +60,7 @@ class JwtJsonSpec extends UnitSpec with JsonFixture {
       val mock = mockBeforeExpiration
       dataJson foreach { d =>
         val success = Success(d.headerClass, claimClass, Option(d.signature))
-        assertResult(success, d.algo) { JwtJson.decodeAll(d.token, secretKey) }
+        assertResult(success, d.algo.fullName) { JwtJson.decodeAll(d.token, secretKey) }
       }
       mock.tearDown
     }
