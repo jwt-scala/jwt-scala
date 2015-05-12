@@ -1,0 +1,325 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>jwt - JWT Scala API 0.0.3 - pdi.jwt</title>
+          <meta name="description" content="jwt - JWT Scala API 0.0.3 - pdi.jwt" />
+          <meta name="keywords" content="jwt JWT Scala API 0.0.3 pdi.jwt" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+      <script type="text/javascript" src="../../lib/modernizr.custom.js"></script><script type="text/javascript" src="../../lib/diagrams.js" id="diagrams-js"></script>
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../index.html';
+            var hash = 'pdi.jwt.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../lib/package_big.png" />
+        <p id="owner"><a href="../package.html" class="extype" name="pdi">pdi</a></p>
+        <h1>jwt</h1><span class="permalink">
+      <a href="../../index.html#pdi.jwt.package" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">jwt</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="pdi.jwt.JwtClaim" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JwtClaimextendsProductwithSerializable"></a>
+      <a id="JwtClaim:JwtClaim"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="JwtClaim.html"><span class="name">JwtClaim</span></a><span class="params">(<span name="content">content: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;{}&quot;</span></span>, <span name="issuer">issuer: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="subject">subject: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="audience">audience: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="expiration">expiration: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">None</span></span>, <span name="notBefore">notBefore: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">None</span></span>, <span name="issuedAt">issuedAt: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">None</span></span>, <span name="jwtId">jwtId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.package@JwtClaimextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="pdi.jwt.JwtCore" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="JwtCore[H,C]extendsAnyRef"></a>
+      <a id="JwtCore[H,C]:JwtCore[H,C]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="JwtCore.html"><span class="name">JwtCore</span></a><span class="tparams">[<span name="H">H</span>, <span name="C">C</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.package@JwtCore[H,C]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="pdi.jwt.JwtException" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="JwtExceptionextendsAnyRef"></a>
+      <a id="JwtException:JwtException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="JwtException.html"><span class="name">JwtException</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.package@JwtExceptionextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="pdi.jwt.JwtExpirationException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JwtExpirationExceptionextendsRuntimeExceptionwithJwtException"></a>
+      <a id="JwtExpirationException:JwtExpirationException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="JwtExpirationException.html"><span class="name">JwtExpirationException</span></a><span class="result"> extends <span class="extype" name="scala.RuntimeException">RuntimeException</span> with <a href="JwtException.html" class="extype" name="pdi.jwt.JwtException">JwtException</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.package@JwtExpirationExceptionextendsRuntimeExceptionwithJwtException" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="pdi.jwt.JwtHeader" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JwtHeaderextendsProductwithSerializable"></a>
+      <a id="JwtHeader:JwtHeader"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="JwtHeader.html"><span class="name">JwtHeader</span></a><span class="params">(<span name="algorithm">algorithm: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="typ">typ: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="contentType">contentType: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.package@JwtHeaderextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="pdi.jwt.JwtLengthException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JwtLengthExceptionextendsRuntimeExceptionwithJwtException"></a>
+      <a id="JwtLengthException:JwtLengthException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="JwtLengthException.html"><span class="name">JwtLengthException</span></a><span class="result"> extends <span class="extype" name="scala.RuntimeException">RuntimeException</span> with <a href="JwtException.html" class="extype" name="pdi.jwt.JwtException">JwtException</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.package@JwtLengthExceptionextendsRuntimeExceptionwithJwtException" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="pdi.jwt.JwtNotBeforeException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JwtNotBeforeExceptionextendsRuntimeExceptionwithJwtException"></a>
+      <a id="JwtNotBeforeException:JwtNotBeforeException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="JwtNotBeforeException.html"><span class="name">JwtNotBeforeException</span></a><span class="result"> extends <span class="extype" name="scala.RuntimeException">RuntimeException</span> with <a href="JwtException.html" class="extype" name="pdi.jwt.JwtException">JwtException</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.package@JwtNotBeforeExceptionextendsRuntimeExceptionwithJwtException" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="pdi.jwt.Jwt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Jwt"></a>
+      <a id="Jwt:Jwt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Jwt$.html"><span class="name">Jwt</span></a><span class="result"> extends <a href="JwtCore.html" class="extype" name="pdi.jwt.JwtCore">JwtCore</a>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.package@Jwt" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="pdi.jwt.JwtBase64" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JwtBase64"></a>
+      <a id="JwtBase64:JwtBase64"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="JwtBase64$.html"><span class="name">JwtBase64</span></a><span class="result"> extends <span class="extype" name="pdi.jwt.JwtBase64Impl">JwtBase64Impl</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.package@JwtBase64" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="pdi.jwt.JwtHeader" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JwtHeader"></a>
+      <a id="JwtHeader:JwtHeader"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="JwtHeader$.html"><span class="name">JwtHeader</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.package@JwtHeader" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="pdi.jwt.JwtTime" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JwtTime"></a>
+      <a id="JwtTime:JwtTime"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="JwtTime$.html"><span class="name">JwtTime</span></a><span class="result"> extends <span class="extype" name="pdi.jwt.JwtTimeImpl">JwtTimeImpl</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.package@JwtTime" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="pdi.jwt.JwtUtils" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JwtUtils"></a>
+      <a id="JwtUtils:JwtUtils"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="JwtUtils$.html"><span class="name">JwtUtils</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.package@JwtUtils" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="pdi.jwt.JwtValidationException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JwtValidationException"></a>
+      <a id="JwtValidationException:JwtValidationException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="JwtValidationException$.html"><span class="name">JwtValidationException</span></a><span class="result"> extends <span class="extype" name="scala.RuntimeException">RuntimeException</span> with <a href="JwtException.html" class="extype" name="pdi.jwt.JwtException">JwtException</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.package@JwtValidationException" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

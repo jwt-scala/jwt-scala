@@ -1,0 +1,6 @@
+---
+layout: default
+---
+
+{% capture README %}{% include README.md %}{% endcapture %}
+{{ README | markdownify }}

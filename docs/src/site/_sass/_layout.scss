@@ -1,0 +1,82 @@
+h1 {
+  font-size: 60px;
+  text-align: center;
+  color: $brand-color;
+  margin-top: 50px;
+}
+
+h1 + p {
+  text-align: center;
+}
+
+h2 {
+  color: $text-color-alt;
+  margin-top: 100px;
+}
+
+.footer {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.wrapper {
+  max-width: 700px;
+  margin: 0 auto;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+table {
+  width: 100%;
+  max-width: 100%;
+
+  > thead,
+  > tbody,
+  > tfoot {
+    > tr {
+      > th,
+      > td {
+        padding: 10px;
+        line-height: $base-line-height;
+        vertical-align: top;
+        border: 1px solid #dddddd;
+      }
+    }
+  }
+  > thead > tr > th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dddddd;
+  }
+  > tbody > tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+  }
+  > tbody > tr > td:nth-child(4) {
+    text-align: center;
+  }
+}
+
+footer {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.project-api {
+  margin: 20px;
+
+  .version {
+    min-width: 400px;
+    text-align: left;
+    position: relative;
+  }
+
+  a {
+    display: block;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+}
+
+.other-api p {
+  text-align: center;
+}

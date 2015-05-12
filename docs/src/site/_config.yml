@@ -1,0 +1,32 @@
+# Site settings
+title: JWT Scala
+email: paul.dijou@gmail.com
+version: 0.0.4
+permalink: pretty
+relative_permalinks: true
+highlighter: pygments
+markdown: redcarpet
+baseurl: "/jwt-scala" # the subpath of your site, e.g. /blog/
+url: "https://pauldijou.github.io" # the base hostname & protocol for your site
+twitter_username: paul_dijou
+github_username:  pauldijou
+
+# Build settings
+markdown: kramdown
+versions: [0.0.3]
+projects:
+  - name: jwt-core
+    description: pure Scala project.
+  - name: jwt-play-json
+    description: using the play-json lib but not Play Framework itself.
+  - name: jwt-play
+    description: developing a Play Framework app.
+
+api:
+  description: There is no global API for the whole project but rather one API for each sub-project. Just pick the one you are using and enjoy awesome Scala documentation.
+  legacy: If you are using a **legacy** version of a project, the API is exactly the same as the non-legacy one.
+  old:
+    title: Old APIs
+  others:
+    title: Other APIs
+    description: If you need another version of the API, please go [here](/jwt-scala/api/).
