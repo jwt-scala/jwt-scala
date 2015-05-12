@@ -26,7 +26,7 @@ object Jwt extends JwtCore[String, String] {
 /** Provide the main logic around Base64 encoding / decoding and signature using the correct algorithm.
   * '''H''' and '''C''' types are respesctively the header type and the claim type. For the core project,
   * they will be String but you are free to extend this trait using other types like
-  * JsObject or anything else. You just need to implement the abstract `decodeAll` function.
+  * JsObject or anything else.
   *
   * Please, check implementations, like [[Jwt]], for code samples.
   *
@@ -182,7 +182,7 @@ trait JwtCore[H, C] {
     val maybeAlgo = extractAlgorithm(header)
 
     maybeSignature match {
-      case Some(signature) if !java.util.Arrays.equals(JwtBase64.decode(signature), JwtUtils.sign(header64 +"."+ claim64, maybeKey, maybeAlgo)) => {
+      case Some(signature) if !JwtUtils.verify(header64 +"."+ claim64, JwtBase64.decode(signature), maybeKey, maybeAlgo) => {
         throw new JwtValidationException(s"The signature is invalid for this token.")
       }
       // If there is no signature, there must be no key nor algorithm either

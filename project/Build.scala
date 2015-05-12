@@ -19,7 +19,7 @@ object ProjectBuild extends Build {
     resolvers ++= Seq(
       "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"
     ),
-    libraryDependencies ++= Seq(Libs.scalatest, Libs.jmockit),
+    libraryDependencies ++= Seq(Libs.bouncyCastle, Libs.scalatest, Libs.jmockit),
     scalacOptions in (Compile, doc) ++= Seq("-unchecked", "-deprecation", "-diagrams", "-implicits", "-skip-packages", "samples"),
     scalacOptions in (Compile, doc) ++= Opts.doc.title("JWT Scala API"),
     scalacOptions in (Compile, doc) ++= Opts.doc.version(buildVersion)

@@ -7,6 +7,7 @@ object Dependencies {
     val scalatest = "2.2.4"
     val jmockit = "1.17"
     val apacheCodec = "1.10"
+    val bouncyCastle = "1.52"
   }
 
   object Libs {
@@ -17,6 +18,7 @@ object Dependencies {
     val json4sJackson = "org.json4s" %% "json4s-jackson" % V.json4s % "provided"
 
     val apacheCodec = "commons-codec" % "commons-codec" % V.apacheCodec
+    val bouncyCastle = "org.bouncycastle" % "bcpkix-jdk15on" % V.bouncyCastle
 
     val scalatest = "org.scalatest" %% "scalatest" % V.scalatest % "test"
     val jmockit = "org.jmockit" % "jmockit" % V.jmockit % "test"

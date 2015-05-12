@@ -9,4 +9,7 @@ trait JwtBase64Impl {
   def decode(value: String): Array[Byte] = Base64.decodeBase64(value)
 
   def encodeString(value: Array[Byte]): String = Base64.encodeBase64URLSafeString(value)
+
+  def decodeNonSafe(value: Array[Byte]): Array[Byte] = Base64.decodeBase64(value)
+  def decodeNonSafe(value: String): Array[Byte] = Base64.decodeBase64(value)
 }

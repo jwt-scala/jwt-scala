@@ -6,9 +6,15 @@ import scala.util.{Success, Failure}
 
 class JwtSpec extends UnitSpec with Fixture {
   describe("Jwt") {
-    it("should encode") {
+    it("should encode Hmac") {
       data foreach { d =>
         assertResult(d.token, d.algo.fullName) { Jwt.encode(d.header, claim, secretKey.get, d.algo) }
+      }
+    }
+
+    it("should encode RSA") {
+      dataRSA foreach { d =>
+        assertResult(d.token, d.algo.fullName) { Jwt.encode(d.header, claim, privateKeyRSA.get, d.algo) }
       }
     }
 
@@ -51,7 +57,8 @@ class JwtSpec extends UnitSpec with Fixture {
     }
 
     it("should validate") {
-      // TODO
+      data foreach { d => assertResult((), d.algo.fullName) { Jwt.validate(d.token, secretKey) } }
+      dataRSA foreach { d => assertResult((), d.algo.fullName) { Jwt.validate(d.token, publicKeyRSA) } }
     }
   }
 }

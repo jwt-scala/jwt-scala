@@ -3,7 +3,7 @@ package pdi.jwt
 import org.scalatest._
 
 class JwtUtilsSpec extends UnitSpec {
-  val encoding = JwtUtils.encoding
+  val ENCODING = JwtUtils.ENCODING
 
   describe("JwtUtils") {
     describe("seqToJson") {
@@ -57,7 +57,7 @@ class JwtUtilsSpec extends UnitSpec {
     /*describe("sign byte array") {
       it("should correctly handle string") {
         signValues.foreach {
-          value => assertResult(value._1.getBytes(encoding)) { JwtUtils.sign(signMessage.getBytes(encoding), signKey, Option(value._2)) }
+          value => assertResult(value._1.getBytes(ENCODING)) { JwtUtils.sign(signMessage.getBytes(ENCODING), signKey, Option(value._2)) }
         }
       }
     }
@@ -65,7 +65,7 @@ class JwtUtilsSpec extends UnitSpec {
     describe("sign string") {
       it("should correctly handle string") {
         signValues.foreach {
-          value => assertResult(value._1.getBytes(encoding)) { JwtUtils.sign(signMessage, signKey, Option(value._2)) }
+          value => assertResult(value._1.getBytes(ENCODING)) { JwtUtils.sign(signMessage, signKey, Option(value._2)) }
         }
       }
     }*/
