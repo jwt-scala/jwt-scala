@@ -7,7 +7,7 @@ import bintray.Plugin.bintraySettings
 import bintray.Plugin.bintrayPublishSettings
 
 object ProjectBuild extends Build {
-  val buildVersion = "0.0.3"
+  val buildVersion = "0.0.4"
 
   val CommonSettings = Seq(
     organization := "pdi",

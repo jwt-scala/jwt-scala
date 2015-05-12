@@ -1,4 +1,4 @@
-# JWT Scala 0.0.3
+# JWT Scala 0.0.4
 
 [JSON Web Token (JWT)](http://tools.ietf.org/html/draft-ietf-oauth-json-web-token) is a compact URL-safe means of representing claims to be transferred between two parties. The claims in a JWT are encoded as a JSON object that is digitally signed using JSON Web Signature (JWS). [IETF](http://tools.ietf.org/html/draft-ietf-oauth-json-web-token)
 
@@ -20,9 +20,9 @@ Depending on your project, you need to pick the right lib to use. You will proba
 
 You can find them inside the online doc.
 
-- [jwt-core](http://pauldijou.fr/jwt-scala-doc/api/0.0.3/jwt-core/index.html#pdi.jwt.Jwt$)
-- [jwt-play-json](http://pauldijou.fr/jwt-scala-doc/api/0.0.3/jwt-play-json/index.html#pdi.jwt.JwtJson$)
-- [jwt-play](http://pauldijou.fr/jwt-scala-doc/api/0.0.3/jwt-play/index.html#pdi.jwt.JwtPlayImplicits)
+- [jwt-core](http://pauldijou.fr/jwt-scala-doc/api/0.0.4/jwt-core/index.html#pdi.jwt.Jwt$)
+- [jwt-play-json](http://pauldijou.fr/jwt-scala-doc/api/0.0.4/jwt-play-json/index.html#pdi.jwt.JwtJson$)
+- [jwt-play](http://pauldijou.fr/jwt-scala-doc/api/0.0.4/jwt-play/index.html#pdi.jwt.JwtPlayImplicits)
 - [Full Play Framework application](https://github.com/pauldijou/jwt-scala/tree/master/examples/play-angular-standalone)
 
 ## Dependencies
@@ -46,7 +46,7 @@ If you want to submit a PR to improve the project, that would be awesome. If, in
 
 ### jwt-core
 
-[API](http://pauldijou.fr/jwt-scala-doc/api/0.0.3/jwt-core/)
+[API](http://pauldijou.fr/jwt-scala-doc/api/0.0.4/jwt-core/)
 
 Low-level API mostly based on String and Map since there is no native support for JSON in Scala.
 
@@ -55,7 +55,7 @@ Low-level API mostly based on String and Map since there is no native support fo
 resolvers += Resolver.jcenterRepo
 
 libraryDependencies ++= Seq(
-  "pdi" %% "jwt-core" % "0.0.3"
+  "pdi" %% "jwt-core" % "0.0.4"
 )
 ~~~
 
@@ -64,13 +64,13 @@ libraryDependencies ++= Seq(
 resolvers += Resolver.jcenterRepo
 
 libraryDependencies ++= Seq(
-  "pdi" %% "jwt-core-legacy" % "0.0.3"
+  "pdi" %% "jwt-core-legacy" % "0.0.4"
 )
 ~~~
 
 ### jwt-play-json
 
-[API](http://pauldijou.fr/jwt-scala-doc/api/0.0.3/jwt-play-json/)
+[API](http://pauldijou.fr/jwt-scala-doc/api/0.0.4/jwt-play-json/)
 
 Nice API to interact with JWT using JsObject from the Play JSON lib.
 
@@ -79,7 +79,7 @@ Nice API to interact with JWT using JsObject from the Play JSON lib.
 resolvers += Resolver.jcenterRepo
 
 libraryDependencies ++= Seq(
-  "pdi" %% "jwt-play-json" % "0.0.3"
+  "pdi" %% "jwt-play-json" % "0.0.4"
 )
 ~~~
 
@@ -88,13 +88,13 @@ libraryDependencies ++= Seq(
 resolvers += Resolver.jcenterRepo
 
 libraryDependencies ++= Seq(
-  "pdi" %% "jwt-play-json-legacy" % "0.0.3"
+  "pdi" %% "jwt-play-json-legacy" % "0.0.4"
 )
 ~~~
 
 ### jwt-play
 
-[API](http://pauldijou.fr/jwt-scala-doc/api/0.0.3/jwt-play/)
+[API](http://pauldijou.fr/jwt-scala-doc/api/0.0.4/jwt-play/)
 
 Built in top of Play JSON, extend the `Result` class in order to allow you to manage the `Session` using JWT.
 
@@ -103,7 +103,7 @@ Built in top of Play JSON, extend the `Result` class in order to allow you to ma
 resolvers += Resolver.jcenterRepo
 
 libraryDependencies ++= Seq(
-  "pdi" %% "jwt-play" % "0.0.3"
+  "pdi" %% "jwt-play" % "0.0.4"
 )
 ~~~
 
@@ -112,7 +112,7 @@ libraryDependencies ++= Seq(
 resolvers += Resolver.jcenterRepo
 
 libraryDependencies ++= Seq(
-  "pdi" %% "jwt-play-legacy" % "0.0.3"
+  "pdi" %% "jwt-play-legacy" % "0.0.4"
 )
 ~~~
 
