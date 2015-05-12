@@ -36,7 +36,7 @@ val commonSettings = Seq(
     "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"
   ),
   libraryDependencies ++= Seq(Libs.bouncyCastle, Libs.scalatest, Libs.jmockit),
-  scalacOptions in (Compile, doc) ++= Seq("-unchecked", "-deprecation", "samples")
+  scalacOptions in (Compile, doc) ++= Seq("-unchecked", "-deprecation")
 )
 
 val publishSettings = bintraySettings ++ bintrayPublishSettings ++ Seq(
