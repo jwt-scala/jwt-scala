@@ -48,7 +48,7 @@ cd ../jwt-scala-doc && git commit -m "Release v$VERSION"
 cd ../jwt-scala-doc && git push origin gh-pages
 
 echo "Publishing to Bintray"
-sbt publish
+sbt +publish
 
 # The end
 exit 0;
