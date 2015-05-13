@@ -7,7 +7,7 @@ if [ -e ./docs/src/site/api/latest ]; then
   rm -r ./docs/src/site/api/latest
 fi
 
-if [ -e -r ./docs/src/site/api/$VERSION ]; then
+if [ -e ./docs/src/site/api/$VERSION ]; then
   rm -r ./docs/src/site/api/$VERSION
 fi
 
