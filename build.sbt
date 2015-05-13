@@ -13,7 +13,7 @@ val buildVersion = "0.0.4"
 
 addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;playEdge/doc;scaladocScript")
 addCommandAlias("publish-doc", ";docs/makeSite;docs/ghpagesPushSite")
-addCommandAlias("release", ";publishScript;scaladoc;publish-doc;publish")
+addCommandAlias("release", ";publishScript;scaladoc;publish-doc;+publish")
 
 lazy val scaladocScript = taskKey[Unit]("Generate scaladoc and copy it to docs site")
 scaladocScript := {
