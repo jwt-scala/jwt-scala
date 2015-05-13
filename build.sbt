@@ -30,8 +30,8 @@ val commonSettings = Seq(
   version := buildVersion,
   scalaVersion := "2.11.6",
   autoAPIMappings := true,
-  /*crossScalaVersions := Seq("2.10.5", "2.11.6"),
-  crossVersion := CrossVersion.binary,*/
+  crossScalaVersions := Seq("2.10.5", "2.11.6"),
+  crossVersion := CrossVersion.binary,
   resolvers ++= Seq(
     "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"
   ),
@@ -83,6 +83,8 @@ lazy val jwtScala = project.in(file("."))
   .settings(
     name := "jwt-scala"
   )
+  .aggregate(playEdge, playLegacy)
+  .dependsOn(playEdge, playLegacy)
 
 lazy val docs = project.in(file("docs"))
   .settings(name := "jwt-docs")
