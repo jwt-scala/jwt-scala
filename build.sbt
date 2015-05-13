@@ -13,16 +13,21 @@ val buildVersion = "0.0.5"
 
 addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;playEdge/doc;scaladocScript")
 addCommandAlias("publish-doc", ";docs/makeSite;docs/ghpagesPushSite")
-addCommandAlias("release", ";publishScript;scaladoc;publish-doc;+publish")
+addCommandAlias("release", ";bumpScript;scaladoc;publish-doc;+publish;pushScript")
 
 lazy val scaladocScript = taskKey[Unit]("Generate scaladoc and copy it to docs site")
 scaladocScript := {
-  "./scaladoc.sh "+buildVersion !
+  "./scripts/scaladoc.sh "+buildVersion !
 }
 
-lazy val publishScript = taskKey[Unit]("Bump the new version all around and push it to GitHub")
-publishScript := {
-  "./publi.sh "+previousVersion+" "+buildVersion !
+lazy val bumpScript = taskKey[Unit]("Bump the new version all around")
+bumpScript := {
+  "./scripts/bump.sh "+previousVersion+" "+buildVersion !
+}
+
+lazy val pushScript = taskKey[Unit]("Push to GitHub")
+pushScript := {
+  "./scripts/pu.sh "+buildVersion !
 }
 
 val commonSettings = Seq(
