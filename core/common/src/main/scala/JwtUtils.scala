@@ -20,16 +20,38 @@ object JwtUtils {
   def stringify(arr: Array[Byte]): String = new String(arr, ENCODING)
   def bytify(str: String): Array[Byte] = str.getBytes(ENCODING)
 
-  def seqToJson(hash: Seq[(String, Any)]): String = hash.map {
-    case (key, value: String) => "\"" + key + "\":\"" + value + "\""
-    case (key, value: Boolean) => "\"" + key + "\":" + (if (value) { "true" } else { "false" })
-    case (key, value: Double) => "\"" + key + "\":" + value.toString
-    case (key, value: Short) => "\"" + key + "\":" + value.toString
-    case (key, value: Float) => "\"" + key + "\":" + value.toString
-    case (key, value: Long) => "\"" + key + "\":" + value.toString
-    case (key, value: Int) => "\"" + key + "\":" + value.toString
-    case (key, value: Any) => "\"" + key + "\":\"" + value.toString + "\""
-  }.mkString("{", ",", "}")
+  def seqToJson(seq: Seq[Any]): String = if (seq.isEmpty) {
+    "[]"
+  } else {
+    seq.map {
+      case value: String => "\"" + value + "\""
+      case value: Boolean => (if (value) { "true" } else { "false" })
+      case value: Double => value.toString
+      case value: Short => value.toString
+      case value: Float => value.toString
+      case value: Long => value.toString
+      case value: Int => value.toString
+      case value: (String, Any) => hashToJson(Seq(value))
+      case value: Any => "\"" + value.toString + "\""
+    }.mkString("[", ",", "]")
+  }
+
+  def hashToJson(hash: Seq[(String, Any)]): String = if (hash.isEmpty) {
+    "{}"
+  } else {
+    hash.map {
+      case (key, value: String) => "\"" + key + "\":\"" + value + "\""
+      case (key, value: Boolean) => "\"" + key + "\":" + (if (value) { "true" } else { "false" })
+      case (key, value: Double) => "\"" + key + "\":" + value.toString
+      case (key, value: Short) => "\"" + key + "\":" + value.toString
+      case (key, value: Float) => "\"" + key + "\":" + value.toString
+      case (key, value: Long) => "\"" + key + "\":" + value.toString
+      case (key, value: Int) => "\"" + key + "\":" + value.toString
+      case (key, value: (String, Any)) => "\"" + key + "\":" + hashToJson(Seq(value))
+      case (key, value: Seq[Any]) => "\"" + key + "\":" + seqToJson(value)
+      case (key, value: Any) => "\"" + key + "\":\"" + value.toString + "\""
+    }.mkString("{", ",", "}")
+  }
 
   def mergeJson(json: String, jsonSeq: String*): String = {
     val initJson = json.trim match {

@@ -1,18 +1,14 @@
-# Site settings
 title: JWT Scala
-email: paul.dijou@gmail.com
 version: 0.0.4
 permalink: pretty
+baseurl: "/jwt-scala"
+url: "https://pauldijou.github.io"
 relative_permalinks: true
 highlighter: pygments
 markdown: redcarpet
-baseurl: "/jwt-scala" # the subpath of your site, e.g. /blog/
-url: "https://pauldijou.github.io" # the base hostname & protocol for your site
-twitter_username: paul_dijou
-github_username:  pauldijou
+redcarpet:
+  extensions: ["tables", "fenced_code_blocks", "autolink", "strikethrough"]
 
-# Build settings
-markdown: kramdown
 versions: [0.0.3]
 projects:
   - name: jwt-core

@@ -5,7 +5,7 @@ case class JwtHeader(
   typ: Option[String] = None,
   contentType: Option[String] = None
 ) {
-  def toJson: String = JwtUtils.seqToJson(Seq(
+  def toJson: String = JwtUtils.hashToJson(Seq(
     "typ" -> typ,
     "alg" -> algorithm.map(_.name),
     "cty" -> contentType
@@ -17,11 +17,18 @@ case class JwtHeader(
   def withType(typ: String): JwtHeader = this.copy(typ = Option(typ))
 
   /** Assign the default type `JWT` to the header */
-  def withType: JwtHeader = this.withType("JWT")
+  def withType: JwtHeader = this.withType(JwtHeader.DEFAULT_TYPE)
 }
 
 object JwtHeader {
-  def apply(algorithm: JwtAlgorithm): JwtHeader = new JwtHeader(Option(algorithm))
+  val DEFAULT_TYPE = "JWT"
+
+  def apply(algorithm: Option[JwtAlgorithm]): JwtHeader = algorithm match {
+    case Some(algo) => JwtHeader(algo)
+    case _ => new JwtHeader(None, None)
+  }
+
+  def apply(algorithm: JwtAlgorithm): JwtHeader = new JwtHeader(Option(algorithm), Option(DEFAULT_TYPE))
 
   def apply(algorithm: JwtAlgorithm, typ: String): JwtHeader = new JwtHeader(Option(algorithm), Option(typ))
 

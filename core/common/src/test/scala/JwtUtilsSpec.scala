@@ -6,7 +6,7 @@ class JwtUtilsSpec extends UnitSpec {
   val ENCODING = JwtUtils.ENCODING
 
   describe("JwtUtils") {
-    describe("seqToJson") {
+    describe("hashToJson") {
       it("should transform a seq of tuples to a valid JSON") {
         val values: Seq[(String, Seq[(String, Any)])] = Seq(
           """{"a":"b","c":1,"d":true,"e":2,"f":3.4,"g":5.6}""" -> Seq(
@@ -21,7 +21,7 @@ class JwtUtilsSpec extends UnitSpec {
         )
 
         values.zipWithIndex.foreach {
-          case (value, index) => assertResult(value._1, "at index "+index) { JwtUtils.seqToJson(value._2) }
+          case (value, index) => assertResult(value._1, "at index "+index) { JwtUtils.hashToJson(value._2) }
         }
       }
     }

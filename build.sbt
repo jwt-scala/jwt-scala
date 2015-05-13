@@ -12,8 +12,8 @@ val previousVersion = "0.0.3"
 val buildVersion = "0.0.4"
 
 addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;playEdge/doc;scaladocScript")
-addCommandAlias("publish-doc", ";scaladoc;docs/makeSite;docs/ghpagesPushSite")
-addCommandAlias("release", ";publishScript;publish-doc;publish")
+addCommandAlias("publish-doc", ";docs/makeSite;docs/ghpagesPushSite")
+addCommandAlias("release", ";publishScript;scaladoc;publish-doc;publish")
 
 lazy val scaladocScript = taskKey[Unit]("Generate scaladoc and copy it to docs site")
 scaladocScript := {
@@ -92,7 +92,10 @@ lazy val docs = project.in(file("docs"))
   .settings(ghpages.settings)
   .settings(tutSettings)
   .settings(docSettings)
-  .dependsOn(coreCommonEdge)
+  .settings(
+    libraryDependencies ++= Seq(Libs.playJson, Libs.play, Libs.playTest)
+  )
+  .dependsOn(playEdge)
 
 lazy val coreLegacy = project.in(file("core/legacy"))
   .settings(commonSettings)

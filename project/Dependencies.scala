@@ -13,6 +13,7 @@ object Dependencies {
   object Libs {
     val play     = "com.typesafe.play" %% "play"      % V.play % "provided"
     val playJson = "com.typesafe.play" %% "play-json" % V.play % "provided"
+    val playTest = "com.typesafe.play" %% "play-test" % V.play % "provided"
 
     val json4sNative  = "org.json4s" %% "json4s-native"  % V.json4s % "provided"
     val json4sJackson = "org.json4s" %% "json4s-jackson" % V.json4s % "provided"

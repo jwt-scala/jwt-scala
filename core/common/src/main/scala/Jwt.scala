@@ -14,11 +14,11 @@ object Jwt extends JwtCore[String, String] {
     (extractAlgorithmRegex findFirstMatchIn header).map(_.group(1)).map(JwtAlgorithm.fromString)
 
 
-  private val extractExpirationRegex = "\"exp\":\"([0-9]+)\"".r
+  private val extractExpirationRegex = "\"exp\":([0-9]+)".r
   protected def extractExpiration(claim: String): Option[Long] =
     (extractExpirationRegex findFirstMatchIn claim).map(_.group(1)).map(_.toLong)
 
-  private val extractNotBeforeRegex = "\"nbf\":\"([0-9]+)\"".r
+  private val extractNotBeforeRegex = "\"nbf\":([0-9]+)".r
   protected def extractNotBefore(claim: String): Option[Long] =
     (extractNotBeforeRegex findFirstMatchIn claim).map(_.group(1)).map(_.toLong)
 }
@@ -53,7 +53,7 @@ trait JwtCore[H, C] {
     * @param key the secret key to use to sign the token. If none, the token will not be signed
     * @param algorithm the algorithm to use to sign the token. If none but there is a key, the default one will be used
     */
-  def encode(header: String, claim: String, key: Option[String] = None, algorithm: Option[JwtAlgorithm] = None): String = {
+  def encode(header: String, claim: String, key: Option[String], algorithm: Option[JwtAlgorithm]): String = {
     val header64 = JwtBase64.encodeString(header)
     val claim64 = JwtBase64.encodeString(claim)
     Seq(
@@ -63,7 +63,22 @@ trait JwtCore[H, C] {
     ).mkString(".")
   }
 
-  /** An alias to `encode` if you want to directly pass strings for the key and the algorithm
+  def encode(claim: String, key: Option[String] = None, algorithm: Option[JwtAlgorithm] = None): String =
+    encode(JwtHeader(algorithm).toJson, claim, key, algorithm)
+
+  def encode(claim: String, key: String, algorithm: JwtAlgorithm): String =
+    encode(claim, Option(key), Option(algorithm))
+
+  def encode(claim: JwtClaim, key: Option[String], algorithm: Option[JwtAlgorithm]): String =
+    encode(claim.toJson, key, algorithm)
+
+  def encode(claim: JwtClaim): String =
+    encode(claim.toJson, None, None)
+
+  def encode(claim: JwtClaim, key: String, algorithm: JwtAlgorithm): String =
+    encode(claim.toJson, Option(key), Option(algorithm))
+
+  /** An alias to `encode` if you do not want to use options for the key and the algorithm
     *
     * @return $token
     * @param header $headerString

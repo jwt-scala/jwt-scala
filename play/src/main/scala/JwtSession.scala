@@ -11,7 +11,7 @@ case class JwtSession(
 ) {
   def + (value: JsObject): JwtSession = this.copy(claimData = claimData.deepMerge(value))
 
-  def + (key: String, value: JsValue): JwtSession = this + new JsObject(Seq(key -> value))
+  def + (key: String, value: JsValue): JwtSession = this + Json.obj((key -> value))
 
   def + [T](key: String, value: T)(implicit writer: Writes[T]): JwtSession = this + (key, writer.writes(value))
 
@@ -57,15 +57,16 @@ object JwtSession {
   lazy val TOKEN_PREFIX: String =
     Play.maybeApplication.flatMap(_.configuration.getString("session.tokenPrefix")).getOrElse("Bearer ")
 
-  private def key =
+  private def key: Option[String] =
     Play.maybeApplication.flatMap(_.configuration.getString("application.secret"))
 
+  def defaultHeader: JwtHeader = key.map(_ => JwtHeader(ALGORITHM)).getOrElse(JwtHeader())
+
   def deserialize(token: String): JwtSession =
-    JwtJson.decodeAllJson(token, key).map { tuple =>
+    JwtJson.decodeJsonAll(token, key).map { tuple =>
       JwtSession(tuple._1, tuple._2, tuple._3)
     }.getOrElse(JwtSession())
 
-  def defaultHeader: JwtHeader = JwtHeader(algorithm = Option(ALGORITHM), typ = Option("JWT"))
 
   def defaultClaim: JwtClaim = MAX_AGE match {
     case Some(seconds) => JwtClaim().expiresIn(seconds)

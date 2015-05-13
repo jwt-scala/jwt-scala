@@ -1,8 +1,8 @@
 h1 {
-  font-size: 60px;
+  font-size: (2 * $spacing-unit);
   text-align: center;
   color: $brand-color;
-  margin-top: 50px;
+  margin-top: (2 * $spacing-unit);
 }
 
 h1 + p {
@@ -11,24 +11,40 @@ h1 + p {
 
 h2 {
   color: $text-color-alt;
-  margin-top: 100px;
+  margin-top: (3 * $spacing-unit);
+}
+
+h3 {
+  color: $text-color-alt;
+  margin-top: (3 * $spacing-unit);
 }
 
 .footer {
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: (0.66 * $spacing-unit);
+  padding-bottom: (0.66 * $spacing-unit);
 }
 
 .wrapper {
-  max-width: 700px;
+  width: 100%;
+  max-width: (700 + 2 * $spacing-unit);
   margin: 0 auto;
-  padding-left: 30px;
-  padding-right: 30px;
+  padding-left: $spacing-unit;
+  padding-right: $spacing-unit;
+  position: relative;
+}
+
+.wrapper-extended {
+  max-width: 1200px;
+}
+
+.centered {
+  text-align: center;
 }
 
 table {
   width: 100%;
   max-width: 100%;
+  margin-bottom: $spacing-unit;
 
   > thead,
   > tbody,
@@ -55,13 +71,39 @@ table {
   }
 }
 
+.highlight pre {
+  padding: 20px;
+  border: 0;
+}
+
+code,
+.highlight pre,
+.highlight .err {
+  background-color: #f8f8f8;
+}
+
+.icon-github {
+  position: absolute;
+  top: (0.66 * $spacing-unit);
+  right: $spacing-unit;
+
+  svg {
+    width: 50px;
+    height: 50px;
+
+    path {
+      fill: $brand-color;
+    }
+  }
+}
+
 footer {
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: $spacing-unit;
+  padding-bottom: $spacing-unit;
 }
 
 .project-api {
-  margin: 20px;
+  margin: $spacing-unit;
 
   .version {
     min-width: 400px;
@@ -72,8 +114,8 @@ footer {
   a {
     display: block;
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: $spacing-unit;
+    right: $spacing-unit;
   }
 }
 

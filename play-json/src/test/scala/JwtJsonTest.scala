@@ -22,18 +22,18 @@ class JwtJsonSpec extends UnitSpec with JsonFixture {
       }
     }
 
-    it("should decodeAllJson when now is before expiration date") {
+    it("should decodeJsonAll when now is before expiration date") {
       val mock = mockBeforeExpiration
       dataJson foreach { d =>
         val success = Success(d.headerJson, claimJson, Option(d.signature))
-        assertResult(success, d.algo.fullName) { JwtJson.decodeAllJson(d.token, secretKey) }
+        assertResult(success, d.algo.fullName) { JwtJson.decodeJsonAll(d.token, secretKey) }
       }
       mock.tearDown
     }
 
-    it("should fail to decodeAllJson when now is after expiration date") {
+    it("should fail to decodeJsonAll when now is after expiration date") {
       val mock = mockAfterExpiration
-      dataJson foreach { d => assert(JwtJson.decodeAllJson(d.token, secretKey).isFailure) }
+      dataJson foreach { d => assert(JwtJson.decodeJsonAll(d.token, secretKey).isFailure) }
       mock.tearDown
     }
 

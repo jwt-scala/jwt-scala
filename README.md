@@ -8,15 +8,16 @@ JWT Scala is divided in several sub-projects each targeting a specific use-case.
 
 | Name | Description | Samples | Scaladoc |
 |------|-------------|---------|----------|
-|`jwt-core`|Pure Scala|[Jwt](/jwt-scala/samples/jwt-core)|[API](/jwt-scala/api/latest/jwt-core)|
-|`jwt-play-json`|`play-json` lib|todo|[API](/jwt-scala/api/latest/jwt-play-json)|
-|`jwt-play`|Play framework|todo|[API](/jwt-scala/api/latest/jwt-play)|
+|`jwt-core`|Pure Scala|[Jwt](https://pauldijou.github.io/jwt-scala/samples/jwt-core)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-core)|
+|`jwt-play-json`|`play-json` lib|[JwtJson](https://pauldijou.github.io/jwt-scala/samples/jwt-play-json)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-play-json)|
+|`jwt-play`|Play framework|[JwtSession](https://pauldijou.github.io/jwt-scala/samples/jwt-play)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-play)|
 
 ## Install
 
 In the following snippet, replace `[name]` with the actual name of the project you need. **Using Java 1.6 or 1.7?** Add `-legacy` after the name of the project. See [below](#which-java) why.
 
 **build.sbt**
+
 ```scala
 resolvers += Resolver.jcenterRepo
 
@@ -28,6 +29,7 @@ libraryDependencies ++= Seq(
 ### Example for `jwt-play` using Java 1.6
 
 **build.sbt**
+
 ```scala
 resolvers += Resolver.jcenterRepo
 

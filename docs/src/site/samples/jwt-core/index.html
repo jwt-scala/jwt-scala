@@ -3,5 +3,11 @@ layout: sample
 project: Core
 ---
 
-{% capture jwt %}{% include tut/jwt.md %}{% endcapture %}
+{% capture jwt %}{% include tut/jwt-core-jwt.md %}{% endcapture %}
 {{ jwt | markdownify }}
+
+{% capture jwtHeader %}{% include tut/jwt-core-jwt-header.md %}{% endcapture %}
+{{ jwtHeader | markdownify }}
+
+{% capture jwtClaim %}{% include tut/jwt-core-jwt-claim.md %}{% endcapture %}
+{{ jwtClaim | markdownify }}
