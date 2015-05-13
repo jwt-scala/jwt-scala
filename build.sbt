@@ -8,8 +8,8 @@ import Dependencies._
 import com.typesafe.sbt.SbtSite.SiteKeys._
 import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 
-val previousVersion = "0.0.3"
-val buildVersion = "0.0.4"
+val previousVersion = "0.0.4"
+val buildVersion = "0.0.5"
 
 addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;playEdge/doc;scaladocScript")
 addCommandAlias("publish-doc", ";docs/makeSite;docs/ghpagesPushSite")
