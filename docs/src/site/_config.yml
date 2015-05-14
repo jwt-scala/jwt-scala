@@ -9,7 +9,7 @@ markdown: redcarpet
 redcarpet:
   extensions: ["tables", "fenced_code_blocks", "autolink", "strikethrough"]
 
-versions: [0.0.3]
+versions: [0.0.4, 0.0.3]
 projects:
   - name: jwt-core
     description: pure Scala project.
