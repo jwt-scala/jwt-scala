@@ -31,6 +31,8 @@ object JwtUtils {
       case value: Float => value.toString
       case value: Long => value.toString
       case value: Int => value.toString
+      case value: BigDecimal => value.toString
+      case value: BigInt => value.toString
       case value: (String, Any) => hashToJson(Seq(value))
       case value: Any => "\"" + value.toString + "\""
     }.mkString("[", ",", "]")
@@ -47,6 +49,8 @@ object JwtUtils {
       case (key, value: Float) => "\"" + key + "\":" + value.toString
       case (key, value: Long) => "\"" + key + "\":" + value.toString
       case (key, value: Int) => "\"" + key + "\":" + value.toString
+      case (key, value: BigDecimal) => "\"" + key + "\":" + value.toString
+      case (key, value: BigInt) => "\"" + key + "\":" + value.toString
       case (key, value: (String, Any)) => "\"" + key + "\":" + hashToJson(Seq(value))
       case (key, value: Seq[Any]) => "\"" + key + "\":" + seqToJson(value)
       case (key, value: Any) => "\"" + key + "\":\"" + value.toString + "\""

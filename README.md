@@ -1,6 +1,6 @@
 # JWT Scala 0.0.5
 
-Scala support for JSON Web Token ([JWT](http://tools.ietf.org/html/draft-ietf-oauth-json-web-token)). Supports Java 1.6+, Scala 2.10.x and Scala 2.11.x. Optional helpers for Play Framework and Play JSON.
+Scala support for JSON Web Token ([JWT](http://tools.ietf.org/html/draft-ietf-oauth-json-web-token)). Supports Java 1.6+, Scala 2.10.x and Scala 2.11.x. Optional helpers for Play Framework, Play JSON, Json4s Native and Json4s Jackson.
 
 ## Pick the right tool for the right job
 
@@ -11,6 +11,8 @@ JWT Scala is divided in several sub-projects each targeting a specific use-case.
 |`jwt-core`|Pure Scala|[Jwt](https://pauldijou.github.io/jwt-scala/samples/jwt-core)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-core)|
 |`jwt-play-json`|`play-json` lib|[JwtJson](https://pauldijou.github.io/jwt-scala/samples/jwt-play-json)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-play-json)|
 |`jwt-play`|Play framework|[JwtSession](https://pauldijou.github.io/jwt-scala/samples/jwt-play)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-play)|
+|`jwt-json4s-native`|`json4s` Native implementation|[JwtJson4s](https://pauldijou.github.io/jwt-scala/samples/jwt-json4s)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-json4s)|
+|`jwt-json4s-jackson`|`json4s` Jackson implementation|[JwtJson4s](https://pauldijou.github.io/jwt-scala/samples/jwt-json4s)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-json4s)|
 
 ## Install
 

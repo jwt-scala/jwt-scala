@@ -3,15 +3,13 @@ import Keys._
 import play.Play.autoImport._
 import PlayKeys._
 import Dependencies._
-//import bintray.Plugin.bintraySettings
-//import bintray.Plugin.bintrayPublishSettings
 import com.typesafe.sbt.SbtSite.SiteKeys._
 import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 
-val previousVersion = "0.0.4"
-val buildVersion = "0.0.5"
+val previousVersion = "0.0.5"
+val buildVersion = "0.0.6"
 
-addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;playEdge/doc;scaladocScript")
+addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;playEdge/doc;json4sNativeEdge/doc;scaladocScript")
 addCommandAlias("publish-doc", ";docs/makeSite;docs/ghpagesPushSite")
 addCommandAlias("release", ";bumpScript;scaladoc;publish-doc;+publish;pushScript")
 
@@ -100,9 +98,9 @@ lazy val docs = project.in(file("docs"))
   .settings(tutSettings)
   .settings(docSettings)
   .settings(
-    libraryDependencies ++= Seq(Libs.playJson, Libs.play, Libs.playTest)
+    libraryDependencies ++= Seq(Libs.playJson, Libs.play, Libs.playTest, Libs.json4sNative)
   )
-  .dependsOn(playEdge)
+  .dependsOn(playEdge, json4sNativeEdge)
 
 lazy val coreLegacy = project.in(file("core/legacy"))
   .settings(commonSettings)
@@ -139,7 +137,27 @@ lazy val coreCommonEdge = project.in(file("core/common"))
   .aggregate(coreEdge)
   .dependsOn(coreEdge % "compile->compile;test->test")
 
-lazy val playJsonLegacy = project.in(file("play-json"))
+lazy val jsonCommonLegacy = project.in(file("json/common"))
+  .settings(commonSettings)
+  .settings(publishSettings)
+  .settings(
+    name := "jwt-json-common-legacy",
+    target <<= target(_ / "legacy")
+  )
+  .aggregate(coreCommonLegacy)
+  .dependsOn(coreCommonLegacy % "compile->compile;test->test")
+
+lazy val jsonCommonEdge = project.in(file("json/common"))
+  .settings(commonSettings)
+  .settings(publishSettings)
+  .settings(
+    name := "jwt-json-common",
+    target <<= target(_ / "edge")
+  )
+  .aggregate(coreCommonEdge)
+  .dependsOn(coreCommonEdge % "compile->compile;test->test")
+
+lazy val playJsonLegacy = project.in(file("json/play-json"))
   .settings(commonSettings)
   .settings(publishSettings)
   .settings(
@@ -147,10 +165,10 @@ lazy val playJsonLegacy = project.in(file("play-json"))
     target <<= target(_ / "legacy"),
     libraryDependencies ++= Seq(Libs.playJson)
   )
-  .aggregate(coreCommonLegacy)
-  .dependsOn(coreCommonLegacy % "compile->compile;test->test")
+  .aggregate(jsonCommonLegacy)
+  .dependsOn(jsonCommonLegacy % "compile->compile;test->test")
 
-lazy val playJsonEdge = project.in(file("play-json"))
+lazy val playJsonEdge = project.in(file("json/play-json"))
   .settings(commonSettings)
   .settings(publishSettings)
   .settings(
@@ -158,8 +176,74 @@ lazy val playJsonEdge = project.in(file("play-json"))
     target <<= target(_ / "edge"),
     libraryDependencies ++= Seq(Libs.playJson)
   )
-  .aggregate(coreCommonEdge)
-  .dependsOn(coreCommonEdge % "compile->compile;test->test")
+  .aggregate(jsonCommonEdge)
+  .dependsOn(jsonCommonEdge % "compile->compile;test->test")
+
+lazy val json4sCommonLegacy = project.in(file("json/json4s-common"))
+  .settings(commonSettings)
+  .settings(publishSettings)
+  .settings(
+    name := "jwt-json4s-common-legacy",
+    target <<= target(_ / "legacy"),
+    libraryDependencies ++= Seq(Libs.json4sCore)
+  )
+  .aggregate(jsonCommonLegacy)
+  .dependsOn(jsonCommonLegacy % "compile->compile;test->test")
+
+lazy val json4sCommonEdge = project.in(file("json/json4s-common"))
+  .settings(commonSettings)
+  .settings(publishSettings)
+  .settings(
+    name := "jwt-json4s-common",
+    target <<= target(_ / "edge"),
+    libraryDependencies ++= Seq(Libs.json4sCore)
+  )
+  .aggregate(jsonCommonEdge)
+  .dependsOn(jsonCommonEdge % "compile->compile;test->test")
+
+lazy val json4sNativeLegacy = project.in(file("json/json4s-native"))
+  .settings(commonSettings)
+  .settings(publishSettings)
+  .settings(
+    name := "jwt-json4s-native-legacy",
+    target <<= target(_ / "legacy"),
+    libraryDependencies ++= Seq(Libs.json4sNative)
+  )
+  .aggregate(json4sCommonLegacy)
+  .dependsOn(json4sCommonLegacy % "compile->compile;test->test")
+
+lazy val json4sNativeEdge = project.in(file("json/json4s-native"))
+  .settings(commonSettings)
+  .settings(publishSettings)
+  .settings(
+    name := "jwt-json4s-native",
+    target <<= target(_ / "edge"),
+    libraryDependencies ++= Seq(Libs.json4sNative)
+  )
+  .aggregate(json4sCommonEdge)
+  .dependsOn(json4sCommonEdge % "compile->compile;test->test")
+
+lazy val json4sJacksonLegacy = project.in(file("json/json4s-jackson"))
+  .settings(commonSettings)
+  .settings(publishSettings)
+  .settings(
+    name := "jwt-json4s-jackson-legacy",
+    target <<= target(_ / "legacy"),
+    libraryDependencies ++= Seq(Libs.json4sJackson)
+  )
+  .aggregate(json4sCommonLegacy)
+  .dependsOn(json4sCommonLegacy % "compile->compile;test->test")
+
+lazy val json4sJacksonEdge = project.in(file("json/json4s-jackson"))
+  .settings(commonSettings)
+  .settings(publishSettings)
+  .settings(
+    name := "jwt-json4s-jackson",
+    target <<= target(_ / "edge"),
+    libraryDependencies ++= Seq(Libs.json4sJackson)
+  )
+  .aggregate(json4sCommonEdge)
+  .dependsOn(json4sCommonEdge % "compile->compile;test->test")
 
 lazy val playLegacy = project.in(file("play"))
   .settings(commonSettings)
