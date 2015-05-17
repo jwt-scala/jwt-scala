@@ -11,6 +11,7 @@ case class JsonDataEntry (
   signature: String,
   token: String,
   tokenUnsigned: String,
+  tokenEmpty: String,
   headerJson: JObject) extends JsonDataEntryTrait[JObject]
 
 trait Json4sCommonFixture extends JsonCommonFixture[JObject] {
@@ -21,7 +22,7 @@ trait Json4sCommonFixture extends JsonCommonFixture[JObject] {
     case _ => throw new RuntimeException("I want a JObject!")
   }
 
-  def mapData(data: DataEntry): JsonDataEntry = JsonDataEntry(
+  def mapData(data: DataEntryBase): JsonDataEntry = JsonDataEntry(
     algo = data.algo,
     header = data.header,
     headerClass = data.headerClass,
@@ -29,6 +30,7 @@ trait Json4sCommonFixture extends JsonCommonFixture[JObject] {
     signature = data.signature,
     token = data.token,
     tokenUnsigned = data.tokenUnsigned,
+    tokenEmpty = data.tokenEmpty,
     headerJson = parseString(data.header) match {
       case j: JObject => j
       case _ => throw new RuntimeException("I want a JObject!")

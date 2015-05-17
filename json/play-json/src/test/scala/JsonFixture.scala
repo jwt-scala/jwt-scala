@@ -10,12 +10,13 @@ case class JsonDataEntry (
   signature: String,
   token: String,
   tokenUnsigned: String,
+  tokenEmpty: String,
   headerJson: JsObject) extends JsonDataEntryTrait[JsObject]
 
 trait JsonFixture extends JsonCommonFixture[JsObject] {
   val claimJson = jwtClaimWriter.writes(claimClass).as[JsObject]
 
-  def mapData(data: DataEntry): JsonDataEntry = JsonDataEntry(
+  def mapData(data: DataEntryBase): JsonDataEntry = JsonDataEntry(
     algo = data.algo,
     header = data.header,
     headerClass = data.headerClass,
@@ -23,6 +24,7 @@ trait JsonFixture extends JsonCommonFixture[JsObject] {
     signature = data.signature,
     token = data.token,
     tokenUnsigned = data.tokenUnsigned,
+    tokenEmpty = data.tokenEmpty,
     headerJson = jwtHeaderWriter.writes(data.headerClass).as[JsObject]
   )
 }

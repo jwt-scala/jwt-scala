@@ -1,5 +1,17 @@
 package pdi.jwt
 
+trait DataEntryBase {
+  def algo: JwtAlgorithm
+  def header: String
+  def headerClass: JwtHeader
+  def header64: String
+  def signature: String
+  def token: String
+  def tokenUnsigned: String
+  def tokenEmpty: String
+}
+
+
 case class DataEntry(
   algo: JwtAlgorithm,
   header: String,
@@ -7,11 +19,13 @@ case class DataEntry(
   header64: String,
   signature: String,
   token: String = "",
-  tokenUnsigned: String = ""
-)
+  tokenUnsigned: String = "",
+  tokenEmpty: String = ""
+) extends DataEntryBase
 
 trait Fixture extends TimeFixture {
-  val secretKey = Option("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow")
+  val secretKey = "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
+  val secretKeyOpt = Option(secretKey)
 
   val expiration: Long = 1300819380
   val expirationMillis: Long = expiration * 1000
@@ -25,7 +39,11 @@ trait Fixture extends TimeFixture {
   val claimClass = JwtClaim("""{"http://example.com/is_root":true}""", issuer = Option("joe"), expiration = Option(expiration))
   val claim64 = "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ"
 
-  val publicKeyRSA = Option("""-----BEGIN PUBLIC KEY-----
+  val headerEmpty = "{}"
+  val headerClassEmpty = JwtHeader()
+  val header64Empty = "e30"
+
+  val publicKeyRSA = """-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvzoCEC2rpSpJQaWZbUml
 sDNwp83Jr4fi6KmBWIwnj1MZ6CUQ7rBasuLI8AcfX5/10scSfQNCsTLV2tMKQaHu
 vyrVfwY0dINk+nkqB74QcT2oCCH9XduJjDuwWA4xLqAKuF96FsIes52opEM50W7/
@@ -33,9 +51,9 @@ W7DZCKXkC8fFPFj6QF5ZzApDw2Qsu3yMRmr7/W9uWeaTwfPx24YdY7Ah+fdLy3KN
 40vXv9c4xiSafVvnx9BwYL7H1Q8NiK9LGEN6+JSWfgckQCs6UUBOXSZdreNN9zbQ
 Cwyzee7bOJqXUDAuLcFARzPw1EsZAyjVtGCKIQ0/btqK+jFunT2NBC8RItanDZpp
 tQIDAQAB
------END PUBLIC KEY-----""")
+-----END PUBLIC KEY-----"""
 
-  val privateKeyRSA = Option("""-----BEGIN RSA PRIVATE KEY-----
+  val privateKeyRSA = """-----BEGIN RSA PRIVATE KEY-----
 MIIEpQIBAAKCAQEAvzoCEC2rpSpJQaWZbUmlsDNwp83Jr4fi6KmBWIwnj1MZ6CUQ
 7rBasuLI8AcfX5/10scSfQNCsTLV2tMKQaHuvyrVfwY0dINk+nkqB74QcT2oCCH9
 XduJjDuwWA4xLqAKuF96FsIes52opEM50W7/W7DZCKXkC8fFPFj6QF5ZzApDw2Qs
@@ -61,24 +79,25 @@ ffx3xHv9zvvGHZqQ1nHKkaEuyjqo+5kli6N8QjWNzsFbdvBQ0CLJoqGhVHsXuWnz
 W3Z4cBbVAoGAEtnwY1OJM7+R2u1CW0tTjqDlYU2hUNa9t1AbhyGdI2arYp+p+umA
 b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
 9f6PIOE1rAmPE8Cfz/GFF5115ZKVlq+2BY8EKNxbCIy2d/vMEvisnXI=
------END RSA PRIVATE KEY-----""")
+-----END RSA PRIVATE KEY-----"""
 
-  val publicKeyEC = Option("""-----BEGIN PUBLIC KEY-----
+  val publicKeyEC = """-----BEGIN PUBLIC KEY-----
 MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEFOep1TN1rATCCgVTjOmtD9jT2vjyIMlk
 DvyorUIqCT5c7c9nQsgy2RFgA1OeNpTGxRmptztVOH02RZm3PMeWdA==
------END PUBLIC KEY-----""")
+-----END PUBLIC KEY-----"""
 
-  val privateKeyEC = Option("""-----BEGIN EC PRIVATE KEY-----
+  val privateKeyEC = """-----BEGIN EC PRIVATE KEY-----
 MHQCAQEEIPDiahgVmw2V91tqGnwGV5I25bdKByFj7hoojmyN+LYYoAcGBSuBBAAK
 oUQDQgAEFOep1TN1rATCCgVTjOmtD9jT2vjyIMlkDvyorUIqCT5c7c9nQsgy2RFg
 A1OeNpTGxRmptztVOH02RZm3PMeWdA==
 -----END EC PRIVATE KEY-----
-""")
+"""
 
   def setToken(entry: DataEntry): DataEntry = {
     entry.copy(
       token = Seq(entry.header64, claim64, entry.signature).mkString("."),
-      tokenUnsigned = Seq(entry.header64, claim64, "").mkString(".")
+      tokenUnsigned = Seq(entry.header64, claim64, "").mkString("."),
+      tokenEmpty = Seq(header64Empty, claim64, "").mkString(".")
     )
   }
 

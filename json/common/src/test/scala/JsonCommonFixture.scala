@@ -1,19 +1,14 @@
 package pdi.jwt
 
-trait JsonDataEntryTrait[J] {
-  def algo: JwtAlgorithm
-  def header: String
-  def headerClass: JwtHeader
-  def header64: String
-  def signature: String
-  def token: String
-  def tokenUnsigned: String
+trait JsonDataEntryTrait[J] extends DataEntryBase {
   def headerJson: J
 }
 
 trait JsonCommonFixture[J] extends Fixture {
   def claimJson: J
-  def mapData(data: DataEntry): JsonDataEntryTrait[J]
+  def mapData(data: DataEntryBase): JsonDataEntryTrait[J]
 
   val dataJson = data.map(mapData)
+  val dataRSAJson = dataRSA.map(mapData)
+  val dataECDSAJson = dataECDSA.map(mapData)
 }
