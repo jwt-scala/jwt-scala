@@ -17,9 +17,24 @@ object JwtUtils {
     Security.addProvider(new BouncyCastleProvider())
   }
 
+  /** Convert an array of bytes to its corresponding string using the default encoding.
+    *
+    * @return the final string
+    * @param arr the array of bytes to transform
+    */
   def stringify(arr: Array[Byte]): String = new String(arr, ENCODING)
+
+  /**
+    * Convert a string to its corresponding array of bytes using the default encoding.
+    *
+    * @return the final array of bytes
+    * @param str the string to convert
+    */
   def bytify(str: String): Array[Byte] = str.getBytes(ENCODING)
 
+  /**
+    * Convert a [[Seq]] to a JSON array
+    */
   def seqToJson(seq: Seq[Any]): String = if (seq.isEmpty) {
     "[]"
   } else {
@@ -38,6 +53,9 @@ object JwtUtils {
     }.mkString("[", ",", "]")
   }
 
+  /**
+    * Convert a [[Seq]] of tuples to a JSON object
+    */
   def hashToJson(hash: Seq[(String, Any)]): String = if (hash.isEmpty) {
     "{}"
   } else {
@@ -57,6 +75,9 @@ object JwtUtils {
     }.mkString("{", ",", "}")
   }
 
+  /**
+    * Merge multiple JSON strings to a unique one
+    */
   def mergeJson(json: String, jsonSeq: String*): String = {
     val initJson = json.trim match {
       case "" => ""
@@ -107,6 +128,10 @@ object JwtUtils {
   private def signECDSA(data: Array[Byte], key: String, algorithm: JwtAlgorithm): Array[Byte] =
     signAsymetric(data, key, algorithm, ECDSA)
 
+  /**
+    * Generate the signature for a given data using the key and algorithm provided. If none,
+    * the signature will be empty.
+    */
   def sign(data: Array[Byte], key: Option[String], algorithm: Option[JwtAlgorithm]): Array[Byte] =
     (key, algorithm) match {
       case (Some(keyValue), Some(algoValue)) => {
@@ -119,6 +144,9 @@ object JwtUtils {
       case _ => Array.empty[Byte]
     }
 
+  /**
+    * Alias to `sign` using a String data which will be converted to an array of bytes.
+    */
   def sign(data: String, key: Option[String], algorithm: Option[JwtAlgorithm]): Array[Byte] =
     sign(bytify(data), key, algorithm)
 
@@ -138,6 +166,9 @@ object JwtUtils {
   private def verifyECDSA(data: Array[Byte], signature: Array[Byte], key: String, algorithm: JwtAlgorithm): Boolean =
     verifyAsymetric(data, signature, key, algorithm, ECDSA)
 
+  /**
+    * Check if a signature is valid for a given data using the key and the algorithm provided.
+    */
   def verify(data: Array[Byte], signature: Array[Byte], key: Option[String], algorithm: Option[JwtAlgorithm]): Boolean = {
     (key, algorithm) match {
       case (Some(keyValue), Some(algoValue)) => {
@@ -151,12 +182,21 @@ object JwtUtils {
     }
   }
 
+  /**
+    * Alias for `verify`
+    */
   def verify(data: String, signature: Array[Byte], key: Option[String], algorithm: Option[JwtAlgorithm]): Boolean =
     verify(bytify(data), signature, key, algorithm)
 
+  /**
+    * Alias for `verify`
+    */
   def verify(data: Array[Byte], signature: String, key: Option[String], algorithm: Option[JwtAlgorithm]): Boolean =
     verify(data, bytify(signature), key, algorithm)
 
+  /**
+    * Alias for `verify`
+    */
   def verify(data: String, signature: String, key: Option[String], algorithm: Option[JwtAlgorithm]): Boolean =
     verify(bytify(data), bytify(signature), key, algorithm)
 }

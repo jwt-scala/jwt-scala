@@ -3,7 +3,17 @@ package pdi.jwt
 import scala.util.Try
 
 /**
-  * Default implementation of [[JwtCore]] using only Strings.
+  * Default implementation of [[JwtCore]] using only Strings. Most of the time, you should use a lib
+  * implementing JSON and shouldn't be using this object. But just in case you need pure Scala support,
+  * here it is.
+  *
+  * To see a full list of samples, check the [[http://pauldijou.fr/jwt-scala/samples/jwt-core/ online documentation]].
+  *
+  * '''Warning''': since there is no JSON support in Scala, this object doesn't have any way to parse
+  * a JSON string as an AST, so it only uses regex with all the limitations it implies. Try not to use
+  * keys like `exp` and `nbf` in sub-objects of the claim. For example, if you try to use the following
+  * claim: `{"user":{"exp":1},"exp":1300819380}`, it should be correct but it will fail because the regex
+  * extracting the expiration will return `1` instead of `1300819380`. Sorry about that.
   */
 object Jwt extends JwtCore[String, String] {
   protected def parseHeader(header: String): String = header
@@ -12,7 +22,6 @@ object Jwt extends JwtCore[String, String] {
   private val extractAlgorithmRegex = "\"alg\":\"([a-zA-Z0-9]+)\"".r
   protected def extractAlgorithm(header: String): Option[JwtAlgorithm] =
     (extractAlgorithmRegex findFirstMatchIn header).map(_.group(1)).map(JwtAlgorithm.fromString)
-
 
   private val extractExpirationRegex = "\"exp\":([0-9]+)".r
   protected def extractExpiration(claim: String): Option[Long] =
@@ -36,8 +45,10 @@ object Jwt extends JwtCore[String, String] {
   * @define token a JSON Web Token as a Base64 url-safe encoded String which can be used inside an HTTP header
   * @define headerString a valid stringified JSON representing the header of the token
   * @define claimString a valid stringified JSON representing the claim of the token
-  * @define maybeKey an optional key that will be used to check the token signature
+  * @define maybeKey an optional key that will be used to check the token signature. If none, the token will not be signed
   * @define key the key that will be used to check the token signature
+  * @define maybeAlgo an optional algorithm to be used to sign the token. If none, the token will not be signed.
+  * @define algo the algorithm to sign the token
   *
   */
 trait JwtCore[H, C] {
@@ -50,8 +61,8 @@ trait JwtCore[H, C] {
     * @return $token
     * @param header $headerString
     * @param claim $claimString
-    * @param key the secret key to use to sign the token. If none, the token will not be signed
-    * @param algorithm the algorithm to use to sign the token. If none but there is a key, the default one will be used
+    * @param key $maybeKey
+    * @param algorithm $maybeAlgo
     */
   def encode(header: String, claim: String, key: Option[String], algorithm: Option[JwtAlgorithm]): String = {
     val header64 = JwtBase64.encodeString(header)
@@ -63,18 +74,54 @@ trait JwtCore[H, C] {
     ).mkString(".")
   }
 
+  /** An alias to `encode` which will provide an automatically generated header.
+    *
+    * @return $token
+    * @param claim $claimString
+    * @param key $maybeKey
+    * @param algorithm $maybeAlgo
+    */
   def encode(claim: String, key: Option[String] = None, algorithm: Option[JwtAlgorithm] = None): String =
     encode(JwtHeader(algorithm).toJson, claim, key, algorithm)
 
+  /** An alias to `encode` which will provide an automatically generated header and allowing you to get rid of Option
+    * for the key and the algorithm.
+    *
+    * @return $token
+    * @param claim $claimString
+    * @param key $key
+    * @param algorithm $algo
+    */
   def encode(claim: String, key: String, algorithm: JwtAlgorithm): String =
     encode(claim, Option(key), Option(algorithm))
 
+  /** An alias to `encode` which will provide an automatically generated header and use the claim as a case class.
+    *
+    * @return $token
+    * @param claim the claim of the JSON Web Token
+    * @param key $maybeKey
+    * @param algorithm $maybeAlgo
+    */
   def encode(claim: JwtClaim, key: Option[String], algorithm: Option[JwtAlgorithm]): String =
     encode(claim.toJson, key, algorithm)
 
+  /** An alias to `encode` which will provide an automatically generated header and setting both key and algorithm
+    * to None.
+    *
+    * @return $token
+    * @param claim the claim of the JSON Web Token
+    */
   def encode(claim: JwtClaim): String =
     encode(claim.toJson, None, None)
 
+  /** An alias to `encode` which will provide an automatically generated header and allowing you to get rid of Option
+    * for the key and the algorithm while passing the claim as a case class.
+    *
+    * @return $token
+    * @param claim the claim of the JSON Web Token
+    * @param key $key
+    * @param algorithm $algo
+    */
   def encode(claim: JwtClaim, key: String, algorithm: JwtAlgorithm): String =
     encode(claim.toJson, Option(key), Option(algorithm))
 
