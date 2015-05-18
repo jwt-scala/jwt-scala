@@ -26,7 +26,7 @@ h3 {
 
 .wrapper {
   width: 100%;
-  max-width: (700 + 2 * $spacing-unit);
+  max-width: $content-width;
   margin: 0 auto;
   padding-left: $spacing-unit;
   padding-right: $spacing-unit;
