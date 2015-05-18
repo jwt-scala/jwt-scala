@@ -8,6 +8,7 @@ abstract class JwtJsonCommonSpec[J] extends UnitSpec with JsonCommonFixture[J] {
   def jwtJsonCommon: JwtJsonCommon[J]
 
   def battleTestEncode(d: JsonDataEntryTrait[J], key: String) = {
+    assertResult(d.tokenUnsigned, d.algo.fullName + " Option(key)") { jwtJsonCommon.encode(d.headerJson, claimJson, None) }
     assertResult(d.token, d.algo.fullName + " Option(key)") { jwtJsonCommon.encode(d.headerJson, claimJson, Option(key)) }
     assertResult(d.token, d.algo.fullName + " String key") { jwtJsonCommon.encode(d.headerJson, claimJson, key) }
     assertResult(d.tokenUnsigned, d.algo.fullName + " No key") { jwtJsonCommon.encode(d.headerJson, claimJson) }
@@ -27,7 +28,7 @@ abstract class JwtJsonCommonSpec[J] extends UnitSpec with JsonCommonFixture[J] {
     }
 
     it("should decodeJsonAll when now is before expiration date") {
-      val mock = mockBeforeExpiration
+      val mock = mockValidTime
       dataJson foreach { d =>
         val success = Success(d.headerJson, claimJson, Option(d.signature))
         assertResult(success, d.algo.fullName) { jwtJsonCommon.decodeJsonAll(d.token, secretKeyOpt) }
@@ -35,14 +36,8 @@ abstract class JwtJsonCommonSpec[J] extends UnitSpec with JsonCommonFixture[J] {
       mock.tearDown
     }
 
-    it("should fail to decodeJsonAll when now is after expiration date") {
-      val mock = mockAfterExpiration
-      dataJson foreach { d => assert(jwtJsonCommon.decodeJsonAll(d.token, secretKeyOpt).isFailure) }
-      mock.tearDown
-    }
-
-    it("should decodeJson when now is before expiration date") {
-      val mock = mockBeforeExpiration
+    it("should decodeJson") {
+      val mock = mockValidTime
       val success = Success(claimJson)
       dataJson foreach { d =>
         assertResult(success, d.algo.fullName + " Option(key)") { jwtJsonCommon.decodeJson(d.token, secretKeyOpt) }
@@ -51,17 +46,8 @@ abstract class JwtJsonCommonSpec[J] extends UnitSpec with JsonCommonFixture[J] {
       mock.tearDown
     }
 
-    it("should fail to decodeJson when now is after expiration date") {
-      val mock = mockAfterExpiration
-      dataJson foreach { d =>
-        assert(jwtJsonCommon.decodeJson(d.token, secretKeyOpt).isFailure)
-        assert(jwtJsonCommon.decodeJson(d.token, secretKey).isFailure)
-      }
-      mock.tearDown
-    }
-
-    it("should decodeAll when now is before expiration date") {
-      val mock = mockBeforeExpiration
+    it("should decodeAll") {
+      val mock = mockValidTime
       dataJson foreach { d =>
         val success = Success(d.headerClass, claimClass, Option(d.signature))
         assertResult(success, d.algo.fullName) { jwtJsonCommon.decodeAll(d.token, secretKeyOpt) }
@@ -69,9 +55,27 @@ abstract class JwtJsonCommonSpec[J] extends UnitSpec with JsonCommonFixture[J] {
       mock.tearDown
     }
 
-    it("should fail to decodeAll when now is after expiration date") {
+    def battleTestExpirationValidation(d: JsonDataEntryTrait[J], key: String) = {
+      intercept[JwtExpirationException] { jwtJsonCommon.decodeJsonAll(d.token, Option(key)).get }
+      intercept[JwtExpirationException] { jwtJsonCommon.decodeJsonAll(d.token, key).get }
+      assert(jwtJsonCommon.decodeJsonAll(d.token, Option(key)).isFailure)
+      assert(jwtJsonCommon.decodeJsonAll(d.token, key).isFailure)
+
+      intercept[JwtExpirationException] { jwtJsonCommon.decodeJson(d.token, Option(key)).get }
+      intercept[JwtExpirationException] { jwtJsonCommon.decodeJson(d.token, key).get }
+      assert(jwtJsonCommon.decodeJson(d.token, Option(key)).isFailure)
+      assert(jwtJsonCommon.decodeJson(d.token, key).isFailure)
+
+      intercept[JwtExpirationException] { jwtJsonCommon.decodeAll(d.token, Option(key)).get }
+      intercept[JwtExpirationException] { jwtJsonCommon.decodeAll(d.token, key).get }
+      assert(jwtJsonCommon.decodeAll(d.token, Option(key)).isFailure)
+      assert(jwtJsonCommon.decodeAll(d.token, key).isFailure)
+    }
+
+    it("should fail to decodeJsonAll and decodeJson when now is after expiration date") {
       val mock = mockAfterExpiration
-      dataJson foreach { d => assert(jwtJsonCommon.decodeAll(d.token, secretKeyOpt).isFailure) }
+      dataJson foreach { d => battleTestExpirationValidation(d, secretKey) }
+      dataRSAJson foreach { d => battleTestExpirationValidation(d, publicKeyRSA) }
       mock.tearDown
     }
   }

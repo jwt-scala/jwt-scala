@@ -36,5 +36,12 @@ class JwtBase64Spec extends UnitSpec {
         value => assertResult(value._2) { JwtBase64.encodeString(JwtBase64.decodeString(value._2)) }
       }
     }
+
+    it("should throw when invalid string") {
+      val vals = Seq("a", "abcde", "*", "aze$")
+      vals.foreach { v =>
+        intercept[IllegalArgumentException] { JwtBase64.decode(v) }
+      }
+    }
   }
 }

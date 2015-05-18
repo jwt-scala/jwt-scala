@@ -35,6 +35,18 @@ trait Fixture extends TimeFixture {
   def mockBeforeExpiration = mockTime(beforeExpirationMillis)
   def mockAfterExpiration = mockTime(afterExpirationMillis)
 
+  val notBefore: Long = 1300819320
+  val notBeforeMillis: Long = notBefore * 1000
+  val beforeNotBeforeMillis: Long = notBeforeMillis - 1
+  val afterNotBeforeMillis: Long = notBeforeMillis + 1
+
+  def mockBeforeNotBefore = mockTime(beforeNotBeforeMillis)
+  def mockAfterNotBefore = mockTime(afterNotBeforeMillis)
+
+  val validTime: Long = (expiration + notBefore) / 2
+  val validTimeMillis: Long = validTime * 1000
+  def mockValidTime = mockTime(validTimeMillis)
+
   val claim = s"""{"iss":"joe","exp":${expiration},"http://example.com/is_root":true}"""
   val claimClass = JwtClaim("""{"http://example.com/is_root":true}""", issuer = Option("joe"), expiration = Option(expiration))
   val claim64 = "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ"
