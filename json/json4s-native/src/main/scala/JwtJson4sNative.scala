@@ -7,6 +7,11 @@ import org.json4s.native.JsonMethods.{parse => jparse}
 import org.json4s.native.Serialization
 import org.json4s.native.Serialization.{read, write}
 
+/**
+  * Implementation of `JwtCore` using `JObject` from Json4s Native.
+  *
+  * To see a full list of samples, check the [[http://pauldijou.fr/jwt-scala/samples/jwt-json4s/ online documentation]].
+  */
 object JwtJson4s extends JwtJson4sCommon {
   protected def parse(value: String): JObject = jparse(value) match {
     case res: JObject => res
@@ -15,7 +20,7 @@ object JwtJson4s extends JwtJson4sCommon {
 
   protected def stringify(value: JObject): String = compact(render(value))
 
-  implicit val formats = Serialization.formats(NoTypeHints)
+  protected implicit val formats = Serialization.formats(NoTypeHints)
 
   protected def parseHeader(header: String): JwtHeader = readHeader(parse(header))
   protected def parseClaim(claim: String): JwtClaim = readClaim(parse(claim))

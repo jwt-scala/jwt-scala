@@ -4,6 +4,11 @@ import scala.util.Try
 
 import play.api.libs.json._
 
+/**
+  * Implementation of `JwtCore` using `JsObject` from Play JSON.
+  *
+  * To see a full list of samples, check the [[http://pauldijou.fr/jwt-scala/samples/jwt-play-json/ online documentation]].
+  */
 object JwtJson extends JwtJsonCommon[JsObject] {
   protected def parse(value: String): JsObject = Json.parse(value).as[JsObject]
 

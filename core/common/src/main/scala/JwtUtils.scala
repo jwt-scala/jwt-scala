@@ -24,16 +24,14 @@ object JwtUtils {
     */
   def stringify(arr: Array[Byte]): String = new String(arr, ENCODING)
 
-  /**
-    * Convert a string to its corresponding array of bytes using the default encoding.
+  /** Convert a string to its corresponding array of bytes using the default encoding.
     *
     * @return the final array of bytes
     * @param str the string to convert
     */
   def bytify(str: String): Array[Byte] = str.getBytes(ENCODING)
 
-  /**
-    * Convert a [[Seq]] to a JSON array
+  /** Convert a sequence to a JSON array
     */
   def seqToJson(seq: Seq[Any]): String = if (seq.isEmpty) {
     "[]"
@@ -54,7 +52,7 @@ object JwtUtils {
   }
 
   /**
-    * Convert a [[Seq]] of tuples to a JSON object
+    * Convert a sequence of tuples to a JSON object
     */
   def hashToJson(hash: Seq[(String, Any)]): String = if (hash.isEmpty) {
     "{}"

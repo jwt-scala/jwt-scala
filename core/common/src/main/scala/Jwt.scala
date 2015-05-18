@@ -270,6 +270,7 @@ trait JwtCore[H, C] {
     * @throws JwtLengthException the number of parts separated by dots is wrong
     * @throws JwtNotBeforeException the token isn't valid yet because its `notBefore` attribute is in the future
     * @throws JwtExpirationException the token isn't valid anymore because its `expiration` attribute is in the past
+    * @throws IllegalArgumentException couldn't decode the token since it's not a valid base64 string
     */
   def validate(token: String, maybeKey: Option[String] = None): Unit = {
     val (header64, header, claim64, claim, maybeSignature) = splitToken(token)
@@ -280,6 +281,11 @@ trait JwtCore[H, C] {
     *
     * @param token $token
     * @param key $key
+    * @throws JwtValidationException default validation exeption
+    * @throws JwtLengthException the number of parts separated by dots is wrong
+    * @throws JwtNotBeforeException the token isn't valid yet because its `notBefore` attribute is in the future
+    * @throws JwtExpirationException the token isn't valid anymore because its `expiration` attribute is in the past
+    * @throws IllegalArgumentException couldn't decode the token since it's not a valid base64 string
     */
   def validate(token: String, key: String): Unit = validate(token, Option(key))
 
