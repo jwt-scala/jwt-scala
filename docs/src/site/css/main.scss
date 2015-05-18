@@ -41,11 +41,13 @@ $text-color-brand: #ffffff;
     }
 }
 
-
+* {
+  box-sizing: border-box;
+}
 
 // Import partials from `sass_dir` (defaults to `_sass`)
 @import
-        "syntax-highlighting",
-        "base",
-        "layout"
+  "syntax-highlighting",
+  "base",
+  "layout"
 ;

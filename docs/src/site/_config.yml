@@ -1,9 +1,9 @@
-title: JWT Scala
+title: "JWT Scala"
+description: "JSON Web Token (JWT) support for Scala. Optional helpers for Play Framework, Play JSON and Json4s"
 version: 0.0.6
 permalink: pretty
 baseurl: "/jwt-scala"
 url: "https://pauldijou.github.io"
-relative_permalinks: true
 highlighter: pygments
 markdown: redcarpet
 redcarpet:
@@ -21,10 +21,10 @@ projects:
     description: using Json4s lib (either Native or Jackson implementation).
 
 api:
-  description: There is no global API for the whole project but rather one API for each sub-project. Just pick the one you are using and enjoy awesome Scala documentation.
-  legacy: If you are using a **legacy** version of a project, the API is exactly the same as the non-legacy one.
+  description: "There is no global API for the whole project but rather one API for each sub-project. Just pick the one you are using and enjoy awesome Scala documentation."
+  legacy: "If you are using a **legacy** version of a project, the API is exactly the same as the non-legacy one."
   old:
-    title: Old APIs
+    title: "Old APIs"
   others:
-    title: Other APIs
-    description: If you need another version of the API, please go [here](/jwt-scala/api/).
+    title: "Other APIs"
+    description: "If you need another version of the API, please go [here](/jwt-scala/api/)."
