@@ -52,11 +52,11 @@ class JwtSessionCustomSpec extends PlaySpec with OneAppPerSuite with BeforeAndAf
     "read default configuration" in {
       assert(JwtSession.defaultHeader == JwtHeader(JwtAlgorithm.HS512))
     }
-    
+
     "init" in {
       assert(session.headerData == Json.obj("typ" -> "JWT", "alg" -> "HS512"))
       assert(session.claimData == Json.obj("exp" -> (validTime + sessionTimeout)))
-      assert(session.signature == None)
+      assert(session.signature == "")
 
     }
 

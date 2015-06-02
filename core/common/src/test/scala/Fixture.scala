@@ -1,5 +1,10 @@
 package pdi.jwt
 
+import java.security.spec.{ECPrivateKeySpec, ECPublicKeySpec, ECGenParameterSpec, ECParameterSpec, ECPoint}
+import java.security.{SecureRandom, KeyFactory, KeyPairGenerator}
+import org.bouncycastle.jce.ECNamedCurveTable
+import org.bouncycastle.jce.spec.ECNamedCurveSpec
+
 trait DataEntryBase {
   def algo: JwtAlgorithm
   def header: String
@@ -10,7 +15,6 @@ trait DataEntryBase {
   def tokenUnsigned: String
   def tokenEmpty: String
 }
-
 
 case class DataEntry(
   algo: JwtAlgorithm,
@@ -25,7 +29,6 @@ case class DataEntry(
 
 trait Fixture extends TimeFixture {
   val secretKey = "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
-  val secretKeyOpt = Option(secretKey)
 
   val expiration: Long = 1300819380
   val expirationMillis: Long = expiration * 1000
@@ -51,9 +54,11 @@ trait Fixture extends TimeFixture {
   val claimClass = JwtClaim("""{"http://example.com/is_root":true}""", issuer = Option("joe"), expiration = Option(expiration))
   val claim64 = "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ"
 
-  val headerEmpty = "{}"
+  val headerEmpty = """{"alg":"none"}"""
   val headerClassEmpty = JwtHeader()
-  val header64Empty = "e30"
+  val header64Empty = "eyJhbGciOiJub25lIn0"
+
+  val tokenEmpty = header64Empty + "." + claim64 + "."
 
   val publicKeyRSA = """-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvzoCEC2rpSpJQaWZbUml
@@ -93,17 +98,28 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
 9f6PIOE1rAmPE8Cfz/GFF5115ZKVlq+2BY8EKNxbCIy2d/vMEvisnXI=
 -----END RSA PRIVATE KEY-----"""
 
-  val publicKeyEC = """-----BEGIN PUBLIC KEY-----
-MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEFOep1TN1rATCCgVTjOmtD9jT2vjyIMlk
-DvyorUIqCT5c7c9nQsgy2RFgA1OeNpTGxRmptztVOH02RZm3PMeWdA==
------END PUBLIC KEY-----"""
+  val generatorRSA = KeyPairGenerator.getInstance(JwtUtils.RSA, JwtUtils.PROVIDER)
+  generatorRSA.initialize(1024)
+  val randomRSAKey = generatorRSA.generateKeyPair()
 
-  val privateKeyEC = """-----BEGIN EC PRIVATE KEY-----
-MHQCAQEEIPDiahgVmw2V91tqGnwGV5I25bdKByFj7hoojmyN+LYYoAcGBSuBBAAK
-oUQDQgAEFOep1TN1rATCCgVTjOmtD9jT2vjyIMlkDvyorUIqCT5c7c9nQsgy2RFg
-A1OeNpTGxRmptztVOH02RZm3PMeWdA==
------END EC PRIVATE KEY-----
-"""
+  val ecGenSpec = new ECGenParameterSpec("P-521")
+  val generatorEC = KeyPairGenerator.getInstance(JwtUtils.ECDSA, JwtUtils.PROVIDER)
+  generatorEC.initialize(ecGenSpec, new SecureRandom())
+
+  val randomECKey = generatorEC.generateKeyPair()
+
+  val S = BigInt("1ed498eedf499e5dd12b1ab94ee03d1a722eaca3ed890630c8b25f1015dd4ec5630a02ddb603f3248a3b87c88637e147ecc7a6e2a1c2f9ff1103be74e5d42def37d", 16)
+  val X = BigInt("16528ac15dc4c8e0559fad628ac3ffbf5c7cfefe12d50a97c7d088cc10b408d4ab03ac0d543bde862699a74925c1f2fe7c247c00fddc1442099dfa0671fc032e10a", 16)
+  val Y = BigInt("b7f22b3c1322beef766cadd1a5f0363840195b7be10d9a518802d8d528e03bc164c9588c5e63f1473d05195510676008b6808508539367d2893e1aa4b7cb9f9dab", 16)
+
+  val curveParams = ECNamedCurveTable.getParameterSpec("P-521")
+  val curveSpec: ECParameterSpec = new ECNamedCurveSpec( "P-521", curveParams.getCurve(), curveParams.getG(), curveParams.getN(), curveParams.getH());
+
+  val privateSpec = new ECPrivateKeySpec(S.underlying(), curveSpec)
+  val publicSpec = new ECPublicKeySpec(new ECPoint(X.underlying(), Y.underlying()), curveSpec)
+
+  val privateKeyEC = KeyFactory.getInstance(JwtUtils.ECDSA, JwtUtils.PROVIDER).generatePrivate(privateSpec)
+  val publicKeyEC = KeyFactory.getInstance(JwtUtils.ECDSA, JwtUtils.PROVIDER).generatePublic(publicSpec)
 
   def setToken(entry: DataEntry): DataEntry = {
     entry.copy(
@@ -227,10 +243,10 @@ A1OeNpTGxRmptztVOH02RZm3PMeWdA==
       """{"typ":"JWT","alg":"ES256"}""",
       JwtHeader(JwtAlgorithm.ES256, "JWT"),
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9",
-      "MEYCIQC5Gr7WWeNsJ_9P8qVxuSFCwLcDhuKDBGRR7kooMgENxgIhAPF1JxcN5SQD_6jPbRyiSjkHJj_e0GnkHecgRlxOOOKg"
-    ) //,
+      "MIGIAkIBFmPwOO2eBdtkCko3pjjJs5Wpdi2GBhRywwptlosRQVlQxmT95uOoKE9BUjqVdyjd8o9TcNHHqM6ayPmQml0aTYICQgGDYkPc5EUfJ1F9VFvbPW1bIpX_sZ3XwyXIeL_4jt7BeKmB_LPorgeO-agmx4UdqMyCG1-Y31m8cJEPNm7h5x5V-Q"
+    ),
 
-    /*DataEntry (
+    DataEntry (
       JwtAlgorithm.ES384,
       """{"typ":"JWT","alg":"ES384"}""",
       JwtHeader(JwtAlgorithm.ES384, "JWT"),
@@ -244,6 +260,6 @@ A1OeNpTGxRmptztVOH02RZm3PMeWdA==
       JwtHeader(JwtAlgorithm.ES512, "JWT"),
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9",
       "MEUCICcluU9j5N40Mcr_Mo5_r5KVexcgrXH0LMVC_k1EPswPAiEA-8W2vz2bVZCzPv-S6CNDlbxNktEkOtTAg0XXiZ0ghLk"
-    )*/
+    )
   ).map(setToken)
 }

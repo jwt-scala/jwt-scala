@@ -15,6 +15,7 @@ case class JsonDataEntry (
 
 trait JsonFixture extends JsonCommonFixture[JsObject] {
   val claimJson = jwtClaimWriter.writes(claimClass).as[JsObject]
+  val headerEmptyJson = jwtHeaderWriter.writes(headerClassEmpty).as[JsObject]
 
   def mapData(data: DataEntryBase): JsonDataEntry = JsonDataEntry(
     algo = data.algo,

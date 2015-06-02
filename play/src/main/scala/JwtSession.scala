@@ -4,21 +4,21 @@ import play.api.Play
 import play.api.libs.json._
 import play.api.libs.json.Json.JsValueWrapper
 
-/** Similar to the default Play Session but using JsObject instead of Map[String, String]. The data is separated into two attributes: 
+/** Similar to the default Play Session but using JsObject instead of Map[String, String]. The data is separated into two attributes:
   * `headerData` and `claimData`. There is also a optional signature. Most of the time, you should only care about the `claimData` which
   * stores the claim of the token containing the custom values you eventually put in it. That's why all methods of `JwtSession` (such as
   * add and removing values) only modifiy the `claimData`.
   *
   * To see a full list of samples, check the [[http://pauldijou.fr/jwt-scala/samples/jwt-play/ online documentation]].
   *
-  * '''Warning''' Be aware that if you override the `claimData` (using `withClaim` for example), you might override some attributes that 
+  * '''Warning''' Be aware that if you override the `claimData` (using `withClaim` for example), you might override some attributes that
   * were automatically put inside the claim such as the expiration of the token.
   *
   */
 case class JwtSession(
   headerData: JsObject,
   claimData: JsObject,
-  signature: Option[String]
+  signature: String
 ) {
   /** Merge the `value` with `claimData` */
   def + (value: JsObject): JwtSession = this.copy(claimData = claimData.deepMerge(value))
@@ -55,16 +55,19 @@ case class JwtSession(
   def header: JwtHeader = jwtHeaderReader.reads(headerData).get
 
   /** Encode the session as a JSON Web Token */
-  def serialize: String = JwtJson.encode(headerData, claimData, JwtSession.key)
+  def serialize: String = JwtSession.key match {
+    case Some(k) => JwtJson.encode(headerData, claimData, k)
+    case _ => JwtJson.encode(headerData, claimData)
+  }
 
   /** Overrride the `claimData` */
   def withClaim(claim: JwtClaim): JwtSession = this.copy(claimData = JwtSession.asJsObject(claim))
-  
+
   /** Override the `headerData` */
   def withHeader(header: JwtHeader): JwtSession = this.copy(headerData = JwtSession.asJsObject(header))
 
   /** Override the `signature` (seriously, you should never need this method) */
-  def withSignature(signature: Option[String]): JwtSession = this.copy(signature = signature)
+  def withSignature(signature: String): JwtSession = this.copy(signature = signature)
 
   /** If your Play app config has a `session.maxAge`, it will extend the expiration by that amount */
   def refresh: JwtSession = JwtSession.MAX_AGE.map(sec => this + ("exp", JwtTime.nowSeconds + sec)).getOrElse(this)
@@ -88,8 +91,10 @@ object JwtSession {
   private def key: Option[String] =
     Play.maybeApplication.flatMap(_.configuration.getString("application.secret"))
 
-  def deserialize(token: String): JwtSession =
-    JwtJson.decodeJsonAll(token, key).map { tuple =>
+  def deserialize(token: String): JwtSession = (key match {
+      case Some(k) => JwtJson.decodeJsonAll(token, k)
+      case _ => JwtJson.decodeJsonAll(token)
+    }).map { tuple =>
       JwtSession(tuple._1, tuple._2, tuple._3)
     }.getOrElse(JwtSession())
 
@@ -116,17 +121,14 @@ object JwtSession {
     }
 
   def apply(jsHeader: JsObject, jsClaim: JsObject): JwtSession =
-    new JwtSession(jsHeader, jsClaim, None)
+    new JwtSession(jsHeader, jsClaim, "")
 
   def apply(claim: JwtClaim): JwtSession =
     JwtSession.apply(defaultHeader, claim)
 
   def apply(header: JwtHeader, claim: JwtClaim): JwtSession =
-    new JwtSession(asJsObject(header), asJsObject(claim), None)
-
-  def apply(header: JwtHeader, claim: JwtClaim, signature: Option[String]): JwtSession =
-    new JwtSession(asJsObject(header), asJsObject(claim), signature)
+    new JwtSession(asJsObject(header), asJsObject(claim), "")
 
   def apply(header: JwtHeader, claim: JwtClaim, signature: String): JwtSession =
-    new JwtSession(asJsObject(header), asJsObject(claim), Option(signature))
+    new JwtSession(asJsObject(header), asJsObject(claim), signature)
 }

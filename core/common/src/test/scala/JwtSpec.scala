@@ -6,15 +6,11 @@ import scala.util.{Success, Failure}
 
 class JwtSpec extends UnitSpec with Fixture {
   def battleTestEncode(d: DataEntryBase, key: String) = {
-    assertResult(d.token, d.algo.fullName) { Jwt.encode(d.header, claim, Option(key), Option(d.algo)) }
     assertResult(d.tokenEmpty, d.algo.fullName) { Jwt.encode(claim) }
-    assertResult(d.token, d.algo.fullName) { Jwt.encode(claim, Option(key), Option(d.algo)) }
+    assertResult(d.token, d.algo.fullName) { Jwt.encode(d.header, claim, key, d.algo) }
     assertResult(d.token, d.algo.fullName) { Jwt.encode(claim, key, d.algo) }
     assertResult(d.tokenEmpty, d.algo.fullName) { Jwt.encode(claimClass) }
-    assertResult(d.token, d.algo.fullName) { Jwt.encode(claimClass, Option(key), Option(d.algo)) }
     assertResult(d.token, d.algo.fullName) { Jwt.encode(claimClass, key, d.algo) }
-    assertResult(d.token, d.algo.fullName) { Jwt.encode(d.header, claim, key, d.algo) }
-    assertResult(d.tokenUnsigned, d.algo.fullName) { Jwt.encode(d.headerClass, claimClass) }
     assertResult(d.token, d.algo.fullName) { Jwt.encode(d.headerClass, claimClass, key) }
   }
 
@@ -34,17 +30,34 @@ class JwtSpec extends UnitSpec with Fixture {
     it("should be symetric") {
       val mock = mockValidTime
       data foreach { d =>
-        assertResult((d.header, claim, Option(d.signature)), d.algo.fullName) {
+        assertResult((d.header, claim, d.signature), d.algo.fullName) {
           Jwt.decodeAll(Jwt.encode(d.header, claim, secretKey, d.algo), secretKey).get
         }
       }
+
+      dataRSA foreach { d =>
+        assert({
+          val (h, c, s) = Jwt.decodeAll(Jwt.encode(d.header, claim, randomRSAKey.getPrivate, d.algo.asInstanceOf[JwtRSAAlgorithm]), randomRSAKey.getPublic).get
+
+          h == d.header && c == claim
+        }, d.algo.fullName)
+      }
+
+      dataECDSA foreach { d =>
+        assert({
+          val (h, c, s) = Jwt.decodeAll(Jwt.encode(d.header, claim, randomECKey.getPrivate, d.algo.asInstanceOf[JwtECDSAAlgorithm]), randomECKey.getPublic).get
+
+          h == d.header && c == claim
+        }, d.algo.fullName)
+      }
+
       mock.tearDown
     }
 
     it("should decodeRawAll") {
       val mock = mockValidTime
       data foreach { d =>
-        assertResult(Success((d.header, claim, Some(d.signature))), d.algo.fullName) { Jwt.decodeRawAll(d.token, secretKeyOpt) }
+        assertResult(Success((d.header, claim, d.signature)), d.algo.fullName) { Jwt.decodeRawAll(d.token, secretKey) }
       }
       mock.tearDown
     }
@@ -52,7 +65,7 @@ class JwtSpec extends UnitSpec with Fixture {
     it("should decodeRaw") {
       val mock = mockValidTime
       data foreach { d =>
-        assertResult(Success((claim)), d.algo.fullName) { Jwt.decodeRaw(d.token, secretKeyOpt) }
+        assertResult(Success((claim)), d.algo.fullName) { Jwt.decodeRaw(d.token, secretKey) }
       }
       mock.tearDown
     }
@@ -60,7 +73,7 @@ class JwtSpec extends UnitSpec with Fixture {
     it("should decodeAll") {
       val mock = mockValidTime
       data foreach { d =>
-        assertResult(Success((d.header, claim, Some(d.signature))), d.algo.fullName) { Jwt.decodeAll(d.token, secretKeyOpt) }
+        assertResult(Success((d.header, claim, d.signature)), d.algo.fullName) { Jwt.decodeAll(d.token, secretKey) }
       }
       mock.tearDown
     }
@@ -68,16 +81,13 @@ class JwtSpec extends UnitSpec with Fixture {
     it("should decode") {
       val mock = mockValidTime
       data foreach { d =>
-        assertResult(Success(claim), d.algo.fullName) { Jwt.decode(d.token, secretKeyOpt) }
         assertResult(Success(claim), d.algo.fullName) { Jwt.decode(d.token, secretKey) }
       }
       mock.tearDown
     }
 
     def battleTestValidation(d: DataEntryBase, key: String) = {
-      assertResult((), d.algo.fullName) { Jwt.validate(d.token, Option(key)) }
       assertResult((), d.algo.fullName) { Jwt.validate(d.token, key) }
-      assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, Option(key)) }
       assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, key) }
     }
 
@@ -92,9 +102,7 @@ class JwtSpec extends UnitSpec with Fixture {
       val tokens = Seq("1", "abcde", "", "a.b.c.d")
 
       tokens.foreach { token =>
-        intercept[JwtLengthException] { Jwt.validate(token, Option(secretKey)) }
         intercept[JwtLengthException] { Jwt.validate(token, secretKey) }
-        assertResult(false, token) { Jwt.isValid(token, Option(secretKey)) }
         assertResult(false, token) { Jwt.isValid(token, secretKey) }
       }
     }
@@ -103,17 +111,13 @@ class JwtSpec extends UnitSpec with Fixture {
       val tokens = Seq("a.b", "a.b.c", "1.2.3", "abcde.azer.azer", "aze$.azer.azer")
 
       tokens.foreach { token =>
-        intercept[IllegalArgumentException] { Jwt.validate(token, Option(secretKey)) }
         intercept[IllegalArgumentException] { Jwt.validate(token, secretKey) }
-        assertResult(false, token) { Jwt.isValid(token, Option(secretKey)) }
         assertResult(false, token) { Jwt.isValid(token, secretKey) }
       }
     }
 
     def battleTestExpirationValidation(d: DataEntryBase, key: String) = {
-      intercept[JwtExpirationException] { Jwt.validate(d.token, Option(key)) }
       intercept[JwtExpirationException] { Jwt.validate(d.token, key) }
-      assertResult(false, d.algo.fullName) { Jwt.isValid(d.token, Option(key)) }
       assertResult(false, d.algo.fullName) { Jwt.isValid(d.token, key) }
     }
 
@@ -128,9 +132,7 @@ class JwtSpec extends UnitSpec with Fixture {
       val claimNotBefore = claimClass.copy(notBefore = Option(notBefore))
       val token = Jwt.encode(claimNotBefore, keyPrivate, d.algo)
 
-      intercept[JwtNotBeforeException] { Jwt.validate(token, Option(keyPublic)) }
       intercept[JwtNotBeforeException] { Jwt.validate(token, keyPublic) }
-      assertResult(false, d.algo.fullName) { Jwt.isValid(token, Option(keyPublic)) }
       assertResult(false, d.algo.fullName) { Jwt.isValid(token, keyPublic) }
     }
 
@@ -142,23 +144,21 @@ class JwtSpec extends UnitSpec with Fixture {
     }
 
     def battleTestKeyValidation(d: DataEntryBase, key: String) = {
-      assertResult(false, d.algo.fullName) { Jwt.isValid(d.token, Option(key)) }
       assertResult(false, d.algo.fullName) { Jwt.isValid(d.token, key) }
     }
 
     it("should invalidate wrong keys") {
       val mock = mockValidTime
-      
+
       data foreach { d => assertResult((), d.algo.fullName) {
-        intercept[JwtValidationException] { Jwt.validate(d.token, Option("wrong key")) }
         intercept[JwtValidationException] { Jwt.validate(d.token, "wrong key") }
         battleTestKeyValidation(d, "wrong key") }
       }
-      
+
       dataRSA foreach { d => assertResult((), d.algo.fullName) {
         battleTestKeyValidation(d, "wrong key") }
       }
-      
+
       mock.tearDown
     }
 

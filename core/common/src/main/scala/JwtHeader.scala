@@ -7,7 +7,7 @@ case class JwtHeader(
 ) {
   def toJson: String = JwtUtils.hashToJson(Seq(
     "typ" -> typ,
-    "alg" -> algorithm.map(_.name),
+    "alg" -> algorithm.map(_.name).orElse(Option("none")),
     "cty" -> contentType
   ).collect {
     case (key, Some(value)) => (key -> value)

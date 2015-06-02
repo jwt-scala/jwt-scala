@@ -15,6 +15,7 @@ object JwtJson extends JwtJsonCommon[JsObject] {
   protected def stringify(value: JsObject): String = Json.stringify(value)
 
   protected def getAlgorithm(header: JsObject): Option[JwtAlgorithm] = header \ "alg" match {
+    case JsString("none") => None
     case JsString(algo) => Option(JwtAlgorithm.fromString(algo))
     case JsNull => None
     case _ : JsUndefined => None

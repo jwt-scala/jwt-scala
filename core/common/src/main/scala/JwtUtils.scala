@@ -1,8 +1,8 @@
 package pdi.jwt
 
-import javax.crypto.Mac
+import javax.crypto.{Mac, SecretKey}
 import javax.crypto.spec.SecretKeySpec
-import java.security.{Security, Signature, KeyFactory, PrivateKey, PublicKey}
+import java.security.{Security, Signature, KeyFactory, Key, PrivateKey, PublicKey}
 import java.security.spec.{PKCS8EncodedKeySpec, X509EncodedKeySpec}
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import JwtAlgorithm._
@@ -99,7 +99,7 @@ object JwtUtils {
 
   private def parsePrivateKey(key: String, keyAlgo: String): PrivateKey = {
     val spec = new PKCS8EncodedKeySpec(parseKey(key))
-    KeyFactory.getInstance(keyAlgo, PROVIDER).generatePrivate(spec)
+      KeyFactory.getInstance(keyAlgo, PROVIDER).generatePrivate(spec)
   }
 
   private def parsePublicKey(key: String, keyAlgo: String): PublicKey = {
@@ -107,94 +107,77 @@ object JwtUtils {
     KeyFactory.getInstance(keyAlgo, PROVIDER).generatePublic(spec)
   }
 
-  private def signHmac(data: Array[Byte], key: String, algorithm: JwtAlgorithm): Array[Byte] = {
+  /**
+    * Generate the signature for a given data using the key and HMAC algorithm provided.
+    */
+  def sign(data: Array[Byte], key: SecretKey, algorithm: JwtHmacAlgorithm): Array[Byte] = {
     val mac = Mac.getInstance(algorithm.fullName, PROVIDER)
-    mac.init(new SecretKeySpec(bytify(key), algorithm.fullName))
+    mac.init(key)
     mac.doFinal(data)
   }
 
-  private def signAsymetric(data: Array[Byte], key: String, algorithm: JwtAlgorithm, keyAlgo: String): Array[Byte] = {
+  def sign(data: String, key: SecretKey, algorithm: JwtHmacAlgorithm): Array[Byte] =
+    sign(bytify(data), key, algorithm)
+
+  /**
+    * Generate the signature for a given data using the key and RSA or ECDSA algorithm provided.
+    */
+  def sign(data: Array[Byte], key: PrivateKey, algorithm: JwtAsymetricAlgorithm): Array[Byte] = {
     val signer = Signature.getInstance(algorithm.fullName, PROVIDER)
-    signer.initSign(parsePrivateKey(key, keyAlgo))
+    signer.initSign(key)
     signer.update(data)
     signer.sign
   }
 
-  private def signRSA(data: Array[Byte], key: String, algorithm: JwtAlgorithm): Array[Byte] =
-    signAsymetric(data, key, algorithm, RSA)
-
-  private def signECDSA(data: Array[Byte], key: String, algorithm: JwtAlgorithm): Array[Byte] =
-    signAsymetric(data, key, algorithm, ECDSA)
+  def sign(data: String, key: PrivateKey, algorithm: JwtAsymetricAlgorithm): Array[Byte] =
+    sign(bytify(data), key, algorithm)
 
   /**
-    * Generate the signature for a given data using the key and algorithm provided. If none,
-    * the signature will be empty.
+    * Will try to sign some given data by parsing the provided key, if parsing fail, please consider retrieving the SecretKey or the PrivateKey on your side and then use another "sign" method.
     */
-  def sign(data: Array[Byte], key: Option[String], algorithm: Option[JwtAlgorithm]): Array[Byte] =
-    (key, algorithm) match {
-      case (Some(keyValue), Some(algoValue)) => {
-        algoValue match {
-          case _ : JwtHmacAlgorithm =>  signHmac(data, keyValue, algoValue)
-          case _ : JwtRSAAlgorithm => signRSA(data, keyValue, algoValue)
-          case _ : JwtECDSAAlgorithm => signECDSA(data, keyValue, algoValue)
-        }
-      }
-      case _ => Array.empty[Byte]
+  def sign(data: Array[Byte], key: String, algorithm: JwtAlgorithm): Array[Byte] =
+    algorithm match {
+      case algo: JwtHmacAlgorithm => sign(data, new SecretKeySpec(bytify(key), algo.fullName), algo)
+      case algo: JwtRSAAlgorithm => sign(data, parsePrivateKey(key, RSA), algo)
+      case algo: JwtECDSAAlgorithm => sign(data, parsePrivateKey(key, ECDSA), algo)
     }
 
   /**
     * Alias to `sign` using a String data which will be converted to an array of bytes.
     */
-  def sign(data: String, key: Option[String], algorithm: Option[JwtAlgorithm]): Array[Byte] =
+  def sign(data: String, key: String, algorithm: JwtAlgorithm): Array[Byte] =
     sign(bytify(data), key, algorithm)
 
-  private def verifyHmac(data: Array[Byte], signature: Array[Byte], key: String, algorithm: JwtAlgorithm): Boolean =
-    java.util.Arrays.equals(signHmac(data, key, algorithm), signature)
+  /**
+    * Check if a signature is valid for a given data using the key and the HMAC algorithm provided.
+    */
+  def verify(data: Array[Byte], signature: Array[Byte], key: SecretKey, algorithm: JwtHmacAlgorithm): Boolean = {
+    java.util.Arrays.equals(sign(data, key, algorithm), signature)
+  }
 
-  private def verifyAsymetric(data: Array[Byte], signature: Array[Byte], key: String, algorithm: JwtAlgorithm, keyAlgo: String): Boolean = {
+  /**
+    * Check if a signature is valid for a given data using the key and the RSA or ECDSA algorithm provided.
+    */
+  def verify(data: Array[Byte], signature: Array[Byte], key: PublicKey, algorithm: JwtAsymetricAlgorithm): Boolean = {
     val signer = Signature.getInstance(algorithm.fullName, PROVIDER)
-    signer.initVerify(parsePublicKey(key, keyAlgo))
+    signer.initVerify(key)
     signer.update(data)
     signer.verify(signature)
   }
 
-  private def verifyRSA(data: Array[Byte], signature: Array[Byte], key: String, algorithm: JwtAlgorithm): Boolean =
-    verifyAsymetric(data, signature, key, algorithm, RSA)
-
-  private def verifyECDSA(data: Array[Byte], signature: Array[Byte], key: String, algorithm: JwtAlgorithm): Boolean =
-    verifyAsymetric(data, signature, key, algorithm, ECDSA)
-
   /**
-    * Check if a signature is valid for a given data using the key and the algorithm provided.
+    * Will try to check if a signature is valid for a given data by parsing the provided key, if parsing fail, please consider retrieving the SecretKey or the PublicKey on your side and then use another "verify" method.
     */
-  def verify(data: Array[Byte], signature: Array[Byte], key: Option[String], algorithm: Option[JwtAlgorithm]): Boolean = {
-    (key, algorithm) match {
-      case (Some(keyValue), Some(algoValue)) => {
-        algoValue match {
-          case _ : JwtHmacAlgorithm =>  verifyHmac(data, signature, keyValue, algoValue)
-          case _ : JwtRSAAlgorithm => verifyRSA(data, signature, keyValue, algoValue)
-          case _ : JwtECDSAAlgorithm => verifyECDSA(data, signature, keyValue, algoValue)
-        }
-      }
-      case _ => signature.isEmpty
+  def verify(data: Array[Byte], signature: Array[Byte], key: String, algorithm: JwtAlgorithm): Boolean =
+    algorithm match {
+      case algo: JwtHmacAlgorithm =>  verify(data, signature, new SecretKeySpec(bytify(key), algo.fullName), algo)
+      case algo: JwtRSAAlgorithm => verify(data, signature, parsePublicKey(key, RSA), algo)
+      case algo: JwtECDSAAlgorithm => verify(data, signature, parsePublicKey(key, ECDSA), algo)
     }
-  }
 
   /**
     * Alias for `verify`
     */
-  def verify(data: String, signature: Array[Byte], key: Option[String], algorithm: Option[JwtAlgorithm]): Boolean =
-    verify(bytify(data), signature, key, algorithm)
-
-  /**
-    * Alias for `verify`
-    */
-  def verify(data: Array[Byte], signature: String, key: Option[String], algorithm: Option[JwtAlgorithm]): Boolean =
-    verify(data, bytify(signature), key, algorithm)
-
-  /**
-    * Alias for `verify`
-    */
-  def verify(data: String, signature: String, key: Option[String], algorithm: Option[JwtAlgorithm]): Boolean =
+  def verify(data: String, signature: String, key: String, algorithm: JwtAlgorithm): Boolean =
     verify(bytify(data), bytify(signature), key, algorithm)
 }

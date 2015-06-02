@@ -6,6 +6,7 @@ trait JsonDataEntryTrait[J] extends DataEntryBase {
 
 trait JsonCommonFixture[J] extends Fixture {
   def claimJson: J
+  def headerEmptyJson: J
   def mapData(data: DataEntryBase): JsonDataEntryTrait[J]
 
   val dataJson = data.map(mapData)

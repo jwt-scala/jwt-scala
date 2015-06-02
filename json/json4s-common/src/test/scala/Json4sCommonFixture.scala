@@ -22,6 +22,11 @@ trait Json4sCommonFixture extends JsonCommonFixture[JObject] {
     case _ => throw new RuntimeException("I want a JObject!")
   }
 
+  val headerEmptyJson = parseString(headerEmpty) match {
+    case j: JObject => j
+    case _ => throw new RuntimeException("I want a JObject!")
+  }
+
   def mapData(data: DataEntryBase): JsonDataEntry = JsonDataEntry(
     algo = data.algo,
     header = data.header,

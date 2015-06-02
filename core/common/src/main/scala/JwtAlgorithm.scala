@@ -5,9 +5,11 @@ sealed trait JwtAlgorithm {
   def fullName: String
 }
 
+sealed trait JwtAsymetricAlgorithm extends JwtAlgorithm {}
+
 sealed trait JwtHmacAlgorithm extends JwtAlgorithm {}
-sealed trait JwtRSAAlgorithm extends JwtAlgorithm {}
-sealed trait JwtECDSAAlgorithm extends JwtAlgorithm {}
+sealed trait JwtRSAAlgorithm extends JwtAsymetricAlgorithm {}
+sealed trait JwtECDSAAlgorithm extends JwtAsymetricAlgorithm {}
 
 object JwtAlgorithm {
   /**
@@ -150,37 +152,37 @@ object JwtAlgorithm {
     def fullName = "SHA1withECDSA"
   }
 
-  case object ECDSASHA1 extends JwtRSAAlgorithm {
+  case object ECDSASHA1 extends JwtECDSAAlgorithm {
     def name = "ECDSASHA1"
     def fullName = "SHA1withECDSA"
   }
 
-  case object ES256 extends JwtRSAAlgorithm {
-    def name = "RS256"
+  case object ES256 extends JwtECDSAAlgorithm {
+    def name = "ES256"
     def fullName = "SHA256withECDSA"
   }
 
-  case object ECDSASHA256 extends JwtRSAAlgorithm {
+  case object ECDSASHA256 extends JwtECDSAAlgorithm {
     def name = "ECDSASHA256"
     def fullName = "SHA256withECDSA"
   }
 
-  case object ES384 extends JwtRSAAlgorithm {
-    def name = "RS384"
+  case object ES384 extends JwtECDSAAlgorithm {
+    def name = "ES384"
     def fullName = "SHA384withECDSA"
   }
 
-  case object ECDSASHA384 extends JwtRSAAlgorithm {
+  case object ECDSASHA384 extends JwtECDSAAlgorithm {
     def name = "ECDSASHA384"
     def fullName = "SHA384withECDSA"
   }
 
-  case object ES512 extends JwtRSAAlgorithm {
-    def name = "RS512"
+  case object ES512 extends JwtECDSAAlgorithm {
+    def name = "ES512"
     def fullName = "SHA512withECDSA"
   }
 
-  case object ECDSASHA512 extends JwtRSAAlgorithm {
+  case object ECDSASHA512 extends JwtECDSAAlgorithm {
     def name = "ECDSASHA512"
     def fullName = "SHA512withECDSA"
   }

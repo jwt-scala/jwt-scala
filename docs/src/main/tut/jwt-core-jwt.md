@@ -5,15 +5,15 @@
 ```tut
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtHeader, JwtClaim}
 val token = Jwt.encode("""{"user":1}""", "secretKey", JwtAlgorithm.HS256)
-Jwt.decodeRawAll(token, Option("secretKey"))
-Jwt.decodeRawAll(token, Option("wrongKey"))
+Jwt.decodeRawAll(token, "secretKey")
+Jwt.decodeRawAll(token, "wrongKey")
 ```
 
 ### Encoding
 
 ```tut
 // Encode from string, header automatically generated
-Jwt.encode("""{"user":1}""","secretKey", JwtAlgorithm.HS384)
+Jwt.encode("""{"user":1}""", "secretKey", JwtAlgorithm.HS384)
 
 // Encode from case class, header automatically generated
 // Set that the token has been issued now and expires in 10 seconds
@@ -37,19 +37,19 @@ In JWT Scala, espcially when using raw strings which are not typesafe at all, th
 
 ```tut
 // Decode all parts of the token as string
-Jwt.decodeRawAll(token, Option("secretKey"))
+Jwt.decodeRawAll(token, "secretKey")
 
 // Decode only the claim as a string
-Jwt.decodeRaw(token, Option("secretKey"))
+Jwt.decodeRaw(token, "secretKey")
 
 // Decode all parts and cast them as a better type if possible.
 // Since the implementation in JWT Core only use string, it is the same as decodeRawAll
 // But check the result in JWT Play JSON to see the difference
-Jwt.decodeAll(token, Option("secretKey"))
+Jwt.decodeAll(token, "secretKey")
 
 // Same as before, but only the claim
 // (you should start to see a pattern in the naming convention of the functions)
-Jwt.decode(token, Option("secretKey"))
+Jwt.decode(token, "secretKey")
 
 // Failure because the token is not a token at all
 Jwt.decode("Hey there!")
@@ -58,7 +58,7 @@ Jwt.decode("Hey there!")
 Jwt.decode("a.b.c")
 
 // Failure in case we use the wrong key
-Jwt.decode(token, Option("wrongKey"))
+Jwt.decode(token, "wrongKey")
 
 // Failure if the token only starts in 5 seconds
 Jwt.decode(Jwt.encode(JwtClaim().startsIn(5)))

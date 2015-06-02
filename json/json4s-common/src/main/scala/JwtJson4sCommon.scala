@@ -5,6 +5,7 @@ import org.json4s.JsonDSL.WithBigDecimal._
 
 trait JwtJson4sCommon extends JwtJsonCommon[JObject] {
   protected def getAlgorithm(header: JObject): Option[JwtAlgorithm] = header \ "alg" match {
+    case JString("none") => None
     case JString(algo) => Option(JwtAlgorithm.fromString(algo))
     case JNull => None
     case JNothing => None
