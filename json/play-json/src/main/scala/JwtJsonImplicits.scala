@@ -4,17 +4,15 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
 trait JwtJsonImplicits {
-  private def extractString(json: JsObject, fieldName: String): Option[String] = (json \ fieldName) match {
+  private def extractString(json: JsObject, fieldName: String): Option[String] = (json \ fieldName).toOption.flatMap {
     case JsString(value) => Option(value)
     case JsNull => None
-    case _ : JsUndefined => None
     case _ => throw new JwtNonStringException(fieldName)
   }
 
-  private def extractLong(json: JsObject, fieldName: String): Option[Long] = (json \ fieldName) match {
+  private def extractLong(json: JsObject, fieldName: String): Option[Long] = (json \ fieldName).toOption.flatMap {
     case JsNumber(value) => Option(value.toLong)
     case JsNull => None
-    case _ : JsUndefined => None
     case _ => throw new JwtNonNumberException(fieldName)
   }
 

@@ -41,13 +41,14 @@ case class JwtSession(
   })
 
   /** Retrieve the value corresponding to `fieldName` from `claimData` */
-  def get(fieldName: String): JsValue = claimData \ fieldName
+  def get(fieldName: String): Option[JsValue] = (claimData \ fieldName).toOption
 
   /** After retrieving the value, try to read it as T, if no value or fails, returns None. */
-  def getAs[T](fieldName: String)(implicit reader: Reads[T]): Option[T] = reader.reads(get(fieldName)).asOpt
+  def getAs[T](fieldName: String)(implicit reader: Reads[T]): Option[T] =
+    get(fieldName).flatMap(value => reader.reads(value).asOpt)
 
   /** Alias of `get` */
-  def apply(fieldName: String): JsValue = get(fieldName)
+  def apply(fieldName: String): Option[JsValue] = get(fieldName)
 
   lazy val isEmpty: Boolean = claimData.keys.isEmpty
 
@@ -75,21 +76,21 @@ case class JwtSession(
 
 object JwtSession {
   lazy val HEADER_NAME: String =
-    Play.maybeApplication.flatMap(_.configuration.getString("session.jwtName")).getOrElse("Authorization")
+    Play.maybeApplication.flatMap(_.configuration.getString("play.http.session.jwtName")).getOrElse("Authorization")
 
   lazy val MAX_AGE: Option[Long] =
-    Play.maybeApplication.flatMap(_.configuration.getMilliseconds("session.maxAge").map(_ / 1000))
+    Play.maybeApplication.flatMap(_.configuration.getMilliseconds("play.http.session.maxAge").map(_ / 1000))
 
   lazy val ALGORITHM: JwtAlgorithm =
     Play.maybeApplication
-      .flatMap(_.configuration.getString("session.algorithm").map(JwtAlgorithm.fromString))
+      .flatMap(_.configuration.getString("play.http.session.algorithm").map(JwtAlgorithm.fromString))
       .getOrElse(JwtAlgorithm.HmacSHA256)
 
   lazy val TOKEN_PREFIX: String =
-    Play.maybeApplication.flatMap(_.configuration.getString("session.tokenPrefix")).getOrElse("Bearer ")
+    Play.maybeApplication.flatMap(_.configuration.getString("play.http.session.tokenPrefix")).getOrElse("Bearer ")
 
   private def key: Option[String] =
-    Play.maybeApplication.flatMap(_.configuration.getString("application.secret"))
+    Play.maybeApplication.flatMap(_.configuration.getString("play.crypto.secret"))
 
   def deserialize(token: String): JwtSession = (key match {
       case Some(k) => JwtJson.decodeJsonAll(token, k)

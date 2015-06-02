@@ -9,7 +9,7 @@ import pdi.jwt._
 
 import models.User
 
-object Application extends Controller with Secured {
+class Application extends Controller with Secured {
   val passwords = Seq("red", "blue", "green")
 
   def index = Action {
@@ -23,7 +23,7 @@ object Application extends Controller with Secured {
   def login = Action(parse.json) { implicit request =>
     request.body.validate(loginForm).fold(
       errors => {
-        BadRequest(JsError.toFlatJson(errors))
+        BadRequest(JsError.toJson(errors))
       },
       form => {
         if (passwords.contains(form._2)) {

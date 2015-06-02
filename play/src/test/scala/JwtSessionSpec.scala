@@ -14,7 +14,7 @@ class JwtSessionSpec extends PlaySpec with OneAppPerSuite with PlayFixture {
 
   implicit override lazy val app: FakeApplication =
     FakeApplication(
-      additionalConfiguration = Map("application.secret" -> secretKey)
+      additionalConfiguration = Map("play.crypto.secret" -> secretKey)
     )
 
   val session = JwtSession().withHeader(JwtHeader(JwtAlgorithm.HmacSHA256))
@@ -47,16 +47,16 @@ class JwtSessionSpec extends PlaySpec with OneAppPerSuite with PlayFixture {
     }
 
     "get stuff" in {
-      assert(session2("a") == JsNumber(1))
-      assert(session2("b") == JsString("c"))
-      assert(session2("e") == JsBoolean(true))
-      assert(session2("f") == Json.arr(1, 2, 3))
-      assert(session2("nope") match { case _: JsUndefined => true; case _ => false })
-      assert(session2.get("a") == JsNumber(1))
-      assert(session2.get("b") == JsString("c"))
-      assert(session2.get("e") == JsBoolean(true))
-      assert(session2.get("f") == Json.arr(1, 2, 3))
-      assert(session2.get("nope") match { case _: JsUndefined => true; case _ => false })
+      assert(session2("a") == Option(JsNumber(1)))
+      assert(session2("b") == Option(JsString("c")))
+      assert(session2("e") == Option(JsBoolean(true)))
+      assert(session2("f") == Option(Json.arr(1, 2, 3)))
+      assert(session2("nope") match { case None => true; case _ => false })
+      assert(session2.get("a") == Option(JsNumber(1)))
+      assert(session2.get("b") == Option(JsString("c")))
+      assert(session2.get("e") == Option(JsBoolean(true)))
+      assert(session2.get("f") == Option(Json.arr(1, 2, 3)))
+      assert(session2.get("nope") match { case None => true; case _ => false })
       assert(session2.getAs[User]("user") == Option(user))
       assert(session2.getAs[User]("nope") == None)
     }

@@ -6,6 +6,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.11.6"
 
+routesGenerator := InjectedRoutesGenerator
+
 resolvers += Resolver.jcenterRepo
 
 libraryDependencies ++= Seq(

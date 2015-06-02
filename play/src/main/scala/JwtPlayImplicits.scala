@@ -73,7 +73,7 @@ trait JwtPlayImplicits {
 
     /** Keep the current [[JwtSession]] and add some values in it, if a key is already defined, it will be overriden. */
     def addingToJwtSession(values: (String, String)*)(implicit request: RequestHeader): Result =
-      withJwtSession(jwtSession + new JsObject(values.map(kv => kv._1 -> JsString(kv._2))))
+      withJwtSession(jwtSession + new JsObject(values.map(kv => kv._1 -> JsString(kv._2)).toMap))
 
     /** Keep the current [[JwtSession]] and add some values in it, if a key is already defined, it will be overriden. */
     def addingToJwtSession[A: Writes](key: String, value: A)(implicit request: RequestHeader): Result =

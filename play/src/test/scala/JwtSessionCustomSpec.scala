@@ -27,11 +27,11 @@ class JwtSessionCustomSpec extends PlaySpec with OneAppPerSuite with BeforeAndAf
   implicit override lazy val app: FakeApplication =
     FakeApplication(
       additionalConfiguration = Map(
-        "application.secret" -> secretKey,
-        "session.jwtName" -> HEADER_NAME,
-        "session.maxAge" -> sessionTimeout * 1000, // 10sec... that's really short :)
-        "session.algorithm" -> "HS512",
-        "session.tokenPrefix" -> ""
+        "play.crypto.secret" -> secretKey,
+        "play.http.session.jwtName" -> HEADER_NAME,
+        "play.http.session.maxAge" -> sessionTimeout * 1000, // 10sec... that's really short :)
+        "play.http.session.algorithm" -> "HS512",
+        "play.http.session.tokenPrefix" -> ""
       )
     )
 

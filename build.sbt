@@ -266,7 +266,8 @@ lazy val playEdge = project.in(file("play"))
 lazy val examplePlayAngularProject = project.in(file("examples/play-angular"))
   .settings(noPublishSettings)
   .settings(
-    name := "playAngular"
+    name := "playAngular",
+    routesGenerator := play.sbt.routes.RoutesKeys.InjectedRoutesGenerator
   )
   .enablePlugins(play.PlayScala)
   .aggregate(playLegacy)

@@ -4,7 +4,7 @@ resolvers ++= Seq(
   )(Resolver.ivyStylePatterns)
 )
 
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.3.4")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.4.0")
 
 addSbtPlugin("me.lessis"         % "bintray-sbt"            % "0.2.1")
 addSbtPlugin("com.github.gseitz" % "sbt-release"            % "0.7.1")
