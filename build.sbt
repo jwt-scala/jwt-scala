@@ -7,8 +7,8 @@ import Dependencies._
 import com.typesafe.sbt.SbtSite.SiteKeys._
 import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 
-val previousVersion = "0.1.0"
-val buildVersion = "0.2.0"
+val previousVersion = "0.2.0"
+val buildVersion = "0.3.0"
 
 addCommandAlias("testAll", ";coreCommonLegacy/test;coreCommonEdge/test;playJsonLegacy/test;playJsonEdge/test;json4sNativeLegacy/test;json4sNativeEdge/test;json4sJacksonLegacy/test;json4sJacksonEdge/test;playLegacy/test;playEdge/test")
 
@@ -247,7 +247,7 @@ lazy val playLegacy = project.in(file("play"))
   .settings(
     name := "jwt-play-legacy",
     target <<= target(_ / "legacy"),
-    libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus/*, Libs.playWs*/),
+    libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus),
     testGrouping in Test <<= definedTests in Test map groupPlayTest,
     bintray.Keys.packageLabels in bintray.Keys.bintray ++= Seq("play", "play framework")
   )
@@ -259,7 +259,7 @@ lazy val playEdge = project.in(file("play"))
   .settings(
     name := "jwt-play",
     target <<= target(_ / "edge"),
-    libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus/*, Libs.playWs*/),
+    libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus),
     testGrouping in Test <<= definedTests in Test map groupPlayTest,
     bintray.Keys.packageLabels in bintray.Keys.bintray ++= Seq("play", "play framework")
   )
