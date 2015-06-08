@@ -41,10 +41,10 @@ class JwtSessionCustomSpec extends PlaySpec with OneAppPerSuite with BeforeAndAf
 
   "Init FakeApplication" must {
     "have the correct config" in {
-      app.configuration.getString("session.jwtName") mustEqual Option(HEADER_NAME)
-      app.configuration.getString("session.algorithm") mustEqual Option("HS512")
-      app.configuration.getString("session.tokenPrefix") mustEqual Option("")
-      app.configuration.getMilliseconds("session.maxAge") mustEqual Option(sessionTimeout * 1000)
+      app.configuration.getString("play.http.session.jwtName") mustEqual Option(HEADER_NAME)
+      app.configuration.getString("play.http.session.algorithm") mustEqual Option("HS512")
+      app.configuration.getString("play.http.session.tokenPrefix") mustEqual Option("")
+      app.configuration.getMilliseconds("play.http.session.maxAge") mustEqual Option(sessionTimeout * 1000)
     }
   }
 

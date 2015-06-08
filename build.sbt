@@ -41,7 +41,8 @@ val commonSettings = Seq(
   resolvers ++= Seq(
     "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"
   ),
-  libraryDependencies ++= Seq(Libs.bouncyCastle, Libs.scalatest, Libs.jmockit),
+  libraryDependencies ++= Seq(Libs.scalatest, Libs.jmockit),
+  //scalacOptions += "-Ylog-classpath",
   scalacOptions in (Compile, doc) ++= Seq("-unchecked", "-deprecation"),
   aggregate in test := false,
   fork in test := true,
@@ -123,7 +124,8 @@ lazy val coreCommonLegacy = project.in(file("core/common"))
   .settings(publishSettings)
   .settings(
     name := "jwt-core-legacy",
-    target <<= target(_ / "legacy")
+    target <<= target(_ / "legacy"),
+    libraryDependencies ++= Seq(Libs.bouncyCastle)
   )
   .aggregate(coreLegacy)
   .dependsOn(coreLegacy % "compile->compile;test->test")
@@ -132,7 +134,8 @@ lazy val coreCommonEdge = project.in(file("core/common"))
   .settings(publishSettings)
   .settings(
     name := "jwt-core",
-    target <<= target(_ / "edge")
+    target <<= target(_ / "edge"),
+    libraryDependencies ++= Seq(Libs.bouncyCastle)
   )
   .aggregate(coreEdge)
   .dependsOn(coreEdge % "compile->compile;test->test")
@@ -244,7 +247,7 @@ lazy val playLegacy = project.in(file("play"))
   .settings(
     name := "jwt-play-legacy",
     target <<= target(_ / "legacy"),
-    libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus),
+    libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus/*, Libs.playWs*/),
     testGrouping in Test <<= definedTests in Test map groupPlayTest,
     bintray.Keys.packageLabels in bintray.Keys.bintray ++= Seq("play", "play framework")
   )
@@ -256,7 +259,7 @@ lazy val playEdge = project.in(file("play"))
   .settings(
     name := "jwt-play",
     target <<= target(_ / "edge"),
-    libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus),
+    libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus/*, Libs.playWs*/),
     testGrouping in Test <<= definedTests in Test map groupPlayTest,
     bintray.Keys.packageLabels in bintray.Keys.bintray ++= Seq("play", "play framework")
   )
@@ -270,5 +273,5 @@ lazy val examplePlayAngularProject = project.in(file("examples/play-angular"))
     routesGenerator := play.sbt.routes.RoutesKeys.InjectedRoutesGenerator
   )
   .enablePlugins(play.PlayScala)
-  .aggregate(playLegacy)
-  .dependsOn(playLegacy)
+  .aggregate(playEdge)
+  .dependsOn(playEdge)

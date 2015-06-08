@@ -16,7 +16,8 @@ object Dependencies {
     val playJson         = "com.typesafe.play" %% "play-json" % V.play % "provided"
     val playTest         = "com.typesafe.play" %% "play-test" % V.play % "test"
     val playTestProvided = "com.typesafe.play" %% "play-test" % V.play % "provided"
-
+    // This one is to fix a DI bug during test
+    val playWs           = "com.typesafe.play" %% "play-ws"   % V.play % "test"
 
     val json4sCore    = "org.json4s" %% "json4s-core"    % V.json4s % "provided"
     val json4sNative  = "org.json4s" %% "json4s-native"  % V.json4s % "provided"
