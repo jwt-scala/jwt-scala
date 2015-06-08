@@ -1,4 +1,6 @@
-package pdi.jwt
+package pdi.jwt.exceptions
+
+import pdi.jwt.JwtTime
 
 sealed trait JwtException
 

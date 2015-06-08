@@ -3,6 +3,9 @@ package pdi.jwt
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
+import  pdi.jwt.algorithms.JwtAlgorithm
+import pdi.jwt.exceptions.{JwtNonStringException, JwtNonNumberException, JwtNonSupportedAlgorithm}
+
 trait JwtJsonImplicits {
   private def extractString(json: JsObject, fieldName: String): Option[String] = (json \ fieldName).toOption.flatMap {
     case JsString(value) => Option(value)

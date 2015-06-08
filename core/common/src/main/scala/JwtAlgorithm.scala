@@ -1,4 +1,6 @@
-package pdi.jwt
+package pdi.jwt.algorithms
+
+import pdi.jwt.exceptions.JwtNonSupportedAlgorithm
 
 sealed trait JwtAlgorithm {
   def name: String

@@ -101,7 +101,7 @@ JsObject or anything else.</p><p>Please, check implementations, like <a href="Jw
         <div id="values" class="values members">
               <h3>Abstract Value Members</h3>
               <ol><li name="pdi.jwt.JwtCore#extractAlgorithm" visbl="prt" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="extractAlgorithm(header:H):Option[pdi.jwt.JwtAlgorithm]"></a>
+      <a id="extractAlgorithm(header:H):Option[pdi.jwt.algorithms.JwtAlgorithm]"></a>
       <a id="extractAlgorithm(H):Option[JwtAlgorithm]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -109,10 +109,10 @@ JsObject or anything else.</p><p>Please, check implementations, like <a href="Jw
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">extractAlgorithm</span><span class="params">(<span name="header">header: <span class="extype" name="pdi.jwt.JwtCore.H">H</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="JwtAlgorithm.html" class="extype" name="pdi.jwt.JwtAlgorithm">JwtAlgorithm</a>]</span>
+        <span class="name">extractAlgorithm</span><span class="params">(<span name="header">header: <span class="extype" name="pdi.jwt.JwtCore.H">H</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="algorithms/JwtAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtAlgorithm">JwtAlgorithm</a>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtCore@extractAlgorithm(header:H):Option[pdi.jwt.JwtAlgorithm]" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtCore@extractAlgorithm(header:H):Option[pdi.jwt.algorithms.JwtAlgorithm]" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -659,7 +659,7 @@ JsObject or anything else.</p><p>Please, check implementations, like <a href="Jw
 </p></div><dl class="paramcmts block"><dt class="param">header</dt><dd class="cmt"><p>the header to stringify as a JSON before encoding the token</p></dd><dt class="param">claim</dt><dd class="cmt"><p>the claim to stringify as a JSON before encoding the token
 </p></dd><dt>returns</dt><dd class="cmt"><p>a JSON Web Token as a Base64 url-safe encoded String which can be used inside an HTTP header</p></dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#encode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="encode(claim:pdi.jwt.JwtClaim,key:java.security.PrivateKey,algorithm:pdi.jwt.JwtAsymetricAlgorithm):String"></a>
+      <a id="encode(claim:pdi.jwt.JwtClaim,key:java.security.PrivateKey,algorithm:pdi.jwt.algorithms.JwtAsymetricAlgorithm):String"></a>
       <a id="encode(JwtClaim,PrivateKey,JwtAsymetricAlgorithm):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -667,10 +667,10 @@ JsObject or anything else.</p><p>Please, check implementations, like <a href="Jw
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">encode</span><span class="params">(<span name="claim">claim: <a href="JwtClaim.html" class="extype" name="pdi.jwt.JwtClaim">JwtClaim</a></span>, <span name="key">key: <span class="extype" name="java.security.PrivateKey">PrivateKey</span></span>, <span name="algorithm">algorithm: <a href="JwtAsymetricAlgorithm.html" class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">encode</span><span class="params">(<span name="claim">claim: <a href="JwtClaim.html" class="extype" name="pdi.jwt.JwtClaim">JwtClaim</a></span>, <span name="key">key: <span class="extype" name="java.security.PrivateKey">PrivateKey</span></span>, <span name="algorithm">algorithm: <a href="algorithms/JwtAsymetricAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtCore@encode(claim:pdi.jwt.JwtClaim,key:java.security.PrivateKey,algorithm:pdi.jwt.JwtAsymetricAlgorithm):String" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtCore@encode(claim:pdi.jwt.JwtClaim,key:java.security.PrivateKey,algorithm:pdi.jwt.algorithms.JwtAsymetricAlgorithm):String" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -678,7 +678,7 @@ JsObject or anything else.</p><p>Please, check implementations, like <a href="Jw
 </p></div><dl class="paramcmts block"><dt class="param">claim</dt><dd class="cmt"><p>the claim of the JSON Web Token</p></dd><dt class="param">key</dt><dd class="cmt"><p>the key that will be used to check the token signature</p></dd><dt class="param">algorithm</dt><dd class="cmt"><p>the algorithm to sign the token
 </p></dd><dt>returns</dt><dd class="cmt"><p>a JSON Web Token as a Base64 url-safe encoded String which can be used inside an HTTP header</p></dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#encode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="encode(claim:pdi.jwt.JwtClaim,key:javax.crypto.SecretKey,algorithm:pdi.jwt.JwtHmacAlgorithm):String"></a>
+      <a id="encode(claim:pdi.jwt.JwtClaim,key:javax.crypto.SecretKey,algorithm:pdi.jwt.algorithms.JwtHmacAlgorithm):String"></a>
       <a id="encode(JwtClaim,SecretKey,JwtHmacAlgorithm):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -686,10 +686,10 @@ JsObject or anything else.</p><p>Please, check implementations, like <a href="Jw
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">encode</span><span class="params">(<span name="claim">claim: <a href="JwtClaim.html" class="extype" name="pdi.jwt.JwtClaim">JwtClaim</a></span>, <span name="key">key: <span class="extype" name="javax.crypto.SecretKey">SecretKey</span></span>, <span name="algorithm">algorithm: <a href="JwtHmacAlgorithm.html" class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">encode</span><span class="params">(<span name="claim">claim: <a href="JwtClaim.html" class="extype" name="pdi.jwt.JwtClaim">JwtClaim</a></span>, <span name="key">key: <span class="extype" name="javax.crypto.SecretKey">SecretKey</span></span>, <span name="algorithm">algorithm: <a href="algorithms/JwtHmacAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtHmacAlgorithm">JwtHmacAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtCore@encode(claim:pdi.jwt.JwtClaim,key:javax.crypto.SecretKey,algorithm:pdi.jwt.JwtHmacAlgorithm):String" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtCore@encode(claim:pdi.jwt.JwtClaim,key:javax.crypto.SecretKey,algorithm:pdi.jwt.algorithms.JwtHmacAlgorithm):String" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -697,7 +697,7 @@ JsObject or anything else.</p><p>Please, check implementations, like <a href="Jw
 </p></div><dl class="paramcmts block"><dt class="param">claim</dt><dd class="cmt"><p>the claim of the JSON Web Token</p></dd><dt class="param">key</dt><dd class="cmt"><p>the key that will be used to check the token signature</p></dd><dt class="param">algorithm</dt><dd class="cmt"><p>the algorithm to sign the token
 </p></dd><dt>returns</dt><dd class="cmt"><p>a JSON Web Token as a Base64 url-safe encoded String which can be used inside an HTTP header</p></dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#encode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="encode(claim:pdi.jwt.JwtClaim,key:String,algorithm:pdi.jwt.JwtAlgorithm):String"></a>
+      <a id="encode(claim:pdi.jwt.JwtClaim,key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):String"></a>
       <a id="encode(JwtClaim,String,JwtAlgorithm):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -705,10 +705,10 @@ JsObject or anything else.</p><p>Please, check implementations, like <a href="Jw
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">encode</span><span class="params">(<span name="claim">claim: <a href="JwtClaim.html" class="extype" name="pdi.jwt.JwtClaim">JwtClaim</a></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="JwtAlgorithm.html" class="extype" name="pdi.jwt.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">encode</span><span class="params">(<span name="claim">claim: <a href="JwtClaim.html" class="extype" name="pdi.jwt.JwtClaim">JwtClaim</a></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="algorithms/JwtAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtCore@encode(claim:pdi.jwt.JwtClaim,key:String,algorithm:pdi.jwt.JwtAlgorithm):String" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtCore@encode(claim:pdi.jwt.JwtClaim,key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):String" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -737,7 +737,7 @@ to None.
 </p></div><dl class="paramcmts block"><dt class="param">claim</dt><dd class="cmt"><p>the claim of the JSON Web Token
 </p></dd><dt>returns</dt><dd class="cmt"><p>a JSON Web Token as a Base64 url-safe encoded String which can be used inside an HTTP header</p></dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#encode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="encode(claim:String,key:java.security.PrivateKey,algorithm:pdi.jwt.JwtAsymetricAlgorithm):String"></a>
+      <a id="encode(claim:String,key:java.security.PrivateKey,algorithm:pdi.jwt.algorithms.JwtAsymetricAlgorithm):String"></a>
       <a id="encode(String,PrivateKey,JwtAsymetricAlgorithm):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -745,10 +745,10 @@ to None.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">encode</span><span class="params">(<span name="claim">claim: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="java.security.PrivateKey">PrivateKey</span></span>, <span name="algorithm">algorithm: <a href="JwtAsymetricAlgorithm.html" class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">encode</span><span class="params">(<span name="claim">claim: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="java.security.PrivateKey">PrivateKey</span></span>, <span name="algorithm">algorithm: <a href="algorithms/JwtAsymetricAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtCore@encode(claim:String,key:java.security.PrivateKey,algorithm:pdi.jwt.JwtAsymetricAlgorithm):String" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtCore@encode(claim:String,key:java.security.PrivateKey,algorithm:pdi.jwt.algorithms.JwtAsymetricAlgorithm):String" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -758,7 +758,7 @@ for the key and the algorithm.
 </p></div><dl class="paramcmts block"><dt class="param">claim</dt><dd class="cmt"><p>a valid stringified JSON representing the claim of the token</p></dd><dt class="param">key</dt><dd class="cmt"><p>the key that will be used to check the token signature</p></dd><dt class="param">algorithm</dt><dd class="cmt"><p>the algorithm to sign the token
 </p></dd><dt>returns</dt><dd class="cmt"><p>a JSON Web Token as a Base64 url-safe encoded String which can be used inside an HTTP header</p></dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#encode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="encode(claim:String,key:javax.crypto.SecretKey,algorithm:pdi.jwt.JwtHmacAlgorithm):String"></a>
+      <a id="encode(claim:String,key:javax.crypto.SecretKey,algorithm:pdi.jwt.algorithms.JwtHmacAlgorithm):String"></a>
       <a id="encode(String,SecretKey,JwtHmacAlgorithm):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -766,10 +766,10 @@ for the key and the algorithm.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">encode</span><span class="params">(<span name="claim">claim: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="javax.crypto.SecretKey">SecretKey</span></span>, <span name="algorithm">algorithm: <a href="JwtHmacAlgorithm.html" class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">encode</span><span class="params">(<span name="claim">claim: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="javax.crypto.SecretKey">SecretKey</span></span>, <span name="algorithm">algorithm: <a href="algorithms/JwtHmacAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtHmacAlgorithm">JwtHmacAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtCore@encode(claim:String,key:javax.crypto.SecretKey,algorithm:pdi.jwt.JwtHmacAlgorithm):String" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtCore@encode(claim:String,key:javax.crypto.SecretKey,algorithm:pdi.jwt.algorithms.JwtHmacAlgorithm):String" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -779,7 +779,7 @@ for the key and the algorithm.
 </p></div><dl class="paramcmts block"><dt class="param">claim</dt><dd class="cmt"><p>a valid stringified JSON representing the claim of the token</p></dd><dt class="param">key</dt><dd class="cmt"><p>the key that will be used to check the token signature</p></dd><dt class="param">algorithm</dt><dd class="cmt"><p>the algorithm to sign the token
 </p></dd><dt>returns</dt><dd class="cmt"><p>a JSON Web Token as a Base64 url-safe encoded String which can be used inside an HTTP header</p></dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#encode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="encode(claim:String,key:String,algorithm:pdi.jwt.JwtAlgorithm):String"></a>
+      <a id="encode(claim:String,key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):String"></a>
       <a id="encode(String,String,JwtAlgorithm):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -787,10 +787,10 @@ for the key and the algorithm.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">encode</span><span class="params">(<span name="claim">claim: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="JwtAlgorithm.html" class="extype" name="pdi.jwt.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">encode</span><span class="params">(<span name="claim">claim: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="algorithms/JwtAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtCore@encode(claim:String,key:String,algorithm:pdi.jwt.JwtAlgorithm):String" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtCore@encode(claim:String,key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):String" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -819,7 +819,7 @@ for the key and the algorithm.
 </p></div><dl class="paramcmts block"><dt class="param">claim</dt><dd class="cmt"><p>a valid stringified JSON representing the claim of the token
 </p></dd><dt>returns</dt><dd class="cmt"><p>a JSON Web Token as a Base64 url-safe encoded String which can be used inside an HTTP header</p></dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#encode" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="encode(header:String,claim:String,key:java.security.PrivateKey,algorithm:pdi.jwt.JwtAsymetricAlgorithm):String"></a>
+      <a id="encode(header:String,claim:String,key:java.security.PrivateKey,algorithm:pdi.jwt.algorithms.JwtAsymetricAlgorithm):String"></a>
       <a id="encode(String,String,PrivateKey,JwtAsymetricAlgorithm):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -827,16 +827,16 @@ for the key and the algorithm.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">encode</span><span class="params">(<span name="header">header: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="java.security.PrivateKey">PrivateKey</span></span>, <span name="algorithm">algorithm: <a href="JwtAsymetricAlgorithm.html" class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">encode</span><span class="params">(<span name="header">header: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="java.security.PrivateKey">PrivateKey</span></span>, <span name="algorithm">algorithm: <a href="algorithms/JwtAsymetricAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtCore@encode(header:String,claim:String,key:java.security.PrivateKey,algorithm:pdi.jwt.JwtAsymetricAlgorithm):String" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtCore@encode(header:String,claim:String,key:java.security.PrivateKey,algorithm:pdi.jwt.algorithms.JwtAsymetricAlgorithm):String" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
       
     </li><li name="pdi.jwt.JwtCore#encode" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="encode(header:String,claim:String,key:javax.crypto.SecretKey,algorithm:pdi.jwt.JwtHmacAlgorithm):String"></a>
+      <a id="encode(header:String,claim:String,key:javax.crypto.SecretKey,algorithm:pdi.jwt.algorithms.JwtHmacAlgorithm):String"></a>
       <a id="encode(String,String,SecretKey,JwtHmacAlgorithm):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -844,16 +844,16 @@ for the key and the algorithm.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">encode</span><span class="params">(<span name="header">header: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="javax.crypto.SecretKey">SecretKey</span></span>, <span name="algorithm">algorithm: <a href="JwtHmacAlgorithm.html" class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">encode</span><span class="params">(<span name="header">header: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="javax.crypto.SecretKey">SecretKey</span></span>, <span name="algorithm">algorithm: <a href="algorithms/JwtHmacAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtHmacAlgorithm">JwtHmacAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtCore@encode(header:String,claim:String,key:javax.crypto.SecretKey,algorithm:pdi.jwt.JwtHmacAlgorithm):String" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtCore@encode(header:String,claim:String,key:javax.crypto.SecretKey,algorithm:pdi.jwt.algorithms.JwtHmacAlgorithm):String" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
       
     </li><li name="pdi.jwt.JwtCore#encode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="encode(header:String,claim:String,key:String,algorithm:pdi.jwt.JwtAlgorithm):String"></a>
+      <a id="encode(header:String,claim:String,key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):String"></a>
       <a id="encode(String,String,String,JwtAlgorithm):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -861,10 +861,10 @@ for the key and the algorithm.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">encode</span><span class="params">(<span name="header">header: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="JwtAlgorithm.html" class="extype" name="pdi.jwt.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">encode</span><span class="params">(<span name="header">header: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="algorithms/JwtAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtCore@encode(header:String,claim:String,key:String,algorithm:pdi.jwt.JwtAlgorithm):String" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtCore@encode(header:String,claim:String,key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):String" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -1178,7 +1178,7 @@ for the key and the algorithm.
     </span>
       <p class="shortcomment cmt">An alias of <code>validate</code> in case you want to directly pass a string key.</p><div class="fullcomment"><div class="comment cmt"><p>An alias of <code>validate</code> in case you want to directly pass a string key.
 </p></div><dl class="paramcmts block"><dt class="param">token</dt><dd class="cmt"><p>a JSON Web Token as a Base64 url-safe encoded String which can be used inside an HTTP header</p></dd><dt class="param">key</dt><dd class="cmt"><p>the key that will be used to check the token signature</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="IllegalArgumentException"><code>IllegalArgumentException</code></span> couldn't decode the token since it's not a valid base64 string
-</p></span><span class="cmt"><p><a href="JwtExpirationException.html" class="extype" name="pdi.jwt.JwtExpirationException"><code>JwtExpirationException</code></a> the token isn't valid anymore because its <code>expiration</code> attribute is in the past</p></span><span class="cmt"><p><a href="JwtLengthException.html" class="extype" name="pdi.jwt.JwtLengthException"><code>JwtLengthException</code></a> the number of parts separated by dots is wrong</p></span><span class="cmt"><p><a href="JwtNotBeforeException.html" class="extype" name="pdi.jwt.JwtNotBeforeException"><code>JwtNotBeforeException</code></a> the token isn't valid yet because its <code>notBefore</code> attribute is in the future</p></span><span class="cmt"><p><a href="JwtValidationException.html" class="extype" name="pdi.jwt.JwtValidationException"><code>JwtValidationException</code></a> default validation exeption</p></span></dd></dl></div>
+</p></span><span class="cmt"><p><span class="extype" name="JwtExpirationException"><code>JwtExpirationException</code></span> the token isn't valid anymore because its <code>expiration</code> attribute is in the past</p></span><span class="cmt"><p><span class="extype" name="JwtLengthException"><code>JwtLengthException</code></span> the number of parts separated by dots is wrong</p></span><span class="cmt"><p><span class="extype" name="JwtNotBeforeException"><code>JwtNotBeforeException</code></span> the token isn't valid yet because its <code>notBefore</code> attribute is in the future</p></span><span class="cmt"><p><span class="extype" name="JwtValidationException"><code>JwtValidationException</code></span> default validation exeption</p></span></dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#validate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="validate(token:String,key:javax.crypto.SecretKey):Unit"></a>
       <a id="validate(String,SecretKey):Unit"></a>
@@ -1197,7 +1197,7 @@ for the key and the algorithm.
     </span>
       <p class="shortcomment cmt">An alias of <code>validate</code> in case you want to directly pass a string key.</p><div class="fullcomment"><div class="comment cmt"><p>An alias of <code>validate</code> in case you want to directly pass a string key.
 </p></div><dl class="paramcmts block"><dt class="param">token</dt><dd class="cmt"><p>a JSON Web Token as a Base64 url-safe encoded String which can be used inside an HTTP header</p></dd><dt class="param">key</dt><dd class="cmt"><p>the key that will be used to check the token signature</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="IllegalArgumentException"><code>IllegalArgumentException</code></span> couldn't decode the token since it's not a valid base64 string
-</p></span><span class="cmt"><p><a href="JwtExpirationException.html" class="extype" name="pdi.jwt.JwtExpirationException"><code>JwtExpirationException</code></a> the token isn't valid anymore because its <code>expiration</code> attribute is in the past</p></span><span class="cmt"><p><a href="JwtLengthException.html" class="extype" name="pdi.jwt.JwtLengthException"><code>JwtLengthException</code></a> the number of parts separated by dots is wrong</p></span><span class="cmt"><p><a href="JwtNotBeforeException.html" class="extype" name="pdi.jwt.JwtNotBeforeException"><code>JwtNotBeforeException</code></a> the token isn't valid yet because its <code>notBefore</code> attribute is in the future</p></span><span class="cmt"><p><a href="JwtValidationException.html" class="extype" name="pdi.jwt.JwtValidationException"><code>JwtValidationException</code></a> default validation exeption</p></span></dd></dl></div>
+</p></span><span class="cmt"><p><span class="extype" name="JwtExpirationException"><code>JwtExpirationException</code></span> the token isn't valid anymore because its <code>expiration</code> attribute is in the past</p></span><span class="cmt"><p><span class="extype" name="JwtLengthException"><code>JwtLengthException</code></span> the number of parts separated by dots is wrong</p></span><span class="cmt"><p><span class="extype" name="JwtNotBeforeException"><code>JwtNotBeforeException</code></span> the token isn't valid yet because its <code>notBefore</code> attribute is in the future</p></span><span class="cmt"><p><span class="extype" name="JwtValidationException"><code>JwtValidationException</code></span> default validation exeption</p></span></dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#validate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="validate(token:String,key:String):Unit"></a>
       <a id="validate(String,String):Unit"></a>
@@ -1216,7 +1216,7 @@ for the key and the algorithm.
     </span>
       <p class="shortcomment cmt">An alias of <code>validate</code> in case you want to directly pass a string key.</p><div class="fullcomment"><div class="comment cmt"><p>An alias of <code>validate</code> in case you want to directly pass a string key.
 </p></div><dl class="paramcmts block"><dt class="param">token</dt><dd class="cmt"><p>a JSON Web Token as a Base64 url-safe encoded String which can be used inside an HTTP header</p></dd><dt class="param">key</dt><dd class="cmt"><p>the key that will be used to check the token signature</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="IllegalArgumentException"><code>IllegalArgumentException</code></span> couldn't decode the token since it's not a valid base64 string
-</p></span><span class="cmt"><p><a href="JwtExpirationException.html" class="extype" name="pdi.jwt.JwtExpirationException"><code>JwtExpirationException</code></a> the token isn't valid anymore because its <code>expiration</code> attribute is in the past</p></span><span class="cmt"><p><a href="JwtLengthException.html" class="extype" name="pdi.jwt.JwtLengthException"><code>JwtLengthException</code></a> the number of parts separated by dots is wrong</p></span><span class="cmt"><p><a href="JwtNotBeforeException.html" class="extype" name="pdi.jwt.JwtNotBeforeException"><code>JwtNotBeforeException</code></a> the token isn't valid yet because its <code>notBefore</code> attribute is in the future</p></span><span class="cmt"><p><a href="JwtValidationException.html" class="extype" name="pdi.jwt.JwtValidationException"><code>JwtValidationException</code></a> default validation exeption</p></span></dd></dl></div>
+</p></span><span class="cmt"><p><span class="extype" name="JwtExpirationException"><code>JwtExpirationException</code></span> the token isn't valid anymore because its <code>expiration</code> attribute is in the past</p></span><span class="cmt"><p><span class="extype" name="JwtLengthException"><code>JwtLengthException</code></span> the number of parts separated by dots is wrong</p></span><span class="cmt"><p><span class="extype" name="JwtNotBeforeException"><code>JwtNotBeforeException</code></span> the token isn't valid yet because its <code>notBefore</code> attribute is in the future</p></span><span class="cmt"><p><span class="extype" name="JwtValidationException"><code>JwtValidationException</code></span> default validation exeption</p></span></dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#validate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="validate(token:String):Unit"></a>
       <a id="validate(String):Unit"></a>
@@ -1235,7 +1235,7 @@ for the key and the algorithm.
     </span>
       <p class="shortcomment cmt">Valid a token: doesn't return anything but will thrown exceptions if there are any errors.</p><div class="fullcomment"><div class="comment cmt"><p>Valid a token: doesn't return anything but will thrown exceptions if there are any errors.
 </p></div><dl class="paramcmts block"><dt class="param">token</dt><dd class="cmt"><p>a JSON Web Token as a Base64 url-safe encoded String which can be used inside an HTTP header</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="IllegalArgumentException"><code>IllegalArgumentException</code></span> couldn't decode the token since it's not a valid base64 string
-</p></span><span class="cmt"><p><a href="JwtExpirationException.html" class="extype" name="pdi.jwt.JwtExpirationException"><code>JwtExpirationException</code></a> the token isn't valid anymore because its <code>expiration</code> attribute is in the past</p></span><span class="cmt"><p><a href="JwtLengthException.html" class="extype" name="pdi.jwt.JwtLengthException"><code>JwtLengthException</code></a> the number of parts separated by dots is wrong</p></span><span class="cmt"><p><a href="JwtNotBeforeException.html" class="extype" name="pdi.jwt.JwtNotBeforeException"><code>JwtNotBeforeException</code></a> the token isn't valid yet because its <code>notBefore</code> attribute is in the future</p></span><span class="cmt"><p><a href="JwtValidationException.html" class="extype" name="pdi.jwt.JwtValidationException"><code>JwtValidationException</code></a> default validation exeption</p></span></dd></dl></div>
+</p></span><span class="cmt"><p><span class="extype" name="JwtExpirationException"><code>JwtExpirationException</code></span> the token isn't valid anymore because its <code>expiration</code> attribute is in the past</p></span><span class="cmt"><p><span class="extype" name="JwtLengthException"><code>JwtLengthException</code></span> the number of parts separated by dots is wrong</p></span><span class="cmt"><p><span class="extype" name="JwtNotBeforeException"><code>JwtNotBeforeException</code></span> the token isn't valid yet because its <code>notBefore</code> attribute is in the future</p></span><span class="cmt"><p><span class="extype" name="JwtValidationException"><code>JwtValidationException</code></span> default validation exeption</p></span></dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#validate" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="validate(header64:String,header:H,claim64:String,claim:C,signature:String,key:java.security.PublicKey):Unit"></a>
       <a id="validate(String,H,String,C,String,PublicKey):Unit"></a>
@@ -1288,7 +1288,7 @@ for the key and the algorithm.
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#validate" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="validate(header64:String,header:H,claim64:String,claim:C,signature:String,verify:(Array[Byte],Array[Byte],pdi.jwt.JwtAlgorithm)=&gt;Boolean):Unit"></a>
+      <a id="validate(header64:String,header:H,claim64:String,claim:C,signature:String,verify:(Array[Byte],Array[Byte],pdi.jwt.algorithms.JwtAlgorithm)=&gt;Boolean):Unit"></a>
       <a id="validate(String,H,String,C,String,(Array[Byte],Array[Byte],JwtAlgorithm)⇒Boolean):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1296,10 +1296,10 @@ for the key and the algorithm.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">validate</span><span class="params">(<span name="header64">header64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="header">header: <span class="extype" name="pdi.jwt.JwtCore.H">H</span></span>, <span name="claim64">claim64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="pdi.jwt.JwtCore.C">C</span></span>, <span name="signature">signature: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="verify">verify: (<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>], <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>], <a href="JwtAlgorithm.html" class="extype" name="pdi.jwt.JwtAlgorithm">JwtAlgorithm</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">validate</span><span class="params">(<span name="header64">header64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="header">header: <span class="extype" name="pdi.jwt.JwtCore.H">H</span></span>, <span name="claim64">claim64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="pdi.jwt.JwtCore.C">C</span></span>, <span name="signature">signature: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="verify">verify: (<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>], <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>], <a href="algorithms/JwtAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtAlgorithm">JwtAlgorithm</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtCore@validate(header64:String,header:H,claim64:String,claim:C,signature:String,verify:(Array[Byte],Array[Byte],pdi.jwt.JwtAlgorithm)=&gt;Boolean):Unit" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtCore@validate(header64:String,header:H,claim64:String,claim:C,signature:String,verify:(Array[Byte],Array[Byte],pdi.jwt.algorithms.JwtAlgorithm)=&gt;Boolean):Unit" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>

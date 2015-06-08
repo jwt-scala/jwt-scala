@@ -3,6 +3,8 @@ package pdi.jwt
 import org.json4s._
 import org.json4s.JsonDSL.WithBigDecimal._
 
+import  pdi.jwt.algorithms._
+
 case class JsonDataEntry (
   algo: JwtAlgorithm,
   header: String,

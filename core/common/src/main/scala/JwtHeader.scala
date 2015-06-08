@@ -1,5 +1,7 @@
 package pdi.jwt
 
+import  pdi.jwt.algorithms.JwtAlgorithm
+
 case class JwtHeader(
   algorithm: Option[JwtAlgorithm] = None,
   typ: Option[String] = None,

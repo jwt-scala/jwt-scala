@@ -4,6 +4,9 @@ import scala.util.Try
 import javax.crypto.SecretKey
 import java.security.{Key, PrivateKey, PublicKey}
 
+import  pdi.jwt.algorithms._
+import pdi.jwt.exceptions.{JwtNonEmptyAlgorithmException, JwtEmptyAlgorithmException, JwtValidationException}
+
 trait JwtJsonCommon[J] extends JwtCore[JwtHeader, JwtClaim] {
   protected def parse(value: String): J
   protected def stringify(value: J): String

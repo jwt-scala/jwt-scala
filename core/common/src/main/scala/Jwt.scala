@@ -4,6 +4,9 @@ import scala.util.Try
 import javax.crypto.SecretKey
 import java.security.{Key, PrivateKey, PublicKey}
 
+import pdi.jwt.algorithms._
+import pdi.jwt.exceptions._
+
 /**
   * Default implementation of [[JwtCore]] using only Strings. Most of the time, you should use a lib
   * implementing JSON and shouldn't be using this object. But just in case you need pure Scala support,

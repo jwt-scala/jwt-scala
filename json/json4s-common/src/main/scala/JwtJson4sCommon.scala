@@ -3,6 +3,9 @@ package pdi.jwt
 import org.json4s._
 import org.json4s.JsonDSL.WithBigDecimal._
 
+import pdi.jwt.algorithms.JwtAlgorithm
+import pdi.jwt.exceptions.{JwtNonStringException, JwtNonNumberException}
+
 trait JwtJson4sCommon extends JwtJsonCommon[JObject] {
   protected def getAlgorithm(header: JObject): Option[JwtAlgorithm] = header \ "alg" match {
     case JString("none") => None

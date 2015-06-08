@@ -5,7 +5,8 @@ import javax.crypto.spec.SecretKeySpec
 import java.security.{Security, Signature, KeyFactory, Key, PrivateKey, PublicKey}
 import java.security.spec.{PKCS8EncodedKeySpec, X509EncodedKeySpec}
 import org.bouncycastle.jce.provider.BouncyCastleProvider
-import JwtAlgorithm._
+
+import pdi.jwt.algorithms._
 
 object JwtUtils {
   val ENCODING = "UTF-8"

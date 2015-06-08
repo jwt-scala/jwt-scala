@@ -1,5 +1,7 @@
 package pdi.jwt
 
+import pdi.jwt.exceptions.{JwtNotBeforeException, JwtExpirationException}
+
 /** Util object to handle time operations */
 object JwtTime extends JwtTimeImpl {
   /** Returns the number of seconds since the 01.01.1970

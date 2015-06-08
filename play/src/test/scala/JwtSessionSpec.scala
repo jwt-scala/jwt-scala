@@ -9,6 +9,8 @@ import play.api.mvc._
 import play.api.mvc.Results._
 import play.api.libs.json._
 
+import  pdi.jwt.algorithms._
+
 class JwtSessionSpec extends PlaySpec with OneAppPerSuite with PlayFixture {
   val HEADER_NAME = "Authorization"
 

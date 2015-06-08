@@ -9,6 +9,8 @@ import play.api.mvc._
 import play.api.mvc.Results._
 import play.api.libs.json._
 
+import  pdi.jwt.algorithms._
+
 class JwtSessionCustomSpec extends PlaySpec with OneAppPerSuite with BeforeAndAfter with PlayFixture {
   // Just for test, users shouldn't change the header name normally
   val HEADER_NAME = "Auth"
