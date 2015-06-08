@@ -2,8 +2,6 @@ package pdi.jwt
 
 import play.api.libs.json.JsObject
 
-import  pdi.jwt.algorithms._
-
 case class JsonDataEntry (
   algo: JwtAlgorithm,
   header: String,

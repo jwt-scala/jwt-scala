@@ -5,8 +5,6 @@ import java.security.{SecureRandom, KeyFactory, KeyPairGenerator}
 import org.bouncycastle.jce.ECNamedCurveTable
 import org.bouncycastle.jce.spec.ECNamedCurveSpec
 
-import  pdi.jwt.algorithms._
-
 trait DataEntryBase {
   def algo: JwtAlgorithm
   def header: String

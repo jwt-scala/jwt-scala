@@ -4,7 +4,6 @@ import scala.util.Try
 
 import play.api.libs.json._
 
-import  pdi.jwt.algorithms.JwtAlgorithm
 import pdi.jwt.exceptions.JwtNonStringException
 
 /**

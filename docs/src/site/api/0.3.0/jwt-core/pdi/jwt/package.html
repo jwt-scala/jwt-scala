@@ -66,7 +66,24 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="pdi.jwt.JwtClaim" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="pdi.jwt.JwtAlgorithm" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="JwtAlgorithmextendsAnyRef"></a>
+      <a id="JwtAlgorithm:JwtAlgorithm"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="JwtAlgorithm.html"><span class="name">JwtAlgorithm</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.package@JwtAlgorithmextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="pdi.jwt.JwtClaim" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="JwtClaimextendsProductwithSerializable"></a>
       <a id="JwtClaim:JwtClaim"></a>
       <h4 class="signature">
@@ -113,7 +130,7 @@ JsObject or anything else.</p><p>Please, check implementations, like <a href="Jw
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="JwtHeader.html"><span class="name">JwtHeader</span></a><span class="params">(<span name="algorithm">algorithm: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="algorithms/JwtAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtAlgorithm">JwtAlgorithm</a>] = <span class="symbol">None</span></span>, <span name="typ">typ: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="contentType">contentType: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="JwtHeader.html"><span class="name">JwtHeader</span></a><span class="params">(<span name="algorithm">algorithm: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="JwtAlgorithm.html" class="extype" name="pdi.jwt.JwtAlgorithm">JwtAlgorithm</a>] = <span class="symbol">None</span></span>, <span name="typ">typ: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="contentType">contentType: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../index.html#pdi.jwt.package@JwtHeaderextendsProductwithSerializable" title="Permalink" target="_top">
@@ -152,6 +169,23 @@ keys like <code>exp</code> and <code>nbf</code> in sub-objects of the claim. For
 claim: <code>{&quot;user&quot;:{&quot;exp&quot;:1},&quot;exp&quot;:1300819380}</code>, it should be correct but it will fail because the regex
 extracting the expiration will return <code>1</code> instead of <code>1300819380</code>. Sorry about that.
 </p></div></div>
+    </li><li name="pdi.jwt.JwtAlgorithm" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JwtAlgorithm"></a>
+      <a id="JwtAlgorithm:JwtAlgorithm"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="JwtAlgorithm$.html"><span class="name">JwtAlgorithm</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.package@JwtAlgorithm" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
     </li><li name="pdi.jwt.JwtBase64" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="JwtBase64"></a>
       <a id="JwtBase64:JwtBase64"></a>

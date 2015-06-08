@@ -1,4 +1,4 @@
-package pdi.jwt.algorithms
+package pdi.jwt
 
 import pdi.jwt.exceptions.JwtNonSupportedAlgorithm
 
@@ -7,11 +7,13 @@ sealed trait JwtAlgorithm {
   def fullName: String
 }
 
-sealed trait JwtAsymetricAlgorithm extends JwtAlgorithm {}
+package algorithms {
+  sealed trait JwtAsymetricAlgorithm extends JwtAlgorithm {}
 
-sealed trait JwtHmacAlgorithm extends JwtAlgorithm {}
-sealed trait JwtRSAAlgorithm extends JwtAsymetricAlgorithm {}
-sealed trait JwtECDSAAlgorithm extends JwtAsymetricAlgorithm {}
+  sealed trait JwtHmacAlgorithm extends JwtAlgorithm {}
+  sealed trait JwtRSAAlgorithm extends JwtAsymetricAlgorithm {}
+  sealed trait JwtECDSAAlgorithm extends JwtAsymetricAlgorithm {}
+}
 
 object JwtAlgorithm {
   /**
@@ -49,142 +51,142 @@ object JwtAlgorithm {
     case _             => throw new JwtNonSupportedAlgorithm(algo)
   }
 
-  case object HMD5 extends JwtHmacAlgorithm {
+  case object HMD5 extends algorithms.JwtHmacAlgorithm {
     def name = "HMD5"
     def fullName = "HmacMD5"
   }
 
-  case object HmacMD5 extends JwtHmacAlgorithm {
+  case object HmacMD5 extends algorithms.JwtHmacAlgorithm {
     def name = "HmacMD5"
     def fullName = "HmacMD5"
   }
 
-  case object HS1 extends JwtHmacAlgorithm {
+  case object HS1 extends algorithms.JwtHmacAlgorithm {
     def name = "HS1"
     def fullName = "HmacSHA1"
   }
 
-  case object HmacSHA1 extends JwtHmacAlgorithm {
+  case object HmacSHA1 extends algorithms.JwtHmacAlgorithm {
     def name = "HmacSHA1"
     def fullName = "HmacSHA1"
   }
 
-  case object HS224 extends JwtHmacAlgorithm {
+  case object HS224 extends algorithms.JwtHmacAlgorithm {
     def name = "HS224"
     def fullName = "HmacSHA224"
   }
 
-  case object HmacSHA224 extends JwtHmacAlgorithm {
+  case object HmacSHA224 extends algorithms.JwtHmacAlgorithm {
     def name = "HmacSHA224"
     def fullName = "HmacSHA224"
   }
 
-  case object HS256 extends JwtHmacAlgorithm {
+  case object HS256 extends algorithms.JwtHmacAlgorithm {
     def name = "HS256"
     def fullName = "HmacSHA256"
   }
 
-  case object HmacSHA256 extends JwtHmacAlgorithm {
+  case object HmacSHA256 extends algorithms.JwtHmacAlgorithm {
     def name = "HmacSHA256"
     def fullName = "HmacSHA256"
   }
 
-  case object HS384 extends JwtHmacAlgorithm {
+  case object HS384 extends algorithms.JwtHmacAlgorithm {
     def name = "HS384"
     def fullName = "HmacSHA384"
   }
 
-  case object HmacSHA384 extends JwtHmacAlgorithm {
+  case object HmacSHA384 extends algorithms.JwtHmacAlgorithm {
     def name = "HmacSHA384"
     def fullName = "HmacSHA384"
   }
 
-  case object HS512 extends JwtHmacAlgorithm {
+  case object HS512 extends algorithms.JwtHmacAlgorithm {
     def name = "HS512"
     def fullName = "HmacSHA512"
   }
 
-  case object HmacSHA512 extends JwtHmacAlgorithm {
+  case object HmacSHA512 extends algorithms.JwtHmacAlgorithm {
     def name = "HmacSHA512"
     def fullName = "HmacSHA512"
   }
 
-  case object RS1 extends JwtRSAAlgorithm {
+  case object RS1 extends algorithms.JwtRSAAlgorithm {
     def name = "RS1"
     def fullName = "SHA1withRSA"
   }
 
-  case object RSASHA1 extends JwtRSAAlgorithm {
+  case object RSASHA1 extends algorithms.JwtRSAAlgorithm {
     def name = "RSASHA1"
     def fullName = "SHA1withRSA"
   }
 
-  case object RS256 extends JwtRSAAlgorithm {
+  case object RS256 extends algorithms.JwtRSAAlgorithm {
     def name = "RS256"
     def fullName = "SHA256withRSA"
   }
 
-  case object RSASHA256 extends JwtRSAAlgorithm {
+  case object RSASHA256 extends algorithms.JwtRSAAlgorithm {
     def name = "RSASHA256"
     def fullName = "SHA256withRSA"
   }
 
-  case object RS384 extends JwtRSAAlgorithm {
+  case object RS384 extends algorithms.JwtRSAAlgorithm {
     def name = "RS384"
     def fullName = "SHA384withRSA"
   }
 
-  case object RSASHA384 extends JwtRSAAlgorithm {
+  case object RSASHA384 extends algorithms.JwtRSAAlgorithm {
     def name = "RSASHA384"
     def fullName = "SHA384withRSA"
   }
 
-  case object RS512 extends JwtRSAAlgorithm {
+  case object RS512 extends algorithms.JwtRSAAlgorithm {
     def name = "RS512"
     def fullName = "SHA512withRSA"
   }
 
-  case object RSASHA512 extends JwtRSAAlgorithm {
+  case object RSASHA512 extends algorithms.JwtRSAAlgorithm {
     def name = "RSASHA512"
     def fullName = "SHA512withRSA"
   }
 
-  case object ES1 extends JwtECDSAAlgorithm {
+  case object ES1 extends algorithms.JwtECDSAAlgorithm {
     def name = "ES1"
     def fullName = "SHA1withECDSA"
   }
 
-  case object ECDSASHA1 extends JwtECDSAAlgorithm {
+  case object ECDSASHA1 extends algorithms.JwtECDSAAlgorithm {
     def name = "ECDSASHA1"
     def fullName = "SHA1withECDSA"
   }
 
-  case object ES256 extends JwtECDSAAlgorithm {
+  case object ES256 extends algorithms.JwtECDSAAlgorithm {
     def name = "ES256"
     def fullName = "SHA256withECDSA"
   }
 
-  case object ECDSASHA256 extends JwtECDSAAlgorithm {
+  case object ECDSASHA256 extends algorithms.JwtECDSAAlgorithm {
     def name = "ECDSASHA256"
     def fullName = "SHA256withECDSA"
   }
 
-  case object ES384 extends JwtECDSAAlgorithm {
+  case object ES384 extends algorithms.JwtECDSAAlgorithm {
     def name = "ES384"
     def fullName = "SHA384withECDSA"
   }
 
-  case object ECDSASHA384 extends JwtECDSAAlgorithm {
+  case object ECDSASHA384 extends algorithms.JwtECDSAAlgorithm {
     def name = "ECDSASHA384"
     def fullName = "SHA384withECDSA"
   }
 
-  case object ES512 extends JwtECDSAAlgorithm {
+  case object ES512 extends algorithms.JwtECDSAAlgorithm {
     def name = "ES512"
     def fullName = "SHA512withECDSA"
   }
 
-  case object ECDSASHA512 extends JwtECDSAAlgorithm {
+  case object ECDSASHA512 extends algorithms.JwtECDSAAlgorithm {
     def name = "ECDSASHA512"
     def fullName = "SHA512withECDSA"
   }

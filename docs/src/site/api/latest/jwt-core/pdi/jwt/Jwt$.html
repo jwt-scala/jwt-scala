@@ -609,7 +609,7 @@ extracting the expiration will return <code>1</code> instead of <code>1300819380
 </p></div><dl class="paramcmts block"><dt class="param">claim</dt><dd class="cmt"><p>the claim of the JSON Web Token</p></dd><dt class="param">key</dt><dd class="cmt"><p>the key that will be used to check the token signature</p></dd><dt class="param">algorithm</dt><dd class="cmt"><p>the algorithm to sign the token
 </p></dd><dt>returns</dt><dd class="cmt"><p>a JSON Web Token as a Base64 url-safe encoded String which can be used inside an HTTP header</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="JwtCore.html" class="extype" name="pdi.jwt.JwtCore">JwtCore</a></dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#encode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="encode(claim:pdi.jwt.JwtClaim,key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):String"></a>
+      <a id="encode(claim:pdi.jwt.JwtClaim,key:String,algorithm:pdi.jwt.JwtAlgorithm):String"></a>
       <a id="encode(JwtClaim,String,JwtAlgorithm):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -617,10 +617,10 @@ extracting the expiration will return <code>1</code> instead of <code>1300819380
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">encode</span><span class="params">(<span name="claim">claim: <a href="JwtClaim.html" class="extype" name="pdi.jwt.JwtClaim">JwtClaim</a></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="algorithms/JwtAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">encode</span><span class="params">(<span name="claim">claim: <a href="JwtClaim.html" class="extype" name="pdi.jwt.JwtClaim">JwtClaim</a></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="JwtAlgorithm.html" class="extype" name="pdi.jwt.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.Jwt$@encode(claim:pdi.jwt.JwtClaim,key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):String" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.Jwt$@encode(claim:pdi.jwt.JwtClaim,key:String,algorithm:pdi.jwt.JwtAlgorithm):String" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -691,7 +691,7 @@ for the key and the algorithm.
 </p></div><dl class="paramcmts block"><dt class="param">claim</dt><dd class="cmt"><p>a valid stringified JSON representing the claim of the token</p></dd><dt class="param">key</dt><dd class="cmt"><p>the key that will be used to check the token signature</p></dd><dt class="param">algorithm</dt><dd class="cmt"><p>the algorithm to sign the token
 </p></dd><dt>returns</dt><dd class="cmt"><p>a JSON Web Token as a Base64 url-safe encoded String which can be used inside an HTTP header</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="JwtCore.html" class="extype" name="pdi.jwt.JwtCore">JwtCore</a></dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#encode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="encode(claim:String,key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):String"></a>
+      <a id="encode(claim:String,key:String,algorithm:pdi.jwt.JwtAlgorithm):String"></a>
       <a id="encode(String,String,JwtAlgorithm):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -699,10 +699,10 @@ for the key and the algorithm.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">encode</span><span class="params">(<span name="claim">claim: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="algorithms/JwtAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">encode</span><span class="params">(<span name="claim">claim: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="JwtAlgorithm.html" class="extype" name="pdi.jwt.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.Jwt$@encode(claim:String,key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):String" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.Jwt$@encode(claim:String,key:String,algorithm:pdi.jwt.JwtAlgorithm):String" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -765,7 +765,7 @@ for the key and the algorithm.
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="JwtCore.html" class="extype" name="pdi.jwt.JwtCore">JwtCore</a></dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#encode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="encode(header:String,claim:String,key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):String"></a>
+      <a id="encode(header:String,claim:String,key:String,algorithm:pdi.jwt.JwtAlgorithm):String"></a>
       <a id="encode(String,String,String,JwtAlgorithm):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -773,10 +773,10 @@ for the key and the algorithm.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">encode</span><span class="params">(<span name="header">header: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="algorithms/JwtAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">encode</span><span class="params">(<span name="header">header: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="JwtAlgorithm.html" class="extype" name="pdi.jwt.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.Jwt$@encode(header:String,claim:String,key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):String" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.Jwt$@encode(header:String,claim:String,key:String,algorithm:pdi.jwt.JwtAlgorithm):String" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -835,7 +835,7 @@ for the key and the algorithm.
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="pdi.jwt.Jwt#extractAlgorithm" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="extractAlgorithm(header:String):Option[pdi.jwt.algorithms.JwtAlgorithm]"></a>
+      <a id="extractAlgorithm(header:String):Option[pdi.jwt.JwtAlgorithm]"></a>
       <a id="extractAlgorithm(String):Option[JwtAlgorithm]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -843,10 +843,10 @@ for the key and the algorithm.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">extractAlgorithm</span><span class="params">(<span name="header">header: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="algorithms/JwtAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtAlgorithm">JwtAlgorithm</a>]</span>
+        <span class="name">extractAlgorithm</span><span class="params">(<span name="header">header: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="JwtAlgorithm.html" class="extype" name="pdi.jwt.JwtAlgorithm">JwtAlgorithm</a>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.Jwt$@extractAlgorithm(header:String):Option[pdi.jwt.algorithms.JwtAlgorithm]" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.Jwt$@extractAlgorithm(header:String):Option[pdi.jwt.JwtAlgorithm]" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -1285,7 +1285,7 @@ for the key and the algorithm.
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="JwtCore.html" class="extype" name="pdi.jwt.JwtCore">JwtCore</a></dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#validate" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="validate(header64:String,header:H,claim64:String,claim:C,signature:String,verify:(Array[Byte],Array[Byte],pdi.jwt.algorithms.JwtAlgorithm)=&gt;Boolean):Unit"></a>
+      <a id="validate(header64:String,header:H,claim64:String,claim:C,signature:String,verify:(Array[Byte],Array[Byte],pdi.jwt.JwtAlgorithm)=&gt;Boolean):Unit"></a>
       <a id="validate(String,String,String,String,String,(Array[Byte],Array[Byte],JwtAlgorithm)⇒Boolean):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1293,10 +1293,10 @@ for the key and the algorithm.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">validate</span><span class="params">(<span name="header64">header64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="header">header: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim64">claim64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="signature">signature: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="verify">verify: (<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>], <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>], <a href="algorithms/JwtAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtAlgorithm">JwtAlgorithm</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">validate</span><span class="params">(<span name="header64">header64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="header">header: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim64">claim64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="signature">signature: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="verify">verify: (<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>], <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>], <a href="JwtAlgorithm.html" class="extype" name="pdi.jwt.JwtAlgorithm">JwtAlgorithm</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.Jwt$@validate(header64:String,header:H,claim64:String,claim:C,signature:String,verify:(Array[Byte],Array[Byte],pdi.jwt.algorithms.JwtAlgorithm)=&gt;Boolean):Unit" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.Jwt$@validate(header64:String,header:H,claim64:String,claim:C,signature:String,verify:(Array[Byte],Array[Byte],pdi.jwt.JwtAlgorithm)=&gt;Boolean):Unit" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>

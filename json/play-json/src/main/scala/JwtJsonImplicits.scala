@@ -3,7 +3,6 @@ package pdi.jwt
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
-import  pdi.jwt.algorithms.JwtAlgorithm
 import pdi.jwt.exceptions.{JwtNonStringException, JwtNonNumberException, JwtNonSupportedAlgorithm}
 
 trait JwtJsonImplicits {

@@ -487,7 +487,7 @@
       <p class="shortcomment cmt">Convert a sequence to a JSON array
 </p>
     </li><li name="pdi.jwt.JwtUtils#sign" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="sign(data:String,key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):Array[Byte]"></a>
+      <a id="sign(data:String,key:String,algorithm:pdi.jwt.JwtAlgorithm):Array[Byte]"></a>
       <a id="sign(String,String,JwtAlgorithm):Array[Byte]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -495,16 +495,16 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">sign</span><span class="params">(<span name="data">data: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="algorithms/JwtAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>
+        <span class="name">sign</span><span class="params">(<span name="data">data: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="JwtAlgorithm.html" class="extype" name="pdi.jwt.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtUtils$@sign(data:String,key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):Array[Byte]" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtUtils$@sign(data:String,key:String,algorithm:pdi.jwt.JwtAlgorithm):Array[Byte]" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
       <p class="shortcomment cmt">Alias to <code>sign</code> using a String data which will be converted to an array of bytes.</p>
     </li><li name="pdi.jwt.JwtUtils#sign" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="sign(data:Array[Byte],key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):Array[Byte]"></a>
+      <a id="sign(data:Array[Byte],key:String,algorithm:pdi.jwt.JwtAlgorithm):Array[Byte]"></a>
       <a id="sign(Array[Byte],String,JwtAlgorithm):Array[Byte]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -512,10 +512,10 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">sign</span><span class="params">(<span name="data">data: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="algorithms/JwtAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>
+        <span class="name">sign</span><span class="params">(<span name="data">data: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="JwtAlgorithm.html" class="extype" name="pdi.jwt.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtUtils$@sign(data:Array[Byte],key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):Array[Byte]" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtUtils$@sign(data:Array[Byte],key:String,algorithm:pdi.jwt.JwtAlgorithm):Array[Byte]" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -642,7 +642,7 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="pdi.jwt.JwtUtils#verify" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="verify(data:String,signature:String,key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):Boolean"></a>
+      <a id="verify(data:String,signature:String,key:String,algorithm:pdi.jwt.JwtAlgorithm):Boolean"></a>
       <a id="verify(String,String,String,JwtAlgorithm):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -650,17 +650,17 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">verify</span><span class="params">(<span name="data">data: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="signature">signature: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="algorithms/JwtAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">verify</span><span class="params">(<span name="data">data: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="signature">signature: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="JwtAlgorithm.html" class="extype" name="pdi.jwt.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtUtils$@verify(data:String,signature:String,key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):Boolean" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtUtils$@verify(data:String,signature:String,key:String,algorithm:pdi.jwt.JwtAlgorithm):Boolean" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
       <p class="shortcomment cmt">Alias for <code>verify</code>
 </p>
     </li><li name="pdi.jwt.JwtUtils#verify" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="verify(data:Array[Byte],signature:Array[Byte],key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):Boolean"></a>
+      <a id="verify(data:Array[Byte],signature:Array[Byte],key:String,algorithm:pdi.jwt.JwtAlgorithm):Boolean"></a>
       <a id="verify(Array[Byte],Array[Byte],String,JwtAlgorithm):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -668,10 +668,10 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">verify</span><span class="params">(<span name="data">data: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>, <span name="signature">signature: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="algorithms/JwtAlgorithm.html" class="extype" name="pdi.jwt.algorithms.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">verify</span><span class="params">(<span name="data">data: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>, <span name="signature">signature: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithm">algorithm: <a href="JwtAlgorithm.html" class="extype" name="pdi.jwt.JwtAlgorithm">JwtAlgorithm</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtUtils$@verify(data:Array[Byte],signature:Array[Byte],key:String,algorithm:pdi.jwt.algorithms.JwtAlgorithm):Boolean" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtUtils$@verify(data:Array[Byte],signature:Array[Byte],key:String,algorithm:pdi.jwt.JwtAlgorithm):Boolean" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
