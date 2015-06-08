@@ -1,6 +1,10 @@
 resolvers ++= Seq(
   Resolver.url("bintray-sbt-plugin-releases",
     url("http://dl.bintray.com/content/sbt/sbt-plugin-releases")
+  )(Resolver.ivyStylePatterns),
+  Resolver.url(
+  "tpolecat-sbt-plugin-releases",
+    url("http://dl.bintray.com/content/tpolecat/sbt-plugin-releases")
   )(Resolver.ivyStylePatterns)
 )
 
