@@ -254,8 +254,7 @@ lazy val playLegacy = project.in(file("play"))
     name := "jwt-play-legacy",
     target <<= target(_ / "legacy"),
     libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus),
-    testGrouping in Test <<= definedTests in Test map groupPlayTest,
-    bintray.Keys.packageLabels in bintray.Keys.bintray ++= Seq("play", "play framework")
+    testGrouping in Test <<= definedTests in Test map groupPlayTest
   )
   .aggregate(playJsonLegacy)
   .dependsOn(playJsonLegacy % "compile->compile;test->test")
@@ -266,8 +265,7 @@ lazy val playEdge = project.in(file("play"))
     name := "jwt-play",
     target <<= target(_ / "edge"),
     libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus),
-    testGrouping in Test <<= definedTests in Test map groupPlayTest,
-    bintray.Keys.packageLabels in bintray.Keys.bintray ++= Seq("play", "play framework")
+    testGrouping in Test <<= definedTests in Test map groupPlayTest
   )
   .aggregate(playJsonEdge)
   .dependsOn(playJsonEdge % "compile->compile;test->test")
