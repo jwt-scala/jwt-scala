@@ -14,7 +14,7 @@ addCommandAlias("testAll", ";coreCommonLegacy/test;coreCommonEdge/test;playJsonL
 
 addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;playEdge/doc;json4sNativeEdge/doc;scaladocScript")
 addCommandAlias("publish-doc", ";docs/makeSite;docs/ghpagesPushSite")
-addCommandAlias("release", ";bumpScript;scaladoc;publish-doc;+publish;pushScript")
+addCommandAlias("release", ";bumpScript;scaladoc;publish-doc;+publishSigned;sonatypeRelease;pushScript")
 
 lazy val scaladocScript = taskKey[Unit]("Generate scaladoc and copy it to docs site")
 scaladocScript := {
@@ -32,7 +32,7 @@ pushScript := {
 }
 
 val commonSettings = Seq(
-  organization := "pdi",
+  organization := "com.pauldijou",
   version := buildVersion,
   scalaVersion := "2.11.6",
   autoAPIMappings := true,
@@ -41,21 +41,32 @@ val commonSettings = Seq(
   resolvers ++= Seq(
     "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"
   ),
+<<<<<<< HEAD
   libraryDependencies ++= Seq(Libs.bouncyCastle, Libs.scalatest, Libs.jmockit),
+=======
+  libraryDependencies ++= Seq(Libs.scalatest, Libs.jmockit),
+>>>>>>> 2ac49c6... Switch to Maven
   scalacOptions in (Compile, doc) ++= Seq("-unchecked", "-deprecation"),
   aggregate in test := false,
   fork in test := true,
   parallelExecution in test := false
 )
 
-val publishSettings = bintraySettings ++ bintrayPublishSettings ++ commonSettings ++ Seq(
-  homepage := Some(url("https://github.com/pauldijou/jwt-scala")),
-  apiURL := Some(url("https://pauldijou.github.io/jwt-scala/api/")),
+val publishSettings = commonSettings ++ Seq(
+  homepage := Some(url("http://pauldijou.fr/jwt-scala/")),
+  organizationHomepage := Some(url("http://pauldijou.github.io/")),
+  apiURL := Some(url("http://pauldijou.fr/jwt-scala/api/")),
   publishMavenStyle := true,
-  publishArtifact in packageDoc := false,
   publishArtifact in Test := false,
   licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0")),
-  bintray.Keys.packageLabels in bintray.Keys.bintray := Seq("jwt", "scala", "authentication", "json", "web", "token"),
+  publishTo := {
+    val nexus = "https://oss.sonatype.org/"
+    if (isSnapshot.value)
+      Some("snapshots" at nexus + "content/repositories/snapshots")
+    else
+      Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+  },
+  pomIncludeRepository := { _ => false },
   pomExtra := (
     <scm>
       <url>git@github.com:pauldijou/jwt-scala.git</url>
