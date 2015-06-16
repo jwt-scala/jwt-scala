@@ -25,10 +25,8 @@ In the following snippet, replace `[name]` with the actual name of the project y
 **build.sbt**
 
 ```scala
-resolvers += Resolver.jcenterRepo
-
 libraryDependencies ++= Seq(
-  "pdi" %% "[name]" % "0.3.0"
+  "com.pauldijou" %% "[name]" % "0.3.0"
 )
 ```
 
@@ -37,10 +35,8 @@ libraryDependencies ++= Seq(
 **build.sbt**
 
 ```scala
-resolvers += Resolver.jcenterRepo
-
 libraryDependencies ++= Seq(
-  "pdi" %% "jwt-play-legacy" % "0.3.0"
+  "com.pauldijou" %% "jwt-play-legacy" % "0.3.0"
 )
 ```
 

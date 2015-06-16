@@ -8,8 +8,6 @@ scalaVersion := "2.11.6"
 
 routesGenerator := InjectedRoutesGenerator
 
-resolvers += Resolver.jcenterRepo
-
 libraryDependencies ++= Seq(
-  "pdi" %% "jwt-play" % "0.3.0"
+  "com.pauldijou" %% "jwt-play" % "0.3.0"
 )
