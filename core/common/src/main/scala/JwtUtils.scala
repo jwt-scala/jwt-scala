@@ -148,11 +148,26 @@ object JwtUtils {
   def sign(data: String, key: String, algorithm: JwtAlgorithm): Array[Byte] =
     sign(bytify(data), key, algorithm)
 
+  // Fix security vulnerability around timing attacks
+  // See http://codahale.com/a-lesson-in-timing-attacks/
+  // Thanks to @drbild for report
+  private def isEqual(arr1: Array[Byte], arr2: Array[Byte]): Boolean = {
+    if (arr1.length != arr2.length) {
+      false
+    } else {
+      var result = 0
+      for (i <- 0 to arr1.length - 1) {
+        result |= arr1(i) ^ arr2(i)
+      }
+      result == 0
+    }
+  }
+
   /**
     * Check if a signature is valid for a given data using the key and the HMAC algorithm provided.
     */
   def verify(data: Array[Byte], signature: Array[Byte], key: SecretKey, algorithm: JwtHmacAlgorithm): Boolean = {
-    java.util.Arrays.equals(sign(data, key, algorithm), signature)
+    isEqual(sign(data, key, algorithm), signature)
   }
 
   /**
