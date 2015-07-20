@@ -72,6 +72,10 @@ Check [ECDSA samples](https://pauldijou.github.io/jwt-scala/samples/jwt-ecdsa) f
 
 Actually, all sub-projects have two flavours. One target Java 1.8+, using the new Time API and the new Base64 util. This is the default one. If you are using Java 1.6 or 1.7 (which have both reach end-of-life by the way), you will have to use the "legacy" version of the lib. It's exactly the same (in fact, 99% of the code source is shared) except it's using the old Calendar API and the Base64 util from Apache Commons Codec (introducing **one small dependency** in this particular use-case).
 
+## Security concerns
+
+This lib doesn't want to impose anything, that's why, by default, a JWT claim is totally empty. That said, you should always add an `issuedAt` attribute to it, probably using `claim.issuedNow`. The reason is that even HTTPS isn't perfect and having always the same chunk of data transfered can be of a big help to crack it. Generating a slightly different token at each request is way better even if it adds a bit of payload to the response. If you are using a session timeout through the `expiration` attribute which is extended at each request, that's fine too. I can't find the article I read about that vulnerability but if someone has some resources about the topic, I would be glad to link them.
+
 ## Got a problem?
 
 If you found any bug or need more documentation, immediately feel an [issue in GitHub](https://github.com/pauldijou/jwt-scala/issues). I should read most of them.
