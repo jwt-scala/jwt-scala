@@ -12,9 +12,9 @@ JwtJson.encode(claim)
 
 val token = JwtJson.encode(claim, key, algo)
 
-JwtJson.decodeJson(token, key)
+JwtJson.decodeJson(token, key, Seq(JwtAlgorithm.HS256))
 
-JwtJson.decode(token, key)
+JwtJson.decode(token, key, Seq(JwtAlgorithm.HS256))
 ```
 
 ### Encoding
@@ -31,11 +31,11 @@ JwtJson.encode(header, claim, key)
 
 ```tut
 // You can decode to JsObject
-JwtJson.decodeJson(token, key)
-JwtJson.decodeJsonAll(token, key)
+JwtJson.decodeJson(token, key, Seq(JwtAlgorithm.HS256))
+JwtJson.decodeJsonAll(token, key, Seq(JwtAlgorithm.HS256))
 // Or to case classes
-JwtJson.decode(token, key)
-JwtJson.decodeAll(token, key)
+JwtJson.decode(token, key, Seq(JwtAlgorithm.HS256))
+JwtJson.decodeAll(token, key, Seq(JwtAlgorithm.HS256))
 ```
 
 ### Formating
@@ -48,7 +48,11 @@ import pdi.jwt._
 // Reads
 Json.fromJson[JwtHeader](header)
 Json.fromJson[JwtClaim](claim)
+
 // Writes
 Json.toJson(JwtHeader(JwtAlgorithm.HS256))
 Json.toJson(JwtClaim("""{"user":1}""").issuedNow.expiresIn(10))
+// Or
+JwtHeader(JwtAlgorithm.HS256).toJsValue
+JwtClaim("""{"user":1}""").issuedNow.expiresIn(10).toJsValue
 ```
