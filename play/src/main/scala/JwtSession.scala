@@ -51,7 +51,7 @@ case class JwtSession(
   /** Alias of `get` */
   def apply(fieldName: String): Option[JsValue] = get(fieldName)
 
-  lazy val isEmpty: Boolean = claimData.keys.isEmpty
+  def isEmpty(): Boolean = claimData.keys.isEmpty
 
   def claim: JwtClaim = jwtClaimReader.reads(claimData).get
   def header: JwtHeader = jwtHeaderReader.reads(headerData).get
@@ -76,13 +76,13 @@ case class JwtSession(
 }
 
 object JwtSession {
-  lazy val HEADER_NAME: String =
+  val HEADER_NAME: String =
     Play.maybeApplication.flatMap(_.configuration.getString("play.http.session.jwtName")).getOrElse("Authorization")
 
-  lazy val MAX_AGE: Option[Long] =
+  val MAX_AGE: Option[Long] =
     Play.maybeApplication.flatMap(_.configuration.getMilliseconds("play.http.session.maxAge").map(_ / 1000))
 
-  lazy val ALGORITHM: JwtHmacAlgorithm =
+  val ALGORITHM: JwtHmacAlgorithm =
     Play.maybeApplication
       .flatMap(_.configuration.getString("play.http.session.algorithm")
       .map(JwtAlgorithm.fromString)
@@ -92,7 +92,7 @@ object JwtSession {
       })
       .getOrElse(JwtAlgorithm.HmacSHA256)
 
-  lazy val TOKEN_PREFIX: String =
+  val TOKEN_PREFIX: String =
     Play.maybeApplication.flatMap(_.configuration.getString("play.http.session.tokenPrefix")).getOrElse("Bearer ")
 
   private def key: Option[String] =
