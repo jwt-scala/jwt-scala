@@ -41,11 +41,7 @@ val commonSettings = Seq(
   resolvers ++= Seq(
     "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"
   ),
-<<<<<<< HEAD
-  libraryDependencies ++= Seq(Libs.bouncyCastle, Libs.scalatest, Libs.jmockit),
-=======
   libraryDependencies ++= Seq(Libs.scalatest, Libs.jmockit),
->>>>>>> 2ac49c6... Switch to Maven
   scalacOptions in (Compile, doc) ++= Seq("-unchecked", "-deprecation"),
   aggregate in test := false,
   fork in test := true,
@@ -134,7 +130,8 @@ lazy val coreCommonLegacy = project.in(file("core/common"))
   .settings(publishSettings)
   .settings(
     name := "jwt-core-legacy",
-    target <<= target(_ / "legacy")
+    target <<= target(_ / "legacy"),
+    libraryDependencies ++= Seq(Libs.bouncyCastle)
   )
   .aggregate(coreLegacy)
   .dependsOn(coreLegacy % "compile->compile;test->test")
@@ -143,7 +140,8 @@ lazy val coreCommonEdge = project.in(file("core/common"))
   .settings(publishSettings)
   .settings(
     name := "jwt-core",
-    target <<= target(_ / "edge")
+    target <<= target(_ / "edge"),
+    libraryDependencies ++= Seq(Libs.bouncyCastle)
   )
   .aggregate(coreEdge)
   .dependsOn(coreEdge % "compile->compile;test->test")

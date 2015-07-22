@@ -4,6 +4,7 @@ import java.security.spec.{ECPrivateKeySpec, ECPublicKeySpec, ECGenParameterSpec
 import java.security.{SecureRandom, KeyFactory, KeyPairGenerator}
 import org.bouncycastle.jce.ECNamedCurveTable
 import org.bouncycastle.jce.spec.ECNamedCurveSpec
+import javax.crypto.spec.SecretKeySpec
 
 trait DataEntryBase {
   def algo: JwtAlgorithm
@@ -29,6 +30,8 @@ case class DataEntry(
 
 trait Fixture extends TimeFixture {
   val secretKey = "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
+  val secretKeyBytes = JwtUtils.bytify(secretKey)
+  def secretKeyOf(algo: JwtAlgorithm) = new SecretKeySpec(secretKeyBytes, algo.fullName)
 
   val expiration: Long = 1300819380
   val expirationMillis: Long = expiration * 1000
