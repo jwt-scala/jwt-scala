@@ -220,7 +220,7 @@ trait JwtCore[H, C] {
     (header, claim, signature)
   }
 
-  /** Will try to decode a JSON Web Token to raw strings
+  /** Will try to decode a JSON Web Token to raw strings using a HMAC algorithm
     *
     * @return if successful, a tuple of 3 strings, the header, the claim and the signature
     * @param token $token
@@ -235,7 +235,7 @@ trait JwtCore[H, C] {
 
   def decodeRawAll(token: String, key: SecretKey): Try[(String, String, String)] = decodeRawAll(token, key, JwtAlgorithm.allHmac)
 
-  /** Will try to decode a JSON Web Token to raw strings
+  /** Will try to decode a JSON Web Token to raw strings using an asymetric algorithm
     *
     * @return if successful, a tuple of 3 strings, the header, the claim and the signature
     * @param token $token
@@ -288,6 +288,12 @@ trait JwtCore[H, C] {
   def decodeRaw(token: String, key: SecretKey, algorithms: Seq[JwtHmacAlgorithm]): Try[String] =
     decodeRawAll(token, key, algorithms).map(_._2)
 
+  /** Same as `decodeRawAll` but only return the claim (you only care about the claim most of the time)
+    *
+    * @return if successful, a string representing the JSON version of the claim
+    * @param token $token
+    * @param key $key
+    */
   def decodeRaw(token: String, key: SecretKey): Try[String] = decodeRaw(token, key, JwtAlgorithm.allHmac)
 
   /** Same as `decodeRawAll` but only return the claim (you only care about the claim most of the time)
@@ -300,6 +306,12 @@ trait JwtCore[H, C] {
   def decodeRaw(token: String, key: PublicKey, algorithms: Seq[JwtAsymetricAlgorithm]): Try[String] =
     decodeRawAll(token, key, algorithms).map(_._2)
 
+  /** Same as `decodeRawAll` but only return the claim (you only care about the claim most of the time)
+    *
+    * @return if successful, a string representing the JSON version of the claim
+    * @param token $token
+    * @param key $key
+    */
   def decodeRaw(token: String, key: PublicKey): Try[String] = decodeRaw(token, key, JwtAlgorithm.allAsymetric)
 
   /** Same as `decodeRawAll` but return the real header and claim types
@@ -314,7 +326,7 @@ trait JwtCore[H, C] {
     (h, c, signature)
   }
 
-  /** An alias of `decodeAll` if you want to directly pass a string key rather than an Option
+  /** Same as `decodeRawAll` but return the real header and claim types
     *
     * @return if successful, a tuple representing the header, the claim and eventually the signature
     * @param token $token
@@ -328,7 +340,7 @@ trait JwtCore[H, C] {
     (h, c, signature)
   }
 
-  /** An alias of `decodeAll` if you want to directly pass a string key rather than an Option
+  /** Same as `decodeRawAll` but return the real header and claim types
     *
     * @return if successful, a tuple representing the header, the claim and eventually the signature
     * @param token $token
@@ -342,7 +354,7 @@ trait JwtCore[H, C] {
     (h, c, signature)
   }
 
-  /** An alias of `decodeAll` if you want to directly pass a string key rather than an Option
+  /** Same as `decodeRawAll` but return the real header and claim types
     *
     * @return if successful, a tuple representing the header, the claim and eventually the signature
     * @param token $token
@@ -356,9 +368,15 @@ trait JwtCore[H, C] {
     (h, c, signature)
   }
 
+  /** Same as `decodeRawAll` but return the real header and claim types
+    *
+    * @return if successful, a tuple representing the header, the claim and eventually the signature
+    * @param token $token
+    * @param key $key
+    */
   def decodeAll(token: String, key: SecretKey): Try[(H, C, String)] = decodeAll(token, key, JwtAlgorithm.allHmac)
 
-  /** An alias of `decodeAll` if you want to directly pass a string key rather than an Option
+  /** Same as `decodeRawAll` but return the real header and claim types
     *
     * @return if successful, a tuple representing the header, the claim and eventually the signature
     * @param token $token
@@ -372,6 +390,12 @@ trait JwtCore[H, C] {
     (h, c, signature)
   }
 
+  /** Same as `decodeRawAll` but return the real header and claim types
+    *
+    * @return if successful, a tuple representing the header, the claim and eventually the signature
+    * @param token $token
+    * @param key $key
+    */
   def decodeAll(token: String, key: PublicKey): Try[(H, C, String)] = decodeAll(token, key, JwtAlgorithm.allAsymetric)
 
   /** Same as `decodeAll` but only return the claim
@@ -382,7 +406,7 @@ trait JwtCore[H, C] {
     */
   def decode(token: String): Try[C] = decodeAll(token).map(_._2)
 
-  /** An alias of `decode` if you want to directly pass a string key rather than an Option
+  /** Same as `decodeAll` but only return the claim
     *
     * @return if successful, the claim of the token in its correct type
     * @param token $token
@@ -392,7 +416,7 @@ trait JwtCore[H, C] {
   def decode(token: String, key: String, algorithms: Seq[JwtHmacAlgorithm]): Try[C] =
     decodeAll(token, key, algorithms).map(_._2)
 
-  /** An alias of `decode` if you want to directly pass a string key rather than an Option
+  /** Same as `decodeAll` but only return the claim
     *
     * @return if successful, the claim of the token in its correct type
     * @param token $token
@@ -402,7 +426,7 @@ trait JwtCore[H, C] {
   def decode(token: String, key: String, algorithms: => Seq[JwtAsymetricAlgorithm]): Try[C] =
     decodeAll(token, key, algorithms).map(_._2)
 
-  /** An alias of `decode` if you want to directly pass a string key rather than an Option
+  /** Same as `decodeAll` but only return the claim
     *
     * @return if successful, the claim of the token in its correct type
     * @param token $token
@@ -412,9 +436,15 @@ trait JwtCore[H, C] {
   def decode(token: String, key: SecretKey, algorithms: Seq[JwtHmacAlgorithm]): Try[C] =
     decodeAll(token, key, algorithms).map(_._2)
 
+  /** Same as `decodeAll` but only return the claim
+    *
+    * @return if successful, the claim of the token in its correct type
+    * @param token $token
+    * @param key $key
+    */
   def decode(token: String, key: SecretKey): Try[C] = decode(token, key, JwtAlgorithm.allHmac)
 
-  /** An alias of `decode` if you want to directly pass a string key rather than an Option
+  /** Same as `decodeAll` but only return the claim
     *
     * @return if successful, the claim of the token in its correct type
     * @param token $token
@@ -424,6 +454,12 @@ trait JwtCore[H, C] {
   def decode(token: String, key: PublicKey, algorithms: Seq[JwtAsymetricAlgorithm]): Try[C] =
     decodeAll(token, key, algorithms).map(_._2)
 
+  /** Same as `decodeAll` but only return the claim
+    *
+    * @return if successful, the claim of the token in its correct type
+    * @param token $token
+    * @param key $key
+    */
   def decode(token: String, key: PublicKey): Try[C] = decode(token, key, JwtAlgorithm.allAsymetric)
 
   // Validate
