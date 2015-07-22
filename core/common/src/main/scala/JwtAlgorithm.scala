@@ -51,6 +51,14 @@ object JwtAlgorithm {
     case _             => throw new JwtNonSupportedAlgorithm(algo)
   }
 
+  def allHmac(): Seq[algorithms.JwtHmacAlgorithm] = Seq(HMD5, HS1, HS224, HS256, HS384, HS512, HmacMD5, HmacSHA1, HmacSHA224, HmacSHA256, HmacSHA384, HmacSHA512)
+
+  def allAsymetric(): Seq[algorithms.JwtAsymetricAlgorithm] = Seq(RS1, RS256, RS384, RS512, RSASHA1, RSASHA256, RSASHA384, RSASHA512, ES1, ES256, ES384, ES512, ECDSASHA1, ECDSASHA256, ECDSASHA384, ECDSASHA512)
+
+  def allRSA(): Seq[algorithms.JwtRSAAlgorithm] = Seq(RS1, RS256, RS384, RS512, RSASHA1, RSASHA256, RSASHA384, RSASHA512)
+
+  def allECDSA(): Seq[algorithms.JwtECDSAAlgorithm] = Seq(ES1, ES256, ES384, ES512, ECDSASHA1, ECDSASHA256, ECDSASHA384, ECDSASHA512)
+
   case object HMD5 extends algorithms.JwtHmacAlgorithm {
     def name = "HMD5"
     def fullName = "HmacMD5"

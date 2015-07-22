@@ -3,6 +3,7 @@ package pdi.jwt
 import play.api.Play
 import play.api.libs.json._
 import play.api.libs.json.Json.JsValueWrapper
+import pdi.jwt.algorithms.JwtHmacAlgorithm
 
 /** Similar to the default Play Session but using JsObject instead of Map[String, String]. The data is separated into two attributes:
   * `headerData` and `claimData`. There is also a optional signature. Most of the time, you should only care about the `claimData` which
@@ -81,10 +82,27 @@ object JwtSession {
   lazy val MAX_AGE: Option[Long] =
     Play.maybeApplication.flatMap(_.configuration.getMilliseconds("play.http.session.maxAge").map(_ / 1000))
 
-  lazy val ALGORITHM: JwtAlgorithm =
+  lazy val ALGORITHM: JwtHmacAlgorithm =
     Play.maybeApplication
-      .flatMap(_.configuration.getString("play.http.session.algorithm").map(JwtAlgorithm.fromString))
+      .flatMap(_.configuration.getString("play.http.session.algorithm")
+      .map(JwtAlgorithm.fromString)
+      .flatMap {
+        case algo: JwtHmacAlgorithm => Option(algo)
+        case _ => throw new RuntimeException("You can only use HMAC algorithms for [play.http.session.algorithm]")
+      })
       .getOrElse(JwtAlgorithm.HmacSHA256)
+
+  lazy val ALGORITHMS: Seq[JwtHmacAlgorithm] =
+    Play.maybeApplication
+      .flatMap(_.configuration.getStringSeq("play.http.session.algorithms")
+      .map(
+        _.map(JwtAlgorithm.fromString)
+        .map {
+          case algo: JwtHmacAlgorithm => algo
+          case _ => throw new RuntimeException("You can only use HMAC algorithms for [play.http.session.algorithms]")
+        }
+      ))
+      .getOrElse(JwtAlgorithm.allHmac)
 
   lazy val TOKEN_PREFIX: String =
     Play.maybeApplication.flatMap(_.configuration.getString("play.http.session.tokenPrefix")).getOrElse("Bearer ")
@@ -93,7 +111,7 @@ object JwtSession {
     Play.maybeApplication.flatMap(_.configuration.getString("play.crypto.secret"))
 
   def deserialize(token: String): JwtSession = (key match {
-      case Some(k) => JwtJson.decodeJsonAll(token, k)
+      case Some(k) => JwtJson.decodeJsonAll(token, k, ALGORITHMS)
       case _ => JwtJson.decodeJsonAll(token)
     }).map { tuple =>
       JwtSession(tuple._1, tuple._2, tuple._3)

@@ -55,6 +55,7 @@ object Jwt extends JwtCore[String, String] {
   * @define claimString a valid stringified JSON representing the claim of the token
   * @define key the key that will be used to check the token signature
   * @define algo the algorithm to sign the token
+  * @define algos a list of possible algorithms that the token can use. See [[http://pauldijou.fr/jwt-scala/#security-concerns Security concerns]] for more infos.
   *
   */
 trait JwtCore[H, C] {
@@ -219,17 +220,40 @@ trait JwtCore[H, C] {
     (parts(0), JwtBase64.decodeString(parts(0)), parts(1), JwtBase64.decodeString(parts(1)), signature)
   }
 
-  private def decodeRawAll(token: String, key: Option[Any]): Try[(String, String, String)] = Try {
+  /** Will try to decode a JSON Web Token to raw strings
+    *
+    * @return if successful, a tuple of 3 strings, the header, the claim and the signature
+    * @param token $token
+    */
+  def decodeRawAll(token: String): Try[(String, String, String)] = Try {
     val (header64, header, claim64, claim, signature) = splitToken(token)
+    validate(parseHeader(header), parseClaim(claim), signature)
+    (header, claim, signature)
+  }
 
-    key match {
-      case None => validate(parseHeader(header), parseClaim(claim), signature)
-      case Some(k: String) => validate(header64, parseHeader(header), claim64, parseClaim(claim), signature, k)
-      case Some(k: SecretKey) => validate(header64, parseHeader(header), claim64, parseClaim(claim), signature, k)
-      case Some(k: PublicKey) => validate(header64, parseHeader(header), claim64, parseClaim(claim), signature, k)
-      case _ => throw new RuntimeException("This should never ever happen")
-    }
+  /** Will try to decode a JSON Web Token to raw strings using a HMAC algorithm
+    *
+    * @return if successful, a tuple of 3 strings, the header, the claim and the signature
+    * @param token $token
+    * @param key $key
+    * @param algorithms $algos
+    */
+  def decodeRawAll(token: String, key: String, algorithms: Seq[JwtHmacAlgorithm]): Try[(String, String, String)] = Try {
+    val (header64, header, claim64, claim, signature) = splitToken(token)
+    validate(header64, parseHeader(header), claim64, parseClaim(claim), signature, key, algorithms)
+    (header, claim, signature)
+  }
 
+  /** Will try to decode a JSON Web Token to raw strings using an asymetric algorithm
+    *
+    * @return if successful, a tuple of 3 strings, the header, the claim and the signature
+    * @param token $token
+    * @param key $key
+    * @param algorithms $algos
+    */
+  def decodeRawAll(token: String, key: String, algorithms: => Seq[JwtAsymetricAlgorithm]): Try[(String, String, String)] = Try {
+    val (header64, header, claim64, claim, signature) = splitToken(token)
+    validate(header64, parseHeader(header), claim64, parseClaim(claim), signature, key, algorithms)
     (header, claim, signature)
   }
 
@@ -237,32 +261,31 @@ trait JwtCore[H, C] {
     *
     * @return if successful, a tuple of 3 strings, the header, the claim and the signature
     * @param token $token
+    * @param key $key
+    * @param algorithms $algos
     */
-  def decodeRawAll(token: String): Try[(String, String, String)] = decodeRawAll(token, None)
+  def decodeRawAll(token: String, key: SecretKey, algorithms: Seq[JwtHmacAlgorithm]): Try[(String, String, String)] = Try {
+    val (header64, header, claim64, claim, signature) = splitToken(token)
+    validate(header64, parseHeader(header), claim64, parseClaim(claim), signature, key, algorithms)
+    (header, claim, signature)
+  }
+
+  def decodeRawAll(token: String, key: SecretKey): Try[(String, String, String)] = decodeRawAll(token, key, JwtAlgorithm.allHmac)
 
   /** Will try to decode a JSON Web Token to raw strings
     *
     * @return if successful, a tuple of 3 strings, the header, the claim and the signature
     * @param token $token
     * @param key $key
+    * @param algorithms $algos
     */
-  def decodeRawAll(token: String, key: String): Try[(String, String, String)] = decodeRawAll(token, Option(key))
+  def decodeRawAll(token: String, key: PublicKey, algorithms: Seq[JwtAsymetricAlgorithm]): Try[(String, String, String)] = Try {
+    val (header64, header, claim64, claim, signature) = splitToken(token)
+    validate(header64, parseHeader(header), claim64, parseClaim(claim), signature, key, algorithms)
+    (header, claim, signature)
+  }
 
-  /** Will try to decode a JSON Web Token to raw strings
-    *
-    * @return if successful, a tuple of 3 strings, the header, the claim and the signature
-    * @param token $token
-    * @param key $key
-    */
-  def decodeRawAll(token: String, key: SecretKey): Try[(String, String, String)] = decodeRawAll(token, Option(key))
-
-  /** Will try to decode a JSON Web Token to raw strings
-    *
-    * @return if successful, a tuple of 3 strings, the header, the claim and the signature
-    * @param token $token
-    * @param key $key
-    */
-  def decodeRawAll(token: String, key: PublicKey): Try[(String, String, String)] = decodeRawAll(token, Option(key))
+  def decodeRawAll(token: String, key: PublicKey): Try[(String, String, String)] = decodeRawAll(token, key, JwtAlgorithm.allAsymetric)
 
   /** Same as `decodeRawAll` but only return the claim (you only care about the claim most of the time)
     *
@@ -276,70 +299,116 @@ trait JwtCore[H, C] {
     * @return if successful, a string representing the JSON version of the claim
     * @param token $token
     * @param key $key
+    * @param algorithms $algos
     */
-  def decodeRaw(token: String, key: String): Try[String] = decodeRawAll(token, key).map(_._2)
+  def decodeRaw(token: String, key: String, algorithms: Seq[JwtHmacAlgorithm]): Try[String] =
+    decodeRawAll(token, key, algorithms).map(_._2)
 
   /** Same as `decodeRawAll` but only return the claim (you only care about the claim most of the time)
     *
     * @return if successful, a string representing the JSON version of the claim
     * @param token $token
     * @param key $key
+    * @param algorithms $algos
     */
-  def decodeRaw(token: String, key: SecretKey): Try[String] = decodeRawAll(token, key).map(_._2)
+  def decodeRaw(token: String, key: String, algorithms: => Seq[JwtAsymetricAlgorithm]): Try[String] =
+    decodeRawAll(token, key, algorithms).map(_._2)
 
   /** Same as `decodeRawAll` but only return the claim (you only care about the claim most of the time)
     *
     * @return if successful, a string representing the JSON version of the claim
     * @param token $token
     * @param key $key
+    * @param algorithms $algos
     */
-  def decodeRaw(token: String, key: PublicKey): Try[String] = decodeRawAll(token, key).map(_._2)
+  def decodeRaw(token: String, key: SecretKey, algorithms: Seq[JwtHmacAlgorithm]): Try[String] =
+    decodeRawAll(token, key, algorithms).map(_._2)
 
-  private def decodeAll(token: String, key: Option[Any]): Try[(H, C, String)] = Try {
-    val (header64, header, claim64, claim, signature) = splitToken(token)
-    val (h, c) = (parseHeader(header), parseClaim(claim))
+  def decodeRaw(token: String, key: SecretKey): Try[String] = decodeRaw(token, key, JwtAlgorithm.allHmac)
 
-    key match {
-      case None => validate(h, c, signature)
-      case Some(k: String) => validate(header64, h, claim64, c, signature, k)
-      case Some(k: SecretKey) => validate(header64, h, claim64, c, signature, k)
-      case Some(k: PublicKey) => validate(header64, h, claim64, c, signature, k)
-      case _ => throw new RuntimeException("This should never ever happen")
-    }
+  /** Same as `decodeRawAll` but only return the claim (you only care about the claim most of the time)
+    *
+    * @return if successful, a string representing the JSON version of the claim
+    * @param token $token
+    * @param key $key
+    * @param algorithms $algos
+    */
+  def decodeRaw(token: String, key: PublicKey, algorithms: Seq[JwtAsymetricAlgorithm]): Try[String] =
+    decodeRawAll(token, key, algorithms).map(_._2)
 
-    (h, c, signature)
-  }
+  def decodeRaw(token: String, key: PublicKey): Try[String] = decodeRaw(token, key, JwtAlgorithm.allAsymetric)
 
   /** Same as `decodeRawAll` but return the real header and claim types
     *
     * @return if successful, a tuple representing the header, the claim and eventually the signature
     * @param token $token
     */
-  def decodeAll(token: String): Try[(H, C, String)] = decodeAll(token, None)
+  def decodeAll(token: String): Try[(H, C, String)] = Try {
+    val (header64, header, claim64, claim, signature) = splitToken(token)
+    val (h, c) = (parseHeader(header), parseClaim(claim))
+    validate(h, c, signature)
+    (h, c, signature)
+  }
 
   /** An alias of `decodeAll` if you want to directly pass a string key rather than an Option
     *
     * @return if successful, a tuple representing the header, the claim and eventually the signature
     * @param token $token
     * @param key $key
+    * @param algorithms $algos
     */
-  def decodeAll(token: String, key: String): Try[(H, C, String)] = decodeAll(token, Option(key))
+  def decodeAll(token: String, key: String, algorithms: Seq[JwtHmacAlgorithm]): Try[(H, C, String)] = Try {
+    val (header64, header, claim64, claim, signature) = splitToken(token)
+    val (h, c) = (parseHeader(header), parseClaim(claim))
+    validate(header64, h, claim64, c, signature, key, algorithms)
+    (h, c, signature)
+  }
 
   /** An alias of `decodeAll` if you want to directly pass a string key rather than an Option
     *
     * @return if successful, a tuple representing the header, the claim and eventually the signature
     * @param token $token
     * @param key $key
+    * @param algorithms $algos
     */
-  def decodeAll(token: String, key: SecretKey): Try[(H, C, String)] = decodeAll(token, Option(key))
+  def decodeAll(token: String, key: String, algorithms: => Seq[JwtAsymetricAlgorithm]): Try[(H, C, String)] = Try {
+    val (header64, header, claim64, claim, signature) = splitToken(token)
+    val (h, c) = (parseHeader(header), parseClaim(claim))
+    validate(header64, h, claim64, c, signature, key, algorithms)
+    (h, c, signature)
+  }
 
   /** An alias of `decodeAll` if you want to directly pass a string key rather than an Option
     *
     * @return if successful, a tuple representing the header, the claim and eventually the signature
     * @param token $token
     * @param key $key
+    * @param algorithms $algos
     */
-  def decodeAll(token: String, key: PublicKey): Try[(H, C, String)] = decodeAll(token, Option(key))
+  def decodeAll(token: String, key: SecretKey, algorithms: Seq[JwtHmacAlgorithm]): Try[(H, C, String)] = Try {
+    val (header64, header, claim64, claim, signature) = splitToken(token)
+    val (h, c) = (parseHeader(header), parseClaim(claim))
+    validate(header64, h, claim64, c, signature, key, algorithms)
+    (h, c, signature)
+  }
+
+  def decodeAll(token: String, key: SecretKey): Try[(H, C, String)] = decodeAll(token, key, JwtAlgorithm.allHmac)
+
+  /** An alias of `decodeAll` if you want to directly pass a string key rather than an Option
+    *
+    * @return if successful, a tuple representing the header, the claim and eventually the signature
+    * @param token $token
+    * @param key $key
+    * @param algorithms $algos
+    */
+  def decodeAll(token: String, key: PublicKey, algorithms: Seq[JwtAsymetricAlgorithm]): Try[(H, C, String)] = Try {
+    val (header64, header, claim64, claim, signature) = splitToken(token)
+    val (h, c) = (parseHeader(header), parseClaim(claim))
+    validate(header64, h, claim64, c, signature, key, algorithms)
+    (h, c, signature)
+  }
+
+  def decodeAll(token: String, key: PublicKey): Try[(H, C, String)] = decodeAll(token, key, JwtAlgorithm.allAsymetric)
 
   /** Same as `decodeAll` but only return the claim
     *
@@ -353,24 +422,44 @@ trait JwtCore[H, C] {
     * @return if successful, the claim of the token in its correct type
     * @param token $token
     * @param key $key
+    * @param algorithms $algos
     */
-  def decode(token: String, key: String): Try[C] = decodeAll(token, key).map(_._2)
+  def decode(token: String, key: String, algorithms: Seq[JwtHmacAlgorithm]): Try[C] =
+    decodeAll(token, key, algorithms).map(_._2)
 
   /** An alias of `decode` if you want to directly pass a string key rather than an Option
     *
     * @return if successful, the claim of the token in its correct type
     * @param token $token
     * @param key $key
+    * @param algorithms $algos
     */
-  def decode(token: String, key: SecretKey): Try[C] = decodeAll(token, key).map(_._2)
+  def decode(token: String, key: String, algorithms: => Seq[JwtAsymetricAlgorithm]): Try[C] =
+    decodeAll(token, key, algorithms).map(_._2)
 
   /** An alias of `decode` if you want to directly pass a string key rather than an Option
     *
     * @return if successful, the claim of the token in its correct type
     * @param token $token
     * @param key $key
+    * @param algorithms $algos
     */
-  def decode(token: String, key: PublicKey): Try[C] = decodeAll(token, key).map(_._2)
+  def decode(token: String, key: SecretKey, algorithms: Seq[JwtHmacAlgorithm]): Try[C] =
+    decodeAll(token, key, algorithms).map(_._2)
+
+  def decode(token: String, key: SecretKey): Try[C] = decode(token, key, JwtAlgorithm.allHmac)
+
+  /** An alias of `decode` if you want to directly pass a string key rather than an Option
+    *
+    * @return if successful, the claim of the token in its correct type
+    * @param token $token
+    * @param key $key
+    * @param algorithms $algos
+    */
+  def decode(token: String, key: PublicKey, algorithms: Seq[JwtAsymetricAlgorithm]): Try[C] =
+    decodeAll(token, key, algorithms).map(_._2)
+
+  def decode(token: String, key: PublicKey): Try[C] = decode(token, key, JwtAlgorithm.allAsymetric)
 
   // Validate
   protected def extractAlgorithm(header: H): Option[JwtAlgorithm]
@@ -382,6 +471,16 @@ trait JwtCore[H, C] {
     val maybeNotBefore = extractNotBefore(claim)
 
     JwtTime.validateNowIsBetweenSeconds(maybeNotBefore, maybeExpiration)
+  }
+
+  // Validate if an algorithm is inside the authorized range
+  protected def validateHmacAlgorithm(algorithm: JwtHmacAlgorithm, algorithms: Seq[JwtHmacAlgorithm]): Boolean = {
+    algorithms.contains(algorithm)
+  }
+
+  // Validate if an algorithm is inside the authorized range
+  protected def validateAsymetricAlgorithm(algorithm: JwtAsymetricAlgorithm, algorithms: Seq[JwtAsymetricAlgorithm]): Boolean = {
+    algorithms.contains(algorithm)
   }
 
   // Validation when no key and no algorithm
@@ -411,31 +510,40 @@ trait JwtCore[H, C] {
     } else if (maybeAlgo.isEmpty) {
       throw new JwtEmptyAlgorithmException()
     } else if (!verify(JwtUtils.bytify(header64 +"."+ claim64), JwtBase64.decode(signature), maybeAlgo.get)) {
-      throw new JwtValidationException("Invalid signature for this token.")
+      throw new JwtValidationException("Invalid signature for this token or wrong algorithm.")
     }
 
     validateTiming(claim)
   }
 
-  // Generic validation on String Key
-  protected def validate(header64: String, header: H, claim64: String, claim: C, signature: String, key: String): Unit = {
-    validate(header64, header, claim64, claim, signature, (data: Array[Byte], signature: Array[Byte], algorithm: JwtAlgorithm) => {
-      JwtUtils.verify(data, signature, key, algorithm)
+  // Generic validation on String Key for HMAC algorithms
+  protected def validate(header64: String, header: H, claim64: String, claim: C, signature: String, key: String, algorithms: Seq[JwtHmacAlgorithm]): Unit = {
+    validate(header64, header, claim64, claim, signature, (data: Array[Byte], signature: Array[Byte], algorithm: JwtAlgorithm) => algorithm match {
+      case algo: JwtHmacAlgorithm => validateHmacAlgorithm(algo, algorithms) && JwtUtils.verify(data, signature, key, algo)
+      case _ => false
+    })
+  }
+
+  // Generic validation on String Key for asymetric algorithms
+  protected def validate(header64: String, header: H, claim64: String, claim: C, signature: String, key: String, algorithms: => Seq[JwtAsymetricAlgorithm]): Unit = {
+    validate(header64, header, claim64, claim, signature, (data: Array[Byte], signature: Array[Byte], algorithm: JwtAlgorithm) => algorithm match {
+      case algo: JwtAsymetricAlgorithm => validateAsymetricAlgorithm(algo, algorithms) && JwtUtils.verify(data, signature, key, algo)
+      case _ => false
     })
   }
 
   // Validation for HMAC algorithm using a SecretKey
-  protected def validate(header64: String, header: H, claim64: String, claim: C, signature: String, key: SecretKey): Unit = {
+  protected def validate(header64: String, header: H, claim64: String, claim: C, signature: String, key: SecretKey, algorithms: Seq[JwtHmacAlgorithm]): Unit = {
     validate(header64, header, claim64, claim, signature, (data: Array[Byte], signature: Array[Byte], algorithm: JwtAlgorithm) => algorithm match {
-      case algo: JwtHmacAlgorithm => JwtUtils.verify(data, signature, key, algo)
+      case algo: JwtHmacAlgorithm => validateHmacAlgorithm(algo, algorithms) && JwtUtils.verify(data, signature, key, algo)
       case _ => false
     })
   }
 
   // Validation for RSA and ECDSA algorithms using PublicKey
-  protected def validate(header64: String, header: H, claim64: String, claim: C, signature: String, key: PublicKey): Unit = {
+  protected def validate(header64: String, header: H, claim64: String, claim: C, signature: String, key: PublicKey, algorithms: Seq[JwtAsymetricAlgorithm]): Unit = {
     validate(header64, header, claim64, claim, signature, (data: Array[Byte], signature: Array[Byte], algorithm: JwtAlgorithm) => algorithm match {
-      case algo: JwtAsymetricAlgorithm => JwtUtils.verify(data, signature, key, algo)
+      case algo: JwtAsymetricAlgorithm => validateAsymetricAlgorithm(algo, algorithms) && JwtUtils.verify(data, signature, key, algo)
       case _ => false
     })
   }
@@ -454,50 +562,73 @@ trait JwtCore[H, C] {
     validate(parseHeader(header), parseClaim(claim), signature)
   }
 
-  /** An alias of `validate` in case you want to directly pass a string key.
+  /** An alias of `validate` in case you want to directly pass a string key for HMAC algorithms.
     *
     * @param token $token
     * @param key $key
+    * @param algorithms $algos
     * @throws JwtValidationException default validation exeption
     * @throws JwtLengthException the number of parts separated by dots is wrong
     * @throws JwtNotBeforeException the token isn't valid yet because its `notBefore` attribute is in the future
     * @throws JwtExpirationException the token isn't valid anymore because its `expiration` attribute is in the past
     * @throws IllegalArgumentException couldn't decode the token since it's not a valid base64 string
     */
-  def validate(token: String, key: String): Unit = {
+  def validate(token: String, key: String, algorithms: Seq[JwtHmacAlgorithm]): Unit = {
     val (header64, header, claim64, claim, signature) = splitToken(token)
-    validate(header64, parseHeader(header), claim64, parseClaim(claim), signature, key)
+    validate(header64, parseHeader(header), claim64, parseClaim(claim), signature, key, algorithms)
+  }
+
+  /** An alias of `validate` in case you want to directly pass a string key for asymetric algorithms.
+    *
+    * @param token $token
+    * @param key $key
+    * @param algorithms $algos
+    * @throws JwtValidationException default validation exeption
+    * @throws JwtLengthException the number of parts separated by dots is wrong
+    * @throws JwtNotBeforeException the token isn't valid yet because its `notBefore` attribute is in the future
+    * @throws JwtExpirationException the token isn't valid anymore because its `expiration` attribute is in the past
+    * @throws IllegalArgumentException couldn't decode the token since it's not a valid base64 string
+    */
+  def validate(token: String, key: String, algorithms: => Seq[JwtAsymetricAlgorithm]): Unit = {
+    val (header64, header, claim64, claim, signature) = splitToken(token)
+    validate(header64, parseHeader(header), claim64, parseClaim(claim), signature, key, algorithms)
   }
 
   /** An alias of `validate` in case you want to directly pass a string key.
     *
     * @param token $token
     * @param key $key
+    * @param algorithms $algos
     * @throws JwtValidationException default validation exeption
     * @throws JwtLengthException the number of parts separated by dots is wrong
     * @throws JwtNotBeforeException the token isn't valid yet because its `notBefore` attribute is in the future
     * @throws JwtExpirationException the token isn't valid anymore because its `expiration` attribute is in the past
     * @throws IllegalArgumentException couldn't decode the token since it's not a valid base64 string
     */
-  def validate(token: String, key: SecretKey): Unit = {
+  def validate(token: String, key: SecretKey, algorithms: Seq[JwtHmacAlgorithm]): Unit = {
     val (header64, header, claim64, claim, signature) = splitToken(token)
-    validate(header64, parseHeader(header), claim64, parseClaim(claim), signature, key)
+    validate(header64, parseHeader(header), claim64, parseClaim(claim), signature, key, algorithms)
   }
+
+  def validate(token: String, key: SecretKey): Unit = validate(token, key, JwtAlgorithm.allHmac)
 
   /** An alias of `validate` in case you want to directly pass a string key.
     *
     * @param token $token
     * @param key $key
+    * @param algorithms $algos
     * @throws JwtValidationException default validation exeption
     * @throws JwtLengthException the number of parts separated by dots is wrong
     * @throws JwtNotBeforeException the token isn't valid yet because its `notBefore` attribute is in the future
     * @throws JwtExpirationException the token isn't valid anymore because its `expiration` attribute is in the past
     * @throws IllegalArgumentException couldn't decode the token since it's not a valid base64 string
     */
-  def validate(token: String, key: PublicKey): Unit = {
+  def validate(token: String, key: PublicKey, algorithms: Seq[JwtAsymetricAlgorithm]): Unit = {
     val (header64, header, claim64, claim, signature) = splitToken(token)
-    validate(header64, parseHeader(header), claim64, parseClaim(claim), signature, key)
+    validate(header64, parseHeader(header), claim64, parseClaim(claim), signature, key, algorithms)
   }
+
+  def validate(token: String, key: PublicKey): Unit = validate(token, key, JwtAlgorithm.allAsymetric)
 
   /** Test if a token is valid. Doesn't throw any exception.
     *
@@ -512,15 +643,31 @@ trait JwtCore[H, C] {
       case _ : Throwable => false
     }
 
-  /** An alias for `isValid` if you want to directly pass a string as the key
+  /** An alias for `isValid` if you want to directly pass a string as the key for HMAC algorithms
     *
     * @return a boolean value indicating if the token is valid or not
     * @param token $token
     * @param key $key
+    * @param algorithms $algos
     */
-  def isValid(token: String, key: String): Boolean =
+  def isValid(token: String, key: String, algorithms: Seq[JwtHmacAlgorithm]): Boolean =
     try {
-      validate(token, key)
+      validate(token, key, algorithms)
+      true
+    } catch {
+      case _ : Throwable => false
+    }
+
+  /** An alias for `isValid` if you want to directly pass a string as the key for asymetric algorithms
+    *
+    * @return a boolean value indicating if the token is valid or not
+    * @param token $token
+    * @param key $key
+    * @param algorithms $algos
+    */
+  def isValid(token: String, key: String, algorithms: => Seq[JwtAsymetricAlgorithm]): Boolean =
+    try {
+      validate(token, key, algorithms)
       true
     } catch {
       case _ : Throwable => false
@@ -531,26 +678,32 @@ trait JwtCore[H, C] {
     * @return a boolean value indicating if the token is valid or not
     * @param token $token
     * @param key $key
+    * @param algorithms $algos
     */
-  def isValid(token: String, key: SecretKey): Boolean =
+  def isValid(token: String, key: SecretKey, algorithms: Seq[JwtHmacAlgorithm]): Boolean =
     try {
-      validate(token, key)
+      validate(token, key, algorithms)
       true
     } catch {
       case _ : Throwable => false
     }
+
+  def isValid(token: String, key: SecretKey): Boolean = isValid(token, key, JwtAlgorithm.allHmac)
 
   /** An alias for `isValid` if you want to directly pass a string as the key
     *
     * @return a boolean value indicating if the token is valid or not
     * @param token $token
     * @param key $key
+    * @param algorithms $algos
     */
-  def isValid(token: String, key: PublicKey): Boolean =
+  def isValid(token: String, key: PublicKey, algorithms: Seq[JwtAsymetricAlgorithm]): Boolean =
     try {
-      validate(token, key)
+      validate(token, key, algorithms)
       true
     } catch {
       case _ : Throwable => false
     }
+
+  def isValid(token: String, key: PublicKey): Boolean = isValid(token, key, JwtAlgorithm.allAsymetric)
 }
