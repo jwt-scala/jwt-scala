@@ -31,7 +31,6 @@ class JwtSessionCustomSpec extends PlaySpec with OneAppPerSuite with BeforeAndAf
         "play.http.session.jwtName" -> HEADER_NAME,
         "play.http.session.maxAge" -> sessionTimeout * 1000, // 10sec... that's really short :)
         "play.http.session.algorithm" -> "HS512",
-        "play.http.session.algorithms" -> Seq("HS512"),
         "play.http.session.tokenPrefix" -> ""
       )
     )
@@ -44,7 +43,6 @@ class JwtSessionCustomSpec extends PlaySpec with OneAppPerSuite with BeforeAndAf
     "have the correct config" in {
       app.configuration.getString("play.http.session.jwtName") mustEqual Option(HEADER_NAME)
       app.configuration.getString("play.http.session.algorithm") mustEqual Option("HS512")
-      app.configuration.getStringSeq("play.http.session.algorithms") mustEqual Option(Seq("HS512"))
       app.configuration.getString("play.http.session.tokenPrefix") mustEqual Option("")
       app.configuration.getMilliseconds("play.http.session.maxAge") mustEqual Option(sessionTimeout * 1000)
     }
@@ -54,7 +52,6 @@ class JwtSessionCustomSpec extends PlaySpec with OneAppPerSuite with BeforeAndAf
     "read default configuration" in {
       assert(JwtSession.defaultHeader == JwtHeader(JwtAlgorithm.HS512))
       assert(JwtSession.ALGORITHM == JwtAlgorithm.HS512)
-      assert(JwtSession.ALGORITHMS == Seq(JwtAlgorithm.HS512))
     }
 
     "init" in {

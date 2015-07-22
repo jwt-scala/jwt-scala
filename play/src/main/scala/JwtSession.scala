@@ -92,18 +92,6 @@ object JwtSession {
       })
       .getOrElse(JwtAlgorithm.HmacSHA256)
 
-  lazy val ALGORITHMS: Seq[JwtHmacAlgorithm] =
-    Play.maybeApplication
-      .flatMap(_.configuration.getStringSeq("play.http.session.algorithms")
-      .map(
-        _.map(JwtAlgorithm.fromString)
-        .map {
-          case algo: JwtHmacAlgorithm => algo
-          case _ => throw new RuntimeException("You can only use HMAC algorithms for [play.http.session.algorithms]")
-        }
-      ))
-      .getOrElse(JwtAlgorithm.allHmac)
-
   lazy val TOKEN_PREFIX: String =
     Play.maybeApplication.flatMap(_.configuration.getString("play.http.session.tokenPrefix")).getOrElse("Bearer ")
 
@@ -111,7 +99,7 @@ object JwtSession {
     Play.maybeApplication.flatMap(_.configuration.getString("play.crypto.secret"))
 
   def deserialize(token: String): JwtSession = (key match {
-      case Some(k) => JwtJson.decodeJsonAll(token, k, ALGORITHMS)
+      case Some(k) => JwtJson.decodeJsonAll(token, k, Seq(ALGORITHM))
       case _ => JwtJson.decodeJsonAll(token)
     }).map { tuple =>
       JwtSession(tuple._1, tuple._2, tuple._3)
