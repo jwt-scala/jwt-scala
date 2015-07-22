@@ -12,9 +12,9 @@ JwtJson4s.encode(claim)
 
 val token = JwtJson4s.encode(claim, key, algo)
 
-JwtJson4s.decodeJson(token, key)
+JwtJson4s.decodeJson(token, key, Seq(JwtAlgorithm.HS256))
 
-JwtJson4s.decode(token, key)
+JwtJson4s.decode(token, key, Seq(JwtAlgorithm.HS256))
 ```
 
 ### Encoding
@@ -31,9 +31,9 @@ JwtJson4s.encode(header, claim, key)
 
 ```tut
 // You can decode to JsObject
-JwtJson4s.decodeJson(token, key)
-JwtJson4s.decodeJsonAll(token, key)
+JwtJson4s.decodeJson(token, key, Seq(JwtAlgorithm.HS256))
+JwtJson4s.decodeJsonAll(token, key, Seq(JwtAlgorithm.HS256))
 // Or to case classes
-JwtJson4s.decode(token, key)
-JwtJson4s.decodeAll(token, key)
+JwtJson4s.decode(token, key, Seq(JwtAlgorithm.HS256))
+JwtJson4s.decodeAll(token, key, Seq(JwtAlgorithm.HS256))
 ```

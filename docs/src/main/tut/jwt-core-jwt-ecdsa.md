@@ -24,7 +24,7 @@ val ecKey = generatorEC.generateKeyPair()
 ```tut
 val token = Jwt.encode("""{"user":1}""", ecKey.getPrivate, JwtAlgorithm.ES512)
 
-Jwt.decode(token, ecKey.getPublic)
+Jwt.decode(token, ecKey.getPublic, JwtAlgorithm.allECDSA)
 ```
 
 ### With saved keys
@@ -59,8 +59,8 @@ val publicKeyEC = KeyFactory.getInstance("ECDSA", "BC").generatePublic(publicSpe
 ```tut
 val token = Jwt.encode("""{"user":1}""", privateKeyEC, JwtAlgorithm.ES512)
 
-Jwt.decode(token, publicKeyEC)
+Jwt.decode(token, publicKeyEC, Seq(JwtAlgorithm.ES512))
 
 // Wrong key...
-Jwt.decode(token, ecKey.getPublic)
+Jwt.decode(token, ecKey.getPublic, Seq(JwtAlgorithm.ES512))
 ```

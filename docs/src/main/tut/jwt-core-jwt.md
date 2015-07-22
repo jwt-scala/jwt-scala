@@ -5,8 +5,8 @@
 ```tut
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtHeader, JwtClaim}
 val token = Jwt.encode("""{"user":1}""", "secretKey", JwtAlgorithm.HS256)
-Jwt.decodeRawAll(token, "secretKey")
-Jwt.decodeRawAll(token, "wrongKey")
+Jwt.decodeRawAll(token, "secretKey", Seq(JwtAlgorithm.HS256))
+Jwt.decodeRawAll(token, "wrongKey", Seq(JwtAlgorithm.HS256))
 ```
 
 ### Encoding
@@ -37,19 +37,19 @@ In JWT Scala, espcially when using raw strings which are not typesafe at all, th
 
 ```tut
 // Decode all parts of the token as string
-Jwt.decodeRawAll(token, "secretKey")
+Jwt.decodeRawAll(token, "secretKey", JwtAlgorithm.allHmac)
 
 // Decode only the claim as a string
-Jwt.decodeRaw(token, "secretKey")
+Jwt.decodeRaw(token, "secretKey", Seq(JwtAlgorithm.HS256))
 
 // Decode all parts and cast them as a better type if possible.
 // Since the implementation in JWT Core only use string, it is the same as decodeRawAll
 // But check the result in JWT Play JSON to see the difference
-Jwt.decodeAll(token, "secretKey")
+Jwt.decodeAll(token, "secretKey", Seq(JwtAlgorithm.HS256))
 
 // Same as before, but only the claim
 // (you should start to see a pattern in the naming convention of the functions)
-Jwt.decode(token, "secretKey")
+Jwt.decode(token, "secretKey", Seq(JwtAlgorithm.HS256))
 
 // Failure because the token is not a token at all
 Jwt.decode("Hey there!")
@@ -58,7 +58,7 @@ Jwt.decode("Hey there!")
 Jwt.decode("a.b.c")
 
 // Failure in case we use the wrong key
-Jwt.decode(token, "wrongKey")
+Jwt.decode(token, "wrongKey", Seq(JwtAlgorithm.HS256))
 
 // Failure if the token only starts in 5 seconds
 Jwt.decode(Jwt.encode(JwtClaim().startsIn(5)))
@@ -70,12 +70,12 @@ If you only want to check if a token is valid without decoding it. You have two 
 
 ```tut:nofail
 // All good
-Jwt.validate(token, "secretKey")
-Jwt.isValid(token, "secretKey")
+Jwt.validate(token, "secretKey", Seq(JwtAlgorithm.HS256))
+Jwt.isValid(token, "secretKey", Seq(JwtAlgorithm.HS256))
 
 // Wrong key here
-Jwt.validate(token, "wrongKey")
-Jwt.isValid(token, "wrongKey")
+Jwt.validate(token, "wrongKey", Seq(JwtAlgorithm.HS256))
+Jwt.isValid(token, "wrongKey", Seq(JwtAlgorithm.HS256))
 
 // No key for unsigned token => ok
 Jwt.validate(Jwt.encode("{}"))
