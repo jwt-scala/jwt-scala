@@ -99,7 +99,7 @@ object JwtUtils {
 
   private def parsePrivateKey(key: String, keyAlgo: String): PrivateKey = {
     val spec = new PKCS8EncodedKeySpec(parseKey(key))
-      KeyFactory.getInstance(keyAlgo, PROVIDER).generatePrivate(spec)
+    KeyFactory.getInstance(keyAlgo, PROVIDER).generatePrivate(spec)
   }
 
   private def parsePublicKey(key: String, keyAlgo: String): PublicKey = {
