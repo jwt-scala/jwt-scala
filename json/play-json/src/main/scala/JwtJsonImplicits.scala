@@ -66,4 +66,12 @@ trait JwtJsonImplicits {
   implicit val jwtHeaderWriter = new Writes[JwtHeader] {
     def writes(header: JwtHeader) = Json.parse(header.toJson)
   }
+
+  implicit class RichJwtClaim(claim: JwtClaim) {
+    def toJsValue(): JsValue = jwtClaimWriter.writes(claim)
+  }
+
+  implicit class RichJwtHeader(header: JwtHeader) {
+    def toJsValue(): JsValue = jwtHeaderWriter.writes(header)
+  }
 }
