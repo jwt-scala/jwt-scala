@@ -32,6 +32,7 @@ class JwtSessionSpec extends PlaySpec with OneAppPerSuite with PlayFixture {
       assert(session.headerData == Json.obj("typ" -> "JWT", "alg" -> "HmacSHA256"))
       assert(session.claimData == Json.obj())
       assert(session.signature == "")
+      assert(session.isEmpty)
     }
 
     "add stuff" in {

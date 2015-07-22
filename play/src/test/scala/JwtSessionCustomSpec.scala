@@ -58,7 +58,7 @@ class JwtSessionCustomSpec extends PlaySpec with OneAppPerSuite with BeforeAndAf
       assert(session.headerData == Json.obj("typ" -> "JWT", "alg" -> "HS512"))
       assert(session.claimData == Json.obj("exp" -> (validTime + sessionTimeout)))
       assert(session.signature == "")
-
+      assert(!session.isEmpty) // There is the expiration date in the claim
     }
 
     "serialize" in {
