@@ -69,8 +69,8 @@ trait JwtCore[H, C] {
     * @return $token
     * @param header $headerString
     * @param claim $claimString
-    * @param key $maybeKey
-    * @param algorithm $maybeAlgo
+    * @param key $key
+    * @param algorithm $algo
     */
   def encode(header: String, claim: String, key: String, algorithm: JwtAlgorithm): String = {
     val data = JwtBase64.encodeString(header) + "." + JwtBase64.encodeString(claim)
@@ -91,8 +91,6 @@ trait JwtCore[H, C] {
     *
     * @return $token
     * @param claim $claimString
-    * @param key $maybeKey
-    * @param algorithm $maybeAlgo
     */
   def encode(claim: String): String = encode(JwtHeader().toJson, claim)
 
@@ -125,8 +123,8 @@ trait JwtCore[H, C] {
     *
     * @return $token
     * @param claim the claim of the JSON Web Token
-    * @param key $maybeKey
-    * @param algorithm $maybeAlgo
+    * @param key $key
+    * @param algorithm $algo
     */
   def encode(claim: JwtClaim, key: String, algorithm: JwtAlgorithm): String =
     encode(claim.toJson, key, algorithm)
@@ -254,7 +252,6 @@ trait JwtCore[H, C] {
     *
     * @return if successful, a string representing the JSON version of the claim
     * @param token $token
-    * @param maybeKey $maybeKey
     */
   def decodeRaw(token: String): Try[String] = decodeRawAll(token).map(_._2)
 
@@ -402,7 +399,6 @@ trait JwtCore[H, C] {
     *
     * @return if successful, the claim of the token in its correct type
     * @param token $token
-    * @param maybeKey $maybeKey
     */
   def decode(token: String): Try[C] = decodeAll(token).map(_._2)
 
@@ -552,7 +548,6 @@ trait JwtCore[H, C] {
   /** Valid a token: doesn't return anything but will thrown exceptions if there are any errors.
     *
     * @param token $token
-    * @param maybeKey $maybeKey
     * @throws JwtValidationException default validation exeption
     * @throws JwtLengthException the number of parts separated by dots is wrong
     * @throws JwtNotBeforeException the token isn't valid yet because its `notBefore` attribute is in the future
@@ -636,7 +631,6 @@ trait JwtCore[H, C] {
     *
     * @return a boolean value indicating if the token is valid or not
     * @param token $token
-    * @param maybeKey $maybeKey
     */
   def isValid(token: String): Boolean =
     try {
