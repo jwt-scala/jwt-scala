@@ -205,6 +205,23 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#decode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="decode(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[C]"></a>
+      <a id="decode(String,PublicKey,Seq[JwtAsymetricAlgorithm]):Try[JwtClaim]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decode</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="java.security.PublicKey">PublicKey</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="pdi.jwt.JwtClaim">JwtClaim</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decode(token:String,key:java.security.PublicKey,algorithms:Seq[pdi.jwt.JwtAsymetricAlgorithm]):scala.util.Try[C]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#decode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="decode(token:&lt;?&gt;,key:&lt;?&gt;):scala.util.Try[C]"></a>
       <a id="decode(String,SecretKey):Try[JwtClaim]"></a>
       <h4 class="signature">
@@ -222,18 +239,52 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#decode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="decode(token:&lt;?&gt;,key:&lt;?&gt;):scala.util.Try[C]"></a>
-      <a id="decode(String,String):Try[JwtClaim]"></a>
+      <a id="decode(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[C]"></a>
+      <a id="decode(String,SecretKey,Seq[JwtHmacAlgorithm]):Try[JwtClaim]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">decode</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="pdi.jwt.JwtClaim">JwtClaim</span>]</span>
+        <span class="name">decode</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="javax.crypto.SecretKey">SecretKey</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="pdi.jwt.JwtClaim">JwtClaim</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtJson$@decode(token:String,key:String):scala.util.Try[C]" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decode(token:String,key:javax.crypto.SecretKey,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):scala.util.Try[C]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#decode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="decode(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[C]"></a>
+      <a id="decode(String,String,⇒Seq[JwtAsymetricAlgorithm]):Try[JwtClaim]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decode</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithms">algorithms: ⇒ <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="pdi.jwt.JwtClaim">JwtClaim</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decode(token:String,key:String,algorithms:=&gt;Seq[pdi.jwt.JwtAsymetricAlgorithm]):scala.util.Try[C]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#decode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="decode(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[C]"></a>
+      <a id="decode(String,String,Seq[JwtHmacAlgorithm]):Try[JwtClaim]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decode</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="pdi.jwt.JwtClaim">JwtClaim</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decode(token:String,key:String,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):scala.util.Try[C]" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -273,6 +324,23 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#decodeAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="decodeAll(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[(H,C,String)]"></a>
+      <a id="decodeAll(String,PublicKey,Seq[JwtAsymetricAlgorithm]):Try[(JwtHeader,JwtClaim,String)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decodeAll</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="java.security.PublicKey">PublicKey</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[(<span class="extype" name="pdi.jwt.JwtHeader">JwtHeader</span>, <span class="extype" name="pdi.jwt.JwtClaim">JwtClaim</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeAll(token:String,key:java.security.PublicKey,algorithms:Seq[pdi.jwt.JwtAsymetricAlgorithm]):scala.util.Try[(H,C,String)]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#decodeAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="decodeAll(token:&lt;?&gt;,key:&lt;?&gt;):scala.util.Try[(H,C,String)]"></a>
       <a id="decodeAll(String,SecretKey):Try[(JwtHeader,JwtClaim,String)]"></a>
       <h4 class="signature">
@@ -290,18 +358,52 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#decodeAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="decodeAll(token:&lt;?&gt;,key:&lt;?&gt;):scala.util.Try[(H,C,String)]"></a>
-      <a id="decodeAll(String,String):Try[(JwtHeader,JwtClaim,String)]"></a>
+      <a id="decodeAll(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[(H,C,String)]"></a>
+      <a id="decodeAll(String,SecretKey,Seq[JwtHmacAlgorithm]):Try[(JwtHeader,JwtClaim,String)]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">decodeAll</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[(<span class="extype" name="pdi.jwt.JwtHeader">JwtHeader</span>, <span class="extype" name="pdi.jwt.JwtClaim">JwtClaim</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
+        <span class="name">decodeAll</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="javax.crypto.SecretKey">SecretKey</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[(<span class="extype" name="pdi.jwt.JwtHeader">JwtHeader</span>, <span class="extype" name="pdi.jwt.JwtClaim">JwtClaim</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtJson$@decodeAll(token:String,key:String):scala.util.Try[(H,C,String)]" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeAll(token:String,key:javax.crypto.SecretKey,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):scala.util.Try[(H,C,String)]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#decodeAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="decodeAll(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[(H,C,String)]"></a>
+      <a id="decodeAll(String,String,⇒Seq[JwtAsymetricAlgorithm]):Try[(JwtHeader,JwtClaim,String)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decodeAll</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithms">algorithms: ⇒ <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[(<span class="extype" name="pdi.jwt.JwtHeader">JwtHeader</span>, <span class="extype" name="pdi.jwt.JwtClaim">JwtClaim</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeAll(token:String,key:String,algorithms:=&gt;Seq[pdi.jwt.JwtAsymetricAlgorithm]):scala.util.Try[(H,C,String)]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#decodeAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="decodeAll(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[(H,C,String)]"></a>
+      <a id="decodeAll(String,String,Seq[JwtHmacAlgorithm]):Try[(JwtHeader,JwtClaim,String)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decodeAll</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[(<span class="extype" name="pdi.jwt.JwtHeader">JwtHeader</span>, <span class="extype" name="pdi.jwt.JwtClaim">JwtClaim</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeAll(token:String,key:String,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):scala.util.Try[(H,C,String)]" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -341,6 +443,23 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtJsonCommon</dd></dl></div>
     </li><li name="pdi.jwt.JwtJsonCommon#decodeJson" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="decodeJson(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[J]"></a>
+      <a id="decodeJson(String,PublicKey,Seq[JwtAsymetricAlgorithm]):Try[JsObject]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decodeJson</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="java.security.PublicKey">PublicKey</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="play.api.libs.json.JsObject">JsObject</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeJson(token:String,key:java.security.PublicKey,algorithms:Seq[pdi.jwt.JwtAsymetricAlgorithm]):scala.util.Try[J]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtJsonCommon</dd></dl></div>
+    </li><li name="pdi.jwt.JwtJsonCommon#decodeJson" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="decodeJson(token:&lt;?&gt;,key:&lt;?&gt;):scala.util.Try[J]"></a>
       <a id="decodeJson(String,SecretKey):Try[JsObject]"></a>
       <h4 class="signature">
@@ -358,18 +477,52 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtJsonCommon</dd></dl></div>
     </li><li name="pdi.jwt.JwtJsonCommon#decodeJson" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="decodeJson(token:&lt;?&gt;,key:&lt;?&gt;):scala.util.Try[J]"></a>
-      <a id="decodeJson(String,String):Try[JsObject]"></a>
+      <a id="decodeJson(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[J]"></a>
+      <a id="decodeJson(String,SecretKey,Seq[JwtHmacAlgorithm]):Try[JsObject]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">decodeJson</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="play.api.libs.json.JsObject">JsObject</span>]</span>
+        <span class="name">decodeJson</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="javax.crypto.SecretKey">SecretKey</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="play.api.libs.json.JsObject">JsObject</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtJson$@decodeJson(token:String,key:String):scala.util.Try[J]" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeJson(token:String,key:javax.crypto.SecretKey,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):scala.util.Try[J]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtJsonCommon</dd></dl></div>
+    </li><li name="pdi.jwt.JwtJsonCommon#decodeJson" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="decodeJson(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[J]"></a>
+      <a id="decodeJson(String,String,⇒Seq[JwtAsymetricAlgorithm]):Try[JsObject]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decodeJson</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithms">algorithms: ⇒ <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="play.api.libs.json.JsObject">JsObject</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeJson(token:String,key:String,algorithms:=&gt;Seq[pdi.jwt.JwtAsymetricAlgorithm]):scala.util.Try[J]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtJsonCommon</dd></dl></div>
+    </li><li name="pdi.jwt.JwtJsonCommon#decodeJson" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="decodeJson(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[J]"></a>
+      <a id="decodeJson(String,String,Seq[JwtHmacAlgorithm]):Try[JsObject]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decodeJson</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="play.api.libs.json.JsObject">JsObject</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeJson(token:String,key:String,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):scala.util.Try[J]" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -409,6 +562,23 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtJsonCommon</dd></dl></div>
     </li><li name="pdi.jwt.JwtJsonCommon#decodeJsonAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="decodeJsonAll(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[(J,J,String)]"></a>
+      <a id="decodeJsonAll(String,PublicKey,Seq[JwtAsymetricAlgorithm]):Try[(JsObject,JsObject,String)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decodeJsonAll</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="java.security.PublicKey">PublicKey</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[(<span class="extype" name="play.api.libs.json.JsObject">JsObject</span>, <span class="extype" name="play.api.libs.json.JsObject">JsObject</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeJsonAll(token:String,key:java.security.PublicKey,algorithms:Seq[pdi.jwt.JwtAsymetricAlgorithm]):scala.util.Try[(J,J,String)]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtJsonCommon</dd></dl></div>
+    </li><li name="pdi.jwt.JwtJsonCommon#decodeJsonAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="decodeJsonAll(token:&lt;?&gt;,key:&lt;?&gt;):scala.util.Try[(J,J,String)]"></a>
       <a id="decodeJsonAll(String,SecretKey):Try[(JsObject,JsObject,String)]"></a>
       <h4 class="signature">
@@ -426,18 +596,52 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtJsonCommon</dd></dl></div>
     </li><li name="pdi.jwt.JwtJsonCommon#decodeJsonAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="decodeJsonAll(token:&lt;?&gt;,key:&lt;?&gt;):scala.util.Try[(J,J,String)]"></a>
-      <a id="decodeJsonAll(String,String):Try[(JsObject,JsObject,String)]"></a>
+      <a id="decodeJsonAll(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[(J,J,String)]"></a>
+      <a id="decodeJsonAll(String,SecretKey,Seq[JwtHmacAlgorithm]):Try[(JsObject,JsObject,String)]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">decodeJsonAll</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[(<span class="extype" name="play.api.libs.json.JsObject">JsObject</span>, <span class="extype" name="play.api.libs.json.JsObject">JsObject</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
+        <span class="name">decodeJsonAll</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="javax.crypto.SecretKey">SecretKey</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[(<span class="extype" name="play.api.libs.json.JsObject">JsObject</span>, <span class="extype" name="play.api.libs.json.JsObject">JsObject</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtJson$@decodeJsonAll(token:String,key:String):scala.util.Try[(J,J,String)]" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeJsonAll(token:String,key:javax.crypto.SecretKey,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):scala.util.Try[(J,J,String)]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtJsonCommon</dd></dl></div>
+    </li><li name="pdi.jwt.JwtJsonCommon#decodeJsonAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="decodeJsonAll(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[(J,J,String)]"></a>
+      <a id="decodeJsonAll(String,String,⇒Seq[JwtAsymetricAlgorithm]):Try[(JsObject,JsObject,String)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decodeJsonAll</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithms">algorithms: ⇒ <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[(<span class="extype" name="play.api.libs.json.JsObject">JsObject</span>, <span class="extype" name="play.api.libs.json.JsObject">JsObject</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeJsonAll(token:String,key:String,algorithms:=&gt;Seq[pdi.jwt.JwtAsymetricAlgorithm]):scala.util.Try[(J,J,String)]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtJsonCommon</dd></dl></div>
+    </li><li name="pdi.jwt.JwtJsonCommon#decodeJsonAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="decodeJsonAll(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[(J,J,String)]"></a>
+      <a id="decodeJsonAll(String,String,Seq[JwtHmacAlgorithm]):Try[(JsObject,JsObject,String)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decodeJsonAll</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[(<span class="extype" name="play.api.libs.json.JsObject">JsObject</span>, <span class="extype" name="play.api.libs.json.JsObject">JsObject</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeJsonAll(token:String,key:String,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):scala.util.Try[(J,J,String)]" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -477,6 +681,23 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#decodeRaw" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="decodeRaw(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[String]"></a>
+      <a id="decodeRaw(String,PublicKey,Seq[JwtAsymetricAlgorithm]):Try[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decodeRaw</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="java.security.PublicKey">PublicKey</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeRaw(token:String,key:java.security.PublicKey,algorithms:Seq[pdi.jwt.JwtAsymetricAlgorithm]):scala.util.Try[String]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#decodeRaw" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="decodeRaw(token:&lt;?&gt;,key:&lt;?&gt;):scala.util.Try[String]"></a>
       <a id="decodeRaw(String,SecretKey):Try[String]"></a>
       <h4 class="signature">
@@ -494,18 +715,52 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#decodeRaw" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="decodeRaw(token:&lt;?&gt;,key:&lt;?&gt;):scala.util.Try[String]"></a>
-      <a id="decodeRaw(String,String):Try[String]"></a>
+      <a id="decodeRaw(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[String]"></a>
+      <a id="decodeRaw(String,SecretKey,Seq[JwtHmacAlgorithm]):Try[String]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">decodeRaw</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+        <span class="name">decodeRaw</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="javax.crypto.SecretKey">SecretKey</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtJson$@decodeRaw(token:String,key:String):scala.util.Try[String]" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeRaw(token:String,key:javax.crypto.SecretKey,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):scala.util.Try[String]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#decodeRaw" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="decodeRaw(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[String]"></a>
+      <a id="decodeRaw(String,String,⇒Seq[JwtAsymetricAlgorithm]):Try[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decodeRaw</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithms">algorithms: ⇒ <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeRaw(token:String,key:String,algorithms:=&gt;Seq[pdi.jwt.JwtAsymetricAlgorithm]):scala.util.Try[String]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#decodeRaw" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="decodeRaw(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[String]"></a>
+      <a id="decodeRaw(String,String,Seq[JwtHmacAlgorithm]):Try[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decodeRaw</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeRaw(token:String,key:String,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):scala.util.Try[String]" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -545,6 +800,23 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#decodeRawAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="decodeRawAll(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[(String,String,String)]"></a>
+      <a id="decodeRawAll(String,PublicKey,Seq[JwtAsymetricAlgorithm]):Try[(String,String,String)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decodeRawAll</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="java.security.PublicKey">PublicKey</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeRawAll(token:String,key:java.security.PublicKey,algorithms:Seq[pdi.jwt.JwtAsymetricAlgorithm]):scala.util.Try[(String,String,String)]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#decodeRawAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="decodeRawAll(token:&lt;?&gt;,key:&lt;?&gt;):scala.util.Try[(String,String,String)]"></a>
       <a id="decodeRawAll(String,SecretKey):Try[(String,String,String)]"></a>
       <h4 class="signature">
@@ -562,18 +834,52 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#decodeRawAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="decodeRawAll(token:&lt;?&gt;,key:&lt;?&gt;):scala.util.Try[(String,String,String)]"></a>
-      <a id="decodeRawAll(String,String):Try[(String,String,String)]"></a>
+      <a id="decodeRawAll(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[(String,String,String)]"></a>
+      <a id="decodeRawAll(String,SecretKey,Seq[JwtHmacAlgorithm]):Try[(String,String,String)]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">decodeRawAll</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
+        <span class="name">decodeRawAll</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="javax.crypto.SecretKey">SecretKey</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtJson$@decodeRawAll(token:String,key:String):scala.util.Try[(String,String,String)]" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeRawAll(token:String,key:javax.crypto.SecretKey,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):scala.util.Try[(String,String,String)]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#decodeRawAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="decodeRawAll(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[(String,String,String)]"></a>
+      <a id="decodeRawAll(String,String,⇒Seq[JwtAsymetricAlgorithm]):Try[(String,String,String)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decodeRawAll</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithms">algorithms: ⇒ <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeRawAll(token:String,key:String,algorithms:=&gt;Seq[pdi.jwt.JwtAsymetricAlgorithm]):scala.util.Try[(String,String,String)]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#decodeRawAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="decodeRawAll(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):scala.util.Try[(String,String,String)]"></a>
+      <a id="decodeRawAll(String,String,Seq[JwtHmacAlgorithm]):Try[(String,String,String)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decodeRawAll</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@decodeRawAll(token:String,key:String,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):scala.util.Try[(String,String,String)]" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -1163,6 +1469,23 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#isValid" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isValid(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):Boolean"></a>
+      <a id="isValid(String,PublicKey,Seq[JwtAsymetricAlgorithm]):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isValid</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="java.security.PublicKey">PublicKey</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@isValid(token:String,key:java.security.PublicKey,algorithms:Seq[pdi.jwt.JwtAsymetricAlgorithm]):Boolean" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#isValid" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isValid(token:&lt;?&gt;,key:&lt;?&gt;):Boolean"></a>
       <a id="isValid(String,SecretKey):Boolean"></a>
       <h4 class="signature">
@@ -1180,18 +1503,52 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#isValid" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="isValid(token:&lt;?&gt;,key:&lt;?&gt;):Boolean"></a>
-      <a id="isValid(String,String):Boolean"></a>
+      <a id="isValid(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):Boolean"></a>
+      <a id="isValid(String,SecretKey,Seq[JwtHmacAlgorithm]):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isValid</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isValid</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="javax.crypto.SecretKey">SecretKey</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtJson$@isValid(token:String,key:String):Boolean" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtJson$@isValid(token:String,key:javax.crypto.SecretKey,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):Boolean" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#isValid" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isValid(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):Boolean"></a>
+      <a id="isValid(String,String,⇒Seq[JwtAsymetricAlgorithm]):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isValid</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithms">algorithms: ⇒ <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@isValid(token:String,key:String,algorithms:=&gt;Seq[pdi.jwt.JwtAsymetricAlgorithm]):Boolean" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#isValid" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isValid(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):Boolean"></a>
+      <a id="isValid(String,String,Seq[JwtHmacAlgorithm]):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isValid</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@isValid(token:String,key:String,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):Boolean" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -1384,6 +1741,23 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#validate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="validate(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):Unit"></a>
+      <a id="validate(String,PublicKey,Seq[JwtAsymetricAlgorithm]):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">validate</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="java.security.PublicKey">PublicKey</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@validate(token:String,key:java.security.PublicKey,algorithms:Seq[pdi.jwt.JwtAsymetricAlgorithm]):Unit" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#validate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="validate(token:&lt;?&gt;,key:&lt;?&gt;):Unit"></a>
       <a id="validate(String,SecretKey):Unit"></a>
       <h4 class="signature">
@@ -1401,18 +1775,52 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#validate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="validate(token:&lt;?&gt;,key:&lt;?&gt;):Unit"></a>
-      <a id="validate(String,String):Unit"></a>
+      <a id="validate(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):Unit"></a>
+      <a id="validate(String,SecretKey,Seq[JwtHmacAlgorithm]):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">validate</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">validate</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="javax.crypto.SecretKey">SecretKey</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtJson$@validate(token:String,key:String):Unit" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtJson$@validate(token:String,key:javax.crypto.SecretKey,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):Unit" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#validate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="validate(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):Unit"></a>
+      <a id="validate(String,String,⇒Seq[JwtAsymetricAlgorithm]):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">validate</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithms">algorithms: ⇒ <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@validate(token:String,key:String,algorithms:=&gt;Seq[pdi.jwt.JwtAsymetricAlgorithm]):Unit" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#validate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="validate(token:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):Unit"></a>
+      <a id="validate(String,String,Seq[JwtHmacAlgorithm]):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">validate</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@validate(token:String,key:String,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):Unit" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -1435,52 +1843,69 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#validate" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="validate(header64:&lt;?&gt;,header:&lt;?&gt;,claim64:&lt;?&gt;,claim:&lt;?&gt;,signature:&lt;?&gt;,key:&lt;?&gt;):Unit"></a>
-      <a id="validate(String,JwtHeader,String,JwtClaim,String,PublicKey):Unit"></a>
+      <a id="validate(header64:&lt;?&gt;,header:&lt;?&gt;,claim64:&lt;?&gt;,claim:&lt;?&gt;,signature:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):Unit"></a>
+      <a id="validate(String,JwtHeader,String,JwtClaim,String,PublicKey,Seq[JwtAsymetricAlgorithm]):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">validate</span><span class="params">(<span name="header64">header64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="header">header: <span class="extype" name="pdi.jwt.JwtHeader">JwtHeader</span></span>, <span name="claim64">claim64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="pdi.jwt.JwtClaim">JwtClaim</span></span>, <span name="signature">signature: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="java.security.PublicKey">PublicKey</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">validate</span><span class="params">(<span name="header64">header64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="header">header: <span class="extype" name="pdi.jwt.JwtHeader">JwtHeader</span></span>, <span name="claim64">claim64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="pdi.jwt.JwtClaim">JwtClaim</span></span>, <span name="signature">signature: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="java.security.PublicKey">PublicKey</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtJson$@validate(header64:String,header:H,claim64:String,claim:C,signature:String,key:java.security.PublicKey):Unit" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtJson$@validate(header64:String,header:H,claim64:String,claim:C,signature:String,key:java.security.PublicKey,algorithms:Seq[pdi.jwt.JwtAsymetricAlgorithm]):Unit" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#validate" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="validate(header64:&lt;?&gt;,header:&lt;?&gt;,claim64:&lt;?&gt;,claim:&lt;?&gt;,signature:&lt;?&gt;,key:&lt;?&gt;):Unit"></a>
-      <a id="validate(String,JwtHeader,String,JwtClaim,String,SecretKey):Unit"></a>
+      <a id="validate(header64:&lt;?&gt;,header:&lt;?&gt;,claim64:&lt;?&gt;,claim:&lt;?&gt;,signature:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):Unit"></a>
+      <a id="validate(String,JwtHeader,String,JwtClaim,String,SecretKey,Seq[JwtHmacAlgorithm]):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">validate</span><span class="params">(<span name="header64">header64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="header">header: <span class="extype" name="pdi.jwt.JwtHeader">JwtHeader</span></span>, <span name="claim64">claim64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="pdi.jwt.JwtClaim">JwtClaim</span></span>, <span name="signature">signature: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="javax.crypto.SecretKey">SecretKey</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">validate</span><span class="params">(<span name="header64">header64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="header">header: <span class="extype" name="pdi.jwt.JwtHeader">JwtHeader</span></span>, <span name="claim64">claim64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="pdi.jwt.JwtClaim">JwtClaim</span></span>, <span name="signature">signature: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="javax.crypto.SecretKey">SecretKey</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtJson$@validate(header64:String,header:H,claim64:String,claim:C,signature:String,key:javax.crypto.SecretKey):Unit" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtJson$@validate(header64:String,header:H,claim64:String,claim:C,signature:String,key:javax.crypto.SecretKey,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):Unit" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
     </li><li name="pdi.jwt.JwtCore#validate" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="validate(header64:&lt;?&gt;,header:&lt;?&gt;,claim64:&lt;?&gt;,claim:&lt;?&gt;,signature:&lt;?&gt;,key:&lt;?&gt;):Unit"></a>
-      <a id="validate(String,JwtHeader,String,JwtClaim,String,String):Unit"></a>
+      <a id="validate(header64:&lt;?&gt;,header:&lt;?&gt;,claim64:&lt;?&gt;,claim:&lt;?&gt;,signature:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):Unit"></a>
+      <a id="validate(String,JwtHeader,String,JwtClaim,String,String,⇒Seq[JwtAsymetricAlgorithm]):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">validate</span><span class="params">(<span name="header64">header64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="header">header: <span class="extype" name="pdi.jwt.JwtHeader">JwtHeader</span></span>, <span name="claim64">claim64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="pdi.jwt.JwtClaim">JwtClaim</span></span>, <span name="signature">signature: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">validate</span><span class="params">(<span name="header64">header64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="header">header: <span class="extype" name="pdi.jwt.JwtHeader">JwtHeader</span></span>, <span name="claim64">claim64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="pdi.jwt.JwtClaim">JwtClaim</span></span>, <span name="signature">signature: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithms">algorithms: ⇒ <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#pdi.jwt.JwtJson$@validate(header64:String,header:H,claim64:String,claim:C,signature:String,key:String):Unit" title="Permalink" target="_top">
+      <a href="../../index.html#pdi.jwt.JwtJson$@validate(header64:String,header:H,claim64:String,claim:C,signature:String,key:String,algorithms:=&gt;Seq[pdi.jwt.JwtAsymetricAlgorithm]):Unit" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#validate" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="validate(header64:&lt;?&gt;,header:&lt;?&gt;,claim64:&lt;?&gt;,claim:&lt;?&gt;,signature:&lt;?&gt;,key:&lt;?&gt;,algorithms:&lt;?&gt;):Unit"></a>
+      <a id="validate(String,JwtHeader,String,JwtClaim,String,String,Seq[JwtHmacAlgorithm]):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">validate</span><span class="params">(<span name="header64">header64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="header">header: <span class="extype" name="pdi.jwt.JwtHeader">JwtHeader</span></span>, <span name="claim64">claim64: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="claim">claim: <span class="extype" name="pdi.jwt.JwtClaim">JwtClaim</span></span>, <span name="signature">signature: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@validate(header64:String,header:H,claim64:String,claim:C,signature:String,key:String,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):Unit" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
@@ -1515,6 +1940,40 @@
       </span>
       </h4><span class="permalink">
       <a href="../../index.html#pdi.jwt.JwtJson$@validate(header:H,claim:C,signature:String):Unit" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#validateAsymetricAlgorithm" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="validateAsymetricAlgorithm(algorithm:&lt;?&gt;,algorithms:&lt;?&gt;):Boolean"></a>
+      <a id="validateAsymetricAlgorithm(JwtAsymetricAlgorithm,Seq[JwtAsymetricAlgorithm]):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">validateAsymetricAlgorithm</span><span class="params">(<span name="algorithm">algorithm: <span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtAsymetricAlgorithm">JwtAsymetricAlgorithm</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@validateAsymetricAlgorithm(algorithm:pdi.jwt.JwtAsymetricAlgorithm,algorithms:Seq[pdi.jwt.JwtAsymetricAlgorithm]):Boolean" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>JwtCore</dd></dl></div>
+    </li><li name="pdi.jwt.JwtCore#validateHmacAlgorithm" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="validateHmacAlgorithm(algorithm:&lt;?&gt;,algorithms:&lt;?&gt;):Boolean"></a>
+      <a id="validateHmacAlgorithm(JwtHmacAlgorithm,Seq[JwtHmacAlgorithm]):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">validateHmacAlgorithm</span><span class="params">(<span name="algorithm">algorithm: <span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span></span>, <span name="algorithms">algorithms: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="pdi.jwt.JwtHmacAlgorithm">JwtHmacAlgorithm</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#pdi.jwt.JwtJson$@validateHmacAlgorithm(algorithm:pdi.jwt.JwtHmacAlgorithm,algorithms:Seq[pdi.jwt.JwtHmacAlgorithm]):Boolean" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" />
       </a>
     </span>
