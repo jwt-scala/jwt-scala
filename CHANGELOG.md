@@ -1,8 +1,12 @@
 # Changelog
 
-## 0.4.0
+## 0.4.0 (24/07/2015)
 
 Thanks a lot to @drbild for helping review the code around security vulnerabilities.
+
+### Now on Maven
+
+All the sub-projects are now released directly on Maven Central. Since Sonatype didn't accept `pdi` as the groupId, I had to change it to `com.pauldijou`. Sorry about that, you will need to quickly update your `build.sbt` (or whatever file contains your dependencies).
 
 ### Breaking changes
 
@@ -42,7 +46,7 @@ JwtHeader(JwtAlgorithm.HS256).toJValue
 JwtClaim().by("me").to("you").about("something").issuedNow.startsNow.expiresIn(15).toJValue
 ```
 
-## 0.2.1
+## 0.2.1 (24/07/2015)
 
 Same as `0.4.0` but targeting Play 2.3
 
