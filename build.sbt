@@ -38,9 +38,6 @@ val commonSettings = Seq(
   autoAPIMappings := true,
   crossScalaVersions := Seq("2.10.5", "2.11.6"),
   crossVersion := CrossVersion.binary,
-  resolvers ++= Seq(
-    "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"
-  ),
   libraryDependencies ++= Seq(Libs.scalatest, Libs.jmockit),
   scalacOptions in (Compile, doc) ++= Seq("-unchecked", "-deprecation"),
   aggregate in test := false,
