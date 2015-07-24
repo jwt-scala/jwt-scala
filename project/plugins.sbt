@@ -5,7 +5,8 @@ resolvers ++= Seq(
   Resolver.url(
   "tpolecat-sbt-plugin-releases",
     url("http://dl.bintray.com/content/tpolecat/sbt-plugin-releases")
-  )(Resolver.ivyStylePatterns)
+  )(Resolver.ivyStylePatterns),
+  "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"
 )
 
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.4.0")
