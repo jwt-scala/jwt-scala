@@ -98,8 +98,8 @@ lazy val jwtScala = project.in(file("."))
   .settings(
     name := "jwt-scala"
   )
-  .aggregate(playEdge, playLegacy)
-  .dependsOn(playEdge, playLegacy)
+  .aggregate(playEdge, playLegacy, json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge)
+  .dependsOn(playEdge, playLegacy, json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge)
 
 lazy val docs = project.in(file("docs"))
   .settings(name := "jwt-docs")
