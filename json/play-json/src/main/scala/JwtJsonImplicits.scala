@@ -51,7 +51,7 @@ trait JwtJsonImplicits {
       case value: JsObject =>
         try {
           JsSuccess(JwtHeader.apply(
-            algorithm = extractString(value, "alg").map(JwtAlgorithm.fromString),
+            algorithm = extractString(value, "alg").flatMap(JwtAlgorithm.optionFromString),
             typ = extractString(value, "typ"),
             contentType = extractString(value, "cty")
           ))
