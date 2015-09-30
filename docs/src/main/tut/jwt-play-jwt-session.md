@@ -96,28 +96,28 @@ var result: play.api.mvc.Result = play.api.mvc.Results.Ok
 result.jwtSession
 
 // Setting a new empty JwtSession
-result.withNewJwtSession
+result = result.withNewJwtSession
 
 // Or from an existing JwtSession
-result.withJwtSession(session2)
+result = result.withJwtSession(session2)
 
 // Or from a JsObject
-result.withJwtSession(Json.obj(("user", 1), ("key", "value")))
+result = result.withJwtSession(Json.obj(("id", 1), ("key", "value")))
 
 // Or from (key, value)
-result.withJwtSession(("user", 1), ("key", "value"))
+result = result.withJwtSession(("id", 1), ("key", "value"))
 
 // We can add stuff to the current session (only (String, String))
-result.addingToJwtSession(("key2", "value2"), ("key3", "value3"))
+result = result.addingToJwtSession(("key2", "value2"), ("key3", "value3"))
 
 // Or directly classes or objects if you have the correct implicit Writes
-result.addingToJwtSession("user2", User(1, "Louis"))
+result = result.addingToJwtSession("user", User(1, "Paul"))
 
 // Removing from session
-result.removingFromJwtSession("key2", "key3")
+result = result.removingFromJwtSession("key2", "key3")
 
 // Refresh the current session
-result.refreshJwtSession
+result = result.refreshJwtSession
 
 // So, at the end, you can do
 result.jwtSession.getAs[User]("user")
