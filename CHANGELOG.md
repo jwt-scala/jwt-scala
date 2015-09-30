@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1 (30/09/2015)
+
+Fix tricky bug inside all JSON libs not supporting correctly the `none` algorithm.
+
 ## 0.4.0 (24/07/2015)
 
 Thanks a lot to @drbild for helping review the code around security vulnerabilities.
