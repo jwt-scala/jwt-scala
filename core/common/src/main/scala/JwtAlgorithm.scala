@@ -16,7 +16,11 @@ package algorithms {
 }
 
 object JwtAlgorithm {
-  /**
+  /** Deserialize an algorithm from its string equivalent. Only real algorithms supported,
+    * if you need to support "none", use "optionFromString".
+    *
+    * @return the actual instance of the algorithm
+    * @param algo the name of the algorithm (e.g. HS256 or HmacSHA256)
     * @throws JwtNonSupportedAlgorithm in case the string doesn't match any known algorithm
     */
   def fromString(algo: String): JwtAlgorithm = algo match {
@@ -49,6 +53,19 @@ object JwtAlgorithm {
     case "ECDSASHA384" => ECDSASHA384
     case "ECDSASHA512" => ECDSASHA512
     case _             => throw new JwtNonSupportedAlgorithm(algo)
+  }
+
+  /** Deserialize an algorithm from its string equivalent. If it's the special "none" algorithm,
+    * return None, else, return Some with the corresponding algorithm inside.
+    *
+    * @return the actual instance of the algorithm
+    * @param algo the name of the algorithm (e.g. none, HS256 or HmacSHA256)
+    * @throws JwtNonSupportedAlgorithm in case the string doesn't match any known algorithm nor "none"
+    */
+  def optionFromString(algo: String): Option[JwtAlgorithm] = if (algo == "none") {
+    None
+  } else {
+    Some(fromString(algo))
   }
 
   def allHmac(): Seq[algorithms.JwtHmacAlgorithm] = Seq(HMD5, HS1, HS224, HS256, HS384, HS512, HmacMD5, HmacSHA1, HmacSHA224, HmacSHA256, HmacSHA384, HmacSHA512)
