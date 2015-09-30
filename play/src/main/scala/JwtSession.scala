@@ -72,7 +72,7 @@ case class JwtSession(
   def withSignature(signature: String): JwtSession = this.copy(signature = signature)
 
   /** If your Play app config has a `session.maxAge`, it will extend the expiration by that amount */
-  def refresh: JwtSession = JwtSession.MAX_AGE.map(sec => this + ("exp", JwtTime.nowSeconds + sec)).getOrElse(this)
+  def refresh(): JwtSession = JwtSession.MAX_AGE.map(sec => this + ("exp", JwtTime.nowSeconds + sec)).getOrElse(this)
 }
 
 object JwtSession {
