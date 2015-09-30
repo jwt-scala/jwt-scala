@@ -7,8 +7,8 @@ import Dependencies._
 import com.typesafe.sbt.SbtSite.SiteKeys._
 import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 
-val previousVersion = "0.3.0"
-val buildVersion = "0.4.0"
+val previousVersion = "0.4.0"
+val buildVersion = "0.4.1"
 
 addCommandAlias("testAll", ";coreCommonLegacy/test;coreCommonEdge/test;playJsonLegacy/test;playJsonEdge/test;json4sNativeLegacy/test;json4sNativeEdge/test;json4sJacksonLegacy/test;json4sJacksonEdge/test;playLegacy/test;playEdge/test")
 
