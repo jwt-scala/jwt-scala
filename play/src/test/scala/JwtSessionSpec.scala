@@ -40,6 +40,13 @@ class JwtSessionSpec extends PlaySpec with OneAppPerSuite with PlayFixture {
       assert((session + ("a", 1) + ("b", "c")).claimData == Json.obj("a" -> 1, "b" -> "c"))
       assert((session + ("user", user)).claimData == Json.obj("user" -> userJson))
       assert((session ++ (("a", 1), ("b", "c"))).claimData == Json.obj("a" -> 1, "b" -> "c"))
+
+      assert((session + ("a", 1) + ("b", "c") + ("user", user)).claimData == Json.obj("a" -> 1, "b" -> "c", "user" -> userJson))
+
+      val sessionBis = session + ("a", 1) + ("b", "c")
+      val sessionTer = sessionBis ++ (("d", true), ("e", 42))
+      val sessionQuad = sessionTer + ("user", user)
+      assert(sessionQuad.claimData == Json.obj("a" -> 1, "b" -> "c", "d" -> true, "e" -> 42, "user" -> userJson))
     }
 
     "remove stuff" in {

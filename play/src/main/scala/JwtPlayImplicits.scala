@@ -41,11 +41,12 @@ trait JwtPlayImplicits {
     /** Retrieve the current [[JwtSession]] from the headers (first from the Result then from the RequestHeader), if none, create a new one.
       * @return the JwtSession inside the headers or a new one
       */
-    def jwtSession(implicit request: RequestHeader): JwtSession =
+    def jwtSession(implicit request: RequestHeader): JwtSession = {
       result.header.headers.get(JwtSession.HEADER_NAME) match {
         case Some(token) => JwtSession.deserialize(sanitizeHeader(token))
         case None => requestToJwtSession(request)
       }
+    }
 
     /** If the Play app has a session.maxAge config, it will extend the expiration of the [[JwtSession]] by that time, if not, it will do nothing.
       * @return the same Result with, eventually, a prolonged [[JwtSession]]
@@ -56,32 +57,35 @@ trait JwtPlayImplicits {
     }
 
     /** Override the current [[JwtSession]] with a new one */
-    def withJwtSession(session: JwtSession): Result =
+    def withJwtSession(session: JwtSession): Result = {
       result.withHeaders(JwtSession.HEADER_NAME -> (JwtSession.TOKEN_PREFIX + session.serialize))
-
+    }
     /** Override the current [[JwtSession]] with a new one created from a JsObject */
-    def withJwtSession(session: JsObject): Result = result.withJwtSession(JwtSession(session))
+    def withJwtSession(session: JsObject): Result = withJwtSession(JwtSession(session))
 
     /** Override the current [[JwtSession]] with a new one created from a sequence of tuples */
-    def withJwtSession(fields: (String, JsValueWrapper)*): Result = result.withJwtSession(JwtSession(fields: _*))
+    def withJwtSession(fields: (String, JsValueWrapper)*): Result = withJwtSession(JwtSession(fields: _*))
 
     /** Override the current [[JwtSession]] with a new empty one */
-    def withNewJwtSession: Result = result.withJwtSession(JwtSession())
+    def withNewJwtSession: Result = withJwtSession(JwtSession())
 
     /** Remove the current [[JwtSession]], which means removing the associated HTTP header */
     def withoutJwtSession: Result = result.copy(header = result.header.copy(headers = result.header.headers - JwtSession.HEADER_NAME))
 
     /** Keep the current [[JwtSession]] and add some values in it, if a key is already defined, it will be overriden. */
-    def addingToJwtSession(values: (String, String)*)(implicit request: RequestHeader): Result =
+    def addingToJwtSession(values: (String, String)*)(implicit request: RequestHeader): Result = {
       withJwtSession(jwtSession + new JsObject(values.map(kv => kv._1 -> JsString(kv._2)).toMap))
+    }
 
     /** Keep the current [[JwtSession]] and add some values in it, if a key is already defined, it will be overriden. */
-    def addingToJwtSession[A: Writes](key: String, value: A)(implicit request: RequestHeader): Result =
+    def addingToJwtSession[A: Writes](key: String, value: A)(implicit request: RequestHeader): Result = {
       withJwtSession(jwtSession + (key, value))
+    }
 
     /** Remove some keys from the current [[JwtSession]] */
-    def removingFromJwtSession(keys: String*)(implicit request: RequestHeader): Result =
+    def removingFromJwtSession(keys: String*)(implicit request: RequestHeader): Result = {
       withJwtSession(jwtSession -- (keys: _*))
+    }
   }
 
   /** By adding `import pdi.jwt._`, you will implicitely add this method to `RequestHeader` allowing you to easily retrieve
