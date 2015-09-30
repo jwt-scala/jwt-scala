@@ -85,7 +85,7 @@ If you want to submit a PR to improve the project, that would be awesome. If, in
 ## Notes
 
 - **Test**: run all tests with `sbt testAll` (if `java.lang.LinkageError`, just re-run the command)
-- **Publish**: update version numbers in `build.sbt` and run `sbt release`
+- **Publish**: update version numbers in `build.sbt` and run `sbt release` (be sure to either `reload` inside sbt or start a new sbt)
 - **Scaladoc**: to manually generate all scaladoc, run `sbt scaladoc`
 - **Publish docs**: to manually build and push online the doc website, run `sbt publish-doc`
 - **Docs**: to have a locally running doc website:
