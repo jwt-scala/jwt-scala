@@ -14,8 +14,7 @@ object JwtCirceJson extends JwtJsonCommon[Json] {
   protected def parse(value: String): Json = jawnParse(value).toOption.get
   protected def parseClaim(claim: String): JwtClaim = {
     val cursor = parse(claim).hcursor
-    val fields = List("iss", "sub", "aud", "exp", "nbf", "iat", "jti")
-    val contentCursor = fields.foldLeft(cursor){(cursor, field) =>
+    val contentCursor = List("iss", "sub", "aud", "exp", "nbf", "iat", "jti").foldLeft(cursor){(cursor, field) =>
       val newCursor = cursor.downField(field).delete
       if(newCursor.succeeded) newCursor.any
       else cursor
