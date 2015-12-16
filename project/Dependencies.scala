@@ -4,6 +4,7 @@ object Dependencies {
   object V {
     val play = "2.4.0"
     val json4s = "3.2.10"
+    val circe = "0.2.1"
     val scalatest = "2.2.4"
     val scalatestPlus = "1.4.0-M2"
     val jmockit = "1.17"
@@ -20,6 +21,10 @@ object Dependencies {
     val json4sCore    = "org.json4s" %% "json4s-core"    % V.json4s % "provided"
     val json4sNative  = "org.json4s" %% "json4s-native"  % V.json4s % "provided"
     val json4sJackson = "org.json4s" %% "json4s-jackson" % V.json4s % "provided"
+
+    val circeCore     = "io.circe" %% "circe-core"    % V.circe
+    val circeGeneric  = "io.circe" %% "circe-generic" % V.circe
+    val circeParse    = "io.circe" %% "circe-parse"   % V.circe
 
     val apacheCodec = "commons-codec" % "commons-codec" % V.apacheCodec
     val bouncyCastle = "org.bouncycastle" % "bcpkix-jdk15on" % V.bouncyCastle
