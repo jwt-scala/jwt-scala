@@ -2,8 +2,8 @@ import sbt._
 
 object Dependencies {
   object V {
-    val play = "2.4.0"
-    val json4s = "3.2.10"
+    val play = "2.4.6"
+    val json4s = "3.3.0"
     val circe = "0.2.1"
     val scalatest = "2.2.4"
     val scalatestPlus = "1.4.0-M2"
