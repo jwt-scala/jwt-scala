@@ -10,7 +10,7 @@ import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 val previousVersion = "0.4.0"
 val buildVersion = "0.4.1"
 
-addCommandAlias("testAll", ";coreCommonLegacy/test;coreCommonEdge/test;playJsonLegacy/test;playJsonEdge/test;json4sNativeLegacy/test;json4sNativeEdge/test;json4sJacksonLegacy/test;json4sJacksonEdge/test;circeEdge/test;circeLegacy/test;playLegacy/test;playEdge/test")
+addCommandAlias("testAll", ";coreCommonLegacy/test;coreCommonEdge/test;playJsonLegacy/test;playJsonEdge/test;json4sNativeLegacy/test;json4sNativeEdge/test;json4sJacksonLegacy/test;json4sJacksonEdge/test;circeLegacy/test;circeEdge/test;playLegacy/test;playEdge/test")
 
 addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;playEdge/doc;json4sNativeEdge/doc;scaladocScript")
 addCommandAlias("publish-doc", ";docs/makeSite;docs/ghpagesPushSite")
@@ -98,8 +98,8 @@ lazy val jwtScala = project.in(file("."))
   .settings(
     name := "jwt-scala"
   )
-  .aggregate(playEdge, playLegacy, json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, circeEdge, circeLegacy)
-  .dependsOn(playEdge, playLegacy, json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, circeEdge, circeLegacy)
+  .aggregate(playEdge, playLegacy, json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, circeLegacy, circeEdge)
+  .dependsOn(playEdge, playLegacy, json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, circeLegacy, circeEdge)
 
 lazy val docs = project.in(file("docs"))
   .settings(name := "jwt-docs")
