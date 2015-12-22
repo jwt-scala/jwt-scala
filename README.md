@@ -13,6 +13,7 @@ JWT Scala is divided in several sub-projects each targeting a specific use-case.
 |`jwt-play`|Play framework|[JwtSession](https://pauldijou.github.io/jwt-scala/samples/jwt-play)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-play)|
 |`jwt-json4s-native`|`json4s` Native implementation|[JwtJson4s](https://pauldijou.github.io/jwt-scala/samples/jwt-json4s)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-json4s)|
 |`jwt-json4s-jackson`|`json4s` Jackson implementation|[JwtJson4s](https://pauldijou.github.io/jwt-scala/samples/jwt-json4s)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-json4s)|
+|`jwt-circe`|`Circe`|[circe](https://pauldijou.github.io/jwt-scala/samples/jwt-circe)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-circe)|
 
 If you need a previous version of the Scaladoc API, check [the bottom of this page](https://pauldijou.github.io/jwt-scala/api/#old-apis)
 

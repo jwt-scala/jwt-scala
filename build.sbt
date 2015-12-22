@@ -10,7 +10,7 @@ import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 val previousVersion = "0.4.0"
 val buildVersion = "0.4.1"
 
-addCommandAlias("testAll", ";coreCommonLegacy/test;coreCommonEdge/test;playJsonLegacy/test;playJsonEdge/test;json4sNativeLegacy/test;json4sNativeEdge/test;json4sJacksonLegacy/test;json4sJacksonEdge/test;playLegacy/test;playEdge/test")
+addCommandAlias("testAll", ";coreCommonLegacy/test;coreCommonEdge/test;playJsonLegacy/test;playJsonEdge/test;json4sNativeLegacy/test;json4sNativeEdge/test;json4sJacksonLegacy/test;json4sJacksonEdge/test;circeEdge/test;circeLegacy/test;playLegacy/test;playEdge/test")
 
 addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;playEdge/doc;json4sNativeEdge/doc;scaladocScript")
 addCommandAlias("publish-doc", ";docs/makeSite;docs/ghpagesPushSite")
@@ -98,8 +98,8 @@ lazy val jwtScala = project.in(file("."))
   .settings(
     name := "jwt-scala"
   )
-  .aggregate(playEdge, playLegacy, json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge)
-  .dependsOn(playEdge, playLegacy, json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge)
+  .aggregate(playEdge, playLegacy, json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, circeEdge, circeLegacy)
+  .dependsOn(playEdge, playLegacy, json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, circeEdge, circeLegacy)
 
 lazy val docs = project.in(file("docs"))
   .settings(name := "jwt-docs")
@@ -183,6 +183,28 @@ lazy val playJsonEdge = project.in(file("json/play-json"))
   )
   .aggregate(jsonCommonEdge)
   .dependsOn(jsonCommonEdge % "compile->compile;test->test")
+
+
+lazy val circeLegacy = project.in(file("json/circe"))
+  .settings(publishSettings)
+  .settings(
+    name := "jwt-circe-legacy",
+    target <<= target(_ / "legacy"),
+    libraryDependencies ++= Seq(Libs.circeCore, Libs.circeGeneric, Libs.circeParse)
+  )
+  .aggregate(jsonCommonLegacy)
+  .dependsOn(jsonCommonLegacy % "compile->compile;test->test")
+
+lazy val circeEdge = project.in(file("json/circe"))
+  .settings(publishSettings)
+  .settings(
+    name := "jwt-circe",
+    target <<= target(_ / "edge"),
+    libraryDependencies ++= Seq(Libs.circeCore, Libs.circeGeneric, Libs.circeParse)
+  )
+  .aggregate(jsonCommonEdge)
+  .dependsOn(jsonCommonEdge % "compile->compile;test->test")
+
 
 lazy val json4sCommonLegacy = project.in(file("json/json4s-common"))
   .settings(publishSettings)
