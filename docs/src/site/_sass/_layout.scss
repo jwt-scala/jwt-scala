@@ -82,6 +82,10 @@ code,
   background-color: #f8f8f8;
 }
 
+code {
+  white-space: nowrap;
+}
+
 .icon-github {
   position: absolute;
   top: (0.66 * $spacing-unit);
