@@ -3,7 +3,7 @@
 ### Basic usage
 
 ```tut
-import pdi.jwt.{Jwt, JwtAlgorithm, JwtHeader, JwtClaim}
+import pdi.jwt.{Jwt, JwtAlgorithm, JwtHeader, JwtClaim, JwtOptions}
 val token = Jwt.encode("""{"user":1}""", "secretKey", JwtAlgorithm.HS256)
 Jwt.decodeRawAll(token, "secretKey", Seq(JwtAlgorithm.HS256))
 Jwt.decodeRawAll(token, "wrongKey", Seq(JwtAlgorithm.HS256))
@@ -33,7 +33,9 @@ Jwt.encode(JwtHeader(JwtAlgorithm.HS1), JwtClaim("""{"user":1}"""), "key")
 
 ### Decoding
 
-In JWT Scala, espcially when using raw strings which are not typesafe at all, there are a lot of possible errors. This is why nearly all `decode` functions will return a `Try` rather than directly the expected result. In case of failure, the wrapped exception should tell you what went wront.
+In JWT Scala, espcially when using raw strings which are not typesafe at all, there are a lot of possible errors. This is why nearly all `decode` functions will return a `Try` rather than directly the expected result. In case of failure, the wrapped exception should tell you what went wrong.
+
+Take note that nearly all decoding methods (including those from helper libs) support either a String key, or a PrivateKey with a Hmac algorithm or a PublicKey with a RSA or ECDSA algorithm.
 
 ```tut
 // Decode all parts of the token as string
@@ -92,4 +94,20 @@ Jwt.isValid(Jwt.encode(JwtClaim().startsIn(5)))
 // This is no token
 Jwt.validate("a.b.c")
 Jwt.isValid("a.b.c")
+```
+
+### Options
+
+All validating and decoding methods support a final optional argument as a `JwtOptions` which allow you to disable validation checks. This is useful if you need to access data from an expired token for example. You can disable `expiration`, `notBefore` and `signature` checks. Be warned that if you disable the last one, you have no guarantee that the user didn't change the content of the token.
+
+```tut:nofail
+val expiredToken = Jwt.encode(JwtClaim().by("me").expiresIn(-1));
+
+// Fail since the token is expired
+Jwt.isValid(expiredToken)
+Jwt.decode(expiredToken)
+
+// Let's disable expiration check
+Jwt.isValid(expiredToken, JwtOptions(expiration = false))
+Jwt.decode(expiredToken, JwtOptions(expiration = false))
 ```

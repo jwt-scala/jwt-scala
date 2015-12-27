@@ -218,5 +218,65 @@ class JwtSpec extends UnitSpec with Fixture {
       assert(Jwt.decode(token).isFailure)
       intercept[JwtNonSupportedAlgorithm] { Jwt.decode(token).get }
     }
+
+    it("should skip expiration validation depending on options") {
+      val mock = mockAfterExpiration
+      val options = JwtOptions(expiration = false)
+
+      data foreach { d =>
+        Jwt.validate(d.token, secretKey, JwtAlgorithm.allHmac, options)
+        assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, secretKey, JwtAlgorithm.allHmac, options) }
+        Jwt.validate(d.token, secretKeyOf(d.algo), options)
+        assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, secretKeyOf(d.algo), options) }
+      }
+
+      dataRSA foreach { d =>
+        Jwt.validate(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options)
+        assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options) }
+      }
+
+      mock.tearDown
+    }
+
+    it("should skip notBefore validation depending on options") {
+      val mock = mockBeforeNotBefore
+      val options = JwtOptions(notBefore = false)
+
+      data foreach { d =>
+        val claimNotBefore = claimClass.copy(notBefore = Option(notBefore))
+        val token = Jwt.encode(claimNotBefore, secretKey, d.algo)
+
+        Jwt.validate(token, secretKey, JwtAlgorithm.allHmac, options)
+        assertResult(true, d.algo.fullName) { Jwt.isValid(token, secretKey, JwtAlgorithm.allHmac, options) }
+        Jwt.validate(token, secretKeyOf(d.algo), options)
+        assertResult(true, d.algo.fullName) { Jwt.isValid(token, secretKeyOf(d.algo), options) }
+      }
+
+      dataRSA foreach { d =>
+        val claimNotBefore = claimClass.copy(notBefore = Option(notBefore))
+        val token = Jwt.encode(claimNotBefore, privateKeyRSA, d.algo)
+
+        Jwt.validate(token, publicKeyRSA, JwtAlgorithm.allRSA, options)
+        assertResult(true, d.algo.fullName) { Jwt.isValid(token, publicKeyRSA, JwtAlgorithm.allRSA, options) }
+      }
+
+      mock.tearDown
+    }
+
+    it("should skip signature validation depending on options") {
+      val mock = mockValidTime
+      val options = JwtOptions(signature = false)
+
+      data foreach { d =>
+        Jwt.validate(d.token, "wrong key", JwtAlgorithm.allHmac, options)
+        assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, "wrong key", JwtAlgorithm.allHmac, options) }
+      }
+
+      dataRSA foreach { d =>
+        assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, "wrong key", JwtAlgorithm.allRSA, options) }
+      }
+
+      mock.tearDown
+    }
   }
 }

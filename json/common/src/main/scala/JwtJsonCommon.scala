@@ -44,41 +44,87 @@ trait JwtJsonCommon[J] extends JwtCore[JwtHeader, JwtClaim] {
   def encode(claim: J, key: PrivateKey, algorithm: JwtAsymetricAlgorithm): String =
     encode(stringify(claim), key, algorithm)
 
+  def decodeJsonAll(token: String, options: JwtOptions): Try[(J, J, String)] =
+    decodeRawAll(token, options).map { tuple => (parse(tuple._1), parse(tuple._2), tuple._3) }
+
   def decodeJsonAll(token: String): Try[(J, J, String)] =
-    decodeRawAll(token).map { tuple => (parse(tuple._1), parse(tuple._2), tuple._3) }
+    decodeJsonAll(token, JwtOptions.DEFAULT)
+
+  def decodeJsonAll(token: String, key: String, algorithms: Seq[JwtHmacAlgorithm], options: JwtOptions): Try[(J, J, String)] =
+    decodeRawAll(token, key, algorithms, options).map { tuple => (parse(tuple._1), parse(tuple._2), tuple._3) }
 
   def decodeJsonAll(token: String, key: String, algorithms: Seq[JwtHmacAlgorithm]): Try[(J, J, String)] =
-    decodeRawAll(token, key, algorithms).map { tuple => (parse(tuple._1), parse(tuple._2), tuple._3) }
+    decodeJsonAll(token, key, algorithms, JwtOptions.DEFAULT)
+
+  def decodeJsonAll(token: String, key: String, algorithms: => Seq[JwtAsymetricAlgorithm], options: JwtOptions): Try[(J, J, String)] =
+    decodeRawAll(token, key, algorithms, options).map { tuple => (parse(tuple._1), parse(tuple._2), tuple._3) }
 
   def decodeJsonAll(token: String, key: String, algorithms: => Seq[JwtAsymetricAlgorithm]): Try[(J, J, String)] =
-    decodeRawAll(token, key, algorithms).map { tuple => (parse(tuple._1), parse(tuple._2), tuple._3) }
+    decodeJsonAll(token, key, algorithms, JwtOptions.DEFAULT)
+
+  def decodeJsonAll(token: String, key: SecretKey, algorithms: Seq[JwtHmacAlgorithm], options: JwtOptions): Try[(J, J, String)] =
+    decodeRawAll(token, key, algorithms, options).map { tuple => (parse(tuple._1), parse(tuple._2), tuple._3) }
 
   def decodeJsonAll(token: String, key: SecretKey, algorithms: Seq[JwtHmacAlgorithm]): Try[(J, J, String)] =
-    decodeRawAll(token, key, algorithms).map { tuple => (parse(tuple._1), parse(tuple._2), tuple._3) }
+    decodeJsonAll(token, key, algorithms, JwtOptions.DEFAULT)
 
-  def decodeJsonAll(token: String, key: SecretKey): Try[(J, J, String)] = decodeJsonAll(token, key, JwtAlgorithm.allHmac)
+  def decodeJsonAll(token: String, key: SecretKey, options: JwtOptions): Try[(J, J, String)] =
+    decodeJsonAll(token, key, JwtAlgorithm.allHmac, options)
+
+  def decodeJsonAll(token: String, key: SecretKey): Try[(J, J, String)] =
+    decodeJsonAll(token, key, JwtOptions.DEFAULT)
+
+  def decodeJsonAll(token: String, key: PublicKey, algorithms: Seq[JwtAsymetricAlgorithm], options: JwtOptions): Try[(J, J, String)] =
+    decodeRawAll(token, key, algorithms, options).map { tuple => (parse(tuple._1), parse(tuple._2), tuple._3) }
 
   def decodeJsonAll(token: String, key: PublicKey, algorithms: Seq[JwtAsymetricAlgorithm]): Try[(J, J, String)] =
-    decodeRawAll(token, key, algorithms).map { tuple => (parse(tuple._1), parse(tuple._2), tuple._3) }
+    decodeJsonAll(token, key, algorithms, JwtOptions.DEFAULT)
 
-  def decodeJsonAll(token: String, key: PublicKey): Try[(J, J, String)] = decodeJsonAll(token, key, JwtAlgorithm.allAsymetric)
+  def decodeJsonAll(token: String, key: PublicKey, options: JwtOptions): Try[(J, J, String)] =
+    decodeJsonAll(token, key, JwtAlgorithm.allAsymetric, options)
+
+  def decodeJsonAll(token: String, key: PublicKey): Try[(J, J, String)] =
+    decodeJsonAll(token, key, JwtOptions.DEFAULT)
+
+  def decodeJson(token: String, options: JwtOptions): Try[J] =
+    decodeJsonAll(token, options).map(_._2)
 
   def decodeJson(token: String): Try[J] =
-    decodeJsonAll(token).map(_._2)
+    decodeJson(token, JwtOptions.DEFAULT)
+
+  def decodeJson(token: String, key: String, algorithms: Seq[JwtHmacAlgorithm], options: JwtOptions): Try[J] =
+    decodeJsonAll(token, key, algorithms, options).map(_._2)
 
   def decodeJson(token: String, key: String, algorithms: Seq[JwtHmacAlgorithm]): Try[J] =
-    decodeJsonAll(token, key, algorithms).map(_._2)
+    decodeJson(token, key, algorithms, JwtOptions.DEFAULT)
+
+  def decodeJson(token: String, key: String, algorithms: => Seq[JwtAsymetricAlgorithm], options: JwtOptions): Try[J] =
+    decodeJsonAll(token, key, algorithms, options).map(_._2)
 
   def decodeJson(token: String, key: String, algorithms: => Seq[JwtAsymetricAlgorithm]): Try[J] =
-    decodeJsonAll(token, key, algorithms).map(_._2)
+    decodeJson(token, key, algorithms, JwtOptions.DEFAULT)
+
+  def decodeJson(token: String, key: SecretKey, algorithms: Seq[JwtHmacAlgorithm], options: JwtOptions): Try[J] =
+    decodeJsonAll(token, key, algorithms, options).map(_._2)
 
   def decodeJson(token: String, key: SecretKey, algorithms: Seq[JwtHmacAlgorithm]): Try[J] =
-    decodeJsonAll(token, key, algorithms).map(_._2)
+    decodeJson(token, key, algorithms, JwtOptions.DEFAULT)
 
-  def decodeJson(token: String, key: SecretKey): Try[J] = decodeJson(token, key, JwtAlgorithm.allHmac)
+  def decodeJson(token: String, key: SecretKey, options: JwtOptions): Try[J] =
+    decodeJson(token, key, JwtAlgorithm.allHmac, options)
+
+  def decodeJson(token: String, key: SecretKey): Try[J] =
+    decodeJson(token, key, JwtOptions.DEFAULT)
+
+  def decodeJson(token: String, key: PublicKey, algorithms: Seq[JwtAsymetricAlgorithm], options: JwtOptions): Try[J] =
+    decodeJsonAll(token, key, algorithms, options).map(_._2)
 
   def decodeJson(token: String, key: PublicKey, algorithms: Seq[JwtAsymetricAlgorithm]): Try[J] =
-    decodeJsonAll(token, key, algorithms).map(_._2)
+    decodeJson(token, key, algorithms, JwtOptions.DEFAULT)
 
-  def decodeJson(token: String, key: PublicKey): Try[J] = decodeJson(token, key, JwtAlgorithm.allAsymetric)
+  def decodeJson(token: String, key: PublicKey, options: JwtOptions): Try[J] =
+    decodeJson(token, key, JwtAlgorithm.allAsymetric, options)
+
+  def decodeJson(token: String, key: PublicKey): Try[J] =
+    decodeJson(token, key, JwtOptions.DEFAULT)
 }

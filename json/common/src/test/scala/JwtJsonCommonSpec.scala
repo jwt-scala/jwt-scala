@@ -105,5 +105,34 @@ abstract class JwtJsonCommonSpec[J] extends UnitSpec with JsonCommonFixture[J] {
 
       mock.tearDown
     }
+
+    it("should success to decodeJsonAll and decodeJson when now is after expiration date with options") {
+      val mock = mockAfterExpiration
+      val options = JwtOptions(expiration = false)
+
+      dataJson foreach { d =>
+        jwtJsonCommon.decodeJsonAll(d.token, secretKey, JwtAlgorithm.allHmac, options).get
+        assert(jwtJsonCommon.decodeJsonAll(d.token, secretKey, JwtAlgorithm.allHmac, options).isSuccess)
+
+        jwtJsonCommon.decodeJson(d.token, secretKey, JwtAlgorithm.allHmac, options).get
+        assert(jwtJsonCommon.decodeJson(d.token, secretKey, JwtAlgorithm.allHmac, options).isSuccess)
+
+        jwtJsonCommon.decodeAll(d.token, secretKey, JwtAlgorithm.allHmac, options).get
+        assert(jwtJsonCommon.decodeAll(d.token, secretKey, JwtAlgorithm.allHmac, options).isSuccess)
+      }
+
+      dataRSAJson foreach { d =>
+        jwtJsonCommon.decodeJsonAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options).get
+        assert(jwtJsonCommon.decodeJsonAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options).isSuccess)
+
+        jwtJsonCommon.decodeJson(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options).get
+        assert(jwtJsonCommon.decodeJson(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options).isSuccess)
+
+        jwtJsonCommon.decodeAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options).get
+        assert(jwtJsonCommon.decodeAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options).isSuccess)
+      }
+
+      mock.tearDown
+    }
   }
 }

@@ -98,12 +98,14 @@ object JwtSession {
   private def key: Option[String] =
     Play.maybeApplication.flatMap(_.configuration.getString("play.crypto.secret"))
 
-  def deserialize(token: String): JwtSession = (key match {
-      case Some(k) => JwtJson.decodeJsonAll(token, k, Seq(ALGORITHM))
-      case _ => JwtJson.decodeJsonAll(token)
+  def deserialize(token: String, options: JwtOptions): JwtSession = (key match {
+      case Some(k) => JwtJson.decodeJsonAll(token, k, Seq(ALGORITHM), options)
+      case _ => JwtJson.decodeJsonAll(token, options)
     }).map { tuple =>
       JwtSession(tuple._1, tuple._2, tuple._3)
     }.getOrElse(JwtSession())
+
+  def deserialize(token: String): JwtSession = deserialize(token, JwtOptions.DEFAULT)
 
   private def asJsObject[A](value: A)(implicit writer: Writes[A]): JsObject = writer.writes(value) match {
     case value: JsObject => value
