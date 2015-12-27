@@ -109,9 +109,9 @@ lazy val docs = project.in(file("docs"))
   .settings(tutSettings)
   .settings(docSettings)
   .settings(
-    libraryDependencies ++= Seq(Libs.playJson, Libs.play, Libs.playTestProvided, Libs.json4sNative)
+    libraryDependencies ++= Seq(Libs.playJson, Libs.play, Libs.playTestProvided, Libs.json4sNative, Libs.circeCore, Libs.circeGeneric, Libs.circeParse)
   )
-  .dependsOn(playEdge, json4sNativeEdge)
+  .dependsOn(playEdge, json4sNativeEdge, circeEdge)
 
 lazy val coreLegacy = project.in(file("core/legacy"))
   .settings(publishSettings)
