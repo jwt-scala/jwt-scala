@@ -76,27 +76,46 @@ case class JwtSession(
 }
 
 object JwtSession {
-  val HEADER_NAME: String =
-    Play.maybeApplication.flatMap(_.configuration.getString("play.http.session.jwtName")).getOrElse("Authorization")
+  // This half-hack is to fix a "bug" in Play Framework where Play assign "null"
+  // values to missing keys leading to ConfigException.Null in Typesafe Config
+  // Especially strange for the maxAge key. Not having it should mean no session timeout,
+  // not crash my app.
+  def wrap[T](getter: String => Option[T]): String => Option[T] = key => try {
+    getter(key)
+  } catch {
+    case e: com.typesafe.config.ConfigException.Null => None
+    case e: java.lang.RuntimeException => {
+      e.getCause() match {
+        case _: com.typesafe.config.ConfigException.Null => None
+        case _ => throw e
+      }
+    }
+  }
 
-  val MAX_AGE: Option[Long] =
-    Play.maybeApplication.flatMap(_.configuration.getMilliseconds("play.http.session.maxAge").map(_ / 1000))
+  val getConfigString = wrap[String](
+    key => Play.maybeApplication.flatMap(_.configuration.getString(key))
+  )
+
+  val getConfigMillis = wrap[Long](
+    key => Play.maybeApplication.flatMap(_.configuration.getMilliseconds(key))
+  )
+
+  val HEADER_NAME: String = getConfigString("play.http.session.jwtName").getOrElse("Authorization")
+
+  val MAX_AGE: Option[Long] = getConfigMillis("play.http.session.maxAge").map(_ / 1000)
 
   val ALGORITHM: JwtHmacAlgorithm =
-    Play.maybeApplication
-      .flatMap(_.configuration.getString("play.http.session.algorithm")
+    getConfigString("play.http.session.algorithm")
       .map(JwtAlgorithm.fromString)
       .flatMap {
         case algo: JwtHmacAlgorithm => Option(algo)
         case _ => throw new RuntimeException("You can only use HMAC algorithms for [play.http.session.algorithm]")
-      })
+      }
       .getOrElse(JwtAlgorithm.HmacSHA256)
 
-  val TOKEN_PREFIX: String =
-    Play.maybeApplication.flatMap(_.configuration.getString("play.http.session.tokenPrefix")).getOrElse("Bearer ")
+  val TOKEN_PREFIX: String = getConfigString("play.http.session.tokenPrefix").getOrElse("Bearer ")
 
-  private def key: Option[String] =
-    Play.maybeApplication.flatMap(_.configuration.getString("play.crypto.secret"))
+  private def key: Option[String] = getConfigString("play.crypto.secret")
 
   def deserialize(token: String, options: JwtOptions): JwtSession = (key match {
       case Some(k) => JwtJson.decodeJsonAll(token, k, Seq(ALGORITHM), options)
