@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.0 (31/12/2015)
+
+### Circe support
+
+Thanks to @dwhitney , `JWT Scala` now has support for [Circe](https://github.com/travisbrown/circe). Check out [samples](http://pauldijou.fr/jwt-scala/samples/jwt-circe/) and [Scaladoc](http://pauldijou.fr/jwt-scala/api/latest/jwt-circe/).
+
+### Disable validation
+
+When decoding, `JWT Scala` also performs validation. If you need to decode an invalid token, you can now use a `JwtOptions` as the last argument of any decoding function to disable validation checks like expiration, notBefore and signature. Read the **Options** section of the [core sample](http://pauldijou.fr/jwt-scala/samples/jwt-core/) to know more.
+
+### Fix null session in Play 2.4
+
+Since 2.4, Play assign `null` as default value for some configuration keys which throw a `ConfigException.Null` in TypeSafe config lib. This should be fixed with the new configuration system at some point in the future. In the mean time, all calls reading the configuration will be wrapped in a try/catch to prevent that.
+
 ## 0.4.1 (30/09/2015)
 
 Fix tricky bug inside all JSON libs not supporting correctly the `none` algorithm.
