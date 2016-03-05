@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1 (05/03/2016)
+
+Fix bug not-escaping quotation mark `"` when stringifying JSON.
+
 ## 0.5.0 (31/12/2015)
 
 ### Circe support
