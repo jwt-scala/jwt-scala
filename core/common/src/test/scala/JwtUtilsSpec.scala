@@ -2,6 +2,10 @@ package pdi.jwt
 
 import org.scalatest._
 
+case class TestObject(value: String) {
+  override def toString(): String = this.value
+}
+
 class JwtUtilsSpec extends UnitSpec {
   val ENCODING = JwtUtils.ENCODING
 
@@ -17,7 +21,12 @@ class JwtUtilsSpec extends UnitSpec {
             "f" -> 3.4f,
             "g" -> 5.6
           ),
-          "{}" -> Seq()
+          "{}" -> Seq(),
+          """{"a\"b":"a\"b","c\"d":"c\"d","e\"f":["e\"f","e\"f"]}""" -> Seq(
+            """a"b""" -> """a"b""",
+            """c"d""" -> TestObject("""c"d"""),
+            """e"f""" -> Seq("""e"f""", TestObject("""e"f"""))
+          )
         )
 
         values.zipWithIndex.foreach {

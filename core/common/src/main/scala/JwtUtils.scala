@@ -32,13 +32,15 @@ object JwtUtils {
     */
   def bytify(str: String): Array[Byte] = str.getBytes(ENCODING)
 
+  private def escape(value: String): String = value.replaceAll("\"", "\\\\\"")
+
   /** Convert a sequence to a JSON array
     */
   def seqToJson(seq: Seq[Any]): String = if (seq.isEmpty) {
     "[]"
   } else {
     seq.map {
-      case value: String => "\"" + value + "\""
+      case value: String => "\"" + escape(value) + "\""
       case value: Boolean => (if (value) { "true" } else { "false" })
       case value: Double => value.toString
       case value: Short => value.toString
@@ -48,7 +50,7 @@ object JwtUtils {
       case value: BigDecimal => value.toString
       case value: BigInt => value.toString
       case value: (String, Any) => hashToJson(Seq(value))
-      case value: Any => "\"" + value.toString + "\""
+      case value: Any => "\"" + escape(value.toString) + "\""
     }.mkString("[", ",", "]")
   }
 
@@ -59,18 +61,18 @@ object JwtUtils {
     "{}"
   } else {
     hash.map {
-      case (key, value: String) => "\"" + key + "\":\"" + value + "\""
-      case (key, value: Boolean) => "\"" + key + "\":" + (if (value) { "true" } else { "false" })
-      case (key, value: Double) => "\"" + key + "\":" + value.toString
-      case (key, value: Short) => "\"" + key + "\":" + value.toString
-      case (key, value: Float) => "\"" + key + "\":" + value.toString
-      case (key, value: Long) => "\"" + key + "\":" + value.toString
-      case (key, value: Int) => "\"" + key + "\":" + value.toString
-      case (key, value: BigDecimal) => "\"" + key + "\":" + value.toString
-      case (key, value: BigInt) => "\"" + key + "\":" + value.toString
-      case (key, value: (String, Any)) => "\"" + key + "\":" + hashToJson(Seq(value))
-      case (key, value: Seq[Any]) => "\"" + key + "\":" + seqToJson(value)
-      case (key, value: Any) => "\"" + key + "\":\"" + value.toString + "\""
+      case (key, value: String) => "\"" + escape(key) + "\":\"" + escape(value) + "\""
+      case (key, value: Boolean) => "\"" + escape(key) + "\":" + (if (value) { "true" } else { "false" })
+      case (key, value: Double) => "\"" + escape(key) + "\":" + value.toString
+      case (key, value: Short) => "\"" + escape(key) + "\":" + value.toString
+      case (key, value: Float) => "\"" + escape(key) + "\":" + value.toString
+      case (key, value: Long) => "\"" + escape(key) + "\":" + value.toString
+      case (key, value: Int) => "\"" + escape(key) + "\":" + value.toString
+      case (key, value: BigDecimal) => "\"" + escape(key) + "\":" + value.toString
+      case (key, value: BigInt) => "\"" + escape(key) + "\":" + value.toString
+      case (key, value: (String, Any)) => "\"" + escape(key) + "\":" + hashToJson(Seq(value))
+      case (key, value: Seq[Any]) => "\"" + escape(key) + "\":" + seqToJson(value)
+      case (key, value: Any) => "\"" + escape(key) + "\":\"" + escape(value.toString) + "\""
     }.mkString("{", ",", "}")
   }
 
