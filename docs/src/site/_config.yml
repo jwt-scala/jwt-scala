@@ -4,7 +4,7 @@ version: 0.5.0
 permalink: pretty
 baseurl: "/jwt-scala"
 url: "https://pauldijou.github.io"
-highlighter: pygments
+highlighter: rouge
 markdown: redcarpet
 redcarpet:
   extensions: ["tables", "fenced_code_blocks", "autolink", "strikethrough"]
