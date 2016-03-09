@@ -1,7 +1,7 @@
 import sbt._
 import Keys._
 import Tests._
-import play.Play.autoImport._
+import play.sbt.Play.autoImport._
 import PlayKeys._
 import Dependencies._
 import com.typesafe.sbt.SbtSite.SiteKeys._
@@ -34,7 +34,7 @@ pushScript := {
 val commonSettings = Seq(
   organization := "com.pauldijou",
   version := buildVersion,
-  scalaVersion := "2.11.6",
+  scalaVersion := "2.11.7",
   autoAPIMappings := true,
   crossScalaVersions := Seq("2.10.5", "2.11.6"),
   crossVersion := CrossVersion.binary,
@@ -298,6 +298,6 @@ lazy val examplePlayAngularProject = project.in(file("examples/play-angular"))
     name := "playAngular",
     routesGenerator := play.sbt.routes.RoutesKeys.InjectedRoutesGenerator
   )
-  .enablePlugins(play.PlayScala)
+  .enablePlugins(PlayScala)
   .aggregate(playEdge)
   .dependsOn(playEdge)
