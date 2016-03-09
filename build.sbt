@@ -12,7 +12,7 @@ val buildVersion = "0.6.0"
 
 addCommandAlias("testAll", ";coreCommonLegacy/test;coreCommonEdge/test;playJsonLegacy/test;playJsonEdge/test;json4sNativeLegacy/test;json4sNativeEdge/test;json4sJacksonLegacy/test;json4sJacksonEdge/test;circeLegacy/test;circeEdge/test;playLegacy/test;playEdge/test")
 
-addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;playEdge/doc;json4sNativeEdge/doc;circeEdge/doc;scaladocScript")
+addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;playEdge/doc;json4sNativeEdge/doc;circeEdge/doc;scaladocScript;cleanScript")
 addCommandAlias("publish-doc", ";docs/makeSite;docs/ghpagesPushSite")
 addCommandAlias("release", ";bumpScript;scaladoc;publish-doc;+publishSigned;sonatypeRelease;pushScript")
 
@@ -29,6 +29,11 @@ bumpScript := {
 lazy val pushScript = taskKey[Unit]("Push to GitHub")
 pushScript := {
   "./scripts/pu.sh "+buildVersion !
+}
+
+lazy val cleanScript = taskKey[Unit]("Clean tmp files")
+pushScript := {
+  "./scripts/clean.sh" !
 }
 
 val commonSettings = Seq(

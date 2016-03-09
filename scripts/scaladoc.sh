@@ -22,7 +22,7 @@ cp -r ./json/json4s-native/target/edge/scala-2.11/api ./docs/src/site/api/latest
 cp -r ./json/circe/target/edge/scala-2.11/api ./docs/src/site/api/latest/jwt-circe
 cp -r ./play/target/edge/scala-2.11/api ./docs/src/site/api/latest/jwt-play
 cp ./docs/src/site/_templates/index_api.html ./docs/src/site/api/latest/index.html
-sed -i '' -e "s/placeholderVersion/$VERSION/g" ./docs/src/site/api/latest/index.html
+sed -i.tmp "s/placeholderVersion/$VERSION/g" ./docs/src/site/api/latest/index.html
 
 cp -r ./core/common/target/edge/scala-2.11/api ./docs/src/site/api/$VERSION/jwt-core
 cp -r ./json/play-json/target/edge/scala-2.11/api ./docs/src/site/api/$VERSION/jwt-play-json
@@ -30,4 +30,4 @@ cp -r ./json/json4s-native/target/edge/scala-2.11/api ./docs/src/site/api/$VERSI
 cp -r ./json/circe/target/edge/scala-2.11/api ./docs/src/site/api/$VERSION/jwt-circe
 cp -r ./play/target/edge/scala-2.11/api ./docs/src/site/api/$VERSION/jwt-play
 cp ./docs/src/site/_templates/index_api.html ./docs/src/site/api/$VERSION/index.html
-sed -i '' -e "s/placeholderVersion/$VERSION/g" ./docs/src/site/api/$VERSION/index.html
+sed -i.tmp "s/placeholderVersion/$VERSION/g" ./docs/src/site/api/$VERSION/index.html
