@@ -3,6 +3,7 @@ package pdi.jwt
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import akka.util.Timeout
+import akka.stream.Materializer
 
 import play.api.mvc._
 import play.api.mvc.Results._
@@ -14,6 +15,7 @@ case class User(id: Long, name: String)
 
 trait PlayFixture extends Fixture {
   def HEADER_NAME: String
+  def materializer: Materializer
 
   implicit val userFormat = Json.format[User]
 
@@ -23,7 +25,7 @@ trait PlayFixture extends Fixture {
   val loginAction: EssentialAction = Action { implicit request =>
     val username = (request.body.asJson.get \ "username").as[String]
     val password = (request.body.asJson.get \ "password").as[String]
-    
+
     password match {
       case "p4ssw0rd" => Ok.addingToJwtSession("user", user)
       case _ => BadRequest
@@ -46,6 +48,7 @@ trait PlayFixture extends Fixture {
   }
 
   def get(action: EssentialAction, header: Option[String] = None) = {
+    implicit val mat: Materializer = materializer
     var request = header match {
       case Some(h) => FakeRequest(GET, "/something").withHeaders((JwtSession.HEADER_NAME, h))
       case _ => FakeRequest(GET, "/something")
@@ -53,8 +56,11 @@ trait PlayFixture extends Fixture {
 
     call(action, request)
   }
-  
-  def post(action: EssentialAction, body: JsObject) = call(action, FakeRequest(POST, "/something").withJsonBody(body))
+
+  def post(action: EssentialAction, body: JsObject) = {
+    implicit val mat: Materializer = materializer
+    call(action, FakeRequest(POST, "/something").withJsonBody(body))
+  }
 
   def jwtHeader(of: Future[Result])(implicit timeout: Timeout): Option[String] = header(JwtSession.HEADER_NAME, of)(timeout)
 }

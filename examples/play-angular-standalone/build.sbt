@@ -9,5 +9,5 @@ scalaVersion := "2.11.6"
 routesGenerator := InjectedRoutesGenerator
 
 libraryDependencies ++= Seq(
-  "com.pauldijou" %% "jwt-play" % "0.4.1"
+  "com.pauldijou" %% "jwt-play" % "0.5.1"
 )

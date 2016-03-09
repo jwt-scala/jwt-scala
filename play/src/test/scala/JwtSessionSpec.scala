@@ -4,13 +4,16 @@ import org.scalatest._
 import play.api.test._
 import play.api.test.Helpers._
 import org.scalatestplus.play._
+import akka.stream.Materializer
 
 import play.api.mvc._
 import play.api.mvc.Results._
 import play.api.libs.json._
 
 class JwtSessionSpec extends PlaySpec with OneAppPerSuite with PlayFixture {
-  val HEADER_NAME = "Authorization"
+  val materializer: Materializer = app.materializer
+
+  def HEADER_NAME = "Authorization"
 
   implicit override lazy val app: FakeApplication =
     FakeApplication(
@@ -22,6 +25,12 @@ class JwtSessionSpec extends PlaySpec with OneAppPerSuite with PlayFixture {
   val session3 = JwtSession(JwtHeader(JwtAlgorithm.HmacSHA256), claimClass, "-3BM6yrNy3a8E2QtEYszKes2Rij80sfpgBAmzrJeJuk")
   // This is session3 serialized (if no bug...)
   val token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIbWFjU0hBMjU2In0." + claim64 + ".-3BM6yrNy3a8E2QtEYszKes2Rij80sfpgBAmzrJeJuk"
+
+  "Init FakeApplication" must {
+    "have the correct config" in {
+      app.configuration.getString("play.crypto.secret") mustEqual Option(secretKey)
+    }
+  }
 
   "JwtSession" must {
     "read default configuration" in {

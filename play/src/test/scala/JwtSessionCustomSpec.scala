@@ -4,15 +4,18 @@ import org.scalatest._
 import play.api.test._
 import play.api.test.Helpers._
 import org.scalatestplus.play._
+import akka.stream.Materializer
 
 import play.api.mvc._
 import play.api.mvc.Results._
 import play.api.libs.json._
 
 class JwtSessionCustomSpec extends PlaySpec with OneAppPerSuite with BeforeAndAfter with PlayFixture {
+  val materializer: Materializer = app.materializer
+
   // Just for test, users shouldn't change the header name normally
-  val HEADER_NAME = "Auth"
-  val sessionTimeout = 10
+  def HEADER_NAME = "Auth"
+  def sessionTimeout = 10
   var currentTime = validTimeMillis
   var mock: mockit.MockUp[_] = null
 
@@ -41,6 +44,7 @@ class JwtSessionCustomSpec extends PlaySpec with OneAppPerSuite with BeforeAndAf
 
   "Init FakeApplication" must {
     "have the correct config" in {
+      app.configuration.getString("play.crypto.secret") mustEqual Option(secretKey)
       app.configuration.getString("play.http.session.jwtName") mustEqual Option(HEADER_NAME)
       app.configuration.getString("play.http.session.algorithm") mustEqual Option("HS512")
       app.configuration.getString("play.http.session.tokenPrefix") mustEqual Option("")
