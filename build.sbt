@@ -10,11 +10,26 @@ import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 val previousVersion = "0.5.1"
 val buildVersion = "0.6.0"
 
-addCommandAlias("testAll", ";coreCommonLegacy/test;coreCommonEdge/test;playJsonLegacy/test;playJsonEdge/test;json4sNativeLegacy/test;json4sNativeEdge/test;json4sJacksonLegacy/test;json4sJacksonEdge/test;circeLegacy/test;circeEdge/test;playLegacy/test;playEdge/test")
+val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "circe", "play")
+val crossProjects = projects.map(p => Seq(p + "Legacy", p + "Edge")).flatten
+
+addCommandAlias("testAll", crossProjects.map(p => p + "/test").mkString(";", ";", ""))
 
 addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;playEdge/doc;json4sNativeEdge/doc;circeEdge/doc;scaladocScript;cleanScript")
+
 addCommandAlias("publish-doc", ";docs/makeSite;docs/ghpagesPushSite")
-addCommandAlias("release", ";bumpScript;scaladoc;publish-doc;+publishSigned;sonatypeRelease;pushScript")
+
+addCommandAlias("publishCore", ";coreCommonEdge/publishSigned;coreCommonLegacy/publishSigned");
+addCommandAlias("publishPlayJson", ";playJsonEdge/publishSigned;playJsonLegacy/publishSigned");
+addCommandAlias("publishJson4Native", ";json4sNativeEdge/publishSigned;json4sNativeLegacy/publishSigned");
+addCommandAlias("publishJson4Jackson", ";json4sJacksonEdge/publishSigned;json4sJacksonLegacy/publishSigned");
+addCommandAlias("publishCirce", ";circeEdge/publishSigned;circeLegacy/publishSigned");
+addCommandAlias("publishPlay", ";playEdge/publishSigned;playLegacy/publishSigned");
+
+// Do not cross-build for Play project since Scala 2.10 support was dropped
+addCommandAlias("publishAll", ";publishPlayJson;+publishJson4Native;+publishJson4Jackson;+publishCirce;publishPlay")
+
+addCommandAlias("release", ";bumpScript;scaladoc;publish-doc;publishAll;sonatypeRelease;pushScript")
 
 lazy val scaladocScript = taskKey[Unit]("Generate scaladoc and copy it to docs site")
 scaladocScript := {
@@ -36,13 +51,13 @@ cleanScript := {
   "./scripts/clean.sh" !
 }
 
-val commonSettings = Seq(
+val baseSettings = Seq(
   organization := "com.pauldijou",
   version := buildVersion,
   scalaVersion := "2.11.7",
-  autoAPIMappings := true,
   crossScalaVersions := Seq("2.10.6", "2.11.7"),
   crossVersion := CrossVersion.binary,
+  autoAPIMappings := true,
   resolvers ++= Seq(
     "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"
   ),
@@ -53,7 +68,7 @@ val commonSettings = Seq(
   parallelExecution in test := false
 )
 
-val publishSettings = commonSettings ++ Seq(
+val publishSettings = Seq(
   homepage := Some(url("http://pauldijou.fr/jwt-scala/")),
   organizationHomepage := Some(url("http://pauldijou.github.io/")),
   apiURL := Some(url("http://pauldijou.fr/jwt-scala/api/")),
@@ -82,11 +97,18 @@ val publishSettings = commonSettings ++ Seq(
     </developers>)
 )
 
-val noPublishSettings = commonSettings ++ Seq(
+val noPublishSettings = Seq(
   publish := (),
   publishLocal := (),
   publishArtifact := false
 )
+
+// Normal published settings
+val releaseSettings = baseSettings ++ publishSettings
+
+// Local non-published projects
+val localSettings = baseSettings ++ noPublishSettings
+
 
 val docSettings = Seq(
   site.addMappingsToSiteDir(tut, "_includes/tut"),
@@ -99,7 +121,7 @@ val docSettings = Seq(
 )
 
 lazy val jwtScala = project.in(file("."))
-  .settings(noPublishSettings)
+  .settings(localSettings)
   .settings(
     name := "jwt-scala"
   )
@@ -108,7 +130,7 @@ lazy val jwtScala = project.in(file("."))
 
 lazy val docs = project.in(file("docs"))
   .settings(name := "jwt-docs")
-  .settings(noPublishSettings)
+  .settings(localSettings)
   .settings(site.settings)
   .settings(ghpages.settings)
   .settings(tutSettings)
@@ -119,20 +141,20 @@ lazy val docs = project.in(file("docs"))
   .dependsOn(playEdge, json4sNativeEdge, circeEdge)
 
 lazy val coreLegacy = project.in(file("core/legacy"))
-  .settings(publishSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-core-legacy-impl",
     libraryDependencies ++= Seq(Libs.apacheCodec)
   )
 
 lazy val coreEdge = project.in(file("core/edge"))
-  .settings(publishSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-core-impl"
   )
 
 lazy val coreCommonLegacy = project.in(file("core/common"))
-  .settings(publishSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-core-legacy",
     target <<= target(_ / "legacy"),
@@ -142,7 +164,7 @@ lazy val coreCommonLegacy = project.in(file("core/common"))
   .dependsOn(coreLegacy % "compile->compile;test->test")
 
 lazy val coreCommonEdge = project.in(file("core/common"))
-  .settings(publishSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-core",
     target <<= target(_ / "edge"),
@@ -152,7 +174,7 @@ lazy val coreCommonEdge = project.in(file("core/common"))
   .dependsOn(coreEdge % "compile->compile;test->test")
 
 lazy val jsonCommonLegacy = project.in(file("json/common"))
-  .settings(publishSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-json-common-legacy",
     target <<= target(_ / "legacy")
@@ -161,7 +183,7 @@ lazy val jsonCommonLegacy = project.in(file("json/common"))
   .dependsOn(coreCommonLegacy % "compile->compile;test->test")
 
 lazy val jsonCommonEdge = project.in(file("json/common"))
-  .settings(publishSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-json-common",
     target <<= target(_ / "edge")
@@ -170,7 +192,7 @@ lazy val jsonCommonEdge = project.in(file("json/common"))
   .dependsOn(coreCommonEdge % "compile->compile;test->test")
 
 lazy val playJsonLegacy = project.in(file("json/play-json"))
-  .settings(publishSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-play-json-legacy",
     target <<= target(_ / "legacy"),
@@ -180,7 +202,7 @@ lazy val playJsonLegacy = project.in(file("json/play-json"))
   .dependsOn(jsonCommonLegacy % "compile->compile;test->test")
 
 lazy val playJsonEdge = project.in(file("json/play-json"))
-  .settings(publishSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-play-json",
     target <<= target(_ / "edge"),
@@ -191,7 +213,7 @@ lazy val playJsonEdge = project.in(file("json/play-json"))
 
 
 lazy val circeLegacy = project.in(file("json/circe"))
-  .settings(publishSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-circe-legacy",
     target <<= target(_ / "legacy"),
@@ -201,7 +223,7 @@ lazy val circeLegacy = project.in(file("json/circe"))
   .dependsOn(jsonCommonLegacy % "compile->compile;test->test")
 
 lazy val circeEdge = project.in(file("json/circe"))
-  .settings(publishSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-circe",
     target <<= target(_ / "edge"),
@@ -212,7 +234,7 @@ lazy val circeEdge = project.in(file("json/circe"))
 
 
 lazy val json4sCommonLegacy = project.in(file("json/json4s-common"))
-  .settings(publishSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-json4s-common-legacy",
     target <<= target(_ / "legacy"),
@@ -222,7 +244,7 @@ lazy val json4sCommonLegacy = project.in(file("json/json4s-common"))
   .dependsOn(jsonCommonLegacy % "compile->compile;test->test")
 
 lazy val json4sCommonEdge = project.in(file("json/json4s-common"))
-  .settings(publishSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-json4s-common",
     target <<= target(_ / "edge"),
@@ -232,7 +254,7 @@ lazy val json4sCommonEdge = project.in(file("json/json4s-common"))
   .dependsOn(jsonCommonEdge % "compile->compile;test->test")
 
 lazy val json4sNativeLegacy = project.in(file("json/json4s-native"))
-  .settings(publishSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-json4s-native-legacy",
     target <<= target(_ / "legacy"),
@@ -242,7 +264,7 @@ lazy val json4sNativeLegacy = project.in(file("json/json4s-native"))
   .dependsOn(json4sCommonLegacy % "compile->compile;test->test")
 
 lazy val json4sNativeEdge = project.in(file("json/json4s-native"))
-  .settings(publishSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-json4s-native",
     target <<= target(_ / "edge"),
@@ -252,7 +274,7 @@ lazy val json4sNativeEdge = project.in(file("json/json4s-native"))
   .dependsOn(json4sCommonEdge % "compile->compile;test->test")
 
 lazy val json4sJacksonLegacy = project.in(file("json/json4s-jackson"))
-  .settings(publishSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-json4s-jackson-legacy",
     target <<= target(_ / "legacy"),
@@ -262,7 +284,7 @@ lazy val json4sJacksonLegacy = project.in(file("json/json4s-jackson"))
   .dependsOn(json4sCommonLegacy % "compile->compile;test->test")
 
 lazy val json4sJacksonEdge = project.in(file("json/json4s-jackson"))
-  .settings(publishSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-json4s-jackson",
     target <<= target(_ / "edge"),
@@ -276,7 +298,7 @@ def groupPlayTest(tests: Seq[TestDefinition]) = tests.map { t =>
 }
 
 lazy val playLegacy = project.in(file("play"))
-  .settings(publishSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-play-legacy",
     target <<= target(_ / "legacy"),
@@ -287,7 +309,7 @@ lazy val playLegacy = project.in(file("play"))
   .dependsOn(playJsonLegacy % "compile->compile;test->test")
 
 lazy val playEdge = project.in(file("play"))
-  .settings(publishSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-play",
     target <<= target(_ / "edge"),
@@ -298,7 +320,7 @@ lazy val playEdge = project.in(file("play"))
   .dependsOn(playJsonEdge % "compile->compile;test->test")
 
 lazy val examplePlayAngularProject = project.in(file("examples/play-angular"))
-  .settings(noPublishSettings)
+  .settings(localSettings)
   .settings(
     name := "playAngular",
     routesGenerator := play.sbt.routes.RoutesKeys.InjectedRoutesGenerator
