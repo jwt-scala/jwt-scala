@@ -32,7 +32,7 @@ pushScript := {
 }
 
 lazy val cleanScript = taskKey[Unit]("Clean tmp files")
-pushScript := {
+cleanScript := {
   "./scripts/clean.sh" !
 }
 
