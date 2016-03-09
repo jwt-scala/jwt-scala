@@ -7,8 +7,8 @@ import Dependencies._
 import com.typesafe.sbt.SbtSite.SiteKeys._
 import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 
-val previousVersion = "0.5.0"
-val buildVersion = "0.5.1"
+val previousVersion = "0.5.1"
+val buildVersion = "0.6.0"
 
 addCommandAlias("testAll", ";coreCommonLegacy/test;coreCommonEdge/test;playJsonLegacy/test;playJsonEdge/test;json4sNativeLegacy/test;json4sNativeEdge/test;json4sJacksonLegacy/test;json4sJacksonEdge/test;circeLegacy/test;circeEdge/test;playLegacy/test;playEdge/test")
 
@@ -36,7 +36,7 @@ val commonSettings = Seq(
   version := buildVersion,
   scalaVersion := "2.11.7",
   autoAPIMappings := true,
-  crossScalaVersions := Seq("2.10.5", "2.11.6"),
+  crossScalaVersions := Seq("2.10.6", "2.11.7"),
   crossVersion := CrossVersion.binary,
   resolvers ++= Seq(
     "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"

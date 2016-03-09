@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0 (09/03/2016)
+
+Support for Play Framework 2.5.0
+
 ## 0.5.1 (05/03/2016)
 
 Fix bug not-escaping quotation mark `"` when stringifying JSON.
