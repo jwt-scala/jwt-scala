@@ -1,4 +1,4 @@
-# JWT Scala 0.5.1
+# JWT Scala 0.6.0
 
 Scala support for JSON Web Token ([JWT](http://tools.ietf.org/html/draft-ietf-oauth-json-web-token)). Supports Java 1.6+, Scala 2.10.x and Scala 2.11.x. Optional helpers for Play Framework, Play JSON, Json4s Native and Json4s Jackson.
 
@@ -27,7 +27,7 @@ In the following snippet, replace `[name]` with the actual name of the project y
 
 ```scala
 libraryDependencies ++= Seq(
-  "com.pauldijou" %% "[name]" % "0.5.1"
+  "com.pauldijou" %% "[name]" % "0.6.0"
 )
 ```
 
@@ -37,7 +37,7 @@ libraryDependencies ++= Seq(
 
 ```scala
 libraryDependencies ++= Seq(
-  "com.pauldijou" %% "jwt-play-legacy" % "0.5.1"
+  "com.pauldijou" %% "jwt-play-legacy" % "0.6.0"
 )
 ```
 
