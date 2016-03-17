@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0 (17/03/2016)
+
+Support for Circe 0.3.0
+
 ## 0.6.0 (09/03/2016)
 
 Support for Play Framework 2.5.0
