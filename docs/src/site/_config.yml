@@ -19,6 +19,8 @@ projects:
     description: developing a Play Framework app.
   - name: jwt-json4s
     description: using Json4s lib (either Native or Jackson implementation).
+  - name: jwt-circe
+    description: using Circe lib.
 
 api:
   description: "There is no global API for the whole project but rather one API for each sub-project. Just pick the one you are using and enjoy awesome Scala documentation."
