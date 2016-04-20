@@ -583,10 +583,16 @@ trait JwtCore[H, C] {
   protected def extractNotBefore(claim: C): Option[Long]
 
   protected def validateTiming(claim: C, options: JwtOptions) {
-    val maybeExpiration = if (options.expiration) extractExpiration(claim) else None
-    val maybeNotBefore = if (options.notBefore) extractNotBefore(claim) else None
+    val maybeExpiration: Option[Long] =
+        if (options.expiration) extractExpiration(claim) else None
 
-    JwtTime.validateNowIsBetweenSeconds(maybeNotBefore, maybeExpiration)
+    val maybeNotBefore: Option[Long] =
+      if (options.notBefore) extractNotBefore(claim) else None
+
+    JwtTime.validateNowIsBetweenSeconds(
+      maybeNotBefore.map(_ - options.leeway),
+      maybeExpiration.map(_ + options.leeway)
+    )
   }
 
   // Validate if an algorithm is inside the authorized range

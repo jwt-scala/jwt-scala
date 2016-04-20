@@ -111,3 +111,11 @@ Jwt.decode(expiredToken)
 Jwt.isValid(expiredToken, JwtOptions(expiration = false))
 Jwt.decode(expiredToken, JwtOptions(expiration = false))
 ```
+
+You can also specify a leeway, in seconds, to account for clock skew.
+
+```tut
+// Allow 30sec leeway
+Jwt.isValid(expiredToken, JwtOptions(leeway = 30))
+Jwt.decode(expiredToken, JwtOptions(leeway = 30))
+```
