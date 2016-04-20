@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.1 (20/04/2016)
+
+Add `leeway` support in `JwtOptions`
+
 ## 0.7.0 (17/03/2016)
 
 Support for Circe 0.3.0
