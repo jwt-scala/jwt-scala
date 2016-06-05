@@ -7,7 +7,7 @@ object Dependencies {
     val circe = "0.3.0"
     val scalatest = "2.2.6"
     val scalatestPlus = "1.4.0"
-    val jmockit = "1.17"
+    val jmockit = "1.24"
     val apacheCodec = "1.10"
     val bouncyCastle = "1.52"
   }
