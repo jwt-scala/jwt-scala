@@ -10,10 +10,10 @@ import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 val previousVersion = "0.7.0"
 val buildVersion = "0.7.1"
 
-val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "circe", "play")
+val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "circe")
 val crossProjects = projects.map(p => Seq(p + "Legacy", p + "Edge")).flatten
 
-addCommandAlias("testAll", crossProjects.map(p => p + "/test").mkString(";", ";", ""))
+addCommandAlias("testAll", crossProjects.map(p => p + "/test").mkString(";", ";", "") + ";playEdge/test")
 
 addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;playEdge/doc;json4sNativeEdge/doc;circeEdge/doc;scaladocScript;cleanScript")
 
@@ -24,7 +24,7 @@ addCommandAlias("publishPlayJson", ";playJsonEdge/publishSigned;playJsonLegacy/p
 addCommandAlias("publishJson4Native", ";json4sNativeEdge/publishSigned;json4sNativeLegacy/publishSigned");
 addCommandAlias("publishJson4Jackson", ";json4sJacksonEdge/publishSigned;json4sJacksonLegacy/publishSigned");
 addCommandAlias("publishCirce", ";circeEdge/publishSigned;circeLegacy/publishSigned");
-addCommandAlias("publishPlay", ";playEdge/publishSigned;playLegacy/publishSigned");
+addCommandAlias("publishPlay", ";playEdge/publishSigned");
 
 // Do not cross-build for Play project since Scala 2.10 support was dropped
 addCommandAlias("publishAll", ";publishPlayJson;+publishJson4Native;+publishJson4Jackson;+publishCirce;publishPlay")
@@ -125,8 +125,8 @@ lazy val jwtScala = project.in(file("."))
   .settings(
     name := "jwt-scala"
   )
-  .aggregate(playEdge, playLegacy, json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, circeLegacy, circeEdge)
-  .dependsOn(playEdge, playLegacy, json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, circeLegacy, circeEdge)
+  .aggregate(playEdge, json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, circeLegacy, circeEdge)
+  .dependsOn(playEdge, json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, circeLegacy, circeEdge)
 
 lazy val docs = project.in(file("docs"))
   .settings(name := "jwt-docs")
@@ -296,17 +296,6 @@ lazy val json4sJacksonEdge = project.in(file("json/json4s-jackson"))
 def groupPlayTest(tests: Seq[TestDefinition]) = tests.map { t =>
   new Group(t.name, Seq(t), SubProcess(javaOptions = Seq.empty[String]))
 }
-
-lazy val playLegacy = project.in(file("play"))
-  .settings(releaseSettings)
-  .settings(
-    name := "jwt-play-legacy",
-    target <<= target(_ / "legacy"),
-    libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus),
-    testGrouping in Test <<= definedTests in Test map groupPlayTest
-  )
-  .aggregate(playJsonLegacy)
-  .dependsOn(playJsonLegacy % "compile->compile;test->test")
 
 lazy val playEdge = project.in(file("play"))
   .settings(releaseSettings)
