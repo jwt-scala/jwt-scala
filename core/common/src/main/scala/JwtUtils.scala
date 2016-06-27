@@ -73,6 +73,7 @@ object JwtUtils {
       case (key, value: BigInt) => "\"" + escape(key) + "\":" + value.toString
       case (key, value: (String, Any)) => "\"" + escape(key) + "\":" + hashToJson(Seq(value))
       case (key, value: Seq[Any]) => "\"" + escape(key) + "\":" + seqToJson(value)
+      case (key, value: Set[Any]) => "\"" + escape(key) + "\":" + seqToJson(value.toSeq)
       case (key, value: Any) => "\"" + escape(key) + "\":\"" + escape(value.toString) + "\""
     }.mkString("{", ",", "}")
   }

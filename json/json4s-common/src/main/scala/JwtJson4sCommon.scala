@@ -2,10 +2,11 @@ package pdi.jwt
 
 import org.json4s._
 import org.json4s.JsonDSL.WithBigDecimal._
-
-import pdi.jwt.exceptions.{JwtNonStringException, JwtNonNumberException}
+import pdi.jwt.exceptions.{JwtNonNumberException, JwtNonStringException, JwtNonStringSetOrStringException}
 
 trait JwtJson4sCommon extends JwtJsonCommon[JObject] {
+  protected implicit def formats: Formats
+
   protected def getAlgorithm(header: JObject): Option[JwtAlgorithm] = header \ "alg" match {
     case JString("none") => None
     case JString(algo) => Option(JwtAlgorithm.fromString(algo))
@@ -18,7 +19,7 @@ trait JwtJson4sCommon extends JwtJsonCommon[JObject] {
     case value: JObject => JwtClaim.apply(
       issuer = extractString(value, "iss"),
       subject = extractString(value, "sub"),
-      audience = extractString(value, "aud"),
+      audience = extractStringSetOrString(value, "aud"),
       expiration = extractLong(value, "exp"),
       notBefore = extractLong(value, "nbf"),
       issuedAt = extractLong(value, "iat"),
@@ -46,6 +47,18 @@ trait JwtJson4sCommon extends JwtJsonCommon[JObject] {
     case JNull => None
     case JNothing => None
     case _ => throw new JwtNonStringException(fieldName)
+  }
+
+  private def extractStringSetOrString(json: JObject, fieldName: String): Option[Set[String]] = (json \ fieldName) match {
+    case JString(value) => Option(Set(value))
+    case JArray(_) => try {
+      Some((json \ fieldName).extract[Set[String]])
+    } catch {
+      case MappingException(_, _) => throw new JwtNonStringSetOrStringException(fieldName)
+    }
+    case JNull => None
+    case JNothing => None
+    case _ => throw new JwtNonStringSetOrStringException(fieldName)
   }
 
   private def extractLong(json: JObject, fieldName: String): Option[Long] = (json \ fieldName) match {

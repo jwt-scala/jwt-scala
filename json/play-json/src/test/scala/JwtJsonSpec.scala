@@ -9,7 +9,7 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
     it("should implicitly convert to JsValue") {
       assertResult(Json.obj(
         ("iss" -> "me"),
-        ("aud" -> "you"),
+        ("aud" -> Set("you")),
         ("sub" -> "something"),
         ("exp" -> 15),
         ("nbf" -> 10),

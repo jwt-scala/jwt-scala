@@ -4,7 +4,7 @@ case class JwtClaim(
   content: String = "{}",
   issuer: Option[String] = None,
   subject: Option[String] = None,
-  audience: Option[String] = None,
+  audience: Option[Set[String]] = None,
   expiration: Option[Long] = None,
   notBefore: Option[Long] = None,
   issuedAt: Option[Long] = None,
@@ -34,7 +34,8 @@ case class JwtClaim(
     this.copy(content = JwtUtils.mergeJson(this.content, JwtUtils.hashToJson(fields)))
 
   def by(issuer: String): JwtClaim = this.copy(issuer = Option(issuer))
-  def to(audience: String): JwtClaim = this.copy(audience = Option(audience))
+  def to(audience: String): JwtClaim = this.copy(audience = Some(Set(audience)))
+  def to(audience: Set[String]): JwtClaim = this.copy(audience = Some(audience))
   def about(subject: String): JwtClaim = this.copy(subject = Option(subject))
   def withId(id: String): JwtClaim = this.copy(jwtId = Option(id))
 
@@ -51,6 +52,6 @@ case class JwtClaim(
   def issuedNow: JwtClaim = this.copy(issuedAt = Option(JwtTime.nowSeconds))
 
   def isValid: Boolean = JwtTime.nowIsBetweenSeconds(this.notBefore, this.expiration)
-  def isValid(issuer: String): Boolean = this.issuer.map(_ == issuer).getOrElse(false) && this.isValid
-  def isValid(issuer: String, audience: String): Boolean = this.audience.map(_ == audience).getOrElse(false) && this.isValid(issuer)
+  def isValid(issuer: String): Boolean = this.issuer.exists(_ == issuer) && this.isValid
+  def isValid(issuer: String, audience: String): Boolean = this.audience.exists(_ contains audience) && this.isValid(issuer)
 }

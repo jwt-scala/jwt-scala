@@ -28,6 +28,10 @@ class JwtNonStringException(key: String) extends RuntimeException(s"During JSON 
   def getKey = key
 }
 
+class JwtNonStringSetOrStringException(key: String) extends RuntimeException(s"During JSON parsing, expected a Set[String] or String for key [$key]") with JwtException {
+  def getKey = key
+}
+
 class JwtNonNumberException(key: String) extends RuntimeException(s"During JSON parsing, expected a Number for key [$key]") with JwtException {
   def getKey = key
 }
