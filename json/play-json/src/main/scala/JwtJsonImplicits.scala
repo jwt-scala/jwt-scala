@@ -2,14 +2,22 @@ package pdi.jwt
 
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
-
-import pdi.jwt.exceptions.{JwtNonStringException, JwtNonNumberException, JwtNonSupportedAlgorithm}
+import pdi.jwt.exceptions.{JwtNonNumberException, JwtNonStringException, JwtNonStringSetOrStringException, JwtNonSupportedAlgorithm}
 
 trait JwtJsonImplicits {
   private def extractString(json: JsObject, fieldName: String): Option[String] = (json \ fieldName).toOption.flatMap {
     case JsString(value) => Option(value)
     case JsNull => None
     case _ => throw new JwtNonStringException(fieldName)
+  }
+
+  private def extractStringSetOrString(json: JsObject, fieldName: String): Option[Set[String]] = (json \ fieldName).validateOpt[Set[String]] match {
+    case JsSuccess(set, _) => set
+    case JsError(_) =>
+      (json \ fieldName).validateOpt[String] match {
+        case JsSuccess(string, _) => string.map(s => Set(s))
+        case JsError(_) => throw new JwtNonStringSetOrStringException(fieldName)
+      }
   }
 
   private def extractLong(json: JsObject, fieldName: String): Option[Long] = (json \ fieldName).toOption.flatMap {
@@ -27,7 +35,7 @@ trait JwtJsonImplicits {
           JsSuccess(JwtClaim.apply(
             issuer = extractString(value, "iss"),
             subject = extractString(value, "sub"),
-            audience = extractString(value, "aud"),
+            audience = extractStringSetOrString(value, "aud"),
             expiration = extractLong(value, "exp"),
             notBefore = extractLong(value, "nbf"),
             issuedAt = extractLong(value, "iat"),
@@ -37,6 +45,7 @@ trait JwtJsonImplicits {
         } catch {
           case e : JwtNonStringException => JsError(keyToPath(e.getKey), "error.expected.string")
           case e : JwtNonNumberException => JsError(keyToPath(e.getKey), "error.expected.number")
+          case e : JwtNonStringSetOrStringException => JsError(keyToPath(e.getKey), "error.expected.array")
         }
       case _ => JsError("error.expected.jsobject")
     }

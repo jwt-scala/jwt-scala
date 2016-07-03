@@ -11,7 +11,7 @@ class JwtJson4sNativeSpec extends JwtJsonCommonSpec[JObject] with Json4sNativeFi
     it("should implicitly convert to JValue") {
       assertResult((
         ("iss" -> "me") ~
-        ("aud" -> "you") ~
+        ("aud" -> Set("you")) ~
         ("sub" -> "something") ~
         ("exp" -> 15) ~
         ("nbf" -> 10) ~
