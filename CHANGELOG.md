@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.0 (05/07/2016)
+
+- Update to Circe 0.4.1
+- `audience` is now `Set[String]` rather than just `String` inside `Claim` according to JWT spec. API using `String` still available.
+- Use `org.bouncycastle.util.Arrays.constantTimeAreEqual` to check signature rather than home made function.
+- Remove Play Legacy since Play 2.5+ only supports Java 1.8+
+
 ## 0.7.1 (20/04/2016)
 
 Add `leeway` support in `JwtOptions`

@@ -8,7 +8,7 @@ import com.typesafe.sbt.SbtSite.SiteKeys._
 import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 
 val previousVersion = "0.7.1"
-val buildVersion = "0.7.2"
+val buildVersion = "0.8.0"
 
 val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "circe")
 val crossProjects = projects.map(p => Seq(p + "Legacy", p + "Edge")).flatten
