@@ -8,6 +8,8 @@ class JwtLengthException(message: String) extends RuntimeException(message) with
 
 class JwtValidationException(message: String) extends RuntimeException(message) with JwtException
 
+class JwtSignatureFormatException(message: String) extends RuntimeException(message) with JwtException
+
 class JwtEmptySignatureException() extends RuntimeException("No signature found inside the token while trying to verify it with a key.") with JwtException
 
 class JwtNonEmptySignatureException() extends RuntimeException("Non-empty signature found inside the token while trying to verify without a key.") with JwtException
