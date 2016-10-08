@@ -203,12 +203,11 @@ object JwtUtils {
     * @throws JwtNonSupportedAlgorithm If the algorithm is not supported.
     */
   @throws[JwtNonSupportedAlgorithm]
-  def getSignatureByteArrayLength(algorithm: JwtAsymetricAlgorithm): Int = {
+  def getSignatureByteArrayLength(algorithm: JwtECDSAAlgorithm): Int = {
     algorithm match {
       case ES256 => 64
       case ES384 => 96
       case ES512 => 132
-      case _ => throw new JwtNonSupportedAlgorithm("Unsupported Algorithm: " + algorithm.fullName)
     }
   }
 

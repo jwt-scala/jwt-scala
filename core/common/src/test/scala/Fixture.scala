@@ -134,43 +134,11 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
 
   val data = Seq(
     DataEntry (
-      JwtAlgorithm.HmacMD5,
-      """{"typ":"JWT","alg":"HmacMD5"}""",
-      JwtHeader(JwtAlgorithm.HmacMD5, "JWT"),
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIbWFjTUQ1In0",
-      "de-uQNyKSx8AskxaptmHpg"
-    ),
-
-    DataEntry (
       JwtAlgorithm.HMD5,
       """{"typ":"JWT","alg":"HMD5"}""",
       JwtHeader(JwtAlgorithm.HMD5, "JWT"),
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJITUQ1In0",
       "BVRxj65Lk3DXIug2IosRvw"
-    ),
-
-    DataEntry (
-      JwtAlgorithm.HmacSHA1,
-      """{"typ":"JWT","alg":"HmacSHA1"}""",
-      JwtHeader(JwtAlgorithm.HmacSHA1, "JWT"),
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIbWFjU0hBMSJ9",
-      "MfxeCEAj4rZmNvcrU_LVRBEkGo8"
-    ),
-
-    DataEntry (
-      JwtAlgorithm.HS1,
-      """{"typ":"JWT","alg":"HS1"}""",
-      JwtHeader(JwtAlgorithm.HS1, "JWT"),
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzEifQ",
-      "z9OBLoWU_-Ekk3sE2e54kn-GWzY"
-    ),
-
-    DataEntry (
-      JwtAlgorithm.HmacSHA256,
-      """{"typ":"JWT","alg":"HmacSHA256"}""",
-      JwtHeader(JwtAlgorithm.HmacSHA256, "JWT"),
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIbWFjU0hBMjU2In0",
-      "-3BM6yrNy3a8E2QtEYszKes2Rij80sfpgBAmzrJeJuk"
     ),
 
     DataEntry (
@@ -182,27 +150,11 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
     ),
 
     DataEntry (
-      JwtAlgorithm.HmacSHA384,
-      """{"typ":"JWT","alg":"HmacSHA384"}""",
-      JwtHeader(JwtAlgorithm.HmacSHA384, "JWT"),
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIbWFjU0hBMzg0In0",
-      "W5LuS1ga9iyoUBFcm5gxI7OGLnouEomfIoq47KTmM62Xn3C5wBWLHi8hRVrte9Uz"
-    ),
-
-    DataEntry (
       JwtAlgorithm.HS384,
       """{"typ":"JWT","alg":"HS384"}""",
       JwtHeader(JwtAlgorithm.HS384, "JWT"),
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzM4NCJ9",
       "tCjCk4PefnNV6E_PByT5xumMVm6KAt_asxP8DXwcDnwsldVJi_Y7SfTVJzvyuGBY"
-    ),
-
-    DataEntry (
-      JwtAlgorithm.HmacSHA512,
-      """{"typ":"JWT","alg":"HmacSHA512"}""",
-      JwtHeader(JwtAlgorithm.HmacSHA512, "JWT"),
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIbWFjU0hBNTEyIn0",
-      "egt3RJEC5VOJBz5MT0lyV4p8dRJYu5FYQjNCzS_4iVT3d2W-Rzqr305ndzw-uvBzHRxQj0RQaxsnrvN8_uwbEQ"
     ),
 
     DataEntry (

@@ -111,7 +111,7 @@ object JwtSession {
         case algo: JwtHmacAlgorithm => Option(algo)
         case _ => throw new RuntimeException("You can only use HMAC algorithms for [play.http.session.algorithm]")
       }
-      .getOrElse(JwtAlgorithm.HmacSHA256)
+      .getOrElse(JwtAlgorithm.HS256)
 
   val TOKEN_PREFIX: String = getConfigString("play.http.session.tokenPrefix").getOrElse("Bearer ")
 

@@ -20,11 +20,11 @@ class JwtSessionSpec extends PlaySpec with OneAppPerSuite with PlayFixture {
       additionalConfiguration = Map("play.crypto.secret" -> secretKey)
     )
 
-  val session = JwtSession().withHeader(JwtHeader(JwtAlgorithm.HmacSHA256))
+  val session = JwtSession().withHeader(JwtHeader(JwtAlgorithm.HS256))
   val session2 = session ++ (("a", 1), ("b", "c"), ("e", true), ("f", Seq(1, 2, 3)), ("user", user))
-  val session3 = JwtSession(JwtHeader(JwtAlgorithm.HmacSHA256), claimClass, "-3BM6yrNy3a8E2QtEYszKes2Rij80sfpgBAmzrJeJuk")
+  val session3 = JwtSession(JwtHeader(JwtAlgorithm.HS256), claimClass, "IPSERPZc5wyxrZ4Yiq7l31wFk_qaDY5YrnfLjIC0Lmc")
   // This is session3 serialized (if no bug...)
-  val token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIbWFjU0hBMjU2In0." + claim64 + ".-3BM6yrNy3a8E2QtEYszKes2Rij80sfpgBAmzrJeJuk"
+  val token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." + claim64 + ".IPSERPZc5wyxrZ4Yiq7l31wFk_qaDY5YrnfLjIC0Lmc"
 
   "Init FakeApplication" must {
     "have the correct config" in {
@@ -34,11 +34,11 @@ class JwtSessionSpec extends PlaySpec with OneAppPerSuite with PlayFixture {
 
   "JwtSession" must {
     "read default configuration" in {
-      assert(JwtSession.defaultHeader == JwtHeader(JwtAlgorithm.HmacSHA256))
+      assert(JwtSession.defaultHeader == JwtHeader(JwtAlgorithm.HS256))
     }
 
     "init" in {
-      assert(session.headerData == Json.obj("typ" -> "JWT", "alg" -> "HmacSHA256"))
+      assert(session.headerData == Json.obj("typ" -> "JWT", "alg" -> "HS256"))
       assert(session.claimData == Json.obj())
       assert(session.signature == "")
       assert(session.isEmpty)
@@ -94,7 +94,7 @@ class JwtSessionSpec extends PlaySpec with OneAppPerSuite with PlayFixture {
     }
   }
 
-  val sessionHeader = Some("Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIbWFjU0hBMjU2In0.eyJ1c2VyIjp7ImlkIjoxLCJuYW1lIjoiUGF1bCJ9fQ.McCC-wVflYAnnk6yRoojeNszDfayCsK9C6NVoMFMq24")
+  val sessionHeader = Some("Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjp7ImlkIjoxLCJuYW1lIjoiUGF1bCJ9fQ.KBHKQarAQMse-4Conoi22XShk1ky--XXKAx4kMp6v-M")
 
   "RichResult" must {
     "access app with no user" in {

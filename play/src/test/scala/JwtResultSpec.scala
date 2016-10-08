@@ -19,7 +19,7 @@ class JwtResultSpec extends PlaySpec with OneAppPerSuite with PlayFixture {
       additionalConfiguration = Map("play.crypto.secret" -> secretKey)
     )
 
-  val session = JwtSession().withHeader(JwtHeader(JwtAlgorithm.HmacSHA256))
+  val session = JwtSession().withHeader(JwtHeader(JwtAlgorithm.HS256))
 
   "JwtResult" must {
     "support basic scenario" in {
