@@ -2,12 +2,14 @@ package pdi.jwt
 
 import javax.crypto.{Mac, SecretKey}
 import javax.crypto.spec.SecretKeySpec
-import java.security.{Security, Signature, KeyFactory, Key, PrivateKey, PublicKey}
+import java.security.{ KeyFactory, PrivateKey, PublicKey, Security, Signature}
 import java.security.spec.{PKCS8EncodedKeySpec, X509EncodedKeySpec}
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.util.Arrays
-
+import pdi.jwt.JwtAlgorithm.{ES256, ES384, ES512}
 import pdi.jwt.algorithms._
+import pdi.jwt.exceptions.{JwtNonSupportedAlgorithm, JwtSignatureFormatException}
 
 object JwtUtils {
   val ENCODING = "UTF-8"
@@ -131,7 +133,10 @@ object JwtUtils {
     val signer = Signature.getInstance(algorithm.fullName, PROVIDER)
     signer.initSign(key)
     signer.update(data)
-    signer.sign
+    algorithm match {
+      case algorithm: JwtRSAAlgorithm => signer.sign
+      case algorithm: JwtECDSAAlgorithm => transcodeSignatureToConcat(signer.sign, getSignatureByteArrayLength(algorithm))
+    }
   }
 
   def sign(data: String, key: PrivateKey, algorithm: JwtAsymetricAlgorithm): Array[Byte] =
@@ -167,7 +172,10 @@ object JwtUtils {
     val signer = Signature.getInstance(algorithm.fullName, PROVIDER)
     signer.initVerify(key)
     signer.update(data)
-    signer.verify(signature)
+    algorithm match {
+      case algo: JwtRSAAlgorithm => signer.verify(signature)
+      case algo: JwtECDSAAlgorithm => signer.verify(transcodeSignatureToDER(signature))
+    }
   }
 
   /**
@@ -185,4 +193,106 @@ object JwtUtils {
     */
   def verify(data: String, signature: String, key: String, algorithm: JwtAlgorithm): Boolean =
     verify(bytify(data), bytify(signature), key, algorithm)
+
+  /**
+    * Returns the expected signature byte array length (R + S parts) for
+    * the specified ECDSA algorithm.
+    *
+    * @param algorithm The ECDSA algorithm. Must be supported and not { @code null}.
+    * @return The expected byte array length for the signature.
+    * @throws JwtNonSupportedAlgorithm If the algorithm is not supported.
+    */
+  @throws[JwtNonSupportedAlgorithm]
+  def getSignatureByteArrayLength(algorithm: JwtAsymetricAlgorithm): Int = {
+    algorithm match {
+      case ES256 => 64
+      case ES384 => 96
+      case ES512 => 132
+      case _ => throw new JwtNonSupportedAlgorithm("Unsupported Algorithm: " + algorithm.fullName)
+    }
+  }
+
+  /**
+    * Transcodes the JCA ASN.1/DER-encoded signature into the concatenated
+    * R + S format expected by ECDSA JWS.
+    *
+    * @param derSignature The ASN1./DER-encoded. Must not be { @code null}.
+    * @param outputLength The expected length of the ECDSA JWS signature.
+    * @return The ECDSA JWS encoded signature.
+    * @throws JwtSignatureFormatException If the ASN.1/DER signature format is invalid.
+    */
+  @throws[JwtSignatureFormatException]
+  def transcodeSignatureToConcat(derSignature: Array[Byte], outputLength: Int): Array[Byte] = {
+    if (derSignature.length < 8 || derSignature(0) != 48)
+      throw new JwtSignatureFormatException("Invalid ECDSA signature format")
+
+    var offset: Int = 0
+    if (derSignature(1) > 0) offset = 2
+    else if (derSignature(1) == 0x81.toByte) offset = 3
+    else throw new JwtSignatureFormatException("Invalid ECDSA signature format")
+
+    val rLength: Byte = derSignature(offset + 1)
+    var i: Int = rLength
+    while ((i > 0) && (derSignature((offset + 2 + rLength) - i) == 0)) {
+      i -= 1
+    }
+
+    val sLength: Byte = derSignature(offset + 2 + rLength + 1)
+    var j: Int = sLength
+    while ((j > 0) && (derSignature((offset + 2 + rLength + 2 + sLength) - j) == 0)) {
+      j -= 1
+    }
+
+    var rawLen: Int = Math.max(i, j)
+    rawLen = Math.max(rawLen, outputLength / 2)
+
+    if ((derSignature(offset - 1) & 0xff) != derSignature.length - offset
+      || (derSignature(offset - 1) & 0xff) != 2 + rLength + 2 + sLength
+      || derSignature(offset) != 2 || derSignature(offset + 2 + rLength) != 2)
+      throw new JwtSignatureFormatException("Invalid ECDSA signature format")
+
+    val concatSignature: Array[Byte] = new Array[Byte](2 * rawLen)
+    System.arraycopy(derSignature, (offset + 2 + rLength) - i, concatSignature, rawLen - i, i)
+    System.arraycopy(derSignature, (offset + 2 + rLength + 2 + sLength) - j, concatSignature, 2 * rawLen - j, j)
+    concatSignature
+  }
+
+  /**
+    * Transcodes the ECDSA JWS signature into ASN.1/DER format for use by
+    * the JCA verifier.
+    *
+    * @param signature The JWS signature, consisting of the
+    *                     concatenated R and S values. Must not be
+    *                     { @code null}.
+    * @return The ASN.1/DER encoded signature.
+    * @throws JwtSignatureFormatException If the ECDSA JWS signature format is invalid.
+    */
+  @throws[JwtSignatureFormatException]
+  def transcodeSignatureToDER(signature: Array[Byte]): Array[Byte] = {
+    var (r,s) = signature.splitAt(signature.length / 2)
+    r = r.dropWhile(_ == 0)
+    if (r.length > 0 && r(0) < 0)
+      r +:= 0.toByte
+
+    s = s.dropWhile(_ == 0)
+    if (s.length > 0 && s(0) < 0)
+      s +:= 0.toByte
+
+    val signatureLength = 2 + r.length + 2 + s.length
+
+    if (signatureLength > 255)
+      throw new JwtSignatureFormatException("Invalid ECDSA signature format")
+
+    var signatureDER = scala.collection.mutable.ListBuffer.empty[Byte]
+    signatureDER += 48
+    if (signatureLength >= 128)
+      signatureDER += 0x81.toByte
+
+    signatureDER += signatureLength.toByte
+    signatureDER += 2.toByte += r.length.toByte ++= r
+    signatureDER += 2.toByte += s.length.toByte ++= s
+
+    signatureDER.toArray
+  }
+
 }
