@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.9.0 (08/10/2016)
+
+- Transformation of Signature to ASN.1 DER for ECDSA Algorithms (thanks @bestehle )
+- Remove algorithm aliases to align with [JWA spec](https://tools.ietf.org/html/rfc7518#section-3.1)
+
+## 0.8.1 (04/09/2016)
+
+- Update to Circe 0.5.0
+
 ## 0.8.0 (05/07/2016)
 
 - Update to Circe 0.4.1
