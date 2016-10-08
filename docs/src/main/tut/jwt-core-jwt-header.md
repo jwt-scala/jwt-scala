@@ -11,5 +11,5 @@ JwtHeader(JwtAlgorithm.HS256, "JWT")
 JwtHeader(JwtAlgorithm.HS256, "JWT").toJson
 
 // You can assign the default type (but it would have be done automatically anyway)
-JwtHeader(JwtAlgorithm.HS1).withType
+JwtHeader(JwtAlgorithm.HS256).withType
 ```
