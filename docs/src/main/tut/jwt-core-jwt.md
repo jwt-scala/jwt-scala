@@ -24,11 +24,11 @@ Jwt.encode("""{"user":1}""")
 
 // You can specify a string header but also need to specify the algorithm just to be sure
 // This is not really typesafe, so please use it with care
-Jwt.encode("""{"typ":"JWT","alg":"HS1"}""", """{"user":1}""", "key", JwtAlgorithm.HS1)
+Jwt.encode("""{"typ":"JWT","alg":"HS256"}""", """{"user":1}""", "key", JwtAlgorithm.HS256)
 
 // If using a case class header, no need to repeat the algorithm
 // This is way better than the previous one
-Jwt.encode(JwtHeader(JwtAlgorithm.HS1), JwtClaim("""{"user":1}"""), "key")
+Jwt.encode(JwtHeader(JwtAlgorithm.HS256), JwtClaim("""{"user":1}"""), "key")
 ```
 
 ### Decoding
