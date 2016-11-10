@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.1 (10/11/2016)
+
+- Support Json4s 3.5.0 (thanks @sanllanta )
+
 ## 0.9.0 (08/10/2016)
 
 - Transformation of Signature to ASN.1 DER for ECDSA Algorithms (thanks @bestehle )
