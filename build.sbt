@@ -7,8 +7,8 @@ import Dependencies._
 import com.typesafe.sbt.SbtSite.SiteKeys._
 import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 
-val previousVersion = "0.9.0"
-val buildVersion = "0.9.1"
+val previousVersion = "0.9.1"
+val buildVersion = "0.9.2"
 
 val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "circe")
 val crossProjects = projects.map(p => Seq(p + "Legacy", p + "Edge")).flatten
@@ -54,7 +54,7 @@ cleanScript := {
 val baseSettings = Seq(
   organization := "com.pauldijou",
   version := buildVersion,
-  scalaVersion := "2.11.8",
+  scalaVersion in ThisBuild := "2.11.8",
   crossScalaVersions := Seq("2.11.8", "2.10.6"),
   crossVersion := CrossVersion.binary,
   autoAPIMappings := true,

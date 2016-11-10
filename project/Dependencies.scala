@@ -4,7 +4,7 @@ object Dependencies {
   object V {
     val play = "2.5.0"
     val json4s = "3.5.0"
-    val circe = "0.5.0"
+    val circe = "0.6.0"
     val scalatest = "2.2.6"
     val scalatestPlus = "1.4.0"
     val jmockit = "1.24"
