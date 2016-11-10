@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.2 (10/11/2016)
+
+- Support Circe 0.6.0 (thanks @TimothyKlim  )
+
 ## 0.9.1 (10/11/2016)
 
 - Support Json4s 3.5.0 (thanks @sanllanta )
