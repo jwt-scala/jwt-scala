@@ -5,8 +5,8 @@ object Dependencies {
     val play = "2.5.0"
     val json4s = "3.5.0"
     val circe = "0.6.0"
-    val scalatest = "2.2.6"
-    val scalatestPlus = "1.4.0"
+    val scalatest = "3.0.0"
+    val scalatestPlus = "2.0.0-M1"
     val jmockit = "1.24"
     val apacheCodec = "1.10"
     val bouncyCastle = "1.52"
@@ -30,7 +30,7 @@ object Dependencies {
     val bouncyCastle = "org.bouncycastle" % "bcpkix-jdk15on" % V.bouncyCastle
 
     val scalatest = "org.scalatest" %% "scalatest" % V.scalatest % "test"
-    val scalatestPlus = "org.scalatestplus" %% "play" % V.scalatestPlus % "test"
+    val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % V.scalatestPlus % "test"
     val jmockit = "org.jmockit" % "jmockit" % V.jmockit % "test"
   }
 }

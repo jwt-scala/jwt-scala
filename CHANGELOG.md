@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.0 (20/11/2016)
+
+- Support Scala 2.12.0 (except for Play Framework modules)
+
 ## 0.9.2 (10/11/2016)
 
 - Support Circe 0.6.0 (thanks @TimothyKlim  )

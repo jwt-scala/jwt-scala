@@ -42,7 +42,7 @@ abstract class JwtJsonCommonSpec[J] extends UnitSpec with JsonCommonFixture[J] {
         assertResult(success, d.algo.fullName) { jwtJsonCommon.decodeJsonAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA) }
       }
 
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should decodeJson") {
@@ -58,7 +58,7 @@ abstract class JwtJsonCommonSpec[J] extends UnitSpec with JsonCommonFixture[J] {
         assertResult(success, d.algo.fullName) { jwtJsonCommon.decodeJson(d.token, publicKeyRSA, JwtAlgorithm.allRSA) }
       }
 
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should decodeAll") {
@@ -75,7 +75,7 @@ abstract class JwtJsonCommonSpec[J] extends UnitSpec with JsonCommonFixture[J] {
         assertResult(success, d.algo.fullName) { jwtJsonCommon.decodeAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA) }
       }
 
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should fail to decodeJsonAll and decodeJson when now is after expiration date") {
@@ -103,7 +103,7 @@ abstract class JwtJsonCommonSpec[J] extends UnitSpec with JsonCommonFixture[J] {
         assert(jwtJsonCommon.decodeAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA).isFailure)
       }
 
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should success to decodeJsonAll and decodeJson when now is after expiration date with options") {
@@ -132,7 +132,7 @@ abstract class JwtJsonCommonSpec[J] extends UnitSpec with JsonCommonFixture[J] {
         assert(jwtJsonCommon.decodeAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options).isSuccess)
       }
 
-      mock.tearDown
+      tearDown(mock)
     }
   }
 }

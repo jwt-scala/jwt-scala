@@ -90,7 +90,7 @@ class JwtSessionSpec extends PlaySpec with OneAppPerSuite with PlayFixture {
     "deserialize" in {
       val mock = mockValidTime
       assert(JwtSession.deserialize(token) == session3)
-      mock.tearDown
+      tearDown(mock)
     }
   }
 

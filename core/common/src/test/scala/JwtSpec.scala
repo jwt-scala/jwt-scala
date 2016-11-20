@@ -21,13 +21,13 @@ class JwtSpec extends UnitSpec with Fixture {
     it("should encode Hmac") {
       val mock = mockValidTime
       data foreach { d => battleTestEncode(d, secretKey) }
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should encode RSA") {
       val mock = mockValidTime
       dataRSA foreach { d => battleTestEncode(d, privateKeyRSA) }
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should be symetric") {
@@ -60,7 +60,7 @@ class JwtSpec extends UnitSpec with Fixture {
         }, d.algo.fullName)
       }
 
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should decodeRawAll") {
@@ -69,7 +69,7 @@ class JwtSpec extends UnitSpec with Fixture {
         assertResult(Success((d.header, claim, d.signature)), d.algo.fullName) { Jwt.decodeRawAll(d.token, secretKey, JwtAlgorithm.allHmac) }
         assertResult(Success((d.header, claim, d.signature)), d.algo.fullName) { Jwt.decodeRawAll(d.token, secretKeyOf(d.algo)) }
       }
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should decodeRaw") {
@@ -78,7 +78,7 @@ class JwtSpec extends UnitSpec with Fixture {
         assertResult(Success((claim)), d.algo.fullName) { Jwt.decodeRaw(d.token, secretKey, JwtAlgorithm.allHmac) }
         assertResult(Success((claim)), d.algo.fullName) { Jwt.decodeRaw(d.token, secretKeyOf(d.algo)) }
       }
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should decodeAll") {
@@ -87,7 +87,7 @@ class JwtSpec extends UnitSpec with Fixture {
         assertResult(Success((d.header, claim, d.signature)), d.algo.fullName) { Jwt.decodeAll(d.token, secretKey, JwtAlgorithm.allHmac) }
         assertResult(Success((d.header, claim, d.signature)), d.algo.fullName) { Jwt.decodeAll(d.token, secretKeyOf(d.algo)) }
       }
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should decode") {
@@ -96,7 +96,7 @@ class JwtSpec extends UnitSpec with Fixture {
         assertResult(Success(claim), d.algo.fullName) { Jwt.decode(d.token, secretKey, JwtAlgorithm.allHmac) }
         assertResult(Success(claim), d.algo.fullName) { Jwt.decode(d.token, secretKeyOf(d.algo)) }
       }
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should validate correct tokens") {
@@ -114,7 +114,7 @@ class JwtSpec extends UnitSpec with Fixture {
         assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allRSA) }
       }
 
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should validate ECDSA from other implementations") {
@@ -163,7 +163,7 @@ class JwtSpec extends UnitSpec with Fixture {
         assertResult(false, d.algo.fullName) { Jwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allRSA) }
       }
 
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should validate expired tokens with leeway") {
@@ -182,7 +182,7 @@ class JwtSpec extends UnitSpec with Fixture {
         assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options) }
       }
 
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should invalidate early tokens") {
@@ -206,7 +206,7 @@ class JwtSpec extends UnitSpec with Fixture {
         assertResult(false, d.algo.fullName) { Jwt.isValid(token, publicKeyRSA, JwtAlgorithm.allRSA) }
       }
 
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should validate early tokens with leeway") {
@@ -231,7 +231,7 @@ class JwtSpec extends UnitSpec with Fixture {
         assertResult(false, d.algo.fullName) { Jwt.isValid(token, publicKeyRSA, JwtAlgorithm.allRSA) }
       }
 
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should invalidate wrong keys") {
@@ -246,7 +246,7 @@ class JwtSpec extends UnitSpec with Fixture {
         assertResult(false, d.algo.fullName) { Jwt.isValid(d.token, "wrong key", JwtAlgorithm.allRSA) }
       }
 
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should fail on non-exposed algorithms") {
@@ -267,7 +267,7 @@ class JwtSpec extends UnitSpec with Fixture {
         assertResult(false, d.algo.fullName) { Jwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allHmac) }
       }
 
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should invalidate wrong algos") {
@@ -292,7 +292,7 @@ class JwtSpec extends UnitSpec with Fixture {
         assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options) }
       }
 
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should skip notBefore validation depending on options") {
@@ -317,7 +317,7 @@ class JwtSpec extends UnitSpec with Fixture {
         assertResult(true, d.algo.fullName) { Jwt.isValid(token, publicKeyRSA, JwtAlgorithm.allRSA, options) }
       }
 
-      mock.tearDown
+      tearDown(mock)
     }
 
     it("should skip signature validation depending on options") {
@@ -333,7 +333,7 @@ class JwtSpec extends UnitSpec with Fixture {
         assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, "wrong key", JwtAlgorithm.allRSA, options) }
       }
 
-      mock.tearDown
+      tearDown(mock)
     }
   }
 }

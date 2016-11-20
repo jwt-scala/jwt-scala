@@ -41,6 +41,9 @@ trait Fixture extends TimeFixture {
   def mockBeforeExpiration = mockTime(beforeExpirationMillis)
   def mockAfterExpiration = mockTime(afterExpirationMillis)
 
+  def tearDown(mock: mockit.MockUp[_]) = mock.tearDown
+  // def tearDown(mock: mockit.MockUp[_]) = 1
+
   val notBefore: Long = 1300819320
   val notBeforeMillis: Long = notBefore * 1000
   val beforeNotBeforeMillis: Long = notBeforeMillis - 1

@@ -24,7 +24,7 @@ class JwtSessionCustomSpec extends PlaySpec with OneAppPerSuite with BeforeAndAf
   }
 
   after {
-    mock.tearDown
+    tearDown(mock)
   }
 
   implicit override lazy val app: FakeApplication =
