@@ -10,7 +10,7 @@ object Dependencies {
     val jmockit = "1.24"
     val apacheCodec = "1.10"
     val bouncyCastle = "1.52"
-    val upickle = "0.4.1"
+    val upickle = "0.4.4"
   }
 
   object Libs {

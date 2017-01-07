@@ -10,16 +10,16 @@ import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 val previousVersion = "0.9.2"
 val buildVersion = "0.10.0"
 
-val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "circe")
+val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "circe", "upickle")
 val crossProjects = projects.map(p => Seq(p + "Legacy", p + "Edge")).flatten
 
 addCommandAlias("testAll", crossProjects.map(p => p + "/test").mkString(";", ";", "") + ";playEdge/test")
 
 addCommandAlias("test211", ";playJsonLegacy/test;playJsonEdge/test;playEdge/test")
 
-addCommandAlias("test212", ";coreCommonLegacy/test;coreCommonEdge/test;json4sNativeLegacy/test;json4sNativeEdge/test;json4sJacksonLegacy/test;json4sJacksonEdge/test;circeLegacy/test;circeEdge/test")
+addCommandAlias("test212", ";coreCommonLegacy/test;coreCommonEdge/test;json4sNativeLegacy/test;json4sNativeEdge/test;json4sJacksonLegacy/test;json4sJacksonEdge/test;circeLegacy/test;circeEdge/test;upickleLegacy/test;upickleEdge/test")
 
-addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;playEdge/doc;json4sNativeEdge/doc;circeEdge/doc;scaladocScript;cleanScript")
+addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;playEdge/doc;json4sNativeEdge/doc;circeEdge/doc;upickleEdge/doc;scaladocScript;cleanScript")
 
 addCommandAlias("publish-doc", ";docs/makeSite;docs/ghpagesPushSite")
 
