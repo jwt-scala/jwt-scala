@@ -1,3 +1,3 @@
 package pdi
 
-package object jwt extends JwtUpickleImplicits {}
+package object jwt extends JwtUpickleImplicits

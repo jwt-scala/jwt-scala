@@ -7,13 +7,13 @@ import upickle.default._
 /**
   * Created by alonsodomin on 07/09/2016.
   */
-trait JwtUpickleImplicits {
+private[jwt] trait JwtUpickleImplicits {
 
-  implicit val headerReader: Reader[JwtHeader] = Reader[JwtHeader] {
+  implicit def headerReader(implicit strReader: Reader[String]): Reader[JwtHeader] = Reader[JwtHeader] {
     case obj: Js.Obj =>
-      val fieldMap = obj.toMap
+      val fieldMap = obj.value.toMap
       JwtHeader(
-        algorithm = fieldMap.get("alg").flatMap(alg => JwtAlgorithm.optionFromString(alg.str)),
+        algorithm = fieldMap.get("alg").map(_.str).flatMap(alg => JwtAlgorithm.optionFromString(alg)),
         typ = fieldMap.get("typ").map(_.str),
         contentType = fieldMap.get("cty").map(_.str)
       )
@@ -25,7 +25,7 @@ trait JwtUpickleImplicits {
 
   implicit val claimReader: Reader[JwtClaim] = Reader[JwtClaim] {
     case obj: Js.Obj =>
-      val fieldMap = obj.toMap
+      val fieldMap = obj.value.toMap
       val content = fieldMap - "iss" - "sub" - "aud" - "exp" - "nbf" - "iat" - "jti"
       JwtClaim(
         content = json.write(Js.Obj(content.toSeq: _*)),
@@ -41,10 +41,6 @@ trait JwtUpickleImplicits {
 
   implicit val claimWriter: Writer[JwtClaim] = Writer[JwtClaim] {
     claim => json.read(claim.toJson)
-  }
-
-  implicit class RichJsObj(obj: Js.Obj) {
-    def toMap: Map[String, Js.Value] = Map(obj.value: _*)
   }
 
 }
