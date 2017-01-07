@@ -7,7 +7,7 @@ import upickle.default._
 /**
   * Created by alonsodomin on 07/09/2016.
   */
-object JwtUpickle extends JwtJsonCommon[Js.Value] {
+object JwtUpickle extends JwtJsonCommon[Js.Value] with JwtUpickleImplicits {
   override protected def parse(value: String): Js.Value = json.read(value)
 
   override protected def stringify(value: Js.Value): String = json.write(value)
@@ -20,7 +20,6 @@ object JwtUpickle extends JwtJsonCommon[Js.Value] {
     case _ => None
   }
 
-  // Abstract methods
   override protected def parseHeader(header: String): JwtHeader = read[JwtHeader](header)
 
   override protected def parseClaim(claim: String): JwtClaim = read[JwtClaim](claim)

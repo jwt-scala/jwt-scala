@@ -9,7 +9,7 @@ import upickle.default._
   */
 private[jwt] trait JwtUpickleImplicits {
 
-  implicit def headerReader(implicit strReader: Reader[String]): Reader[JwtHeader] = Reader[JwtHeader] {
+  implicit def headerReader: Reader[JwtHeader] = Reader[JwtHeader] {
     case obj: Js.Obj =>
       val fieldMap = obj.value.toMap
       JwtHeader(
