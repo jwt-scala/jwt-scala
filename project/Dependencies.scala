@@ -10,6 +10,7 @@ object Dependencies {
     val jmockit = "1.24"
     val apacheCodec = "1.10"
     val bouncyCastle = "1.52"
+    val upickle = "0.4.4"
   }
 
   object Libs {
@@ -25,6 +26,8 @@ object Dependencies {
     val circeCore     = "io.circe" %% "circe-core"    % V.circe
     val circeGeneric  = "io.circe" %% "circe-generic" % V.circe
     val circeParse    = "io.circe" %% "circe-parser"  % V.circe
+
+    val upickle = "com.lihaoyi" %% "upickle" % V.upickle
 
     val apacheCodec = "commons-codec" % "commons-codec" % V.apacheCodec
     val bouncyCastle = "org.bouncycastle" % "bcpkix-jdk15on" % V.bouncyCastle

@@ -10,14 +10,12 @@ import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 val previousVersion = "0.9.2"
 val buildVersion = "0.10.0"
 
-val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "circe")
+val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "circe", "upickle")
 val crossProjects = projects.map(p => Seq(p + "Legacy", p + "Edge")).flatten
 
-// addCommandAlias("testAll", crossProjects.map(p => p + "/test").mkString(";", ";", "") + ";playEdge/test")
 addCommandAlias("testAll", crossProjects.map(p => p + "/test").mkString(";", ";", ""))
 
-// addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;playEdge/doc;json4sNativeEdge/doc;circeEdge/doc;scaladocScript;cleanScript")
-addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;json4sNativeEdge/doc;circeEdge/doc;scaladocScript;cleanScript")
+addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;json4sNativeEdge/doc;circeEdge/doc;upickleEdge/doc;scaladocScript;cleanScript")
 
 addCommandAlias("publish-doc", ";docs/makeSite;docs/ghpagesPushSite")
 
@@ -26,11 +24,10 @@ addCommandAlias("publishPlayJson", ";playJsonEdge/publishSigned;playJsonLegacy/p
 addCommandAlias("publishJson4Native", ";json4sNativeEdge/publishSigned;json4sNativeLegacy/publishSigned");
 addCommandAlias("publishJson4Jackson", ";json4sJacksonEdge/publishSigned;json4sJacksonLegacy/publishSigned");
 addCommandAlias("publishCirce", ";circeEdge/publishSigned;circeLegacy/publishSigned");
-// addCommandAlias("publishPlay", ";playEdge/publishSigned");
+addCommandAlias("publishUpickle", ";upickleEdge/publishSigned;upickleLegacy/publishSigned")
+addCommandAlias("publishPlay", ";playEdge/publishSigned");
 
-// Do not cross-build for Play project since Scala 2.10 support was dropped
-// addCommandAlias("publishAll", ";publishPlayJson;+publishJson4Native;+publishJson4Jackson;+publishCirce;publishPlay")
-addCommandAlias("publishAll", ";publishPlayJson;+publishJson4Native;+publishJson4Jackson;+publishCirce")
+addCommandAlias("publishAll", ";publishPlayJson;+publishJson4Native;+publishJson4Jackson;+publishCirce;+publishUpickle")
 
 addCommandAlias("release", ";bumpScript;scaladoc;publish-doc;publishAll;sonatypeRelease;pushScript")
 
@@ -128,8 +125,8 @@ lazy val jwtScala = project.in(file("."))
   .settings(
     name := "jwt-scala"
   )
-  .aggregate(playEdge, json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, circeLegacy, circeEdge)
-  .dependsOn(playEdge, json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, circeLegacy, circeEdge)
+  .aggregate(json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, circeLegacy, circeEdge, upickleLegacy, upickleEdge)
+  .dependsOn(json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, circeLegacy, circeEdge, upickleLegacy, upickleEdge)
 
 lazy val docs = project.in(file("docs"))
   .settings(name := "jwt-docs")
@@ -139,9 +136,9 @@ lazy val docs = project.in(file("docs"))
   .settings(tutSettings)
   .settings(docSettings)
   .settings(
-    libraryDependencies ++= Seq(Libs.playJson, Libs.play, Libs.playTestProvided, Libs.json4sNative, Libs.circeCore, Libs.circeGeneric, Libs.circeParse)
+    libraryDependencies ++= Seq(Libs.playJson, Libs.json4sNative, Libs.circeCore, Libs.circeGeneric, Libs.circeParse, Libs.upickle)
   )
-  .dependsOn(playEdge, json4sNativeEdge, circeEdge)
+  .dependsOn(json4sNativeEdge, circeEdge, upickleEdge)
 
 lazy val coreLegacy = project.in(file("core/legacy"))
   .settings(releaseSettings)
@@ -235,6 +232,26 @@ lazy val circeEdge = project.in(file("json/circe"))
   .aggregate(jsonCommonEdge)
   .dependsOn(jsonCommonEdge % "compile->compile;test->test")
 
+lazy val upickleLegacy = project.in(file("json/upickle"))
+  .settings(releaseSettings)
+  .settings(
+    name := "jwt-upickle-legacy",
+    target <<= target(_ / "legacy"),
+    libraryDependencies ++= Seq(Libs.upickle)
+  )
+  .aggregate(jsonCommonLegacy)
+  .dependsOn(jsonCommonLegacy % "compile->compile;test->test")
+
+lazy val upickleEdge = project.in(file("json/upickle"))
+  .settings(releaseSettings)
+  .settings(
+    name := "jwt-upickle",
+    target <<= target(_ / "edge"),
+    libraryDependencies ++= Seq(Libs.upickle)
+  )
+  .aggregate(jsonCommonEdge)
+  .dependsOn(jsonCommonEdge % "compile->compile;test->test")
+
 
 lazy val json4sCommonLegacy = project.in(file("json/json4s-common"))
   .settings(releaseSettings)
@@ -295,32 +312,3 @@ lazy val json4sJacksonEdge = project.in(file("json/json4s-jackson"))
   )
   .aggregate(json4sCommonEdge)
   .dependsOn(json4sCommonEdge % "compile->compile;test->test")
-
-// ----------------------------------------------------------------------------
-// Disable Play Framework support until it compiles in Scala 2.12
-// ----------------------------------------------------------------------------
-
-// def groupPlayTest(tests: Seq[TestDefinition]) = tests.map { t =>
-//   new Group(t.name, Seq(t), SubProcess(javaOptions = Seq.empty[String]))
-// }
-//
-// lazy val playEdge = project.in(file("play"))
-//   .settings(releaseSettings)
-//   .settings(
-//     name := "jwt-play",
-//     target <<= target(_ / "edge"),
-//     libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus),
-//     testGrouping in Test <<= definedTests in Test map groupPlayTest
-//   )
-//   .aggregate(playJsonEdge)
-//   .dependsOn(playJsonEdge % "compile->compile;test->test")
-//
-// lazy val examplePlayAngularProject = project.in(file("examples/play-angular"))
-//   .settings(localSettings)
-//   .settings(
-//     name := "playAngular",
-//     routesGenerator := play.sbt.routes.RoutesKeys.InjectedRoutesGenerator
-//   )
-//   .enablePlugins(PlayScala)
-//   .aggregate(playEdge)
-//   .dependsOn(playEdge)

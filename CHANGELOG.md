@@ -1,8 +1,10 @@
 # Changelog
 
-## 0.10.0 (20/11/2016)
+## 0.10.0 (13/01/2017)
 
-- Support Scala 2.12.0 (except for Play Framework modules)
+- Support Scala 2.12.0
+- Drop Play Framework support until it supports Scala 2.12
+- Add uPickle support (thanks @alonsodomin )
 
 ## 0.9.2 (10/11/2016)
 
