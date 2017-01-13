@@ -13,13 +13,11 @@ val buildVersion = "0.10.0"
 val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "circe")
 val crossProjects = projects.map(p => Seq(p + "Legacy", p + "Edge")).flatten
 
-addCommandAlias("testAll", crossProjects.map(p => p + "/test").mkString(";", ";", "") + ";playEdge/test")
+// addCommandAlias("testAll", crossProjects.map(p => p + "/test").mkString(";", ";", "") + ";playEdge/test")
+addCommandAlias("testAll", crossProjects.map(p => p + "/test").mkString(";", ";", ""))
 
-addCommandAlias("test211", ";playJsonLegacy/test;playJsonEdge/test;playEdge/test")
-
-addCommandAlias("test212", ";coreCommonLegacy/test;coreCommonEdge/test;json4sNativeLegacy/test;json4sNativeEdge/test;json4sJacksonLegacy/test;json4sJacksonEdge/test;circeLegacy/test;circeEdge/test")
-
-addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;playEdge/doc;json4sNativeEdge/doc;circeEdge/doc;scaladocScript;cleanScript")
+// addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;playEdge/doc;json4sNativeEdge/doc;circeEdge/doc;scaladocScript;cleanScript")
+addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;json4sNativeEdge/doc;circeEdge/doc;scaladocScript;cleanScript")
 
 addCommandAlias("publish-doc", ";docs/makeSite;docs/ghpagesPushSite")
 
@@ -28,10 +26,11 @@ addCommandAlias("publishPlayJson", ";playJsonEdge/publishSigned;playJsonLegacy/p
 addCommandAlias("publishJson4Native", ";json4sNativeEdge/publishSigned;json4sNativeLegacy/publishSigned");
 addCommandAlias("publishJson4Jackson", ";json4sJacksonEdge/publishSigned;json4sJacksonLegacy/publishSigned");
 addCommandAlias("publishCirce", ";circeEdge/publishSigned;circeLegacy/publishSigned");
-addCommandAlias("publishPlay", ";playEdge/publishSigned");
+// addCommandAlias("publishPlay", ";playEdge/publishSigned");
 
 // Do not cross-build for Play project since Scala 2.10 support was dropped
-addCommandAlias("publishAll", ";publishPlayJson;+publishJson4Native;+publishJson4Jackson;+publishCirce;publishPlay")
+// addCommandAlias("publishAll", ";publishPlayJson;+publishJson4Native;+publishJson4Jackson;+publishCirce;publishPlay")
+addCommandAlias("publishAll", ";publishPlayJson;+publishJson4Native;+publishJson4Jackson;+publishCirce")
 
 addCommandAlias("release", ";bumpScript;scaladoc;publish-doc;publishAll;sonatypeRelease;pushScript")
 
@@ -58,6 +57,8 @@ cleanScript := {
 val baseSettings = Seq(
   organization := "com.pauldijou",
   version := buildVersion,
+  scalaVersion in ThisBuild := "2.12.0",
+  crossScalaVersions := Seq("2.12.0", "2.11.8", "2.10.6"),
   crossVersion := CrossVersion.binary,
   autoAPIMappings := true,
   resolvers ++= Seq(
@@ -105,28 +106,13 @@ val noPublishSettings = Seq(
   publishArtifact := false
 )
 
-val crossBuildSettings = Seq(
-  scalaVersion in ThisBuild := "2.12.0",
-  crossScalaVersions := Seq("2.12.0", "2.11.8", "2.10.6")
-)
-
 // Normal published settings
-val releaseSettings = baseSettings ++ crossBuildSettings ++ publishSettings
+val releaseSettings = baseSettings ++ publishSettings
 
 // Local non-published projects
-val localSettings = baseSettings ++ crossBuildSettings ++ noPublishSettings
+val localSettings = baseSettings ++ noPublishSettings
 
-// Special Play settings, waiting for 2.12 support
-val playCrossBuildSettings = Seq(
-  scalaVersion in ThisBuild := "2.11.8",
-  crossScalaVersions := Seq("2.11.8", "2.10.6")
-)
 
-val playSettings = baseSettings ++ playCrossBuildSettings ++ publishSettings
-
-val playLocalSettings = baseSettings ++ playCrossBuildSettings ++ noPublishSettings
-
-// Documentation settings
 val docSettings = Seq(
   site.addMappingsToSiteDir(tut, "_includes/tut"),
   ghpagesNoJekyll := false,
@@ -138,7 +124,7 @@ val docSettings = Seq(
 )
 
 lazy val jwtScala = project.in(file("."))
-  .settings(playLocalSettings)
+  .settings(localSettings)
   .settings(
     name := "jwt-scala"
   )
@@ -147,7 +133,7 @@ lazy val jwtScala = project.in(file("."))
 
 lazy val docs = project.in(file("docs"))
   .settings(name := "jwt-docs")
-  .settings(playLocalSettings)
+  .settings(localSettings)
   .settings(site.settings)
   .settings(ghpages.settings)
   .settings(tutSettings)
@@ -209,7 +195,7 @@ lazy val jsonCommonEdge = project.in(file("json/common"))
   .dependsOn(coreCommonEdge % "compile->compile;test->test")
 
 lazy val playJsonLegacy = project.in(file("json/play-json"))
-  .settings(playSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-play-json-legacy",
     target <<= target(_ / "legacy"),
@@ -219,7 +205,7 @@ lazy val playJsonLegacy = project.in(file("json/play-json"))
   .dependsOn(jsonCommonLegacy % "compile->compile;test->test")
 
 lazy val playJsonEdge = project.in(file("json/play-json"))
-  .settings(playSettings)
+  .settings(releaseSettings)
   .settings(
     name := "jwt-play-json",
     target <<= target(_ / "edge"),
@@ -310,27 +296,31 @@ lazy val json4sJacksonEdge = project.in(file("json/json4s-jackson"))
   .aggregate(json4sCommonEdge)
   .dependsOn(json4sCommonEdge % "compile->compile;test->test")
 
-def groupPlayTest(tests: Seq[TestDefinition]) = tests.map { t =>
-  new Group(t.name, Seq(t), SubProcess(javaOptions = Seq.empty[String]))
-}
+// ----------------------------------------------------------------------------
+// Disable Play Framework support until it compiles in Scala 2.12
+// ----------------------------------------------------------------------------
 
-lazy val playEdge = project.in(file("play"))
-  .settings(playSettings)
-  .settings(
-    name := "jwt-play",
-    target <<= target(_ / "edge"),
-    libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus),
-    testGrouping in Test <<= definedTests in Test map groupPlayTest
-  )
-  .aggregate(playJsonEdge)
-  .dependsOn(playJsonEdge % "compile->compile;test->test")
-
-lazy val examplePlayAngularProject = project.in(file("examples/play-angular"))
-  .settings(playLocalSettings)
-  .settings(
-    name := "playAngular",
-    routesGenerator := play.sbt.routes.RoutesKeys.InjectedRoutesGenerator
-  )
-  .enablePlugins(PlayScala)
-  .aggregate(playEdge)
-  .dependsOn(playEdge)
+// def groupPlayTest(tests: Seq[TestDefinition]) = tests.map { t =>
+//   new Group(t.name, Seq(t), SubProcess(javaOptions = Seq.empty[String]))
+// }
+//
+// lazy val playEdge = project.in(file("play"))
+//   .settings(releaseSettings)
+//   .settings(
+//     name := "jwt-play",
+//     target <<= target(_ / "edge"),
+//     libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus),
+//     testGrouping in Test <<= definedTests in Test map groupPlayTest
+//   )
+//   .aggregate(playJsonEdge)
+//   .dependsOn(playJsonEdge % "compile->compile;test->test")
+//
+// lazy val examplePlayAngularProject = project.in(file("examples/play-angular"))
+//   .settings(localSettings)
+//   .settings(
+//     name := "playAngular",
+//     routesGenerator := play.sbt.routes.RoutesKeys.InjectedRoutesGenerator
+//   )
+//   .enablePlugins(PlayScala)
+//   .aggregate(playEdge)
+//   .dependsOn(playEdge)
