@@ -5,14 +5,16 @@ import upickle.json
 import upickle.default._
 
 /**
-  * Created by alonsodomin on 07/09/2016.
+  * Implementation of `JwtCore` using `Js.Value` from uPickle.
+  *
+  * To see a full list of samples, check the [[http://pauldijou.fr/jwt-scala/samples/jwt-upickle/ online documentation]].
   */
-object JwtUpickle extends JwtJsonCommon[Js.Value] with JwtUpickleImplicits {
-  override protected def parse(value: String): Js.Value = json.read(value)
+object JwtUpickle extends JwtJsonCommon[Js.Value] {
+  protected def parse(value: String): Js.Value = json.read(value)
 
-  override protected def stringify(value: Js.Value): String = json.write(value)
+  protected def stringify(value: Js.Value): String = json.write(value)
 
-  override protected def getAlgorithm(header: Js.Value): Option[JwtAlgorithm] = header match {
+  protected def getAlgorithm(header: Js.Value): Option[JwtAlgorithm] = header match {
     case obj: Js.Obj =>
       val fields = obj.value.toMap
       fields.get("alg").flatMap(alg => JwtAlgorithm.optionFromString(alg.str))
@@ -20,8 +22,7 @@ object JwtUpickle extends JwtJsonCommon[Js.Value] with JwtUpickleImplicits {
     case _ => None
   }
 
-  override protected def parseHeader(header: String): JwtHeader = read[JwtHeader](header)
-
-  override protected def parseClaim(claim: String): JwtClaim = read[JwtClaim](claim)
+  protected def parseHeader(header: String): JwtHeader = read[JwtHeader](header)
+  protected def parseClaim(claim: String): JwtClaim = read[JwtClaim](claim)
 
 }

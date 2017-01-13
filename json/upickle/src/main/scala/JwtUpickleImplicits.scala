@@ -4,10 +4,7 @@ import upickle.Js
 import upickle.json
 import upickle.default._
 
-/**
-  * Created by alonsodomin on 07/09/2016.
-  */
-private[jwt] trait JwtUpickleImplicits {
+trait JwtUpickleImplicits {
 
   implicit def headerReader: Reader[JwtHeader] = Reader[JwtHeader] {
     case obj: Js.Obj =>
