@@ -6,7 +6,7 @@ import upickle.default._
 
 trait JwtUpickleImplicits {
 
-  implicit def headerReader: Reader[JwtHeader] = Reader[JwtHeader] {
+  implicit val jwtUpickleHeaderReader: Reader[JwtHeader] = Reader[JwtHeader] {
     case obj: Js.Obj =>
       val fieldMap = obj.value.toMap
       JwtHeader(
@@ -16,11 +16,11 @@ trait JwtUpickleImplicits {
       )
   }
 
-  implicit val headerWriter: Writer[JwtHeader] = Writer[JwtHeader] {
+  implicit val jwtUpickleHeaderWriter: Writer[JwtHeader] = Writer[JwtHeader] {
     header => json.read(header.toJson)
   }
 
-  implicit val claimReader: Reader[JwtClaim] = Reader[JwtClaim] {
+  implicit val jwtUpickleClaimReader: Reader[JwtClaim] = Reader[JwtClaim] {
     case obj: Js.Obj =>
       val fieldMap = obj.value.toMap
       val content = fieldMap - "iss" - "sub" - "aud" - "exp" - "nbf" - "iat" - "jti"
@@ -36,7 +36,7 @@ trait JwtUpickleImplicits {
       )
   }
 
-  implicit val claimWriter: Writer[JwtClaim] = Writer[JwtClaim] {
+  implicit val jwtUpickleClaimWriter: Writer[JwtClaim] = Writer[JwtClaim] {
     claim => json.read(claim.toJson)
   }
 
