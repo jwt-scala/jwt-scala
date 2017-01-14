@@ -28,7 +28,7 @@ trait JwtJsonImplicits {
 
   private def keyToPath(key: String): JsPath = new JsPath(List(new KeyPathNode(key)))
 
-  implicit val jwtClaimReader = new Reads[JwtClaim] {
+  implicit val jwtPlayJsonClaimReader = new Reads[JwtClaim] {
     def reads(json: JsValue) = json match {
       case value: JsObject =>
         try {
@@ -51,11 +51,11 @@ trait JwtJsonImplicits {
     }
   }
 
-  implicit val jwtClaimWriter = new Writes[JwtClaim] {
+  implicit val jwtPlayJsonClaimWriter = new Writes[JwtClaim] {
     def writes(claim: JwtClaim) = Json.parse(claim.toJson)
   }
 
-  implicit val jwtHeaderReader = new Reads[JwtHeader] {
+  implicit val jwtPlayJsonHeaderReader = new Reads[JwtHeader] {
     def reads(json: JsValue) = json match {
       case value: JsObject =>
         try {
@@ -72,15 +72,15 @@ trait JwtJsonImplicits {
     }
   }
 
-  implicit val jwtHeaderWriter = new Writes[JwtHeader] {
+  implicit val jwtPlayJsonHeaderWriter = new Writes[JwtHeader] {
     def writes(header: JwtHeader) = Json.parse(header.toJson)
   }
 
   implicit class RichJwtClaim(claim: JwtClaim) {
-    def toJsValue(): JsValue = jwtClaimWriter.writes(claim)
+    def toJsValue(): JsValue = jwtPlayJsonClaimWriter.writes(claim)
   }
 
   implicit class RichJwtHeader(header: JwtHeader) {
-    def toJsValue(): JsValue = jwtHeaderWriter.writes(header)
+    def toJsValue(): JsValue = jwtPlayJsonHeaderWriter.writes(header)
   }
 }

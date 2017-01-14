@@ -16,7 +16,7 @@ case class JsonDataEntry(
   headerJson: Js.Value) extends JsonDataEntryTrait[Js.Value]
 
 
-trait UpickleFixture extends JsonCommonFixture[Js.Value] {
+trait JwtUpickleFixture extends JsonCommonFixture[Js.Value] {
 
   val claimJson: Js.Value = json.read(claim)
 

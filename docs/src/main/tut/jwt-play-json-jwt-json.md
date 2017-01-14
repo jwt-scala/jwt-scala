@@ -3,7 +3,9 @@
 ### Basic usage
 
 ```tut
-import pdi.jwt.{JwtJson, JwtAlgorithm}, play.api.libs.json.Json
+import pdi.jwt.{JwtJson, JwtAlgorithm}
+import play.api.libs.json.Json
+
 val claim = Json.obj(("user", 1), ("nbf", 1431520421))
 val key = "secretKey"
 val algo = JwtAlgorithm.HS256

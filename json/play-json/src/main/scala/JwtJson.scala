@@ -1,9 +1,7 @@
 package pdi.jwt
 
 import scala.util.Try
-
 import play.api.libs.json._
-
 import pdi.jwt.exceptions.JwtNonStringException
 
 /**
@@ -23,6 +21,6 @@ object JwtJson extends JwtJsonCommon[JsObject] {
     case _ => throw new JwtNonStringException("alg")
   }
 
-  protected def parseHeader(header: String): JwtHeader = jwtHeaderReader.reads(Json.parse(header)).get
-  protected def parseClaim(claim: String): JwtClaim = jwtClaimReader.reads(Json.parse(claim)).get
+  protected def parseHeader(header: String): JwtHeader = jwtPlayJsonHeaderReader.reads(Json.parse(header)).get
+  protected def parseClaim(claim: String): JwtClaim = jwtPlayJsonClaimReader.reads(Json.parse(claim)).get
 }

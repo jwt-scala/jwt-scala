@@ -4,11 +4,13 @@
 
 ```tut
 import java.time.Instant
+import upickle.json
+import upickle.default._
 import pdi.jwt.{JwtUpickle, JwtAlgorithm, JwtClaim}
 
 val claim = JwtClaim(
-    expiration = Some(Instant.now.plusSeconds(157784760).getEpochSecond)
-  , issuedAt = Some(Instant.now.getEpochSecond)
+  expiration = Some(Instant.now.plusSeconds(157784760).getEpochSecond),
+  issuedAt = Some(Instant.now.getEpochSecond)
 )
 val key = "secretKey"
 val algo = JwtAlgorithm.HS256
@@ -22,11 +24,6 @@ JwtUpickle.decode(token, key, Seq(JwtAlgorithm.HS256))
 ### Encoding
 
 ```tut
-import java.time.Instant
-import upickle.json
-import upickle.default._
-import pdi.jwt.{JwtUpickle, JwtAlgorithm, JwtClaim}
-
 val key = "secretKey"
 val algo = JwtAlgorithm.HS256
 
@@ -41,12 +38,9 @@ JwtUpickle.encode(header, claimJson, key)
 ### Decoding
 
 ```tut
-import java.time.Instant
-import pdi.jwt.{JwtUpickle, JwtAlgorithm, JwtClaim}
-
 val claim = JwtClaim(
-    expiration = Some(Instant.now.plusSeconds(157784760).getEpochSecond)
-  , issuedAt = Some(Instant.now.getEpochSecond)
+  expiration = Some(Instant.now.plusSeconds(157784760).getEpochSecond),
+  issuedAt = Some(Instant.now.getEpochSecond)
 )
 val key = "secretKey"
 val algo = JwtAlgorithm.HS256

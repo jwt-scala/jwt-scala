@@ -17,7 +17,7 @@ addCommandAlias("testAll", crossProjects.map(p => p + "/test").mkString(";", ";"
 
 addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;json4sNativeEdge/doc;circeEdge/doc;upickleEdge/doc;scaladocScript;cleanScript")
 
-addCommandAlias("publish-doc", ";docs/makeSite;docs/ghpagesPushSite")
+addCommandAlias("publish-doc", ";docs/makeSite;docs/tut;docs/ghpagesPushSite")
 
 addCommandAlias("publishCore", ";coreCommonEdge/publishSigned;coreCommonLegacy/publishSigned");
 addCommandAlias("publishPlayJson", ";playJsonEdge/publishSigned;playJsonLegacy/publishSigned");
@@ -109,14 +109,13 @@ val releaseSettings = baseSettings ++ publishSettings
 // Local non-published projects
 val localSettings = baseSettings ++ noPublishSettings
 
-
 val docSettings = Seq(
-  site.addMappingsToSiteDir(tut, "_includes/tut"),
+  tutTargetDirectory := siteDirectory.value / "_includes" / "tut",
   ghpagesNoJekyll := false,
-  siteMappings ++= Seq(
+  git.remoteRepo := "git@github.com:pauldijou/jwt-scala.git",
+  mappings in makeSite ++= Seq(
     file("README.md") -> "_includes/README.md"
   ),
-  git.remoteRepo := "git@github.com:pauldijou/jwt-scala.git",
   includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md" | "*.scss"
 )
 
@@ -131,14 +130,13 @@ lazy val jwtScala = project.in(file("."))
 lazy val docs = project.in(file("docs"))
   .settings(name := "jwt-docs")
   .settings(localSettings)
-  .settings(site.settings)
   .settings(ghpages.settings)
   .settings(tutSettings)
   .settings(docSettings)
   .settings(
     libraryDependencies ++= Seq(Libs.playJson, Libs.json4sNative, Libs.circeCore, Libs.circeGeneric, Libs.circeParse, Libs.upickle)
   )
-  .dependsOn(json4sNativeEdge, circeEdge, upickleEdge)
+  .dependsOn(playJsonEdge, json4sNativeEdge, circeEdge, upickleEdge)
 
 lazy val coreLegacy = project.in(file("core/legacy"))
   .settings(releaseSettings)
