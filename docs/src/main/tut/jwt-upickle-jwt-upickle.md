@@ -1,8 +1,10 @@
 ## JwtUpickle Object
 
+**Compilation problem** Right now, even if all tests are green, there is a problem for compiling this documentation file.
+
 ### Basic usage
 
-```tut
+```
 import java.time.Instant
 import upickle.json
 import upickle.default._
@@ -23,7 +25,7 @@ JwtUpickle.decode(token, key, Seq(JwtAlgorithm.HS256))
 
 ### Encoding
 
-```tut
+```
 val key = "secretKey"
 val algo = JwtAlgorithm.HS256
 
@@ -37,7 +39,7 @@ JwtUpickle.encode(header, claimJson, key)
 
 ### Decoding
 
-```tut
+```
 val claim = JwtClaim(
   expiration = Some(Instant.now.plusSeconds(157784760).getEpochSecond),
   issuedAt = Some(Instant.now.getEpochSecond)

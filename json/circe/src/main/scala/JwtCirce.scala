@@ -16,9 +16,10 @@ object JwtCirce extends JwtJsonCommon[Json] {
   protected def parseClaim(claim: String): JwtClaim = {
     val cursor = parse(claim).hcursor
     val contentCursor = List("iss", "sub", "aud", "exp", "nbf", "iat", "jti").foldLeft(cursor) { (cursor, field) =>
-      val newCursor = cursor.downField(field).delete
-      if(newCursor.succeeded) newCursor.any
-      else cursor
+      cursor.downField(field).delete.success match {
+        case Some(newCursor) => newCursor
+        case None => cursor
+      }
     }
     JwtClaim(
         content = contentCursor.top.asJson.noSpaces

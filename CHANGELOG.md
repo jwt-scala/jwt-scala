@@ -1,11 +1,12 @@
 # Changelog
 
-## 0.10.0 (13/01/2017)
+## 0.10.0 (02/02/2017)
 
 - Support Scala 2.12.0
 - Drop Play Framework support until it supports Scala 2.12
 - Add uPickle support (thanks @alonsodomin )
 - Update Play Json to 2.6.0-M1 for Scala 2.12 support
+- Update Circe to 0.7.0
 
 ## 0.9.2 (10/11/2016)
 
