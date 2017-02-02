@@ -4,7 +4,6 @@ import Tests._
 import play.sbt.Play.autoImport._
 import PlayKeys._
 import Dependencies._
-import com.typesafe.sbt.sbtghpages.GhpagesPlugin
 
 val previousVersion = "0.9.2"
 val buildVersion = "0.10.0"
@@ -111,7 +110,6 @@ val localSettings = baseSettings ++ noPublishSettings
 val docSettings = Seq(
   git.remoteRepo := "git@github.com:pauldijou/jwt-scala.git",
   sourceDirectory in Preprocess := tutTargetDirectory.value,
-  // tutTargetDirectory := siteDirectory.value / "_includes" / "tut",
   ghpagesNoJekyll := false,
   git.remoteRepo := "git@github.com:pauldijou/jwt-scala.git",
   mappings in makeSite ++= Seq(
@@ -133,7 +131,6 @@ lazy val docs = project.in(file("docs"))
   .enablePlugins(GhpagesPlugin)
   .settings(name := "jwt-docs")
   .settings(localSettings)
-  // .settings(ghpages.settings)
   .settings(tutSettings)
   .settings(docSettings)
   .settings(
