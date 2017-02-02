@@ -4,8 +4,7 @@ import Tests._
 import play.sbt.Play.autoImport._
 import PlayKeys._
 import Dependencies._
-import com.typesafe.sbt.SbtSite.SiteKeys._
-import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
+import com.typesafe.sbt.sbtghpages.GhpagesPlugin
 
 val previousVersion = "0.9.2"
 val buildVersion = "0.10.0"
@@ -110,7 +109,9 @@ val releaseSettings = baseSettings ++ publishSettings
 val localSettings = baseSettings ++ noPublishSettings
 
 val docSettings = Seq(
-  tutTargetDirectory := siteDirectory.value / "_includes" / "tut",
+  git.remoteRepo := "git@github.com:pauldijou/jwt-scala.git",
+  sourceDirectory in Preprocess := tutTargetDirectory.value,
+  // tutTargetDirectory := siteDirectory.value / "_includes" / "tut",
   ghpagesNoJekyll := false,
   git.remoteRepo := "git@github.com:pauldijou/jwt-scala.git",
   mappings in makeSite ++= Seq(
@@ -128,9 +129,11 @@ lazy val jwtScala = project.in(file("."))
   .dependsOn(json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, circeLegacy, circeEdge, upickleLegacy, upickleEdge)
 
 lazy val docs = project.in(file("docs"))
+  .enablePlugins(PreprocessPlugin)
+  .enablePlugins(GhpagesPlugin)
   .settings(name := "jwt-docs")
   .settings(localSettings)
-  .settings(ghpages.settings)
+  // .settings(ghpages.settings)
   .settings(tutSettings)
   .settings(docSettings)
   .settings(
