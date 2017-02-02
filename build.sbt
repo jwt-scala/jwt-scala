@@ -29,7 +29,7 @@ addCommandAlias("publishPlay", ";playEdge/publishSigned");
 
 addCommandAlias("publishAll", ";publishPlayJson;+publishJson4Native;+publishJson4Jackson;+publishCirce;+publishUpickle")
 
-addCommandAlias("release", ";bumpScript;scaladoc;publish-doc;publishAll;sonatypeRelease;pushScript")
+addCommandAlias("releaseAll", ";bumpScript;scaladoc;publish-doc;publishAll;sonatypeRelease;pushScript")
 
 lazy val scaladocScript = taskKey[Unit]("Generate scaladoc and copy it to docs site")
 scaladocScript := {

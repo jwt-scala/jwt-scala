@@ -1,6 +1,6 @@
 title: "JWT Scala"
 description: "JSON Web Token (JWT) support for Scala. Optional helpers for Play Framework, Play JSON and Json4s"
-version: 0.9.2
+version: 0.10.0
 permalink: pretty
 baseurl: "/jwt-scala"
 url: "https://pauldijou.github.io"
@@ -9,7 +9,7 @@ markdown: redcarpet
 redcarpet:
   extensions: ["tables", "fenced_code_blocks", "autolink", "strikethrough"]
 
-versions: [0.9.1, 0.9.0, 0.8.1, 0.8.0, 0.7.1, 0.7.0, 0.6.0, 0.5.1, 0.5.0, 0.4.1, 0.4.0, 0.4.0, 0.3.0, 0.2.1, 0.2.0, 0.1.0, 0.0.6, 0.0.5, 0.0.4, 0.0.3]
+versions: [0.9.2, 0.9.1, 0.9.0, 0.8.1, 0.8.0, 0.7.1, 0.7.0, 0.6.0, 0.5.1, 0.5.0, 0.4.1, 0.4.0, 0.4.0, 0.3.0, 0.2.1, 0.2.0, 0.1.0, 0.0.6, 0.0.5, 0.0.4, 0.0.3]
 projects:
   - name: jwt-core
     description: pure Scala project.
