@@ -9,7 +9,7 @@ resolvers ++= Seq(
   "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"
 )
 
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.0")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.0-M1")
 
 addSbtPlugin("com.typesafe.sbt"  % "sbt-site"               % "1.2.0")
 addSbtPlugin("com.typesafe.sbt"  % "sbt-ghpages"            % "0.6.0")

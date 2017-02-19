@@ -5,19 +5,21 @@ object Dependencies {
     val play = "2.6.0-M1"
     val json4s = "3.5.0"
     val circe = "0.7.0"
-    val scalatest = "3.0.0"
-    val scalatestPlus = "2.0.0-M1"
+    val scalatest = "3.2.0-SNAP4"
+    val scalatestPlus = "2.0.0-M2"
     val jmockit = "1.24"
     val apacheCodec = "1.10"
     val bouncyCastle = "1.52"
     val upickle = "0.4.4"
+    val guice = "4.1.0"
   }
 
   object Libs {
-    val play             = "com.typesafe.play" %% "play"      % V.play % "provided"
-    val playJson         = "com.typesafe.play" %% "play-json" % V.play % "provided"
-    val playTest         = "com.typesafe.play" %% "play-test" % V.play % "test"
-    val playTestProvided = "com.typesafe.play" %% "play-test" % V.play % "provided"
+    val play             = "com.typesafe.play" %% "play"      % V.play  % "provided"
+    val playJson         = "com.typesafe.play" %% "play-json" % V.play  % "provided"
+    val playTest         = "com.typesafe.play" %% "play-test" % V.play  % "test"
+    val playTestProvided = "com.typesafe.play" %% "play-test" % V.play  % "provided"
+    val guice            = "com.google.inject" %  "guice"     % V.guice % "test"
 
     val json4sCore    = "org.json4s" %% "json4s-core"    % V.json4s % "provided"
     val json4sNative  = "org.json4s" %% "json4s-native"  % V.json4s % "provided"

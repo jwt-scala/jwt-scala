@@ -4,13 +4,15 @@ import org.scalatest._
 import play.api.test._
 import play.api.test.Helpers._
 import org.scalatestplus.play._
+import org.scalatestplus.play.guice._
+import play.api.inject.guice.GuiceApplicationBuilder
 import akka.stream.Materializer
 
 import play.api.mvc._
 import play.api.mvc.Results._
 import play.api.libs.json._
 
-class JwtSessionCustomSpec extends PlaySpec with OneAppPerSuite with BeforeAndAfter with PlayFixture {
+class JwtSessionCustomSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAndAfter with PlayFixture {
   val materializer: Materializer = app.materializer
 
   // Just for test, users shouldn't change the header name normally
@@ -27,16 +29,16 @@ class JwtSessionCustomSpec extends PlaySpec with OneAppPerSuite with BeforeAndAf
     tearDown(mock)
   }
 
-  implicit override lazy val app: FakeApplication =
-    FakeApplication(
-      additionalConfiguration = Map(
+  override def fakeApplication() =
+    new GuiceApplicationBuilder()
+      .configure(Map(
         "play.crypto.secret" -> secretKey,
         "play.http.session.jwtName" -> HEADER_NAME,
         "play.http.session.maxAge" -> sessionTimeout * 1000, // 10sec... that's really short :)
         "play.http.session.algorithm" -> "HS512",
         "play.http.session.tokenPrefix" -> ""
-      )
-    )
+      ))
+      .build()
 
   def session = JwtSession()
   def sessionCustom = JwtSession(JwtHeader(JwtAlgorithm.HS512), claimClass, "ngZsdQj8p2wvUAo8xCbJPwganGPnG5UnLkg7VrE6NgmQdV16UITjlBajZxcai_U5PjQdeN-yJtyA5kxf8O5BOQ")

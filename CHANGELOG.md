@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.11.0 (19/02/2017)
+
+- Drop Scala 2.10
+- Play support is back
+
 ## 0.10.0 (02/02/2017)
 
 - Support Scala 2.12.0

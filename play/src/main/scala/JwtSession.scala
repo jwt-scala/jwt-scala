@@ -53,8 +53,8 @@ case class JwtSession(
 
   def isEmpty(): Boolean = claimData.keys.isEmpty
 
-  def claim: JwtClaim = jwtClaimReader.reads(claimData).get
-  def header: JwtHeader = jwtHeaderReader.reads(headerData).get
+  def claim: JwtClaim = jwtPlayJsonClaimReader.reads(claimData).get
+  def header: JwtHeader = jwtPlayJsonHeaderReader.reads(headerData).get
 
   /** Encode the session as a JSON Web Token */
   def serialize: String = JwtSession.key match {
