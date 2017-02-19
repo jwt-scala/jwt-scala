@@ -25,7 +25,7 @@ addCommandAlias("publishCirce", ";circeEdge/publishSigned;circeLegacy/publishSig
 addCommandAlias("publishUpickle", ";upickleEdge/publishSigned;upickleLegacy/publishSigned")
 addCommandAlias("publishPlay", ";playEdge/publishSigned;playLegacy/publishSigned");
 
-addCommandAlias("publishAll", ";publishPlayJson;+publishJson4Native;+publishJson4Jackson;+publishCirce;+publishUpickle")
+addCommandAlias("publishAll", ";+publishPlayJson;+publishJson4Native;+publishJson4Jackson;+publishCirce;+publishUpickle;+publishPlay")
 
 addCommandAlias("releaseAll", ";bumpScript;scaladoc;publish-doc;publishAll;sonatypeRelease;pushScript")
 
