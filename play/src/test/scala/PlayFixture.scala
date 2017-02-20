@@ -14,6 +14,8 @@ import play.api.libs.json._
 case class User(id: Long, name: String)
 
 trait PlayFixture extends Fixture {
+  import pdi.jwt.JwtSession._
+  
   def HEADER_NAME: String
   def materializer: Materializer
 

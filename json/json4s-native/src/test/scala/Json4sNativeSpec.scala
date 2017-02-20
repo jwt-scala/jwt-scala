@@ -5,6 +5,8 @@ import org.json4s.JsonDSL._
 import org.json4s.native.JsonMethods._
 
 class JwtJson4sNativeSpec extends JwtJsonCommonSpec[JObject] with Json4sNativeFixture {
+  import pdi.jwt.JwtJson4s._
+
   val jwtJsonCommon = JwtJson4s
 
   describe("JwtJson") {

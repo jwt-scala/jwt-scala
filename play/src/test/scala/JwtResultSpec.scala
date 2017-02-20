@@ -13,6 +13,8 @@ import play.api.mvc.Results._
 import play.api.libs.json._
 
 class JwtResultSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture {
+  import pdi.jwt.JwtSession._
+
   val HEADER_NAME = "Authorization"
   val materializer: Materializer = app.materializer
 

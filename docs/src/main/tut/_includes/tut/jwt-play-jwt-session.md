@@ -65,7 +65,9 @@ session2.getAs[User]("user")
 You can extract a `JwtSession` from a `RequestHeader`.
 
 ```tut
-import pdi.jwt._, play.api.test.{FakeRequest, FakeHeaders}
+import pdi.jwt._
+import pdi.jwt.JwtSession._
+import play.api.test.{FakeRequest, FakeHeaders}
 
 // Default JwtSession
 FakeRequest().jwtSession

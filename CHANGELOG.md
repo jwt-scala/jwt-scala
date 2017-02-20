@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.12.0 (20/02/2017)
+
+- **Breaking changes** I liked having all implicits directly inside the package object but it started to create problems. When generating the documentation, which depends on all projects, we had runtime errors while all tests were green, but they are ran on project at a time. Also, it means all implicits where always present on the scope which might not be the best option. So the idea is to move them from the package object to the `JwtXXX` object. For example, for Play Json:
+
+```scala
+// Before
+// JwtJson.scala.
+package pdi.jwt
+
+object JwtJson extends JwtJsonCommon[JsObject] {
+  // stuff...
+}
+
+// package.scala
+package pdi
+
+package object jwt extends JwtJsonImplicits {}
+
+// --------------------------------------------------------
+// After
+// JwtJson.scala.
+package pdi.jwt
+
+object JwtJson extends JwtJsonCommon[JsObject] with JwtJsonImplicits {
+  // stuff...
+}
+```
+
 ## 0.11.0 (19/02/2017)
 
 - Drop Scala 2.10

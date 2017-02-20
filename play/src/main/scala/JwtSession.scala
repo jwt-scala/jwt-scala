@@ -53,8 +53,8 @@ case class JwtSession(
 
   def isEmpty(): Boolean = claimData.keys.isEmpty
 
-  def claim: JwtClaim = jwtPlayJsonClaimReader.reads(claimData).get
-  def header: JwtHeader = jwtPlayJsonHeaderReader.reads(headerData).get
+  def claim: JwtClaim = JwtSession.jwtPlayJsonClaimReader.reads(claimData).get
+  def header: JwtHeader = JwtSession.jwtPlayJsonHeaderReader.reads(headerData).get
 
   /** Encode the session as a JSON Web Token */
   def serialize: String = JwtSession.key match {
@@ -63,10 +63,12 @@ case class JwtSession(
   }
 
   /** Overrride the `claimData` */
-  def withClaim(claim: JwtClaim): JwtSession = this.copy(claimData = JwtSession.asJsObject(claim))
+  def withClaim(claim: JwtClaim): JwtSession =
+    this.copy(claimData = JwtSession.asJsObject(claim)(JwtSession.jwtPlayJsonClaimWriter))
 
   /** Override the `headerData` */
-  def withHeader(header: JwtHeader): JwtSession = this.copy(headerData = JwtSession.asJsObject(header))
+  def withHeader(header: JwtHeader): JwtSession =
+    this.copy(headerData = JwtSession.asJsObject(header)(JwtSession.jwtPlayJsonHeaderWriter))
 
   /** Override the `signature` (seriously, you should never need this method) */
   def withSignature(signature: String): JwtSession = this.copy(signature = signature)
@@ -75,7 +77,7 @@ case class JwtSession(
   def refresh(): JwtSession = JwtSession.MAX_AGE.map(sec => this + ("exp", JwtTime.nowSeconds + sec)).getOrElse(this)
 }
 
-object JwtSession {
+object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
   // This half-hack is to fix a "bug" in Play Framework where Play assign "null"
   // values to missing keys leading to ConfigException.Null in Typesafe Config
   // Especially strange for the maxAge key. Not having it should mean no session timeout,
