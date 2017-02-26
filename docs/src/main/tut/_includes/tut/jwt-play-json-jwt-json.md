@@ -46,6 +46,7 @@ The project provides implicit reader and writer for both `JwtHeader` and `JwtCla
 
 ```tut
 import pdi.jwt._
+import pdi.jwt.JwtJson._
 
 // Reads
 Json.fromJson[JwtHeader](header)

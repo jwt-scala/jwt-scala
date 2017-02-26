@@ -13,6 +13,8 @@ import play.api.mvc.Results._
 import play.api.libs.json._
 
 class JwtSessionCustomSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAndAfter with PlayFixture {
+  import pdi.jwt.JwtSession._
+  
   val materializer: Materializer = app.materializer
 
   // Just for test, users shouldn't change the header name normally

@@ -3,6 +3,8 @@ package pdi.jwt
 import play.api.libs.json.{Json, JsObject}
 
 class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
+  import pdi.jwt.JwtJson._
+  
   val jwtJsonCommon = JwtJson
 
   describe("JwtJson") {
