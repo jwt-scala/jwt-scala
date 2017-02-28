@@ -42,10 +42,6 @@ libraryDependencies ++= Seq(
 )
 ```
 
-## Play Framework
-
-Starting with JWT Scala 0.10, Play Framework support is dropped until it compiles to Scala 2.12.0
-
 ## Dependencies
 
 - `"org.bouncycastle" % "bcpkix-jdk15on"`
