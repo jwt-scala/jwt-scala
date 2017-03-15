@@ -23,7 +23,7 @@ trait JwtUpickleImplicits {
   implicit val jwtUpickleClaimReader: Reader[JwtClaim] = Reader[JwtClaim] {
     case obj: Js.Obj =>
       val fieldMap = obj.value.toMap
-      val content = fieldMap - "iss" - "sub" - "aud" - "exp" - "nbf" - "iat" - "jti"
+      val content = fieldMap -- Seq("iss", "sub", "aud", "exp", "nbf", "iat", "jti")
       JwtClaim(
         content = json.write(Js.Obj(content.toSeq: _*)),
         issuer = fieldMap.get("iss").map(_.str),
