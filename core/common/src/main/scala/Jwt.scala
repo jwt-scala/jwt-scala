@@ -24,18 +24,18 @@ object Jwt extends JwtCore[String, String] {
   protected def parseHeader(header: String): String = header
   protected def parseClaim(claim: String): String = claim
 
-  private val extractAlgorithmRegex = "\"alg\":\"([a-zA-Z0-9]+)\"".r
+  private val extractAlgorithmRegex = "\"alg\" *: *\"([a-zA-Z0-9]+)\"".r
   protected def extractAlgorithm(header: String): Option[JwtAlgorithm] =
     (extractAlgorithmRegex findFirstMatchIn header).map(_.group(1)).flatMap {
       case "none" => None
       case name: String => Some(JwtAlgorithm.fromString(name))
     }
 
-  private val extractExpirationRegex = "\"exp\":([0-9]+)".r
+  private val extractExpirationRegex = "\"exp\" *: *([0-9]+)".r
   protected def extractExpiration(claim: String): Option[Long] =
     (extractExpirationRegex findFirstMatchIn claim).map(_.group(1)).map(_.toLong)
 
-  private val extractNotBeforeRegex = "\"nbf\":([0-9]+)".r
+  private val extractNotBeforeRegex = "\"nbf\" *: *([0-9]+)".r
   protected def extractNotBefore(claim: String): Option[Long] =
     (extractNotBeforeRegex findFirstMatchIn claim).map(_.group(1)).map(_.toLong)
 }

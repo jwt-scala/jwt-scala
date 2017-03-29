@@ -18,6 +18,10 @@ class JwtSpec extends UnitSpec with Fixture {
   }
 
   describe("Jwt") {
+    it("should parse JSON with spaces") {
+      assertResult(true) { Jwt.isValid(tokenWithSpaces) }
+    }
+
     it("should encode Hmac") {
       val mock = mockValidTime
       data foreach { d => battleTestEncode(d, secretKey) }

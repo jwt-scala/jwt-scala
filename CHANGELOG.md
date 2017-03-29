@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12.1 (29/03/2017)
+
+- Support spaces in JSON for pure Scala JWT
+
 ## 0.12.0 (20/02/2017)
 
 - **Breaking changes** I liked having all implicits directly inside the package object but it started to create problems. When generating the documentation, which depends on all projects, we had runtime errors while all tests were green, but they are ran on project at a time. Also, it means all implicits where always present on the scope which might not be the best option. So the idea is to move them from the package object to the `JwtXXX` object. For example, for Play Json:
