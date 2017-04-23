@@ -1,10 +1,10 @@
 package pdi.jwt
 
-import play.api.libs.json.{Json, JsObject}
+import play.api.libs.json.{Json, JsObject, JsNumber, JsString}
 
 class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
   import pdi.jwt.JwtJson._
-  
+
   val jwtJsonCommon = JwtJson
 
   describe("JwtJson") {
@@ -26,6 +26,14 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
       ), "Claim") {
         JwtHeader(JwtAlgorithm.HS256).toJsValue
       }
+    }
+
+    it("should decode token with spaces") {
+      val (header, claim, signature) = jwtJsonCommon.decodeJsonAll(tokenWithSpaces).get
+      val expiration = BigDecimal("32086368000")
+      assertResult(JsNumber(0)) { (claim \ "nbf").get }
+      assertResult(JsNumber(expiration)) { (claim \ "exp").get }
+      assertResult(JsString("bar")) { (claim \ "foo").get }
     }
   }
 }

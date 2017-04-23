@@ -67,7 +67,7 @@ trait Fixture extends TimeFixture {
   val tokenEmpty = header64Empty + "." + claim64 + "."
 
   val headerWithSpaces = """{"alg"  :   "none"}"""
-  val claimWithSpaces = """{"nbf"  :0  , "foo"  : "bar"  , "exp":    9999999999}"""
+  val claimWithSpaces = """{"nbf"  :0  , "foo"  : "bar"  , "exp":    32086368000}"""
   val tokenWithSpaces = JwtBase64.encodeString(headerWithSpaces) + "." + JwtBase64.encodeString(claimWithSpaces) + "."
 
   val publicKeyRSA = """-----BEGIN PUBLIC KEY-----

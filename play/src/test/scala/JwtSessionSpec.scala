@@ -14,7 +14,7 @@ import play.api.libs.json._
 
 class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture {
   import pdi.jwt.JwtSession._
-  
+
   val materializer: Materializer = app.materializer
 
   def HEADER_NAME = "Authorization"
