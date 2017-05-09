@@ -117,7 +117,7 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
 
   val TOKEN_PREFIX: String = getConfigString("play.http.session.tokenPrefix").getOrElse("Bearer ")
 
-  private def key: Option[String] = getConfigString("play.crypto.secret")
+  private def key: Option[String] = getConfigString("play.http.secret.key")
 
   def deserialize(token: String, options: JwtOptions): JwtSession = (key match {
       case Some(k) => JwtJson.decodeJsonAll(token, k, Seq(ALGORITHM), options)
