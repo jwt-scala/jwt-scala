@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.13.0 (08/06/2017)
+
+- Upgrade to Circe 0.8.0 (thanks @dvic)
+- Play 2.6 support (thanks @perotom)
+- Bouncy Castle 1.57 (thanks @rwhitworth)
+
 ## 0.12.1 (29/03/2017)
 
 - Support spaces in JSON for pure Scala JWT
@@ -41,21 +47,21 @@ object JwtJson extends JwtJsonCommon[JsObject] with JwtJsonImplicits {
 
 - Support Scala 2.12.0
 - Drop Play Framework support until it supports Scala 2.12
-- Add uPickle support (thanks @alonsodomin )
+- Add uPickle support (thanks @alonsodomin)
 - Update Play Json to 2.6.0-M1 for Scala 2.12 support
 - Update Circe to 0.7.0
 
 ## 0.9.2 (10/11/2016)
 
-- Support Circe 0.6.0 (thanks @TimothyKlim  )
+- Support Circe 0.6.0 (thanks @TimothyKlim )
 
 ## 0.9.1 (10/11/2016)
 
-- Support Json4s 3.5.0 (thanks @sanllanta )
+- Support Json4s 3.5.0 (thanks @sanllanta)
 
 ## 0.9.0 (08/10/2016)
 
-- Transformation of Signature to ASN.1 DER for ECDSA Algorithms (thanks @bestehle )
+- Transformation of Signature to ASN.1 DER for ECDSA Algorithms (thanks @bestehle)
 - Remove algorithm aliases to align with [JWA spec](https://tools.ietf.org/html/rfc7518#section-3.1)
 
 ## 0.8.1 (04/09/2016)

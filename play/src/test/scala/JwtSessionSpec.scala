@@ -21,7 +21,7 @@ class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture 
 
   override def fakeApplication() =
     new GuiceApplicationBuilder()
-      .configure(Map("play.crypto.secret" -> secretKey))
+      .configure(Map("play.http.secret.key" -> secretKey))
       .build()
 
   val session = JwtSession().withHeader(JwtHeader(JwtAlgorithm.HS256))
@@ -32,7 +32,7 @@ class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture 
 
   "Init FakeApplication" must {
     "have the correct config" in {
-      app.configuration.getString("play.crypto.secret") mustEqual Option(secretKey)
+      app.configuration.getString("play.http.secret.key") mustEqual Option(secretKey)
     }
   }
 

@@ -13,7 +13,7 @@ Then go to [localhost:9000](http://localhost:9000) to see the small application 
 
 ## Goal
 
-The goal of the application is to demonstrate how to use JWT (Json Web Token) as a way to manage the user session rather than cookies, the default way in Play Framework. Using JWT, we take all the good parts (signature using `play.crypto.secret`), add a bit of JSON syntax, and put all that in an HTTP header. So it's just as secured as a cookie would be, it's just at a different place.
+The goal of the application is to demonstrate how to use JWT (Json Web Token) as a way to manage the user session rather than cookies, the default way in Play Framework. Using JWT, we take all the good parts (signature using `play.http.secret.key`), add a bit of JSON syntax, and put all that in an HTTP header. So it's just as secured as a cookie would be, it's just at a different place.
 
 One nice benefit of JWT is that... it is not cookies! Cookies can be disabled (sometime by default... I'm looking at you Windows Phone), people don't like them (I'm talking about the ones in the internet). One major problem is that... it is not cookies. Those are automatically send with every request. With JWT, we need to manually add the header each time we send a request. You will also need to persist them client-side whereas the browser would have done that for you using cookies. There is no silver bullet for that, it depends mostly on what technologies you are using for your front-end, but you can use [this micro-library](https://github.com/pauldijou/jwt-client) that I quickly wrote to help you reading and storing the token. In the case of this application, we will take advantage of the HTTP interceptors provided by AngularJS to achieve the final result.  
 

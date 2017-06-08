@@ -5,8 +5,8 @@ import play.sbt.Play.autoImport._
 import PlayKeys._
 import Dependencies._
 
-val previousVersion = "0.12.0"
-val buildVersion = "0.12.1"
+val previousVersion = "0.12.1"
+val buildVersion = "0.13.0"
 
 val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "circe", "upickle", "play")
 val crossProjects = projects.map(p => Seq(p + "Legacy", p + "Edge")).flatten

@@ -14,7 +14,7 @@ import play.api.libs.json._
 
 class JwtSessionCustomSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAndAfter with PlayFixture {
   import pdi.jwt.JwtSession._
-  
+
   val materializer: Materializer = app.materializer
 
   // Just for test, users shouldn't change the header name normally
@@ -34,7 +34,7 @@ class JwtSessionCustomSpec extends PlaySpec with GuiceOneAppPerSuite with Before
   override def fakeApplication() =
     new GuiceApplicationBuilder()
       .configure(Map(
-        "play.crypto.secret" -> secretKey,
+        "play.http.secret.key" -> secretKey,
         "play.http.session.jwtName" -> HEADER_NAME,
         "play.http.session.maxAge" -> sessionTimeout * 1000, // 10sec... that's really short :)
         "play.http.session.algorithm" -> "HS512",
@@ -48,7 +48,7 @@ class JwtSessionCustomSpec extends PlaySpec with GuiceOneAppPerSuite with Before
 
   "Init FakeApplication" must {
     "have the correct config" in {
-      app.configuration.getString("play.crypto.secret") mustEqual Option(secretKey)
+      app.configuration.getString("play.http.secret.key") mustEqual Option(secretKey)
       app.configuration.getString("play.http.session.jwtName") mustEqual Option(HEADER_NAME)
       app.configuration.getString("play.http.session.algorithm") mustEqual Option("HS512")
       app.configuration.getString("play.http.session.tokenPrefix") mustEqual Option("")

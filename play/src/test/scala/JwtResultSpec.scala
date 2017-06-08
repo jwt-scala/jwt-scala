@@ -20,7 +20,7 @@ class JwtResultSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture {
 
   override def fakeApplication() =
     new GuiceApplicationBuilder()
-      .configure(Map("play.crypto.secret" -> secretKey))
+      .configure(Map("play.http.secret.key" -> secretKey))
       .build()
 
   val session = JwtSession().withHeader(JwtHeader(JwtAlgorithm.HS256))
