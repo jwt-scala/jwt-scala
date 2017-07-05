@@ -14,7 +14,7 @@ trait JwtPlayImplicits {
     }
 
   private def requestToJwtSession(request: RequestHeader): JwtSession =
-    request.headers.get(JwtSession.HEADER_NAME).map(sanitizeHeader).map(JwtSession.deserialize).getOrElse(JwtSession())
+    request.headers.get(JwtSession.REQUEST_HEADER_NAME).map(sanitizeHeader).map(JwtSession.deserialize).getOrElse(JwtSession())
 
   /** By adding `import pdi.jwt._`, you will implicitely add all those methods to `Result` allowing you to easily manipulate
     * the [[JwtSession]] inside your Play application.
@@ -42,7 +42,7 @@ trait JwtPlayImplicits {
       * @return the JwtSession inside the headers or a new one
       */
     def jwtSession(implicit request: RequestHeader): JwtSession = {
-      result.header.headers.get(JwtSession.HEADER_NAME) match {
+      result.header.headers.get(JwtSession.RESPONSE_HEADER_NAME) match {
         case Some(token) => JwtSession.deserialize(sanitizeHeader(token))
         case None => requestToJwtSession(request)
       }
@@ -58,7 +58,7 @@ trait JwtPlayImplicits {
 
     /** Override the current [[JwtSession]] with a new one */
     def withJwtSession(session: JwtSession): Result = {
-      result.withHeaders(JwtSession.HEADER_NAME -> (JwtSession.TOKEN_PREFIX + session.serialize))
+      result.withHeaders(JwtSession.RESPONSE_HEADER_NAME -> (JwtSession.TOKEN_PREFIX + session.serialize))
     }
     /** Override the current [[JwtSession]] with a new one created from a JsObject */
     def withJwtSession(session: JsObject): Result = withJwtSession(JwtSession(session))
@@ -70,7 +70,7 @@ trait JwtPlayImplicits {
     def withNewJwtSession: Result = withJwtSession(JwtSession())
 
     /** Remove the current [[JwtSession]], which means removing the associated HTTP header */
-    def withoutJwtSession: Result = result.copy(header = result.header.copy(headers = result.header.headers - JwtSession.HEADER_NAME))
+    def withoutJwtSession: Result = result.copy(header = result.header.copy(headers = result.header.headers - JwtSession.RESPONSE_HEADER_NAME))
 
     /** Keep the current [[JwtSession]] and add some values in it, if a key is already defined, it will be overriden. */
     def addingToJwtSession(values: (String, String)*)(implicit request: RequestHeader): Result = {

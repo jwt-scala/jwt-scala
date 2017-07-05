@@ -52,7 +52,7 @@ trait PlayFixture extends Fixture {
   def get(action: EssentialAction, header: Option[String] = None) = {
     implicit val mat: Materializer = materializer
     var request = header match {
-      case Some(h) => FakeRequest(GET, "/something").withHeaders((JwtSession.HEADER_NAME, h))
+      case Some(h) => FakeRequest(GET, "/something").withHeaders((JwtSession.REQUEST_HEADER_NAME, h))
       case _ => FakeRequest(GET, "/something")
     }
 
@@ -64,5 +64,5 @@ trait PlayFixture extends Fixture {
     call(action, FakeRequest(POST, "/something").withJsonBody(body))
   }
 
-  def jwtHeader(of: Future[Result])(implicit timeout: Timeout): Option[String] = header(JwtSession.HEADER_NAME, of)(timeout)
+  def jwtHeader(of: Future[Result])(implicit timeout: Timeout): Option[String] = header(JwtSession.RESPONSE_HEADER_NAME, of)(timeout)
 }
