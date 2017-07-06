@@ -102,7 +102,9 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
     key => Play.maybeApplication.flatMap(_.configuration.getMilliseconds(key))
   )
 
-  val HEADER_NAME: String = getConfigString("play.http.session.jwtName").getOrElse("Authorization")
+  val REQUEST_HEADER_NAME: String = getConfigString("play.http.session.jwtName").getOrElse("Authorization")
+
+  val RESPONSE_HEADER_NAME: String = getConfigString("play.http.session.jwtResponseName").getOrElse(REQUEST_HEADER_NAME)
 
   val MAX_AGE: Option[Long] = getConfigMillis("play.http.session.maxAge").map(_ / 1000)
 
