@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.14.0 (07/07/2017)
+
+- Add `play.http.session.jwtResponseName` to customize response header in Play (thanks @Isammoc)
+- Fix code snippet style in docs
+
 ## 0.13.0 (08/06/2017)
 
 - Upgrade to Circe 0.8.0 (thanks @dvic)
