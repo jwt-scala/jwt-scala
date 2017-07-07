@@ -1,9 +1,45 @@
-.highlight pre {
-  overflow-x: auto;       // this sets the scrolling in x
+/**
+ * Code formatting
+ */
+pre,
+code {
+  font-size: 15px;
+  border: 1px solid $text-color-alt;
+  border-radius: 3px;
+  background-color: #eef;
 }
 
-.highlight pre code {
+code {
+  padding: 1px 5px;
+  white-space: nowrap;
+}
+
+pre {
+  padding: 8px 12px;
+  overflow-x: scroll;
+
+  > code {
+    border: 0;
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+/**
+ * Code block formatting
+ */
+.highlight pre,
+pre.highlight {
+  overflow-x: auto;       // this sets the scrolling in x
+  padding: 20px;
+  border: 0;
+  background-color: #f8f8f8;
+}
+
+.highlight pre code,
+pre.highlight code {
   white-space: pre;       // forces <code> to respect <pre> formatting
+  background-color: #f8f8f8;
 }
 
 

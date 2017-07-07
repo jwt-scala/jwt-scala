@@ -124,3 +124,56 @@ result = result.refreshJwtSession
 // So, at the end, you can do
 result.jwtSession.getAs[User]("user")
 ```
+
+## Play configuration
+
+### Secret key
+
+`play.http.secret.key`
+
+> Default: none
+
+The secret key is used to secure cryptographics functions. We are using the same key to sign Json Web Tokens so you don't need to worry about it.
+
+### Session timeout
+
+`play.http.session.maxAge`
+
+> Default: none
+
+Just like for the cookie session, you can use this key to specify the duration, in milliseconds or using the duration syntax (for example 30m or 1h), after which the user should be logout, which mean the token will no longer be valid. It means you need to refresh the expiration date at each request
+
+### Signature algorithm
+
+`play.http.session.algorithm`
+
+> Default: HS256
+>
+> Supported: HMD5, HS1, HS224, HS256, HS384, HS512
+
+You can specify which algorithm you want to use, among the supported ones, in order to create the signature which will assure you that nobody can actually change the token. You should probably stick with the default one or use HmacSHA512 for maximum security.
+
+### Header name
+
+`play.http.session.jwtName`
+
+> Default: Authorization
+
+You can change the name of the header in which the token should be stored. It will be used for both requests and responses.
+
+### Response header name
+
+`play.http.session.jwtResponseName`
+
+> Default: none
+
+If you need to have a different header for request and response, you can override the response header using this key.
+
+
+### Token prefix
+
+`play.http.session.tokenPrefix`
+
+> Default: "Bearer "
+
+Authorization header should have a prefix before the token, like "Basic" for example. For a JWT token, it should be "Bearer" (which is the default value) but you can freely change or remove it (using an empty string). The token prefix will be directly prepend before the token, so be sure to put any necessary whitespaces in it.
