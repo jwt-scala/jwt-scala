@@ -10,7 +10,7 @@ trait JwtBase64Impl {
 
   def decode(value: String): Array[Byte] = decoder.decode(value)
 
-  // Since the complement character "=" is optinal,
+  // Since the complement character "=" is optional,
   // we can remove it to save some bits in the HTTP header
   def encodeString(value: Array[Byte]): String = encoder.encodeToString(value).replaceAll("=", "")
 
