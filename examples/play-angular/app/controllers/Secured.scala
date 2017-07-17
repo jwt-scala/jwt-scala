@@ -20,7 +20,7 @@ class AuthenticatedActionBuilder @Inject()(parser: BodyParsers.Default)(implicit
       case Some(user) =>
         block(new AuthenticatedRequest[A](user, request)).map(_.refreshJwtSession(request))
       case _ =>
-        Future.successful(Unauthorized)
+        Future(Unauthorized)
     }
   }
 }
@@ -32,9 +32,9 @@ class AdminActionBuilder @Inject()(parser: BodyParsers.Default)(implicit ec: Exe
       case Some(user) if user.isAdmin =>
         block(new AuthenticatedRequest(user, request)).map(_.refreshJwtSession(request))
       case Some(_) =>
-        Future.successful(Forbidden.refreshJwtSession(request))
+        Future(Forbidden.refreshJwtSession(request))
       case _ =>
-        Future.successful(Unauthorized)
+        Future(Unauthorized)
     }
   }
 }
