@@ -12,7 +12,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class Application @Inject()(scc: SecuredControllerComponents, assets: AssetsFinder)(implicit ec: ExecutionContext)
-    extends SecuredBaseController(scc) {
+    extends SecuredController(scc) {
 
   private val passwords = Seq("red", "blue", "green")
 
