@@ -6,7 +6,7 @@
 git clone git@github.com:pauldijou/jwt-scala.git
 cd jwt-scala
 sbt
-project playAngular
+project examplePlayAngularProject
 run
 ~~~
 
