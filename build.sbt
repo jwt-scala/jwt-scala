@@ -341,6 +341,7 @@ lazy val examplePlayAngularProject = project.in(file("examples/play-angular"))
   .settings(localSettings)
   .settings(
     name := "playAngular",
+    libraryDependencies ++= Seq(guice),
     routesGenerator := play.sbt.routes.RoutesKeys.InjectedRoutesGenerator
   )
   .enablePlugins(PlayScala)

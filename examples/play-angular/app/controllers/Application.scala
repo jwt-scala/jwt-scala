@@ -1,50 +1,56 @@
 package controllers
 
-import play.api._
-import play.api.mvc._
-import play.api.libs.json._
-import play.api.libs.functional.syntax._
-
-import pdi.jwt._
+import javax.inject.{ Inject, Singleton }
 
 import models.User
+import pdi.jwt.JwtSession._
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
+import play.api.mvc._
 
-class Application extends Controller with Secured {
-  val passwords = Seq("red", "blue", "green")
+import scala.concurrent.{ ExecutionContext, Future }
 
-  def index = Action {
-    Ok(views.html.index())
-  }
+@Singleton
+class Application @Inject()(scc: SecuredControllerComponents, assets: AssetsFinder)(implicit ec: ExecutionContext)
+    extends SecuredBaseController(scc) {
+
+  private val passwords = Seq("red", "blue", "green")
 
   private val loginForm: Reads[(String, String)] =
-    (JsPath \ "username").read[String] and
-    (JsPath \ "password").read[String] tupled
+    ((JsPath \ "username").read[String] and (JsPath \ "password").read[String]).tupled
 
-  def login = Action(parse.json) { implicit request =>
-    request.body.validate(loginForm).fold(
-      errors => {
-        BadRequest(JsError.toJson(errors))
-      },
-      form => {
-        if (passwords.contains(form._2)) {
-          Ok.addingToJwtSession("user", User(form._1))
-        } else {
-          Unauthorized
+  def index = Action {
+    Ok(views.html.index(assets))
+  }
+
+  def login = Action(parse.json).async { implicit request: Request[JsValue] =>
+    val result = request.body
+      .validate(loginForm)
+      .fold(
+        errors => {
+          BadRequest(JsError.toJson(errors))
+        }, {
+          case (username, password) =>
+            if (passwords.contains(password))
+              Ok.addingToJwtSession("user", User(username))
+            else
+              Unauthorized
         }
-      }
-    )
+      )
+
+    Future(result)
   }
 
-  def publicApi = Action {
-    Ok("That was easy!")
+  def publicApi = Action.async {
+    Future(Ok("That was easy!"))
   }
 
-  def privateApi = Authenticated {
-    Ok("Only the best can see that.")
+  def privateApi = AuthenticatedAction.async {
+    Future(Ok("Only the best can see that."))
   }
 
-  def adminApi = Admin {
-    Ok("Top secret data. Hopefully, nobody will ever access it.")
+  def adminApi = AdminAction.async {
+    Future(Ok("Top secret data. Hopefully, nobody will ever access it."))
   }
 
 }
