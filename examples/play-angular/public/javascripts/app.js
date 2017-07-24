@@ -66,7 +66,7 @@ angular.module('app', ['ngAnimate'])
   function login(data) {
     return $http.post('/api/login', data).then(function (response) {
       // If successful, read the new token from the header
-      var token = response.headers("Authorization");
+      var token = response.headers("JWT-Token");
       var session = JWT.read(token);
 
       // Validate it just in case the server would have send something fishy
