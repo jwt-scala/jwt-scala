@@ -89,6 +89,7 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
     case e: java.lang.RuntimeException => {
       e.getCause() match {
         case _: com.typesafe.config.ConfigException.Null => None
+        case _: IllegalArgumentException => None
         case _ => throw e
       }
     }
