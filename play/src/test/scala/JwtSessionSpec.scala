@@ -21,7 +21,10 @@ class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture 
 
   override def fakeApplication() =
     new GuiceApplicationBuilder()
-      .configure(Map("play.http.secret.key" -> secretKey))
+      .configure(Map(
+        "play.http.secret.key" -> secretKey,
+        "play.http.session.maxAge" -> null
+      ))
       .build()
 
   val session = JwtSession().withHeader(JwtHeader(JwtAlgorithm.HS256))
@@ -34,11 +37,28 @@ class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture 
     "have the correct config" in {
       app.configuration.getString("play.http.secret.key") mustEqual Option(secretKey)
     }
+    "handle null value for maxAge" in {
+      try {
+        /*
+           This was the old way of requesting maxAge. It attempted a lookup of Duration,
+           and it defaulted to InfiniteDuration on null (the default Play value) which
+           throws IllegalArgumentException when mapping _.toMillis. This prevented the
+           JwtSession from being able to initialize.
+         */
+        def getConfigMillis = JwtSession.wrap[Long](key => app.configuration.getMilliseconds(key))
+        getConfigMillis("play.http.session.maxAge")
+        fail()
+      } catch {
+        case _: IllegalArgumentException => ()
+      }
+      JwtSession.getConfigMillis("play.http.session.maxAge") mustEqual None
+    }
   }
 
   "JwtSession" must {
     "read default configuration" in {
       assert(JwtSession.defaultHeader == JwtHeader(JwtAlgorithm.HS256))
+      assert(JwtSession.MAX_AGE.isEmpty)
     }
 
     "init" in {
