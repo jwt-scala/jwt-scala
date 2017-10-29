@@ -5,6 +5,8 @@ import play.api.libs.json._
 import play.api.libs.json.Json.JsValueWrapper
 import pdi.jwt.algorithms.JwtHmacAlgorithm
 
+import scala.concurrent.duration.FiniteDuration
+
 /** Similar to the default Play Session but using JsObject instead of Map[String, String]. The data is separated into two attributes:
   * `headerData` and `claimData`. There is also a optional signature. Most of the time, you should only care about the `claimData` which
   * stores the claim of the token containing the custom values you eventually put in it. That's why all methods of `JwtSession` (such as
@@ -99,7 +101,7 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
   )
 
   val getConfigMillis = wrap[Long](
-    key => Play.maybeApplication.flatMap(_.configuration.getMilliseconds(key))
+    key => Play.maybeApplication.flatMap(_.configuration.getOptional[FiniteDuration](key).map(_.toMillis))
   )
 
   val REQUEST_HEADER_NAME: String = getConfigString("play.http.session.jwtName").getOrElse("Authorization")
