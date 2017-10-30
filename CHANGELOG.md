@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.14.1 (30/10/2017)
+
+- Fix exception when `play.http.session.maxAge` is `null` in Play 2.6.x (thanks @austinpernell)
+
 ## 0.14.0 (07/07/2017)
 
 - Add `play.http.session.jwtResponseName` to customize response header in Play (thanks @Isammoc)
