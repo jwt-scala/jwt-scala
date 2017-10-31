@@ -9,11 +9,7 @@
     <link rel="stylesheet" media="screen" href="@assets.path("stylesheets/app.css")">
   </head>
   <body ng-controller="HomeCtrl as ctrl">
-    <header>
-
-    </header>
-
-    <section ng-hide="authenticated">
+    <section class="{{authenticated ? 'hidden' : ''}}">
       <form ng-submit="ctrl.login()">
         <input type="text" placeholder="Username" ng-model="ctrl.loginForm.username">
         <input type="password" placeholder="Password ('red' or 'blue' or 'green')" ng-model="ctrl.loginForm.password">
@@ -21,7 +17,7 @@
       </form>
     </section>
 
-    <section ng-show="authenticated">
+    <section class="{{authenticated ? '' : 'hidden'}}">
       <div>Hello there! How are you today <strong>{{user().name}}</strong>?</div>
       <button type="button" class="btn btn-logout" ng-click="logout()">Logout</button>
     </section>

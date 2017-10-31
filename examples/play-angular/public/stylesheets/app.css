@@ -100,3 +100,7 @@ input {
 .fade-if.ng-enter.ng-enter-active {
   opacity:1;
 }
+
+.hidden {
+  display: none;
+}
