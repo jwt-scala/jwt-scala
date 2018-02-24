@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.15.0 (24/02/2018)
+
+- Upgrade to uPickle 0.5.1
+- Upgrade to Circe 0.9.1 (thanks @jan0sch)
+
 ## 0.14.1 (30/10/2017)
 
 - Fix exception when `play.http.session.maxAge` is `null` in Play 2.6.x (thanks @austinpernell)

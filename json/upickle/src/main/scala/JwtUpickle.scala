@@ -17,7 +17,7 @@ object JwtUpickle extends JwtJsonCommon[Js.Value] with JwtUpickleImplicits {
   protected def getAlgorithm(header: Js.Value): Option[JwtAlgorithm] = header match {
     case obj: Js.Obj =>
       val fields = obj.value.toMap
-      fields.get("alg").flatMap(alg => JwtAlgorithm.optionFromString(alg.str))
+      fields.get("alg").flatMap(alg => JwtAlgorithm.optionFromString(alg.str.toString()))
 
     case _ => None
   }

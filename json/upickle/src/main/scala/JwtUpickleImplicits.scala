@@ -10,9 +10,9 @@ trait JwtUpickleImplicits {
     case obj: Js.Obj =>
       val fieldMap = obj.value.toMap
       JwtHeader(
-        algorithm = fieldMap.get("alg").map(_.str).flatMap(alg => JwtAlgorithm.optionFromString(alg)),
-        typ = fieldMap.get("typ").map(_.str),
-        contentType = fieldMap.get("cty").map(_.str)
+        algorithm = fieldMap.get("alg").map(_.str.toString()).flatMap(alg => JwtAlgorithm.optionFromString(alg)),
+        typ = fieldMap.get("typ").map(_.str.toString()),
+        contentType = fieldMap.get("cty").map(_.str.toString())
       )
   }
 
@@ -26,13 +26,13 @@ trait JwtUpickleImplicits {
       val content = fieldMap -- Seq("iss", "sub", "aud", "exp", "nbf", "iat", "jti")
       JwtClaim(
         content = json.write(Js.Obj(content.toSeq: _*)),
-        issuer = fieldMap.get("iss").map(_.str),
-        subject = fieldMap.get("sub").map(_.str),
-        audience = fieldMap.get("aud").map(_.arr.map(_.str).toSet),
+        issuer = fieldMap.get("iss").map(_.str.toString()),
+        subject = fieldMap.get("sub").map(_.str.toString()),
+        audience = fieldMap.get("aud").map(_.arr.map(_.str.toString()).toSet),
         expiration = fieldMap.get("exp").map(_.num.toLong),
         notBefore = fieldMap.get("nbf").map(_.num.toLong),
         issuedAt = fieldMap.get("iat").map(_.num.toLong),
-        jwtId = fieldMap.get("jti").map(_.str)
+        jwtId = fieldMap.get("jti").map(_.str.toString())
       )
   }
 

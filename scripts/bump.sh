@@ -12,5 +12,9 @@ sed -i.tmp "s/\"com.pauldijou\" %% \"jwt-play\" % \"$OLDVERSION\"/\"com.pauldijo
 sed -i.tmp "s/version: $OLDVERSION/version: $VERSION/g" ./docs/src/site/_config.yml
 sed -i.tmp "s/versions: \[/versions: \[$OLDVERSION, /g" ./docs/src/site/_config.yml
 
+rm ./README.md.tmp
+rm ./examples/play-angular-standalone/build.sbt.tmp
+rm ./docs/src/site/_config.yml.tmp
+
 # The end
 exit 0;

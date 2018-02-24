@@ -5,25 +5,25 @@ object Dependencies {
     val play = "2.6.6"
     val json4s = "3.5.3"
     val circe = "0.9.1"
-    val scalatest = "3.2.0-SNAP4"
-    val scalatestPlus = "3.0.0-RC1"
+    val scalatest = "3.0.5"
+    val scalatestPlus = "3.1.2"
     val jmockit = "1.24"
     val apacheCodec = "1.10"
     val bouncyCastle = "1.57"
-    val upickle = "0.4.4"
+    val upickle = "0.5.1"
     val guice = "4.1.0"
   }
 
   object Libs {
-    val play             = "com.typesafe.play" %% "play"      % V.play  % "provided"
-    val playJson         = "com.typesafe.play" %% "play-json" % V.play  % "provided"
+    val play             = "com.typesafe.play" %% "play"      % V.play
+    val playJson         = "com.typesafe.play" %% "play-json" % V.play
     val playTest         = "com.typesafe.play" %% "play-test" % V.play  % "test"
-    val playTestProvided = "com.typesafe.play" %% "play-test" % V.play  % "provided"
+    val playTestProvided = "com.typesafe.play" %% "play-test" % V.play
     val guice            = "com.google.inject" %  "guice"     % V.guice % "test"
 
-    val json4sCore    = "org.json4s" %% "json4s-core"    % V.json4s % "provided"
-    val json4sNative  = "org.json4s" %% "json4s-native"  % V.json4s % "provided"
-    val json4sJackson = "org.json4s" %% "json4s-jackson" % V.json4s % "provided"
+    val json4sCore    = "org.json4s" %% "json4s-core"    % V.json4s
+    val json4sNative  = "org.json4s" %% "json4s-native"  % V.json4s
+    val json4sJackson = "org.json4s" %% "json4s-jackson" % V.json4s
 
     val circeCore     = "io.circe" %% "circe-core"    % V.circe
     val circeGeneric  = "io.circe" %% "circe-generic" % V.circe

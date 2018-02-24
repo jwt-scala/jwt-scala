@@ -4,9 +4,10 @@ import Tests._
 import play.sbt.Play.autoImport._
 import PlayKeys._
 import Dependencies._
+import scala.sys.process._
 
 val previousVersion = "0.14.1"
-val buildVersion = "0.14.2"
+val buildVersion = "0.15.0"
 
 val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "circe", "upickle", "play")
 val crossProjects = projects.map(p => Seq(p + "Legacy", p + "Edge")).flatten
@@ -81,18 +82,15 @@ val publishSettings = Seq(
       Some("releases"  at nexus + "service/local/staging/deploy/maven2")
   },
   pomIncludeRepository := { _ => false },
-  pomExtra := (
-    <scm>
-      <url>git@github.com:pauldijou/jwt-scala.git</url>
-      <connection>scm:git:git@github.com:pauldijou/jwt-scala.git</connection>
-    </scm>
-    <developers>
-      <developer>
-        <id>pdi</id>
-        <name>Paul Dijou</name>
-        <url>http://pauldijou.fr</url>
-      </developer>
-    </developers>)
+  scmInfo := Some(
+    ScmInfo(
+      url("https://github.com/pauldijou/jwt-scala"),
+      "scm:git@github.com:pauldijou/jwt-scala.git"
+    )
+  ),
+  developers := List(
+    Developer(id="pdi", name="Paul Dijou", email="paul.dijou@gmail.com", url=url("http://pauldijou.fr"))
+  )
 )
 
 val noPublishSettings = Seq(
@@ -115,7 +113,8 @@ val docSettings = Seq(
   mappings in makeSite ++= Seq(
     file("README.md") -> "_includes/README.md"
   ),
-  includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md" | "*.scss"
+  includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md" | "*.scss",
+  fork in tut := true,
 )
 
 lazy val jwtScala = project.in(file("."))
@@ -129,9 +128,9 @@ lazy val jwtScala = project.in(file("."))
 lazy val docs = project.in(file("docs"))
   .enablePlugins(PreprocessPlugin)
   .enablePlugins(GhpagesPlugin)
+  .enablePlugins(TutPlugin)
   .settings(name := "jwt-docs")
   .settings(localSettings)
-  .settings(tutSettings)
   .settings(docSettings)
   .settings(
     libraryDependencies ++= Seq(Libs.playJson, Libs.play, Libs.playTestProvided, Libs.json4sNative, Libs.circeCore, Libs.circeGeneric, Libs.circeParse, Libs.upickle)
@@ -208,7 +207,6 @@ lazy val playJsonEdge = project.in(file("json/play-json"))
   )
   .aggregate(jsonCommonEdge)
   .dependsOn(jsonCommonEdge % "compile->compile;test->test")
-
 
 lazy val circeLegacy = project.in(file("json/circe"))
   .settings(releaseSettings)
@@ -312,7 +310,7 @@ lazy val json4sJacksonEdge = project.in(file("json/json4s-jackson"))
   .dependsOn(json4sCommonEdge % "compile->compile;test->test")
 
 def groupPlayTest(tests: Seq[TestDefinition]) = tests.map { t =>
-  new Group(t.name, Seq(t), new SubProcess(new ForkOptions()))
+  new Group(t.name, Seq(t), new SubProcess(ForkOptions()))
 }
 
 lazy val playLegacy = project.in(file("play"))
