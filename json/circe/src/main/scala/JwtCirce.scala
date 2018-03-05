@@ -50,6 +50,7 @@ object JwtCirce extends JwtJsonCommon[Json] {
         algorithm = getAlg(cursor)
       , typ = cursor.get[String]("typ").toOption
       , contentType = cursor.get[String]("cty").toOption
+      , keyId = cursor.get[String]("kid").toOption
     )
   }
 

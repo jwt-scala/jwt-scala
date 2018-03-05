@@ -12,7 +12,8 @@ trait JwtUpickleImplicits {
       JwtHeader(
         algorithm = fieldMap.get("alg").map(_.str.toString()).flatMap(alg => JwtAlgorithm.optionFromString(alg)),
         typ = fieldMap.get("typ").map(_.str.toString()),
-        contentType = fieldMap.get("cty").map(_.str.toString())
+        contentType = fieldMap.get("cty").map(_.str.toString()),
+        keyId = fieldMap.get("kid").map(_.str.toString())
       )
   }
 

@@ -35,7 +35,8 @@ trait JwtJson4sCommon extends JwtJsonCommon[JObject] {
     case value: JObject => JwtHeader.apply(
       algorithm = extractString(value, "alg").flatMap(JwtAlgorithm.optionFromString),
       typ = extractString(value, "typ"),
-      contentType = extractString(value, "cty")
+      contentType = extractString(value, "cty"),
+      keyId = extractString(value, "kid")
     )
     case _ => throw new RuntimeException("Expected a JObject")
   }

@@ -62,7 +62,8 @@ trait JwtJsonImplicits {
           JsSuccess(JwtHeader.apply(
             algorithm = extractString(value, "alg").flatMap(JwtAlgorithm.optionFromString),
             typ = extractString(value, "typ"),
-            contentType = extractString(value, "cty")
+            contentType = extractString(value, "cty"),
+            keyId = extractString(value, "kid")
           ))
         } catch {
           case e : JwtNonStringException => JsError(keyToPath(e.getKey), "error.expected.string")
