@@ -2,7 +2,7 @@
 
 ## 0.16.0 (05/03/2018)
 
-- Adding Key ID property to JwtHeader as `kdi` in JSON payload
+- Adding Key ID property to JwtHeader as `kid` in JSON payload
 
 ## 0.15.0 (24/02/2018)
 
