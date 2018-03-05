@@ -5,13 +5,17 @@
 #### Generation
 
 ```tut
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 import java.security.spec.{ECPrivateKeySpec, ECPublicKeySpec, ECGenParameterSpec, ECParameterSpec, ECPoint}
-import java.security.{SecureRandom, KeyFactory, KeyPairGenerator}
+import java.security.{SecureRandom, KeyFactory, KeyPairGenerator, Security}
 import pdi.jwt.{Jwt, JwtAlgorithm}
 // We specify the curve we want to use
 val ecGenSpec = new ECGenParameterSpec("P-521")
 // We are going to use a ECDSA algorithm
 // and the Bouncy Castle provider
+if (Security.getProvider("BC") == null) {
+  Security.addProvider(new BouncyCastleProvider())
+}
 val generatorEC = KeyPairGenerator.getInstance("ECDSA", "BC")
 generatorEC.initialize(ecGenSpec, new SecureRandom())
 // Generate a pair of keys, one private for encoding
