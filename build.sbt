@@ -5,6 +5,7 @@ import play.sbt.Play.autoImport._
 import PlayKeys._
 import Dependencies._
 import scala.sys.process._
+import com.typesafe.sbt.pgp.PgpKeys._
 
 val previousVersion = "0.15.0"
 val buildVersion = "0.16.0"
@@ -90,7 +91,11 @@ val publishSettings = Seq(
   ),
   developers := List(
     Developer(id="pdi", name="Paul Dijou", email="paul.dijou@gmail.com", url=url("http://pauldijou.fr"))
-  )
+  ),
+  publishConfiguration := publishConfiguration.value.withOverwrite(true),
+  publishSignedConfiguration := publishSignedConfiguration.value.withOverwrite(true),
+  publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true),
+  publishLocalSignedConfiguration := publishLocalSignedConfiguration.value.withOverwrite(true)  
 )
 
 val noPublishSettings = Seq(
