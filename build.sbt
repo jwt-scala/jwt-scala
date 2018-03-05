@@ -6,8 +6,8 @@ import PlayKeys._
 import Dependencies._
 import scala.sys.process._
 
-val previousVersion = "0.14.1"
-val buildVersion = "0.15.0"
+val previousVersion = "0.15.0"
+val buildVersion = "0.16.0"
 
 val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "circe", "upickle", "play")
 val crossProjects = projects.map(p => Seq(p + "Legacy", p + "Edge")).flatten
