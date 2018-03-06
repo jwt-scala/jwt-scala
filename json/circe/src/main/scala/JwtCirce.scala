@@ -11,8 +11,23 @@ import pdi.jwt.exceptions.JwtNonStringException
 /**
   * Implementation of `JwtCore` using `Json` from Circe.
   */
-object JwtCirce extends JwtJsonCommon[Json] {
+trait JwtCirceParser[H, C] extends JwtJsonCommon[Json, H, C] {
   protected def parse(value: String): Json = jawnParse(value).toOption.get
+  protected def stringify(value: Json): String = value.asJson.noSpaces
+}
+
+case object JwtCirce extends JwtCirceParser[JwtHeader, JwtClaim] {
+
+  protected def parseHeader(header: String): JwtHeader = {
+    val cursor = parse(header).hcursor
+    JwtHeader(
+      algorithm = getAlg(cursor)
+      , typ = cursor.get[String]("typ").toOption
+      , contentType = cursor.get[String]("cty").toOption
+      , keyId = cursor.get[String]("kid").toOption
+    )
+  }
+
   protected def parseClaim(claim: String): JwtClaim = {
     val cursor = parse(claim).hcursor
     val contentCursor = List("iss", "sub", "aud", "exp", "nbf", "iat", "jti").foldLeft(cursor) { (cursor, field) =>
@@ -22,7 +37,7 @@ object JwtCirce extends JwtJsonCommon[Json] {
       }
     }
     JwtClaim(
-        content = contentCursor.top.asJson.noSpaces
+      content = contentCursor.top.asJson.noSpaces
       , issuer = cursor.get[String]("iss").toOption
       , subject = cursor.get[String]("sub").toOption
       , audience = cursor.get[Set[String]]("aud").orElse(cursor.get[String]("aud").map(s => Set(s))).toOption
@@ -33,7 +48,7 @@ object JwtCirce extends JwtJsonCommon[Json] {
     )
   }
 
-  protected def stringify(value: Json): String = value.asJson.noSpaces
+  protected def getAlgorithm(header: Json): Option[JwtAlgorithm] = getAlg(header.hcursor)
 
   private def getAlg(cursor: HCursor): Option[JwtAlgorithm] = {
     cursor.get[String]("alg").toOption.flatMap {
@@ -43,17 +58,4 @@ object JwtCirce extends JwtJsonCommon[Json] {
       case _ => throw new JwtNonStringException("alg")
     }
   }
-
-  protected def parseHeader(header: String): JwtHeader = {
-    val cursor = parse(header).hcursor
-    JwtHeader(
-        algorithm = getAlg(cursor)
-      , typ = cursor.get[String]("typ").toOption
-      , contentType = cursor.get[String]("cty").toOption
-      , keyId = cursor.get[String]("kid").toOption
-    )
-  }
-
-  protected def getAlgorithm(header: Json): Option[JwtAlgorithm] = getAlg(header.hcursor)
-
 }

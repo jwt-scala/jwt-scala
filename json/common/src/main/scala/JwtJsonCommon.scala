@@ -7,7 +7,7 @@ import java.security.{Key, PrivateKey, PublicKey}
 import pdi.jwt.algorithms._
 import pdi.jwt.exceptions.{JwtNonEmptyAlgorithmException, JwtEmptyAlgorithmException, JwtValidationException}
 
-trait JwtJsonCommon[J] extends JwtCore[JwtHeader, JwtClaim] {
+trait JwtJsonCommon[J, H, C] extends JwtCore[H, C] {
   protected def parse(value: String): J
   protected def stringify(value: J): String
   protected def getAlgorithm(header: J): Option[JwtAlgorithm]
