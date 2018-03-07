@@ -14,10 +14,19 @@ import pdi.jwt.exceptions.JwtNonStringException
 trait JwtCirceParser[H, C] extends JwtJsonCommon[Json, H, C] {
   protected def parse(value: String): Json = jawnParse(value).toOption.get
   protected def stringify(value: Json): String = value.asJson.noSpaces
+  protected def getAlgorithm(header: Json): Option[JwtAlgorithm] = getAlg(header.hcursor)
+
+  protected def getAlg(cursor: HCursor): Option[JwtAlgorithm] = {
+    cursor.get[String]("alg").toOption.flatMap {
+      case "none" => None
+      case s if s == null => None
+      case s: String => Option(JwtAlgorithm.fromString(s))
+      case _ => throw new JwtNonStringException("alg")
+    }
+  }
 }
 
 case object JwtCirce extends JwtCirceParser[JwtHeader, JwtClaim] {
-
   protected def parseHeader(header: String): JwtHeader = {
     val cursor = parse(header).hcursor
     JwtHeader(
@@ -27,7 +36,6 @@ case object JwtCirce extends JwtCirceParser[JwtHeader, JwtClaim] {
       , keyId = cursor.get[String]("kid").toOption
     )
   }
-
   protected def parseClaim(claim: String): JwtClaim = {
     val cursor = parse(claim).hcursor
     val contentCursor = List("iss", "sub", "aud", "exp", "nbf", "iat", "jti").foldLeft(cursor) { (cursor, field) =>
@@ -46,16 +54,5 @@ case object JwtCirce extends JwtCirceParser[JwtHeader, JwtClaim] {
       , issuedAt = cursor.get[Long]("iat").toOption
       , jwtId = cursor.get[String]("jti").toOption
     )
-  }
-
-  protected def getAlgorithm(header: Json): Option[JwtAlgorithm] = getAlg(header.hcursor)
-
-  private def getAlg(cursor: HCursor): Option[JwtAlgorithm] = {
-    cursor.get[String]("alg").toOption.flatMap {
-      case "none" => None
-      case s if s == null => None
-      case s: String => Option(JwtAlgorithm.fromString(s))
-      case _ => throw new JwtNonStringException("alg")
-    }
   }
 }

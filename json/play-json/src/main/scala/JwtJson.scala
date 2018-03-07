@@ -1,6 +1,5 @@
 package pdi.jwt
 
-import scala.util.Try
 import play.api.libs.json._
 import pdi.jwt.exceptions.JwtNonStringException
 
@@ -20,6 +19,7 @@ trait JwtJsonParser[H, C] extends JwtJsonCommon[JsObject, H, C] with JwtJsonImpl
     case JsNull => None
     case _ => throw new JwtNonStringException("alg")
   }
+
 }
 
 case object JwtJson extends JwtJsonParser[JwtHeader, JwtClaim] {

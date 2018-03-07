@@ -21,6 +21,7 @@ trait JwtJson4sParser[H, C] extends JwtJson4sCommon[H, C] with JwtJson4sImplicit
   protected def stringify(value: JObject): String = compact(render(value))
 
   protected implicit val formats = Serialization.formats(NoTypeHints)
+
 }
 
 case object JwtJson4s extends JwtJson4sParser[JwtHeader, JwtClaim] {
