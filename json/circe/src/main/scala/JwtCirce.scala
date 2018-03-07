@@ -30,7 +30,7 @@ case object JwtCirce extends JwtCirceParser[JwtHeader, JwtClaim] {
   protected def parseHeader(header: String): JwtHeader = {
     val cursor = parse(header).hcursor
     JwtHeader(
-      algorithm = getAlg(cursor)
+        algorithm = getAlg(cursor)
       , typ = cursor.get[String]("typ").toOption
       , contentType = cursor.get[String]("cty").toOption
       , keyId = cursor.get[String]("kid").toOption
@@ -45,7 +45,7 @@ case object JwtCirce extends JwtCirceParser[JwtHeader, JwtClaim] {
       }
     }
     JwtClaim(
-      content = contentCursor.top.asJson.noSpaces
+        content = contentCursor.top.asJson.noSpaces
       , issuer = cursor.get[String]("iss").toOption
       , subject = cursor.get[String]("sub").toOption
       , audience = cursor.get[Set[String]]("aud").orElse(cursor.get[String]("aud").map(s => Set(s))).toOption
