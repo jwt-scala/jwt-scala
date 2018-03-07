@@ -23,7 +23,7 @@ trait JwtUpickleParser[H, C] extends JwtJsonCommon[Js.Value, H, C] with JwtUpick
   }
 }
 
-case object JwtUpickle extends JwtUpickleParser[JwtHeader, JwtClaim] {
+object JwtUpickle extends JwtUpickleParser[JwtHeader, JwtClaim] {
   protected def parseHeader(header: String): JwtHeader = read[JwtHeader](header)
   protected def parseClaim(claim: String): JwtClaim = read[JwtClaim](claim)
 }
