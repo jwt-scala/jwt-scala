@@ -43,14 +43,14 @@ trait JwtJson4sCommon[H, C] extends JwtJsonCommon[JObject, H, C] {
 
   def writeHeader(header: JwtHeader): JValue = parse(header.toJson)
 
-  private def extractString(json: JObject, fieldName: String): Option[String] = (json \ fieldName) match {
+  protected def extractString(json: JObject, fieldName: String): Option[String] = (json \ fieldName) match {
     case JString(value) => Option(value)
     case JNull => None
     case JNothing => None
     case _ => throw new JwtNonStringException(fieldName)
   }
 
-  private def extractStringSetOrString(json: JObject, fieldName: String): Option[Set[String]] = (json \ fieldName) match {
+  protected def extractStringSetOrString(json: JObject, fieldName: String): Option[Set[String]] = (json \ fieldName) match {
     case JString(value) => Option(Set(value))
     case JArray(_) => try {
       Some((json \ fieldName).extract[Set[String]])
@@ -62,14 +62,14 @@ trait JwtJson4sCommon[H, C] extends JwtJsonCommon[JObject, H, C] {
     case _ => throw new JwtNonStringSetOrStringException(fieldName)
   }
 
-  private def extractLong(json: JObject, fieldName: String): Option[Long] = (json \ fieldName) match {
+  protected def extractLong(json: JObject, fieldName: String): Option[Long] = (json \ fieldName) match {
     case JInt(value) => Option(value.toLong)
     case JNull => None
     case JNothing => None
     case _ => throw new JwtNonNumberException(fieldName)
   }
 
-  private def filterClaimFields(json: JObject): JObject = json removeField {
+  protected def filterClaimFields(json: JObject): JObject = json removeField {
     case JField("iss", _) => true
     case JField("sub", _) => true
     case JField("aud", _) => true
