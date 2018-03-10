@@ -7,7 +7,7 @@ import scala.util.{Success, Failure}
 import pdi.jwt.exceptions._
 
 abstract class JwtJsonCommonSpec[J] extends UnitSpec with JsonCommonFixture[J] {
-  def jwtJsonCommon: JwtJsonCommon[J]
+  def jwtJsonCommon: JwtJsonCommon[J, JwtHeader, JwtClaim]
 
   def battleTestEncode(d: JsonDataEntryTrait[J], key: String) = {
     assertResult(d.token, d.algo.fullName + " key") { jwtJsonCommon.encode(d.headerJson, claimJson, key) }

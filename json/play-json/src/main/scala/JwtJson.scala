@@ -1,6 +1,5 @@
 package pdi.jwt
 
-import scala.util.Try
 import play.api.libs.json._
 import pdi.jwt.exceptions.JwtNonStringException
 
@@ -9,7 +8,7 @@ import pdi.jwt.exceptions.JwtNonStringException
   *
   * To see a full list of samples, check the [[http://pauldijou.fr/jwt-scala/samples/jwt-play-json/ online documentation]].
   */
-object JwtJson extends JwtJsonCommon[JsObject] with JwtJsonImplicits {
+trait JwtJsonParser[H, C] extends JwtJsonCommon[JsObject, H, C] with JwtJsonImplicits {
   protected def parse(value: String): JsObject = Json.parse(value).as[JsObject]
 
   protected def stringify(value: JsObject): String = Json.stringify(value)
@@ -21,6 +20,9 @@ object JwtJson extends JwtJsonCommon[JsObject] with JwtJsonImplicits {
     case _ => throw new JwtNonStringException("alg")
   }
 
+}
+
+object JwtJson extends JwtJsonParser[JwtHeader, JwtClaim] {
   protected def parseHeader(header: String): JwtHeader = jwtPlayJsonHeaderReader.reads(Json.parse(header)).get
   protected def parseClaim(claim: String): JwtClaim = jwtPlayJsonClaimReader.reads(Json.parse(claim)).get
 }

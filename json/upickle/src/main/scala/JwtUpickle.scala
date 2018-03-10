@@ -9,7 +9,7 @@ import upickle.default._
   *
   * To see a full list of samples, check the [[http://pauldijou.fr/jwt-scala/samples/jwt-upickle/ online documentation]].
   */
-object JwtUpickle extends JwtJsonCommon[Js.Value] with JwtUpickleImplicits {
+trait JwtUpickleParser[H, C] extends JwtJsonCommon[Js.Value, H, C] with JwtUpickleImplicits {
   protected def parse(value: String): Js.Value = json.read(value)
 
   protected def stringify(value: Js.Value): String = json.write(value)
@@ -21,8 +21,9 @@ object JwtUpickle extends JwtJsonCommon[Js.Value] with JwtUpickleImplicits {
 
     case _ => None
   }
+}
 
+object JwtUpickle extends JwtUpickleParser[JwtHeader, JwtClaim] {
   protected def parseHeader(header: String): JwtHeader = read[JwtHeader](header)
   protected def parseClaim(claim: String): JwtClaim = read[JwtClaim](claim)
-
 }

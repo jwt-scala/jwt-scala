@@ -12,7 +12,7 @@ import org.json4s.native.Serialization.{read, write}
   *
   * To see a full list of samples, check the [[http://pauldijou.fr/jwt-scala/samples/jwt-json4s/ online documentation]].
   */
-object JwtJson4s extends JwtJson4sCommon with JwtJson4sImplicits {
+trait JwtJson4sParser[H, C] extends JwtJson4sCommon[H, C] with JwtJson4sImplicits {
   protected def parse(value: String): JObject = jparse(value) match {
     case res: JObject => res
     case _ => throw new RuntimeException(s"Couldn't parse [$value] to a JObject")
@@ -21,7 +21,9 @@ object JwtJson4s extends JwtJson4sCommon with JwtJson4sImplicits {
   protected def stringify(value: JObject): String = compact(render(value))
 
   protected implicit val formats = Serialization.formats(NoTypeHints)
+}
 
+object JwtJson4s extends JwtJson4sParser[JwtHeader, JwtClaim] {
   protected def parseHeader(header: String): JwtHeader = readHeader(parse(header))
   protected def parseClaim(claim: String): JwtClaim = readClaim(parse(claim))
 }
