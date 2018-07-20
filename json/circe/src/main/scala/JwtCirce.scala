@@ -27,7 +27,7 @@ trait JwtCirceParser[H, C] extends JwtJsonCommon[Json, H, C] {
 }
 
 object JwtCirce extends JwtCirceParser[JwtHeader, JwtClaim] {
-  protected def parseHeader(header: String): JwtHeader = {
+  def parseHeader(header: String): JwtHeader = {
     val cursor = parse(header).hcursor
     JwtHeader(
         algorithm = getAlg(cursor)
