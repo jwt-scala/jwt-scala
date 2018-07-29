@@ -205,7 +205,7 @@ trait JwtCore[H, C] {
   }
 
   /**
-    * @return a tuple of (header64, header, claim64, claim, Option(signature as bytes))
+    * @return a tuple of (header64, header, claim64, claim, signature or empty string if none)
     * @throws JwtLengthException if there is not 2 or 3 parts in the token
     */
   private def splitToken(token: String): (String, String, String, String, String) = {
@@ -675,7 +675,7 @@ trait JwtCore[H, C] {
   /** Valid a token: doesn't return anything but will thrown exceptions if there are any errors.
     *
     * @param token $token
-    * @throws JwtValidationException default validation exeption
+    * @throws JwtValidationException default validation exception
     * @throws JwtLengthException the number of parts separated by dots is wrong
     * @throws JwtNotBeforeException the token isn't valid yet because its `notBefore` attribute is in the future
     * @throws JwtExpirationException the token isn't valid anymore because its `expiration` attribute is in the past
@@ -693,7 +693,7 @@ trait JwtCore[H, C] {
     * @param token $token
     * @param key $key
     * @param algorithms $algos
-    * @throws JwtValidationException default validation exeption
+    * @throws JwtValidationException default validation exception
     * @throws JwtLengthException the number of parts separated by dots is wrong
     * @throws JwtNotBeforeException the token isn't valid yet because its `notBefore` attribute is in the future
     * @throws JwtExpirationException the token isn't valid anymore because its `expiration` attribute is in the past
@@ -711,7 +711,7 @@ trait JwtCore[H, C] {
     * @param token $token
     * @param key $key
     * @param algorithms $algos
-    * @throws JwtValidationException default validation exeption
+    * @throws JwtValidationException default validation exception
     * @throws JwtLengthException the number of parts separated by dots is wrong
     * @throws JwtNotBeforeException the token isn't valid yet because its `notBefore` attribute is in the future
     * @throws JwtExpirationException the token isn't valid anymore because its `expiration` attribute is in the past
@@ -729,7 +729,7 @@ trait JwtCore[H, C] {
     * @param token $token
     * @param key $key
     * @param algorithms $algos
-    * @throws JwtValidationException default validation exeption
+    * @throws JwtValidationException default validation exception
     * @throws JwtLengthException the number of parts separated by dots is wrong
     * @throws JwtNotBeforeException the token isn't valid yet because its `notBefore` attribute is in the future
     * @throws JwtExpirationException the token isn't valid anymore because its `expiration` attribute is in the past
@@ -751,7 +751,7 @@ trait JwtCore[H, C] {
     * @param token $token
     * @param key $key
     * @param algorithms $algos
-    * @throws JwtValidationException default validation exeption
+    * @throws JwtValidationException default validation exception
     * @throws JwtLengthException the number of parts separated by dots is wrong
     * @throws JwtNotBeforeException the token isn't valid yet because its `notBefore` attribute is in the future
     * @throws JwtExpirationException the token isn't valid anymore because its `expiration` attribute is in the past

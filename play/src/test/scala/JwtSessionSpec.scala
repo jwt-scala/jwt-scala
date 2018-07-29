@@ -38,19 +38,6 @@ class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture 
       app.configuration.getString("play.http.secret.key") mustEqual Option(secretKey)
     }
     "handle null value for maxAge" in {
-      try {
-        /*
-           This was the old way of requesting maxAge. It attempted a lookup of Duration,
-           and it defaulted to InfiniteDuration on null (the default Play value) which
-           throws IllegalArgumentException when mapping _.toMillis. This prevented the
-           JwtSession from being able to initialize.
-         */
-        def getConfigMillis = JwtSession.wrap[Long](key => app.configuration.getMilliseconds(key))
-        getConfigMillis("play.http.session.maxAge")
-        fail()
-      } catch {
-        case _: IllegalArgumentException => ()
-      }
       JwtSession.getConfigMillis("play.http.session.maxAge") mustEqual None
     }
   }

@@ -36,6 +36,7 @@ object JwtCirce extends JwtCirceParser[JwtHeader, JwtClaim] {
       , keyId = cursor.get[String]("kid").toOption
     )
   }
+
   protected def parseClaim(claim: String): JwtClaim = {
     val cursor = parse(claim).hcursor
     val contentCursor = List("iss", "sub", "aud", "exp", "nbf", "iat", "jti").foldLeft(cursor) { (cursor, field) =>

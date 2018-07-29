@@ -2,21 +2,22 @@ import sbt._
 
 object Dependencies {
   object V {
-    val play = "2.6.6"
-    val json4s = "3.5.3"
-    val circe = "0.9.1"
+    val play = "2.6.16"
+    val playJson = "2.6.9"
+    val json4s = "3.6.0"
+    val circe = "0.9.3"
     val scalatest = "3.0.5"
     val scalatestPlus = "3.1.2"
     val jmockit = "1.24"
     val apacheCodec = "1.10"
     val bouncyCastle = "1.57"
     val upickle = "0.5.1"
-    val guice = "4.1.0"
+    val guice = "4.2.0"
   }
 
   object Libs {
     val play             = "com.typesafe.play" %% "play"      % V.play
-    val playJson         = "com.typesafe.play" %% "play-json" % V.play
+    val playJson         = "com.typesafe.play" %% "play-json" % V.playJson
     val playTest         = "com.typesafe.play" %% "play-test" % V.play  % "test"
     val playTestProvided = "com.typesafe.play" %% "play-test" % V.play
     val guice            = "com.google.inject" %  "guice"     % V.guice % "test"

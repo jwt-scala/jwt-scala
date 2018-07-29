@@ -7,10 +7,10 @@ Given that there may be many of these public/private claims, rather than parsing
 Here is an example where reserved headers, along with a private "user" claim, is used:
 
 ```tut
+import pdi.jwt.{Jwt, JwtHeader, JwtClaim, JwtUtils, JwtJson4sParser}
 // define your network-specific claims, and compose them with the usual reservedClaims
 case class JwtPrivateClaim(user: Option[String] = None, reservedClaims: JwtClaim = JwtClaim()) {
-
-// merge your json definition along with the reserved claims too
+  // merge your json definition along with the reserved claims too
   def toJson: String = JwtUtils.mergeJson(JwtUtils.hashToJson(Seq(
       "user" -> user,
     ).collect {
@@ -22,30 +22,26 @@ case class JwtPrivateClaim(user: Option[String] = None, reservedClaims: JwtClaim
 // notice that the default `JwtHeader` class was used since we're only interested in overriding with a custom private claims type in this example
 object JwtJson4sPrivate extends JwtJson4sParser[JwtHeader, JwtPrivateClaim] {
   override protected def parseClaim(claim: String): JwtPrivateClaim = {
-    val claimJson = parse(claim)
-    val jwtReservedClaim: JwtClaim = readClaim(claimJson)
-    val content = parse(jwtReservedClaim.content)
-    JwtPrivateClaim(extractString(content, "user"), jwtReservedClaim.copy(content = "{}"))
+    val claimJson = super.parse(claim)
+    val jwtReservedClaim: JwtClaim = super.readClaim(claimJson)
+    val content = super.parse(jwtReservedClaim.content)
+    JwtPrivateClaim(super.extractString(content, "user"), jwtReservedClaim.copy(content = "{}"))
   }
 
-// here is the only boilerplate (but if you chose to also specify a custom header type then you would make use of this)
-  override protected def parseHeader(header: String): JwtHeader = readHeader(parse(header))
+  // here is the only boilerplate (but if you chose to also specify a custom header type then you would make use of this)
+  override protected def parseHeader(header: String): JwtHeader = super.readHeader(parse(header))
 
-// marginal boilerplate to ensure consistency with isValid checks now that your nesting reserved claims into your custom private claims
+  // marginal boilerplate to ensure consistency with isValid checks now that your nesting reserved claims into your custom private claims
   override protected def extractExpiration(claim: JwtPrivateClaim): Option[Long] = claim.reservedClaims.expiration
   override protected def extractNotBefore(claim: JwtPrivateClaim): Option[Long] = claim.reservedClaims.notBefore
-}
-
-// and here is how you marshal your claims (if needed)
-trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
-  implicit val jwtReservedClaimFormat = jsonFormat8(JwtClaim)
-  implicit val jwtPrivateClaimFormat = jsonFormat2(JwtPrivateClaim)
 }
 ```
 
 You can then use the same decodeAll method as you would before, now with your fully objectified claims:
 
 ```tut
+import scala.util.Try
 // this example chose to use JwtJson4s, but any Json implementation would work the same
+val token: String = Jwt.encode("""{"user":"someone", "iss": "me"}""");
 val decoded: Try[(JwtHeader, JwtPrivateClaim, String)] = JwtJson4sPrivate.decodeAll(token)
 ```

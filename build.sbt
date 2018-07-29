@@ -51,21 +51,24 @@ cleanScript := {
   "./scripts/clean.sh" !
 }
 
+def jmockitPath(f: Seq[File]) = f.filter(_.name.endsWith("jmockit-1.24.jar")).head
+
 val baseSettings = Seq(
   organization := "com.pauldijou",
   version := buildVersion,
-  scalaVersion in ThisBuild := "2.12.4",
-  crossScalaVersions := Seq("2.12.4", "2.11.11"),
+  scalaVersion in ThisBuild := "2.12.6",
+  crossScalaVersions := Seq("2.12.6", "2.11.12"),
   crossVersion := CrossVersion.binary,
   autoAPIMappings := true,
   resolvers ++= Seq(
     "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"
   ),
   libraryDependencies ++= Seq(Libs.scalatest, Libs.jmockit),
+  Test / aggregate := false,
+  Test / fork := true,
+  Test / parallelExecution := false,
   scalacOptions in (Compile, doc) ++= Seq("-unchecked", "-deprecation"),
-  aggregate in test := false,
-  fork in test := true,
-  parallelExecution in test := false
+  javaOptions in Test += s"-javaagent:${jmockitPath((dependencyClasspath in Test).value.files)}"
 )
 
 val publishSettings = Seq(
@@ -95,7 +98,7 @@ val publishSettings = Seq(
   publishConfiguration := publishConfiguration.value.withOverwrite(true),
   publishSignedConfiguration := publishSignedConfiguration.value.withOverwrite(true),
   publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true),
-  publishLocalSignedConfiguration := publishLocalSignedConfiguration.value.withOverwrite(true)  
+  publishLocalSignedConfiguration := publishLocalSignedConfiguration.value.withOverwrite(true)
 )
 
 val noPublishSettings = Seq(
@@ -314,8 +317,9 @@ lazy val json4sJacksonEdge = project.in(file("json/json4s-jackson"))
   .aggregate(json4sCommonEdge)
   .dependsOn(json4sCommonEdge % "compile->compile;test->test")
 
-def groupPlayTest(tests: Seq[TestDefinition]) = tests.map { t =>
-  new Group(t.name, Seq(t), new SubProcess(ForkOptions()))
+def groupPlayTest(tests: Seq[TestDefinition], files: Seq[File]) = tests.map { t =>
+  val options = ForkOptions().withRunJVMOptions(Vector(s"-javaagent:${jmockitPath(files)}"))
+  new Group(t.name, Seq(t), new SubProcess(options))
 }
 
 lazy val playLegacy = project.in(file("play"))
@@ -324,7 +328,7 @@ lazy val playLegacy = project.in(file("play"))
     name := "jwt-play",
     target := target(_ / "legacy").value,
     libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus, Libs.guice),
-    testGrouping in Test := (definedTests in Test map groupPlayTest).value
+    testGrouping in Test := groupPlayTest((definedTests in Test).value, (dependencyClasspath in Test).value.files)
   )
   .aggregate(playJsonLegacy)
   .dependsOn(playJsonLegacy % "compile->compile;test->test")
@@ -335,7 +339,7 @@ lazy val playEdge = project.in(file("play"))
     name := "jwt-play",
     target := target(_ / "edge").value,
     libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus, Libs.guice),
-    testGrouping in Test := (definedTests in Test map groupPlayTest).value
+    testGrouping in Test := groupPlayTest((definedTests in Test).value, (dependencyClasspath in Test).value.files)
   )
   .aggregate(playJsonEdge)
   .dependsOn(playJsonEdge % "compile->compile;test->test")
