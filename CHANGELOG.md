@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.18.0 (09/10/2018)
+
+- Add support to `aud` being a simple string on uPickle (thans @deterdw)
+- Make all `parseHeader` and `parseClaim` methods public.
+
+## 0.17.0 (29/07/2018)
+
+- After consideration, release #84 , which mostly allow users to write custom parsers by extending jwt-scala ones. Doc page can be found here.
+
 ## 0.16.0 (05/03/2018)
 
 - Adding Key ID property to JwtHeader as `kid` in JSON payload
