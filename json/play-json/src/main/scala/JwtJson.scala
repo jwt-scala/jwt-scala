@@ -23,6 +23,6 @@ trait JwtJsonParser[H, C] extends JwtJsonCommon[JsObject, H, C] with JwtJsonImpl
 }
 
 object JwtJson extends JwtJsonParser[JwtHeader, JwtClaim] {
-  protected def parseHeader(header: String): JwtHeader = jwtPlayJsonHeaderReader.reads(Json.parse(header)).get
-  protected def parseClaim(claim: String): JwtClaim = jwtPlayJsonClaimReader.reads(Json.parse(claim)).get
+  def parseHeader(header: String): JwtHeader = jwtPlayJsonHeaderReader.reads(Json.parse(header)).get
+  def parseClaim(claim: String): JwtClaim = jwtPlayJsonClaimReader.reads(Json.parse(claim)).get
 }

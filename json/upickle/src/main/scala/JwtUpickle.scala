@@ -24,6 +24,6 @@ trait JwtUpickleParser[H, C] extends JwtJsonCommon[Js.Value, H, C] with JwtUpick
 }
 
 object JwtUpickle extends JwtUpickleParser[JwtHeader, JwtClaim] {
-  protected def parseHeader(header: String): JwtHeader = read[JwtHeader](header)
-  protected def parseClaim(claim: String): JwtClaim = read[JwtClaim](claim)
+  def parseHeader(header: String): JwtHeader = read[JwtHeader](header)
+  def parseClaim(claim: String): JwtClaim = read[JwtClaim](claim)
 }

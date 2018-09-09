@@ -24,6 +24,6 @@ trait JwtJson4sParser[H, C] extends JwtJson4sCommon[H, C] with JwtJson4sImplicit
 }
 
 object JwtJson4s extends JwtJson4sParser[JwtHeader, JwtClaim] {
-  protected def parseHeader(header: String): JwtHeader = readHeader(parse(header))
-  protected def parseClaim(claim: String): JwtClaim = readClaim(parse(claim))
+  def parseHeader(header: String): JwtHeader = readHeader(parse(header))
+  def parseClaim(claim: String): JwtClaim = readClaim(parse(claim))
 }
