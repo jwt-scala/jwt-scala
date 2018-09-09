@@ -29,7 +29,10 @@ trait JwtUpickleImplicits {
         content = json.write(Js.Obj(content.toSeq: _*)),
         issuer = fieldMap.get("iss").map(_.str.toString()),
         subject = fieldMap.get("sub").map(_.str.toString()),
-        audience = fieldMap.get("aud").map(_.arr.map(_.str.toString()).toSet),
+        audience = fieldMap.get("aud").map{
+          case Js.Arr(arr@_*) => arr.map(_.str.toString()).toSet
+          case Js.Str(s) => Set(s.toString)
+        },
         expiration = fieldMap.get("exp").map(_.num.toLong),
         notBefore = fieldMap.get("nbf").map(_.num.toLong),
         issuedAt = fieldMap.get("iat").map(_.num.toLong),
