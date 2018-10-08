@@ -5,7 +5,7 @@ object Dependencies {
     val play = "2.6.16"
     val playJson = "2.6.9"
     val json4s = "3.6.0"
-    val circe = "0.9.3"
+    val circe = "0.10.0"
     val scalatest = "3.0.5"
     val scalatestPlus = "3.1.2"
     val jmockit = "1.24"
