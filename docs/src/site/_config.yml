@@ -21,6 +21,8 @@ projects:
     description: developing a Play Framework app.
   - name: jwt-json4s
     description: using Json4s lib (either Native or Jackson implementation).
+  - name: jwt-spray-json
+    description: using spray-json lib.
   - name: jwt-circe
     description: using Circe lib.
   - name: jwt-upickle
