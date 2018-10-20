@@ -52,9 +52,8 @@ object JwtSprayJson extends JwtSprayJsonParser[JwtHeader, JwtClaim] {
     )
   }
 
-  private[this] def safeRead[A: JsonReader](js: JsValue) = safeReader[A].read(js).toOption
+  private[this] def safeRead[A: JsonReader](js: JsValue) = safeReader[A].read(js).fold(e => Option.empty, a => Option(a))
 
   private[this] def safeGetField[A: JsonReader](js: JsObject, name: String) =
     js.fields.get(name).flatMap(safeRead[A])
 }
-
