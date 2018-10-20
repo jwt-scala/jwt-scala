@@ -1,8 +1,17 @@
 # Changelog
 
+## 0.19.0 (20/10/2018)
+
+**Breaking change**
+
+This is actually a simple one but still... fixed a typo at `asymmetric` missing one `m`, just need to rename a few types to fix your code (thanks @DrPhil).
+
+- Add support to `spray-json` (thanks @Slakah)
+- Bump some versions (thanks @vhiairrassary)
+
 ## 0.18.0 (09/10/2018)
 
-- Add support to `aud` being a simple string on uPickle (thans @deterdw)
+- Add support to `aud` being a simple string on uPickle (thanks @deterdw)
 - Make all `parseHeader` and `parseClaim` methods public.
 
 ## 0.17.0 (29/07/2018)
