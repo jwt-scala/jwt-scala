@@ -15,7 +15,7 @@ val crossProjects = projects.map(p => Seq(p + "Legacy", p + "Edge")).flatten
 
 addCommandAlias("testAll", crossProjects.map(p => p + "/test").mkString(";", ";", ""))
 
-addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;json4sNativeEdge/doc;circeEdge/doc;upickleEdge/doc;playEdge/doc;scaladocScript;cleanScript")
+addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;json4sNativeEdge/doc;sprayJsonEdge/doc;circeEdge/doc;upickleEdge/doc;playEdge/doc;scaladocScript;cleanScript")
 
 addCommandAlias("publish-doc", ";docs/makeSite;docs/tut;docs/ghpagesPushSite")
 
