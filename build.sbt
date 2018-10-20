@@ -23,7 +23,7 @@ addCommandAlias("publishCore", ";coreCommonEdge/publishSigned;coreCommonLegacy/p
 addCommandAlias("publishPlayJson", ";playJsonEdge/publishSigned;playJsonLegacy/publishSigned");
 addCommandAlias("publishJson4Native", ";json4sNativeEdge/publishSigned;json4sNativeLegacy/publishSigned");
 addCommandAlias("publishJson4Jackson", ";json4sJacksonEdge/publishSigned;json4sJacksonLegacy/publishSigned");
-addCommandAlias("publishSprayJson", ";sprayJsonEdge/publishSigned;sprayJsonEdgeLegacy/publishSigned");
+addCommandAlias("publishSprayJson", ";sprayJsonEdge/publishSigned;sprayJsonLegacy/publishSigned");
 addCommandAlias("publishCirce", ";circeEdge/publishSigned;circeLegacy/publishSigned");
 addCommandAlias("publishUpickle", ";upickleEdge/publishSigned;upickleLegacy/publishSigned")
 addCommandAlias("publishPlay", ";playEdge/publishSigned;playLegacy/publishSigned");
