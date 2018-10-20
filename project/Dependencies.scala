@@ -12,6 +12,7 @@ object Dependencies {
     val apacheCodec = "1.10"
     val bouncyCastle = "1.57"
     val upickle = "0.5.1"
+    val sprayJson = "1.3.4"
     val guice = "4.2.0"
   }
 
@@ -31,6 +32,8 @@ object Dependencies {
     val circeParse    = "io.circe" %% "circe-parser"  % V.circe
 
     val upickle = "com.lihaoyi" %% "upickle" % V.upickle
+
+    val sprayJson = "io.spray" %%  "spray-json" % V.sprayJson
 
     val apacheCodec = "commons-codec" % "commons-codec" % V.apacheCodec
     val bouncyCastle = "org.bouncycastle" % "bcpkix-jdk15on" % V.bouncyCastle

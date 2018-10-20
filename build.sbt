@@ -10,7 +10,7 @@ import com.typesafe.sbt.pgp.PgpKeys._
 val previousVersion = "0.17.0"
 val buildVersion = "0.18.0"
 
-val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "circe", "upickle", "play")
+val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "sprayJson", "circe", "upickle", "play")
 val crossProjects = projects.map(p => Seq(p + "Legacy", p + "Edge")).flatten
 
 addCommandAlias("testAll", crossProjects.map(p => p + "/test").mkString(";", ";", ""))
@@ -23,11 +23,12 @@ addCommandAlias("publishCore", ";coreCommonEdge/publishSigned;coreCommonLegacy/p
 addCommandAlias("publishPlayJson", ";playJsonEdge/publishSigned;playJsonLegacy/publishSigned");
 addCommandAlias("publishJson4Native", ";json4sNativeEdge/publishSigned;json4sNativeLegacy/publishSigned");
 addCommandAlias("publishJson4Jackson", ";json4sJacksonEdge/publishSigned;json4sJacksonLegacy/publishSigned");
+addCommandAlias("publishSprayJson", ";sprayJsonEdge/publishSigned;sprayJsonEdgeLegacy/publishSigned");
 addCommandAlias("publishCirce", ";circeEdge/publishSigned;circeLegacy/publishSigned");
 addCommandAlias("publishUpickle", ";upickleEdge/publishSigned;upickleLegacy/publishSigned")
 addCommandAlias("publishPlay", ";playEdge/publishSigned;playLegacy/publishSigned");
 
-addCommandAlias("publishAll", ";+publishPlayJson;+publishJson4Native;+publishJson4Jackson;+publishCirce;+publishUpickle;+publishPlay")
+addCommandAlias("publishAll", ";+publishPlayJson;+publishJson4Native;+publishJson4Jackson;+publishSprayJson;+publishCirce;+publishUpickle;+publishPlay")
 
 addCommandAlias("releaseAll", ";bumpScript;scaladoc;publish-doc;publishAll;sonatypeRelease;pushScript")
 
@@ -130,8 +131,8 @@ lazy val jwtScala = project.in(file("."))
   .settings(
     name := "jwt-scala"
   )
-  .aggregate(json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, circeLegacy, circeEdge, upickleLegacy, upickleEdge, playLegacy, playEdge)
-  .dependsOn(json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, circeLegacy, circeEdge, upickleLegacy, upickleEdge, playLegacy, playEdge)
+  .aggregate(json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, sprayJsonLegacy, sprayJsonEdge, circeLegacy, circeEdge, upickleLegacy, upickleEdge, playLegacy, playEdge)
+  .dependsOn(json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, sprayJsonLegacy, sprayJsonEdge, circeLegacy, circeEdge, upickleLegacy, upickleEdge, playLegacy, playEdge)
 
 lazy val docs = project.in(file("docs"))
   .enablePlugins(PreprocessPlugin)
@@ -141,9 +142,9 @@ lazy val docs = project.in(file("docs"))
   .settings(localSettings)
   .settings(docSettings)
   .settings(
-    libraryDependencies ++= Seq(Libs.playJson, Libs.play, Libs.playTestProvided, Libs.json4sNative, Libs.circeCore, Libs.circeGeneric, Libs.circeParse, Libs.upickle)
+    libraryDependencies ++= Seq(Libs.playJson, Libs.play, Libs.playTestProvided, Libs.json4sNative, Libs.sprayJson, Libs.circeCore, Libs.circeGeneric, Libs.circeParse, Libs.upickle)
   )
-  .dependsOn(playEdge, json4sNativeEdge, circeEdge, upickleEdge)
+  .dependsOn(playEdge, json4sNativeEdge, sprayJsonEdge, circeEdge, upickleEdge)
 
 lazy val coreLegacy = project.in(file("core/legacy"))
   .settings(releaseSettings)
@@ -316,6 +317,27 @@ lazy val json4sJacksonEdge = project.in(file("json/json4s-jackson"))
   )
   .aggregate(json4sCommonEdge)
   .dependsOn(json4sCommonEdge % "compile->compile;test->test")
+
+
+lazy val sprayJsonLegacy = project.in(file("json/spray-json"))
+  .settings(releaseSettings)
+  .settings(
+    name := "jwt-spray-json-legacy",
+    target := target(_ / "legacy").value,
+    libraryDependencies ++= Seq(Libs.sprayJson)
+  )
+  .aggregate(jsonCommonLegacy)
+  .dependsOn(jsonCommonLegacy % "compile->compile;test->test")
+
+lazy val sprayJsonEdge = project.in(file("json/spray-json"))
+  .settings(releaseSettings)
+  .settings(
+    name := "jwt-spray-json",
+    target := target(_ / "edge").value,
+    libraryDependencies ++= Seq(Libs.sprayJson)
+  )
+  .aggregate(jsonCommonEdge)
+  .dependsOn(jsonCommonEdge % "compile->compile;test->test")
 
 def groupPlayTest(tests: Seq[TestDefinition], files: Seq[File]) = tests.map { t =>
   val options = ForkOptions().withRunJVMOptions(Vector(s"-javaagent:${jmockitPath(files)}"))
