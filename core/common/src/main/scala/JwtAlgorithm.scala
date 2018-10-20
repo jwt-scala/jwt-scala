@@ -8,11 +8,11 @@ sealed trait JwtAlgorithm {
 }
 
 package algorithms {
-  sealed trait JwtAsymetricAlgorithm extends JwtAlgorithm {}
+  sealed trait JwtAsymmetricAlgorithm extends JwtAlgorithm {}
 
   sealed trait JwtHmacAlgorithm extends JwtAlgorithm {}
-  sealed trait JwtRSAAlgorithm extends JwtAsymetricAlgorithm {}
-  sealed trait JwtECDSAAlgorithm extends JwtAsymetricAlgorithm {}
+  sealed trait JwtRSAAlgorithm extends JwtAsymmetricAlgorithm {}
+  sealed trait JwtECDSAAlgorithm extends JwtAsymmetricAlgorithm {}
 }
 
 object JwtAlgorithm {
@@ -54,7 +54,7 @@ object JwtAlgorithm {
 
   def allHmac(): Seq[algorithms.JwtHmacAlgorithm] = Seq(HMD5, HS224, HS256, HS384, HS512)
 
-  def allAsymetric(): Seq[algorithms.JwtAsymetricAlgorithm] = Seq(RS256, RS384, RS512, ES256, ES384, ES512)
+  def allAsymmetric(): Seq[algorithms.JwtAsymmetricAlgorithm] = Seq(RS256, RS384, RS512, ES256, ES384, ES512)
 
   def allRSA(): Seq[algorithms.JwtRSAAlgorithm] = Seq(RS256, RS384, RS512)
 

@@ -34,7 +34,7 @@ class JwtSpec extends UnitSpec with Fixture {
       tearDown(mock)
     }
 
-    it("should be symetric") {
+    it("should be symmetric") {
       val mock = mockValidTime
       data foreach { d =>
         assertResult((d.header, claim, d.signature), d.algo.fullName) {

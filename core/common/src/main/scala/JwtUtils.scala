@@ -129,7 +129,7 @@ object JwtUtils {
   /**
     * Generate the signature for a given data using the key and RSA or ECDSA algorithm provided.
     */
-  def sign(data: Array[Byte], key: PrivateKey, algorithm: JwtAsymetricAlgorithm): Array[Byte] = {
+  def sign(data: Array[Byte], key: PrivateKey, algorithm: JwtAsymmetricAlgorithm): Array[Byte] = {
     val signer = Signature.getInstance(algorithm.fullName, PROVIDER)
     signer.initSign(key)
     signer.update(data)
@@ -139,7 +139,7 @@ object JwtUtils {
     }
   }
 
-  def sign(data: String, key: PrivateKey, algorithm: JwtAsymetricAlgorithm): Array[Byte] =
+  def sign(data: String, key: PrivateKey, algorithm: JwtAsymmetricAlgorithm): Array[Byte] =
     sign(bytify(data), key, algorithm)
 
   /**
@@ -168,7 +168,7 @@ object JwtUtils {
   /**
     * Check if a signature is valid for a given data using the key and the RSA or ECDSA algorithm provided.
     */
-  def verify(data: Array[Byte], signature: Array[Byte], key: PublicKey, algorithm: JwtAsymetricAlgorithm): Boolean = {
+  def verify(data: Array[Byte], signature: Array[Byte], key: PublicKey, algorithm: JwtAsymmetricAlgorithm): Boolean = {
     val signer = Signature.getInstance(algorithm.fullName, PROVIDER)
     signer.initVerify(key)
     signer.update(data)
