@@ -11,7 +11,7 @@ object Dependencies {
     val jmockit = "1.24"
     val apacheCodec = "1.10"
     val bouncyCastle = "1.57"
-    val upickle = "0.5.1"
+    val upickle = "0.6.6"
     val sprayJson = "1.3.4"
     val guice = "4.2.0"
   }
