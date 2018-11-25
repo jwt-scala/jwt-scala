@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.0 (25/11/2018)
+
+- Bump bouncyCastle version to fix [CVE-2018-1000613](cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-1000613) (thanks @djamelz)
+- Also 1.0.0 for no reason except no feature was needed over the last months.
+
 ## 0.19.0 (20/10/2018)
 
 **Breaking change**
