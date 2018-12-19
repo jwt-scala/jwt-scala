@@ -16,7 +16,7 @@ abstract class JwtJsonCommonSpec[J] extends UnitSpec with JsonCommonFixture[J] {
   }
 
   describe("JwtJson") {
-    it("should encode with no algoritm") {
+    it("should encode with no algorithm") {
       assertResult(tokenEmpty, "Unsigned key") { jwtJsonCommon.encode(headerEmptyJson, claimJson) }
     }
 

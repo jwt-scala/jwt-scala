@@ -1,7 +1,5 @@
 package pdi.jwt
 
-import upickle.Js
-import upickle.json
 import upickle.default._
 
 /**
@@ -9,13 +7,13 @@ import upickle.default._
   *
   * To see a full list of samples, check the [[http://pauldijou.fr/jwt-scala/samples/jwt-upickle/ online documentation]].
   */
-trait JwtUpickleParser[H, C] extends JwtJsonCommon[Js.Value, H, C] with JwtUpickleImplicits {
-  protected def parse(value: String): Js.Value = json.read(value)
+trait JwtUpickleParser[H, C] extends JwtJsonCommon[ujson.Value, H, C] with JwtUpickleImplicits {
+  protected def parse(value: String): ujson.Value = ujson.read(value)
 
-  protected def stringify(value: Js.Value): String = json.write(value)
+  protected def stringify(value: ujson.Value): String = ujson.write(value)
 
-  protected def getAlgorithm(header: Js.Value): Option[JwtAlgorithm] = header match {
-    case obj: Js.Obj =>
+  protected def getAlgorithm(header: ujson.Value): Option[JwtAlgorithm] = header match {
+    case obj: ujson.Obj =>
       val fields = obj.value.toMap
       fields.get("alg").flatMap(alg => JwtAlgorithm.optionFromString(alg.str.toString()))
 
