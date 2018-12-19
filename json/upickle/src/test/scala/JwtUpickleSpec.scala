@@ -1,8 +1,5 @@
 package pdi.jwt
 
-import upickle.Js
-import upickle.default._
-
-class JwtUpickleSpec extends JwtJsonCommonSpec[Js.Value] with JwtUpickleFixture {
+class JwtUpickleSpec extends JwtJsonCommonSpec[ujson.Value] with JwtUpickleFixture {
   val jwtJsonCommon = JwtUpickle
 }

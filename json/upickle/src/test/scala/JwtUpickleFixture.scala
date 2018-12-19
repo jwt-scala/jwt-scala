@@ -1,9 +1,5 @@
 package pdi.jwt
 
-import upickle.Js
-import upickle.json
-import upickle.default._
-
 case class JsonDataEntry(
   algo: JwtAlgorithm,
   header: String,
@@ -13,14 +9,14 @@ case class JsonDataEntry(
   token: String,
   tokenUnsigned: String,
   tokenEmpty: String,
-  headerJson: Js.Value) extends JsonDataEntryTrait[Js.Value]
+  headerJson: ujson.Value) extends JsonDataEntryTrait[ujson.Value]
 
 
-trait JwtUpickleFixture extends JsonCommonFixture[Js.Value] {
+trait JwtUpickleFixture extends JsonCommonFixture[ujson.Value] {
 
-  val claimJson: Js.Value = json.read(claim)
+  val claimJson: ujson.Value = ujson.read(claim)
 
-  val headerEmptyJson: Js.Value = json.read(headerEmpty)
+  val headerEmptyJson: ujson.Value = ujson.read(headerEmpty)
 
   def mapData(data: DataEntryBase): JsonDataEntry = JsonDataEntry(
     algo = data.algo,
@@ -31,7 +27,7 @@ trait JwtUpickleFixture extends JsonCommonFixture[Js.Value] {
     token = data.token,
     tokenUnsigned = data.tokenUnsigned,
     tokenEmpty = data.tokenEmpty,
-    headerJson = json.read(data.header)
+    headerJson = ujson.read(data.header)
   )
 
 }

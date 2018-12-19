@@ -1,17 +1,15 @@
 package pdi.jwt
 
-import upickle.Js
-import upickle.json
+import pdi.jwt.exceptions.JwtNonStringSetOrStringException
 import upickle.default._
-import pdi.jwt.exceptions.{JwtNonStringSetOrStringException}
 
 trait JwtUpickleImplicits {
   implicit val jwtUpickleHeaderReadWrite: ReadWriter[JwtHeader] =
-    readwriter[Js.Value].bimap[JwtHeader](
-      header => json.read(header.toJson),
+    readwriter[ujson.Value].bimap[JwtHeader](
+      header => ujson.read(header.toJson),
       json =>
         json match {
-          case obj: Js.Obj =>
+          case obj: ujson.Obj =>
             val fieldMap = obj.value.toMap
             JwtHeader(
               algorithm = fieldMap.get("alg").map(_.str.toString()).flatMap(alg => JwtAlgorithm.optionFromString(alg)),
@@ -19,16 +17,16 @@ trait JwtUpickleImplicits {
               contentType = fieldMap.get("cty").map(_.str.toString()),
               keyId = fieldMap.get("kid").map(_.str.toString())
             )
-          case _ => throw new RuntimeException("Expected a Js.Obj")
+          case _ => throw new RuntimeException("Expected a ujson.Obj")
         }
     )
 
   implicit val jwtUpickleClaimReadWrite: ReadWriter[JwtClaim] =
-    readwriter[Js.Value].bimap[JwtClaim](
-      claim => json.read(claim.toJson),
+    readwriter[ujson.Value].bimap[JwtClaim](
+      claim => ujson.read(claim.toJson),
       json =>
         json match {
-          case obj: Js.Obj =>
+          case obj: ujson.Obj =>
             val fieldMap = obj.value.toMap
             val content = fieldMap -- Seq("iss", "sub", "aud", "exp", "nbf", "iat", "jti")
             JwtClaim(
@@ -36,8 +34,8 @@ trait JwtUpickleImplicits {
               issuer = fieldMap.get("iss").map(_.str.toString()),
               subject = fieldMap.get("sub").map(_.str.toString()),
               audience = fieldMap.get("aud").map{
-                case Js.Arr(arr) => arr.map(_.str.toString()).toSet
-                case Js.Str(s) => Set(s.toString)
+                case ujson.Arr(arr) => arr.map(_.str.toString()).toSet
+                case ujson.Str(s) => Set(s.toString)
                 case _ => throw new JwtNonStringSetOrStringException("aud")
               },
               expiration = fieldMap.get("exp").map(_.num.toLong),
@@ -45,7 +43,7 @@ trait JwtUpickleImplicits {
               issuedAt = fieldMap.get("iat").map(_.num.toLong),
               jwtId = fieldMap.get("jti").map(_.str.toString())
             )
-          case _ => throw new RuntimeException("Expected a Js.Obj")
+          case _ => throw new RuntimeException("Expected a ujson.Obj")
         }
     )
 }
