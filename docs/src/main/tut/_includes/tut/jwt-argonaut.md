@@ -4,8 +4,11 @@
 
 ```tut
 import java.time.Instant
+import scala.util.Try
 
 import pdi.jwt.{JwtAlgorithm, JwtArgonaut, JwtClaim}
+
+import argonaut.Json
 
 val claim = JwtClaim(
   expiration = Some(Instant.now().plusSeconds(157784760).getEpochSecond),

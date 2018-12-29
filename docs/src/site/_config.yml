@@ -11,7 +11,7 @@ kramdown:
   syntax_highlighter: rouge
   hard_wrap: false
 
-versions: [0.19.0, 0.18.0, 0.17.0, 0.16.0, 0.15.0]
+versions: [0.19.0, 0.19.0, 0.19.0, 0.19.0, 0.19.0, 0.19.0, 0.19.0, 0.19.0, 0.19.0, 0.18.0, 0.17.0, 0.16.0, 0.15.0]
 projects:
   - name: jwt-core
     description: pure Scala project.
@@ -27,6 +27,8 @@ projects:
     description: using Circe lib.
   - name: jwt-upickle
     description: using uPickle lib.
+  - name: jwt-argonaut
+    description: using Argonaut lib.
 
 api:
   description: "There is no global API for the whole project but rather one API for each sub-project. Just pick the one you are using and enjoy awesome Scala documentation."
