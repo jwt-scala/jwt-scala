@@ -13,6 +13,7 @@ object Dependencies {
     val bouncyCastle = "1.60"
     val upickle = "0.6.6"
     val sprayJson = "1.3.4"
+    val argonaut = "6.2.2"
     val guice = "4.2.0"
   }
 
@@ -35,6 +36,8 @@ object Dependencies {
 
     val sprayJson = "io.spray" %%  "spray-json" % V.sprayJson
 
+    val argonaut = "io.argonaut" %% "argonaut" % V.argonaut
+    
     val apacheCodec = "commons-codec" % "commons-codec" % V.apacheCodec
     val bouncyCastle = "org.bouncycastle" % "bcpkix-jdk15on" % V.bouncyCastle
 

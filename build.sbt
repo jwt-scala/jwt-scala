@@ -10,12 +10,13 @@ import com.typesafe.sbt.pgp.PgpKeys._
 val previousVersion = "0.19.0"
 val buildVersion = "1.0.0"
 
-val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "sprayJson", "circe", "upickle", "play")
+val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "sprayJson", "circe",
+                   "upickle", "play", "argonaut")
 val crossProjects = projects.map(p => Seq(p + "Legacy", p + "Edge")).flatten
 
 addCommandAlias("testAll", crossProjects.map(p => p + "/test").mkString(";", ";", ""))
 
-addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;json4sNativeEdge/doc;sprayJsonEdge/doc;circeEdge/doc;upickleEdge/doc;playEdge/doc;scaladocScript;cleanScript")
+addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;json4sNativeEdge/doc;sprayJsonEdge/doc;circeEdge/doc;upickleEdge/doc;playEdge/doc;argonautEdge/doc;scaladocScript;cleanScript")
 
 addCommandAlias("publish-doc", ";docs/makeSite;docs/tut;docs/ghpagesPushSite")
 
@@ -27,8 +28,9 @@ addCommandAlias("publishSprayJson", ";sprayJsonEdge/publishSigned;sprayJsonLegac
 addCommandAlias("publishCirce", ";circeEdge/publishSigned;circeLegacy/publishSigned");
 addCommandAlias("publishUpickle", ";upickleEdge/publishSigned;upickleLegacy/publishSigned")
 addCommandAlias("publishPlay", ";playEdge/publishSigned;playLegacy/publishSigned");
+addCommandAlias("publishArgonaut", ";argonautEdge/publishSigned;argonautLegacy/publishSigned")
 
-addCommandAlias("publishAll", ";+publishPlayJson;+publishJson4Native;+publishJson4Jackson;+publishSprayJson;+publishCirce;+publishUpickle;+publishPlay")
+addCommandAlias("publishAll", ";+publishPlayJson;+publishJson4Native;+publishJson4Jackson;+publishSprayJson;+publishCirce;+publishUpickle;+publishPlay;+publishArgonaut")
 
 addCommandAlias("releaseAll", ";bumpScript;scaladoc;publish-doc;publishAll;sonatypeRelease;pushScript")
 
@@ -131,8 +133,8 @@ lazy val jwtScala = project.in(file("."))
   .settings(
     name := "jwt-scala"
   )
-  .aggregate(json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, sprayJsonLegacy, sprayJsonEdge, circeLegacy, circeEdge, upickleLegacy, upickleEdge, playLegacy, playEdge)
-  .dependsOn(json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, sprayJsonLegacy, sprayJsonEdge, circeLegacy, circeEdge, upickleLegacy, upickleEdge, playLegacy, playEdge)
+  .aggregate(json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, sprayJsonLegacy, sprayJsonEdge, circeLegacy, circeEdge, upickleLegacy, upickleEdge, playLegacy, playEdge, argonautEdge, argonautLegacy)
+  .dependsOn(json4sNativeLegacy, json4sNativeEdge, json4sJacksonLegacy, json4sJacksonEdge, sprayJsonLegacy, sprayJsonEdge, circeLegacy, circeEdge, upickleLegacy, upickleEdge, playLegacy, playEdge, argonautEdge, argonautLegacy)
 
 lazy val docs = project.in(file("docs"))
   .enablePlugins(PreprocessPlugin)
@@ -142,9 +144,9 @@ lazy val docs = project.in(file("docs"))
   .settings(localSettings)
   .settings(docSettings)
   .settings(
-    libraryDependencies ++= Seq(Libs.playJson, Libs.play, Libs.playTestProvided, Libs.json4sNative, Libs.sprayJson, Libs.circeCore, Libs.circeGeneric, Libs.circeParse, Libs.upickle)
+    libraryDependencies ++= Seq(Libs.playJson, Libs.play, Libs.playTestProvided, Libs.json4sNative, Libs.sprayJson, Libs.circeCore, Libs.circeGeneric, Libs.circeParse, Libs.upickle, Libs.argonaut)
   )
-  .dependsOn(playEdge, json4sNativeEdge, sprayJsonEdge, circeEdge, upickleEdge)
+  .dependsOn(playEdge, json4sNativeEdge, sprayJsonEdge, circeEdge, upickleEdge, argonautEdge)
 
 lazy val coreLegacy = project.in(file("core/legacy"))
   .settings(releaseSettings)
@@ -338,6 +340,26 @@ lazy val sprayJsonEdge = project.in(file("json/spray-json"))
   )
   .aggregate(jsonCommonEdge)
   .dependsOn(jsonCommonEdge % "compile->compile;test->test")
+
+lazy val argonautLegacy = project.in(file("json/argonaut"))
+    .settings(releaseSettings)
+    .settings(
+      name := "jwt-argonaut-legacy",
+      target := target(_ / "legacy").value,
+      libraryDependencies ++= Seq(Libs.argonaut)
+    )
+    .aggregate(jsonCommonLegacy)
+    .dependsOn(jsonCommonLegacy % "compile->compile;test->test")
+
+lazy val argonautEdge = project.in(file("json/argonaut"))
+    .settings(releaseSettings)
+    .settings(
+      name := "jwt-argonaut-edge",
+      target := target(_ / "edge").value,
+      libraryDependencies ++= Seq(Libs.argonaut)
+    )
+    .aggregate(jsonCommonEdge)
+    .dependsOn(jsonCommonEdge % "compile->compile;test->test")
 
 def groupPlayTest(tests: Seq[TestDefinition], files: Seq[File]) = tests.map { t =>
   val options = ForkOptions().withRunJVMOptions(Vector(s"-javaagent:${jmockitPath(files)}"))
