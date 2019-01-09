@@ -7,16 +7,15 @@ import Dependencies._
 import scala.sys.process._
 import com.typesafe.sbt.pgp.PgpKeys._
 
-val previousVersion = "0.19.0"
-val buildVersion = "1.0.0"
+val previousVersion = "1.0.0"
+val buildVersion = "1.1.0"
 
-val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "sprayJson", "circe",
-                   "upickle", "play", "argonaut")
+val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "sprayJson", "circe", "upickle", "argonaut", "play")
 val crossProjects = projects.map(p => Seq(p + "Legacy", p + "Edge")).flatten
 
 addCommandAlias("testAll", crossProjects.map(p => p + "/test").mkString(";", ";", ""))
 
-addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;json4sNativeEdge/doc;sprayJsonEdge/doc;circeEdge/doc;upickleEdge/doc;playEdge/doc;argonautEdge/doc;scaladocScript;cleanScript")
+addCommandAlias("scaladoc", ";coreEdge/doc;playJsonEdge/doc;json4sNativeEdge/doc;sprayJsonEdge/doc;circeEdge/doc;upickleEdge/doc;argonautEdge/doc;playEdge/doc;scaladocScript;cleanScript")
 
 addCommandAlias("publish-doc", ";docs/makeSite;docs/tut;docs/ghpagesPushSite")
 
@@ -27,10 +26,10 @@ addCommandAlias("publishJson4Jackson", ";json4sJacksonEdge/publishSigned;json4sJ
 addCommandAlias("publishSprayJson", ";sprayJsonEdge/publishSigned;sprayJsonLegacy/publishSigned");
 addCommandAlias("publishCirce", ";circeEdge/publishSigned;circeLegacy/publishSigned");
 addCommandAlias("publishUpickle", ";upickleEdge/publishSigned;upickleLegacy/publishSigned")
-addCommandAlias("publishPlay", ";playEdge/publishSigned;playLegacy/publishSigned");
 addCommandAlias("publishArgonaut", ";argonautEdge/publishSigned;argonautLegacy/publishSigned")
+addCommandAlias("publishPlay", ";playEdge/publishSigned;playLegacy/publishSigned");
 
-addCommandAlias("publishAll", ";+publishPlayJson;+publishJson4Native;+publishJson4Jackson;+publishSprayJson;+publishCirce;+publishUpickle;+publishPlay;+publishArgonaut")
+addCommandAlias("publishAll", ";+publishPlayJson;+publishJson4Native;+publishJson4Jackson;+publishSprayJson;+publishCirce;+publishUpickle;+publishArgonaut;+publishPlay")
 
 addCommandAlias("releaseAll", ";bumpScript;scaladoc;publish-doc;publishAll;sonatypeRelease;pushScript")
 

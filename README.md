@@ -16,6 +16,7 @@ JWT Scala is divided in several sub-projects each targeting a specific use-case.
 |`jwt-spray-json`|[spray-json](https://github.com/spray/spray-json) lib|[JwtSprayJson](https://pauldijou.github.io/jwt-scala/samples/jwt-spray-json)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-spray-json)|
 |`jwt-circe`|[circe](https://circe.github.io/circe/) lib|[JwtCirce](https://pauldijou.github.io/jwt-scala/samples/jwt-circe)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-circe)|
 |`jwt-upickle`|[uPickle](http://www.lihaoyi.com/upickle-pprint/upickle/) lib|[JwtUpickle](https://pauldijou.github.io/jwt-scala/samples/jwt-upickle)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-upickle)|
+|`jwt-argonaut`|[Argonaut](http://argonaut.io/) lib|[JwtArgonaut](https://pauldijou.github.io/jwt-scala/samples/jwt-argonaut)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-argonaut)|
 
 If you need a previous version of the Scaladoc API, check [the bottom of this page](https://pauldijou.github.io/jwt-scala/api/#old-apis)
 

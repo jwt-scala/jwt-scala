@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0 (09/01/2019)
+
+- Upgrade to uPickle 0.7.1 (thanks @edombowsky)
+- Add support for Argonaut (thanks @isbodand)
+
 ## 1.0.0 (25/11/2018)
 
 - Bump bouncyCastle version to fix [CVE-2018-1000613](cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-1000613) (thanks @djamelz)
