@@ -22,8 +22,8 @@ cp -r ./json/json4s-native/target/edge/scala-2.12/api ./docs/src/site/api/latest
 cp -r ./json/spray-json/target/edge/scala-2.12/api ./docs/src/site/api/latest/jwt-spray-json
 cp -r ./json/circe/target/edge/scala-2.12/api ./docs/src/site/api/latest/jwt-circe
 cp -r ./json/upickle/target/edge/scala-2.12/api ./docs/src/site/api/latest/jwt-upickle
+cp -r ./json/argonaut/target/edge/scala-2.12/api ./docs/src/site/api/latest/jwt-argonaut
 cp -r ./play/target/edge/scala-2.12/api ./docs/src/site/api/latest/jwt-play
-cp -r ./json/argonaut/target/edge/scala-2.12/api ./docs/src/size/api/latest/argonaut
 cp ./docs/src/site/_templates/index_api.html ./docs/src/site/api/latest/index.html
 sed -i.tmp "s/placeholderVersion/$VERSION/g" ./docs/src/site/api/latest/index.html
 
@@ -33,7 +33,7 @@ cp -r ./json/json4s-native/target/edge/scala-2.12/api ./docs/src/site/api/$VERSI
 cp -r ./json/spray-json/target/edge/scala-2.12/api ./docs/src/site/api/$VERSION/jwt-spray-json
 cp -r ./json/circe/target/edge/scala-2.12/api ./docs/src/site/api/$VERSION/jwt-circe
 cp -r ./json/upickle/target/edge/scala-2.12/api ./docs/src/site/api/$VERSION/jwt-upickle
+cp -r ./json/argonaut/target/edge/scala-2.12/api ./docs/src/site/api/$VERSION/jwt-argonaut
 cp -r ./play/target/edge/scala-2.12/api ./docs/src/site/api/$VERSION/jwt-play
-cp -r ./json/argonaut/target/edge/scala-2.12/api ./docs/src/size/api/$VERSION/argonaut
 cp ./docs/src/site/_templates/index_api.html ./docs/src/site/api/$VERSION/index.html
 sed -i.tmp "s/placeholderVersion/$VERSION/g" ./docs/src/site/api/$VERSION/index.html
