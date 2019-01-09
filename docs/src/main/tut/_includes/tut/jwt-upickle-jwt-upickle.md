@@ -4,7 +4,6 @@
 
 ```tut
 import java.time.Instant
-import upickle.json
 import upickle.default._
 import pdi.jwt.{JwtUpickle, JwtAlgorithm, JwtClaim}
 
@@ -27,8 +26,8 @@ JwtUpickle.decode(token, key, Seq(JwtAlgorithm.HS256))
 val key = "secretKey"
 val algo = JwtAlgorithm.HS256
 
-val claimJson = json.read(s"""{"expires":${Instant.now.getEpochSecond}}""")
-val header = json.read( """{"typ":"JWT","alg":"HS256"}""")
+val claimJson = read[ujson.Value](s"""{"expires":${Instant.now.getEpochSecond}}""")
+val header = read[ujson.Value]( """{"typ":"JWT","alg":"HS256"}""")
 // From just the claim to all possible attributes
 JwtUpickle.encode(claimJson)
 JwtUpickle.encode(claimJson, key, algo)
