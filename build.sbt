@@ -7,8 +7,8 @@ import Dependencies._
 import scala.sys.process._
 import com.typesafe.sbt.pgp.PgpKeys._
 
-val previousVersion = "1.0.0"
-val buildVersion = "1.1.0"
+val previousVersion = "1.1.0"
+val buildVersion = "1.1.1"
 
 val projects = Seq("coreCommon", "playJson", "json4sNative", "json4sJackson", "sprayJson", "circe", "upickle", "argonaut", "play")
 val crossProjects = projects.map(p => Seq(p + "Legacy", p + "Edge")).flatten
