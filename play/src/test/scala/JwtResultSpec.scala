@@ -7,21 +7,25 @@ import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
 import play.api.inject.guice.GuiceApplicationBuilder
 import akka.stream.Materializer
-
+import play.api.Configuration
 import play.api.mvc._
 import play.api.mvc.Results._
 import play.api.libs.json._
 
-class JwtResultSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture {
+class JwtResultSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting with PlayFixture {
   import pdi.jwt.JwtSession._
 
+  implicit lazy val conf:Configuration = app.configuration
+  implicit lazy val materializer: Materializer = app.materializer
+  implicit lazy val Action:DefaultActionBuilder = app.injector.instanceOf(classOf[DefaultActionBuilder])
+
   val HEADER_NAME = "Authorization"
-  val materializer: Materializer = app.materializer
 
   override def fakeApplication() =
     new GuiceApplicationBuilder()
       .configure(Map("play.http.secret.key" -> secretKey))
       .build()
+
 
   val session = JwtSession().withHeader(JwtHeader(JwtAlgorithm.HS256))
 

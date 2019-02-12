@@ -2,12 +2,12 @@ import sbt._
 
 object Dependencies {
   object V {
-    val play = "2.6.16"
+    val play = "2.7.0"
     val playJson = "2.7.0"
     val json4s = "3.6.0"
     val circe = "0.10.0"
     val scalatest = "3.0.5"
-    val scalatestPlus = "3.1.2"
+    val scalatestPlus = "4.0.0"
     val jmockit = "1.24"
     val apacheCodec = "1.10"
     val bouncyCastle = "1.60"

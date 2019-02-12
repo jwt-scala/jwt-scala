@@ -7,7 +7,7 @@ import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
 import play.api.inject.guice.GuiceApplicationBuilder
 import akka.stream.Materializer
-
+import play.api.Configuration
 import play.api.mvc._
 import play.api.mvc.Results._
 import play.api.libs.json._
@@ -15,7 +15,10 @@ import play.api.libs.json._
 class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture {
   import pdi.jwt.JwtSession._
 
-  val materializer: Materializer = app.materializer
+  implicit lazy val conf:Configuration = app.configuration
+  implicit lazy val materializer: Materializer = app.materializer
+  implicit lazy val Action: DefaultActionBuilder = app.injector.instanceOf(classOf[DefaultActionBuilder])
+
 
   def HEADER_NAME = "Authorization"
 
@@ -27,6 +30,7 @@ class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture 
       ))
       .build()
 
+
   val session = JwtSession().withHeader(JwtHeader(JwtAlgorithm.HS256))
   val session2 = session ++ (("a", 1), ("b", "c"), ("e", true), ("f", Seq(1, 2, 3)), ("user", user))
   val session3 = JwtSession(JwtHeader(JwtAlgorithm.HS256), claimClass, "IPSERPZc5wyxrZ4Yiq7l31wFk_qaDY5YrnfLjIC0Lmc")
@@ -35,7 +39,7 @@ class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture 
 
   "Init FakeApplication" must {
     "have the correct config" in {
-      app.configuration.getString("play.http.secret.key") mustEqual Option(secretKey)
+      app.configuration.getOptional[String]("play.http.secret.key") mustEqual Option(secretKey)
     }
     "handle null value for maxAge" in {
       JwtSession.getConfigMillis("play.http.session.maxAge") mustEqual None

@@ -7,7 +7,7 @@ import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
 import play.api.inject.guice.GuiceApplicationBuilder
 import akka.stream.Materializer
-
+import play.api.Configuration
 import play.api.mvc._
 import play.api.mvc.Results._
 import play.api.libs.json._
@@ -15,7 +15,9 @@ import play.api.libs.json._
 class JwtSessionCustomSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAndAfter with PlayFixture {
   import pdi.jwt.JwtSession._
 
-  val materializer: Materializer = app.materializer
+  implicit lazy val conf:Configuration = app.configuration
+  implicit lazy val materializer: Materializer = app.materializer
+  implicit lazy val Action:DefaultActionBuilder = app.injector.instanceOf(classOf[DefaultActionBuilder])
 
   // Just for test, users shouldn't change the header name normally
   def HEADER_NAME = "Auth"
@@ -42,17 +44,18 @@ class JwtSessionCustomSpec extends PlaySpec with GuiceOneAppPerSuite with Before
       ))
       .build()
 
+
   def session = JwtSession()
   def sessionCustom = JwtSession(JwtHeader(JwtAlgorithm.HS512), claimClass, "ngZsdQj8p2wvUAo8xCbJPwganGPnG5UnLkg7VrE6NgmQdV16UITjlBajZxcai_U5PjQdeN-yJtyA5kxf8O5BOQ")
   def tokenCustom = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9." + claim64 + ".ngZsdQj8p2wvUAo8xCbJPwganGPnG5UnLkg7VrE6NgmQdV16UITjlBajZxcai_U5PjQdeN-yJtyA5kxf8O5BOQ"
 
   "Init FakeApplication" must {
     "have the correct config" in {
-      app.configuration.getString("play.http.secret.key") mustEqual Option(secretKey)
-      app.configuration.getString("play.http.session.jwtName") mustEqual Option(HEADER_NAME)
-      app.configuration.getString("play.http.session.algorithm") mustEqual Option("HS512")
-      app.configuration.getString("play.http.session.tokenPrefix") mustEqual Option("")
-      app.configuration.getMilliseconds("play.http.session.maxAge") mustEqual Option(sessionTimeout * 1000)
+      app.configuration.getOptional[String]("play.http.secret.key") mustEqual Option(secretKey)
+      app.configuration.getOptional[String]("play.http.session.jwtName") mustEqual Option(HEADER_NAME)
+      app.configuration.getOptional[String]("play.http.session.algorithm") mustEqual Option("HS512")
+      app.configuration.getOptional[String]("play.http.session.tokenPrefix") mustEqual Option("")
+      app.configuration.getOptional[Int]("play.http.session.maxAge") mustEqual Option(sessionTimeout * 1000)
     }
   }
 

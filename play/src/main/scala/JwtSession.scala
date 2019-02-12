@@ -1,8 +1,10 @@
 package pdi.jwt
 
+import javax.inject.Inject
 import play.api.Play
 import play.api.libs.json._
 import play.api.libs.json.Json.JsValueWrapper
+import play.api.Configuration
 import pdi.jwt.algorithms.JwtHmacAlgorithm
 
 /** Similar to the default Play Session but using JsObject instead of Map[String, String]. The data is separated into two attributes:
@@ -16,11 +18,11 @@ import pdi.jwt.algorithms.JwtHmacAlgorithm
   * were automatically put inside the claim such as the expiration of the token.
   *
   */
-case class JwtSession(
+case class JwtSession @Inject()(
   headerData: JsObject,
   claimData: JsObject,
-  signature: String
-) {
+  signature: String)(implicit conf:Configuration)
+ {
   /** Merge the `value` with `claimData` */
   def + (value: JsObject): JwtSession = this.copy(claimData = claimData.deepMerge(value))
 
@@ -78,43 +80,18 @@ case class JwtSession(
 }
 
 object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
-  // This half-hack is to fix a "bug" in Play Framework where Play assign "null"
-  // values to missing keys leading to ConfigException.Null in Typesafe Config
-  // Especially strange for the maxAge key. Not having it should mean no session timeout,
-  // not crash my app.
-  def wrap[T](getter: String => Option[T]): String => Option[T] = key => try {
-    getter(key)
-  } catch {
-    case e: com.typesafe.config.ConfigException.Null => None
-    case e: java.lang.RuntimeException => {
-      e.getCause() match {
-        case _: com.typesafe.config.ConfigException.Null => None
-        case _ => throw e
-      }
-    }
-  }
 
-  val getConfigString = wrap[String](
-    key => Play.maybeApplication.flatMap(_.configuration.getString(key))
-  )
+  def getConfigString(key:String)(implicit conf:Configuration) = conf.getOptional[String](key)
 
-  val getConfigMillis = wrap[Long](
-    key => Play.maybeApplication.flatMap(app =>
-      if (app.configuration.has(key)) {
-        Some(app.configuration.getMillis(key))
-      } else {
-        None
-      }
-    )
-  )
+  def getConfigMillis(key:String)(implicit conf:Configuration) = conf.getOptional[Long](key)
 
-  val REQUEST_HEADER_NAME: String = getConfigString("play.http.session.jwtName").getOrElse("Authorization")
+  def REQUEST_HEADER_NAME(implicit conf:Configuration): String = getConfigString("play.http.session.jwtName").getOrElse("Authorization")
 
-  val RESPONSE_HEADER_NAME: String = getConfigString("play.http.session.jwtResponseName").getOrElse(REQUEST_HEADER_NAME)
+  def RESPONSE_HEADER_NAME(implicit conf:Configuration): String = getConfigString("play.http.session.jwtResponseName").getOrElse(REQUEST_HEADER_NAME)
 
-  val MAX_AGE: Option[Long] = getConfigMillis("play.http.session.maxAge").map(_ / 1000)
+  def MAX_AGE(implicit conf:Configuration): Option[Long] = getConfigMillis("play.http.session.maxAge").map(_ / 1000)
 
-  val ALGORITHM: JwtHmacAlgorithm =
+  def ALGORITHM(implicit conf:Configuration): JwtHmacAlgorithm =
     getConfigString("play.http.session.algorithm")
       .map(JwtAlgorithm.fromString)
       .flatMap {
@@ -123,50 +100,50 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
       }
       .getOrElse(JwtAlgorithm.HS256)
 
-  val TOKEN_PREFIX: String = getConfigString("play.http.session.tokenPrefix").getOrElse("Bearer ")
+  def TOKEN_PREFIX(implicit conf:Configuration): String = getConfigString("play.http.session.tokenPrefix").getOrElse("Bearer ")
 
-  private def key: Option[String] = getConfigString("play.http.secret.key")
+  private def key(implicit conf:Configuration): Option[String] = getConfigString("play.http.secret.key")
 
-  def deserialize(token: String, options: JwtOptions): JwtSession = (key match {
+  def deserialize(token: String, options: JwtOptions)(implicit conf:Configuration): JwtSession = (key match {
       case Some(k) => JwtJson.decodeJsonAll(token, k, Seq(ALGORITHM), options)
       case _ => JwtJson.decodeJsonAll(token, options)
     }).map { tuple =>
       JwtSession(tuple._1, tuple._2, tuple._3)
     }.getOrElse(JwtSession())
 
-  def deserialize(token: String): JwtSession = deserialize(token, JwtOptions.DEFAULT)
+  def deserialize(token: String)(implicit conf:Configuration): JwtSession = deserialize(token, JwtOptions.DEFAULT)
 
   private def asJsObject[A](value: A)(implicit writer: Writes[A]): JsObject = writer.writes(value) match {
     case value: JsObject => value
     case _ => Json.obj()
   }
 
-  def defaultHeader: JwtHeader = key.map(_ => JwtHeader(ALGORITHM)).getOrElse(JwtHeader())
+  def defaultHeader(implicit conf:Configuration): JwtHeader = key.map(_ => JwtHeader(ALGORITHM)).getOrElse(JwtHeader())
 
-  def defaultClaim: JwtClaim = MAX_AGE match {
+  def defaultClaim(implicit conf:Configuration): JwtClaim = MAX_AGE match {
     case Some(seconds) => JwtClaim().expiresIn(seconds)
     case _ => JwtClaim()
   }
 
-  def apply(jsClaim: JsObject): JwtSession =
+  def apply(jsClaim: JsObject)(implicit conf:Configuration): JwtSession =
     JwtSession.apply(asJsObject(defaultHeader), jsClaim)
 
-  def apply(fields: (String, JsValueWrapper)*): JwtSession =
+  def apply(fields: (String, JsValueWrapper)*)(implicit conf:Configuration): JwtSession =
     if (fields.isEmpty) {
       JwtSession.apply(defaultHeader, defaultClaim)
     } else {
       JwtSession.apply(Json.obj(fields: _*))
     }
 
-  def apply(jsHeader: JsObject, jsClaim: JsObject): JwtSession =
+  def apply(jsHeader: JsObject, jsClaim: JsObject)(implicit conf:Configuration): JwtSession =
     new JwtSession(jsHeader, jsClaim, "")
 
-  def apply(claim: JwtClaim): JwtSession =
+  def apply(claim: JwtClaim)(implicit conf:Configuration): JwtSession =
     JwtSession.apply(defaultHeader, claim)
 
-  def apply(header: JwtHeader, claim: JwtClaim): JwtSession =
+  def apply(header: JwtHeader, claim: JwtClaim)(implicit conf:Configuration): JwtSession =
     new JwtSession(asJsObject(header), asJsObject(claim), "")
 
-  def apply(header: JwtHeader, claim: JwtClaim, signature: String): JwtSession =
+  def apply(header: JwtHeader, claim: JwtClaim, signature: String)(implicit conf:Configuration): JwtSession =
     new JwtSession(asJsObject(header), asJsObject(claim), signature)
 }

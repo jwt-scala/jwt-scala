@@ -1,19 +1,20 @@
 package pdi.jwt
 
-import play.api.Play
-import play.api.mvc.{Result, RequestHeader}
-import play.api.libs.json.{Json, JsObject, JsString, Writes}
+import javax.inject.Inject
+import play.api.{Configuration, Play}
+import play.api.mvc.{RequestHeader, Result}
+import play.api.libs.json.{JsObject, JsString, Json, Writes}
 import play.api.libs.json.Json.JsValueWrapper
 
 trait JwtPlayImplicits {
-  private def sanitizeHeader(header: String): String =
+  private def sanitizeHeader(header: String)(implicit conf:Configuration): String =
     if (header.startsWith(JwtSession.TOKEN_PREFIX)) {
       header.substring(JwtSession.TOKEN_PREFIX.length()).trim
     } else {
       header.trim
     }
 
-  private def requestToJwtSession(request: RequestHeader): JwtSession =
+  private def requestToJwtSession(request: RequestHeader)(implicit conf:Configuration): JwtSession =
     request.headers.get(JwtSession.REQUEST_HEADER_NAME).map(sanitizeHeader).map(JwtSession.deserialize).getOrElse(JwtSession())
 
   /** By adding `import pdi.jwt._`, you will implicitely add all those methods to `Result` allowing you to easily manipulate
@@ -37,7 +38,7 @@ trait JwtPlayImplicits {
     * }
     * }}}
     */
-  implicit class RichResult(result: Result) {
+  implicit class RichResult @Inject()(result: Result)(implicit conf:Configuration) {
     /** Retrieve the current [[JwtSession]] from the headers (first from the Result then from the RequestHeader), if none, create a new one.
       * @return the JwtSession inside the headers or a new one
       */
@@ -105,7 +106,7 @@ trait JwtPlayImplicits {
     * }
     * }}}
     */
-  implicit class RichRequestHeader(request: RequestHeader) {
+  implicit class RichRequestHeader @Inject()(request: RequestHeader)(implicit conf:Configuration) {
     /** Return the current [[JwtSession]] from the request */
     def jwtSession: JwtSession = requestToJwtSession(request)
   }
