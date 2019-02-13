@@ -1,9 +1,10 @@
 # Changelog
 
-## 1.2.0 (06/02/2019)
+## 2.0.0 (13/02/2019)
 
 - Upgrade to Play 2.7.0 (thanks @prakhunov)
 - Upgrade to play-json 2.7.0 (thanks @etspaceman)
+- Drop support for Java 6 and 7
 
 ## 1.1.0 (09/01/2019)
 
