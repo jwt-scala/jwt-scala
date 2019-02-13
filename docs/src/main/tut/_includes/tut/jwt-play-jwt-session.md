@@ -6,6 +6,12 @@ Provides an API similar to the Play [Session](https://www.playframework.com/docu
 
 ```tut
 import pdi.jwt.JwtSession
+import play.api.Configuration
+
+
+//In a real Play! App this should normally be injected in the constructor with @Inject()
+implicit val conf:Configuration = Configuration.reference
+
 // Let's create a session, it will automatically assign a default header. No
 // In your app, the default header would be generated from "application.conf" file
 // but here, it will just use the default values (which are all empty)
@@ -50,6 +56,12 @@ If you have implicit `Reads` and/or `Writes`, you can access and/or add data dir
 // First, creating the implicits
 import play.api.libs.json.Json
 import play.api.libs.functional.syntax._
+
+import play.api.Configuration
+
+//In a real Play! App this should normally be injected in the constructor with @Inject()
+implicit val conf:Configuration = Configuration.reference
+
 case class User(id: Long, name: String)
 implicit val formatUser = Json.format[User]
 
@@ -68,6 +80,11 @@ You can extract a `JwtSession` from a `RequestHeader`.
 import pdi.jwt._
 import pdi.jwt.JwtSession._
 import play.api.test.{FakeRequest, FakeHeaders}
+
+import play.api.Configuration
+
+//In a real Play! App this should normally be injected in the constructor with @Inject()
+implicit val conf:Configuration = Configuration.reference
 
 // Default JwtSession
 FakeRequest().jwtSession
@@ -89,6 +106,11 @@ There are also implicit helpers around `Result` to help you manipulate the sessi
 ```tut
 // Several functions will need an implicit RequestHeader
 // since this is the only way to read the headers of the Result
+import play.api.Configuration
+
+//In a real Play! App this should normally be injected in the constructor with @Inject()
+implicit val conf:Configuration = Configuration.reference
+
 implicit val implRequest = request
 
 // Let's begin by creating a Result
