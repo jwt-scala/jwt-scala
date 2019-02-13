@@ -14,7 +14,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 class AuthenticatedRequest[A](val user: User, request: Request[A]) extends WrappedRequest[A](request)
 
 class AuthenticatedActionBuilder @Inject()(parser: BodyParsers.Default)(implicit ec: ExecutionContext)
-    extends ActionBuilderImpl(parser) {
+  extends ActionBuilderImpl(parser) {
   override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
     request.jwtSession.getAs[User]("user") match {
       case Some(user) =>
@@ -26,7 +26,7 @@ class AuthenticatedActionBuilder @Inject()(parser: BodyParsers.Default)(implicit
 }
 
 class AdminActionBuilder @Inject()(parser: BodyParsers.Default)(implicit ec: ExecutionContext)
-    extends ActionBuilderImpl(parser) {
+  extends ActionBuilderImpl(parser) {
   override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
     request.jwtSession.getAs[User]("user") match {
       case Some(user) if user.isAdmin =>
@@ -40,15 +40,15 @@ class AdminActionBuilder @Inject()(parser: BodyParsers.Default)(implicit ec: Exe
 }
 
 case class SecuredControllerComponents @Inject()(
-    adminActionBuilder: AdminActionBuilder,
-    authenticatedActionBuilder: AuthenticatedActionBuilder,
-    actionBuilder: DefaultActionBuilder,
-    parsers: PlayBodyParsers,
-    messagesApi: MessagesApi,
-    langs: Langs,
-    fileMimeTypes: FileMimeTypes,
-    executionContext: scala.concurrent.ExecutionContext
-) extends ControllerComponents
+                                                  adminActionBuilder: AdminActionBuilder,
+                                                  authenticatedActionBuilder: AuthenticatedActionBuilder,
+                                                  actionBuilder: DefaultActionBuilder,
+                                                  parsers: PlayBodyParsers,
+                                                  messagesApi: MessagesApi,
+                                                  langs: Langs,
+                                                  fileMimeTypes: FileMimeTypes,
+                                                  executionContext: scala.concurrent.ExecutionContext
+                                                ) extends ControllerComponents
 
 class SecuredController @Inject()(scc: SecuredControllerComponents) extends AbstractController(scc) {
   def AdminAction: AdminActionBuilder                 = scc.adminActionBuilder
