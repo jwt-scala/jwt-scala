@@ -1,14 +1,23 @@
 package pdi.jwt
 
+import java.time.Instant
 import pdi.jwt.exceptions.{JwtNotBeforeException, JwtExpirationException}
 
 /** Util object to handle time operations */
-object JwtTime extends JwtTimeImpl {
+object JwtTime {
+  /** Returns the number of millis since the 01.01.1970
+    *
+    * @return Returns the number of millis since the 01.01.1970
+    */
+  def now: Long = Instant.now().toEpochMilli
+
   /** Returns the number of seconds since the 01.01.1970
     *
     * @return Returns the number of seconds since the 01.01.1970
     */
   def nowSeconds: Long = this.now / 1000
+
+  def format(time: Long): String = Instant.ofEpochMilli(time).toString
 
   /** Test if the current time is between the two prams
     *

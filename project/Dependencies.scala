@@ -2,19 +2,20 @@ import sbt._
 
 object Dependencies {
   object V {
-    val play = "2.7.0"
-    val playJson = "2.7.0"
-    val json4s = "3.6.0"
-    val circe = "0.10.0"
     val scalatest = "3.0.5"
     val scalatestPlus = "4.0.0"
     val jmockit = "1.24"
     val apacheCodec = "1.10"
     val bouncyCastle = "1.60"
+    val guice = "4.2.2"
+
+    val play = "2.7.0"
+    val playJson = "2.7.0"
+    val json4s = "3.6.4"
+    val circe = "0.11.1"
     val upickle = "0.7.1"
     val sprayJson = "1.3.4"
     val argonaut = "6.2.2"
-    val guice = "4.2.0"
   }
 
   object Libs {
@@ -37,7 +38,7 @@ object Dependencies {
     val sprayJson = "io.spray" %%  "spray-json" % V.sprayJson
 
     val argonaut = "io.argonaut" %% "argonaut" % V.argonaut
-    
+
     val apacheCodec = "commons-codec" % "commons-codec" % V.apacheCodec
     val bouncyCastle = "org.bouncycastle" % "bcpkix-jdk15on" % V.bouncyCastle
 

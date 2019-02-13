@@ -42,7 +42,7 @@ class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture 
       app.configuration.getOptional[String]("play.http.secret.key") mustEqual Option(secretKey)
     }
     "handle null value for maxAge" in {
-      JwtSession.getConfigMillis("play.http.session.maxAge") mustEqual None
+      app.configuration.getOptional[Long]("play.http.session.maxAge") mustEqual None
     }
   }
 

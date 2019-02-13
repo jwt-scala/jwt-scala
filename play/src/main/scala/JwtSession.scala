@@ -80,8 +80,9 @@ case class JwtSession @Inject()(
 }
 
 object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
+  def REQUEST_HEADER_NAME(implicit conf:Configuration): String = conf.getOptional[String]("play.http.session.jwtName").getOrElse("Authorization")
 
-  def getConfigString(key:String)(implicit conf:Configuration) = conf.getOptional[String](key)
+  def RESPONSE_HEADER_NAME(implicit conf:Configuration): String = conf.getOptional[String]("play.http.session.jwtResponseName").getOrElse(REQUEST_HEADER_NAME)
 
   def getConfigMillis(key:String)(implicit conf:Configuration) =
     if(conf.has(key)) {
@@ -90,14 +91,14 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
       None
     }
 
-  def REQUEST_HEADER_NAME(implicit conf:Configuration): String = getConfigString("play.http.session.jwtName").getOrElse("Authorization")
+  def REQUEST_HEADER_NAME(implicit conf:Configuration): String = conf.getOptional[String]("play.http.session.jwtName").getOrElse("Authorization")
 
-  def RESPONSE_HEADER_NAME(implicit conf:Configuration): String = getConfigString("play.http.session.jwtResponseName").getOrElse(REQUEST_HEADER_NAME)
+  def RESPONSE_HEADER_NAME(implicit conf:Configuration): String = conf.getOptional[String]("play.http.session.jwtResponseName").getOrElse(REQUEST_HEADER_NAME)
 
   def MAX_AGE(implicit conf:Configuration): Option[Long] = getConfigMillis("play.http.session.maxAge").map(_ / 1000)
 
   def ALGORITHM(implicit conf:Configuration): JwtHmacAlgorithm =
-    getConfigString("play.http.session.algorithm")
+    conf.getOptional[String]("play.http.session.algorithm")
       .map(JwtAlgorithm.fromString)
       .flatMap {
         case algo: JwtHmacAlgorithm => Option(algo)
@@ -105,9 +106,9 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
       }
       .getOrElse(JwtAlgorithm.HS256)
 
-  def TOKEN_PREFIX(implicit conf:Configuration): String = getConfigString("play.http.session.tokenPrefix").getOrElse("Bearer ")
+  def TOKEN_PREFIX(implicit conf:Configuration): String = conf.getOptional[String]("play.http.session.tokenPrefix").getOrElse("Bearer ")
 
-  private def key(implicit conf:Configuration): Option[String] = getConfigString("play.http.secret.key")
+  private def key(implicit conf:Configuration): Option[String] = conf.getOptional[String]("play.http.secret.key")
 
   def deserialize(token: String, options: JwtOptions)(implicit conf:Configuration): JwtSession = (key match {
       case Some(k) => JwtJson.decodeJsonAll(token, k, Seq(ALGORITHM), options)
