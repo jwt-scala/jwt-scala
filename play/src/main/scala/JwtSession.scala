@@ -86,7 +86,7 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
   def RESPONSE_HEADER_NAME(implicit conf:Configuration): String = conf.getOptional[String]("play.http.session.jwtResponseName").getOrElse(REQUEST_HEADER_NAME)
 
   // in seconds
-  def MAX_AGE(implicit conf:Configuration): Option[Long] = conf.getOptional[Duration]("play.http.session.maxAge").map(d => d.toSeconds)
+  def MAX_AGE(implicit conf:Configuration): Option[Long] = conf.getOptional[Duration]("play.http.session.maxAge").map(_.toSeconds)
 
   def ALGORITHM(implicit conf:Configuration): JwtHmacAlgorithm =
     conf.getOptional[String]("play.http.session.algorithm")
