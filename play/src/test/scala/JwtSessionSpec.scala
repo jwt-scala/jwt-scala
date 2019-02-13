@@ -1,5 +1,6 @@
 package pdi.jwt
 
+import scala.concurrent.duration.Duration
 import org.scalatest._
 import play.api.test._
 import play.api.test.Helpers._
@@ -42,7 +43,7 @@ class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture 
       app.configuration.getOptional[String]("play.http.secret.key") mustEqual Option(secretKey)
     }
     "handle null value for maxAge" in {
-      app.configuration.getOptional[Long]("play.http.session.maxAge") mustEqual None
+      app.configuration.getOptional[Duration]("play.http.session.maxAge") mustEqual None
     }
   }
 

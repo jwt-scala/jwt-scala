@@ -1,5 +1,6 @@
 package pdi.jwt
 
+import scala.concurrent.duration.Duration
 import javax.inject.Inject
 import play.api.Play
 import play.api.libs.json._
@@ -84,18 +85,8 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
 
   def RESPONSE_HEADER_NAME(implicit conf:Configuration): String = conf.getOptional[String]("play.http.session.jwtResponseName").getOrElse(REQUEST_HEADER_NAME)
 
-  def getConfigMillis(key:String)(implicit conf:Configuration) =
-    if(conf.has(key)) {
-      Some(conf.getMillis(key))
-    } else {
-      None
-    }
-
-  def REQUEST_HEADER_NAME(implicit conf:Configuration): String = conf.getOptional[String]("play.http.session.jwtName").getOrElse("Authorization")
-
-  def RESPONSE_HEADER_NAME(implicit conf:Configuration): String = conf.getOptional[String]("play.http.session.jwtResponseName").getOrElse(REQUEST_HEADER_NAME)
-
-  def MAX_AGE(implicit conf:Configuration): Option[Long] = getConfigMillis("play.http.session.maxAge").map(_ / 1000)
+  // in seconds
+  def MAX_AGE(implicit conf:Configuration): Option[Long] = conf.getOptional[Duration]("play.http.session.maxAge").map(d => d.toSeconds)
 
   def ALGORITHM(implicit conf:Configuration): JwtHmacAlgorithm =
     conf.getOptional[String]("play.http.session.algorithm")
