@@ -227,7 +227,7 @@ lazy val sprayJsonProject = project.in(file("json/spray-json"))
 lazy val argonautProject = project.in(file("json/argonaut"))
     .settings(releaseSettings)
     .settings(
-      name := "jwt-argonaut-edge",
+      name := "jwt-argonaut",
       libraryDependencies ++= Seq(Libs.argonaut)
     )
     .aggregate(jsonCommonProject)
