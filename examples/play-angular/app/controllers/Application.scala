@@ -1,17 +1,17 @@
 package controllers
 
-import javax.inject.{ Inject, Singleton }
-
+import javax.inject.{Inject, Singleton}
 import models.User
 import pdi.jwt.JwtSession._
+import play.api.Configuration
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.api.mvc._
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class Application @Inject()(scc: SecuredControllerComponents, assets: AssetsFinder)(implicit ec: ExecutionContext)
+class Application @Inject()(scc: SecuredControllerComponents, assets: AssetsFinder)(implicit ec: ExecutionContext, conf:Configuration)
     extends SecuredController(scc) {
 
   private val passwords = Seq("red", "blue", "green")
