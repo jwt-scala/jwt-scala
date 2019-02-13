@@ -83,7 +83,12 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
 
   def getConfigString(key:String)(implicit conf:Configuration) = conf.getOptional[String](key)
 
-  def getConfigMillis(key:String)(implicit conf:Configuration) = conf.getOptional[Long](key)
+  def getConfigMillis(key:String)(implicit conf:Configuration) =
+    if(conf.has(key)) {
+      Some(conf.getMillis(key))
+    } else {
+      None
+    }
 
   def REQUEST_HEADER_NAME(implicit conf:Configuration): String = getConfigString("play.http.session.jwtName").getOrElse("Authorization")
 
