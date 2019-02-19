@@ -1,15 +1,21 @@
 package pdi.jwt
 
-case class JwtClaim(
-  content: String = "{}",
-  issuer: Option[String] = None,
-  subject: Option[String] = None,
-  audience: Option[Set[String]] = None,
-  expiration: Option[Long] = None,
-  notBefore: Option[Long] = None,
-  issuedAt: Option[Long] = None,
-  jwtId: Option[String] = None
-) {
+object JwtClaim {
+  def apply(content: String = "{}",
+            issuer: Option[String] = None,
+            subject: Option[String] = None,
+            audience: Option[Set[String]] = None,
+            expiration: Option[Long] = None,
+            notBefore: Option[Long] = None,
+            issuedAt: Option[Long] = None,
+            jwtId: Option[String] = None
+           ) = new JwtClaim(content, issuer, subject, audience, expiration, notBefore, issuedAt, jwtId)
+}
+
+class JwtClaim(val content: String, val issuer: Option[String], val subject: Option[String],
+               val audience: Option[Set[String]], val expiration: Option[Long], val notBefore: Option[Long],
+               val issuedAt: Option[Long], val jwtId: Option[String]) {
+
   def toJson: String = JwtUtils.mergeJson(JwtUtils.hashToJson(Seq(
     "iss" -> issuer,
     "sub" -> subject,
@@ -19,39 +25,105 @@ case class JwtClaim(
     "iat" -> issuedAt,
     "jti" -> jwtId
   ).collect {
-    case (key, Some(value)) => (key -> value)
+    case (key, Some(value)) => key -> value
   }), content)
 
-  def + (json: String): JwtClaim = this.copy(content = JwtUtils.mergeJson(this.content, json))
+  def +(json: String): JwtClaim = {
+    JwtClaim(JwtUtils.mergeJson(this.content, json), issuer, subject, audience, expiration, notBefore, issuedAt, jwtId)
+  }
 
-  def + (key: String, value: Any): JwtClaim =
-    this.copy(content = JwtUtils.mergeJson(this.content, JwtUtils.hashToJson(Seq(key -> value))))
+  def +(key: String, value: Any): JwtClaim = {
+    JwtClaim(JwtUtils.mergeJson(this.content, JwtUtils.hashToJson(Seq(key -> value))), issuer, subject, audience, expiration, notBefore, issuedAt, jwtId)
+  }
 
   // Ok, it's Any, but just use "primitive" types
   // It will not work with classes or case classes since, you know,
   // there is no way to serialize them to JSON out of the box.
-  def ++ (fields: (String, Any)*): JwtClaim =
-    this.copy(content = JwtUtils.mergeJson(this.content, JwtUtils.hashToJson(fields)))
+  def ++[T <: Any](fields: (String, T)*): JwtClaim = {
+    JwtClaim(JwtUtils.mergeJson(this.content, JwtUtils.hashToJson(fields)), issuer, subject, audience, expiration, notBefore, issuedAt, jwtId)
+  }
 
-  def by(issuer: String): JwtClaim = this.copy(issuer = Option(issuer))
-  def to(audience: String): JwtClaim = this.copy(audience = Some(Set(audience)))
-  def to(audience: Set[String]): JwtClaim = this.copy(audience = Some(audience))
-  def about(subject: String): JwtClaim = this.copy(subject = Option(subject))
-  def withId(id: String): JwtClaim = this.copy(jwtId = Option(id))
+  def by(issuer: String): JwtClaim = {
+    JwtClaim(content, Some(issuer), subject, audience, expiration, notBefore, issuedAt, jwtId)
+  }
 
-  def expiresIn(seconds: Long): JwtClaim = this.copy(expiration = Option(JwtTime.nowSeconds + seconds))
-  def expiresAt(seconds: Long): JwtClaim = this.copy(expiration = Option(seconds))
-  def expiresNow: JwtClaim = this.copy(expiration = Option(JwtTime.nowSeconds))
+  def to(audience: String): JwtClaim = {
+    JwtClaim(content, issuer, subject, Some(Set(audience)), expiration, notBefore, issuedAt, jwtId)
+  }
 
-  def startsIn(seconds: Long): JwtClaim = this.copy(notBefore = Option(JwtTime.nowSeconds + seconds))
-  def startsAt(seconds: Long): JwtClaim = this.copy(notBefore = Option(seconds))
-  def startsNow: JwtClaim = this.copy(notBefore = Option(JwtTime.nowSeconds))
+  def to(audience: Set[String]): JwtClaim = {
+    JwtClaim(content, issuer, subject, Some(audience), expiration, notBefore, issuedAt, jwtId)
+  }
 
-  def issuedIn(seconds: Long): JwtClaim = this.copy(issuedAt = Option(JwtTime.nowSeconds + seconds))
-  def issuedAt(seconds: Long): JwtClaim = this.copy(issuedAt = Option(seconds))
-  def issuedNow: JwtClaim = this.copy(issuedAt = Option(JwtTime.nowSeconds))
+  def about(subject: String): JwtClaim = {
+    JwtClaim(content, issuer, Option(subject), audience, expiration, notBefore, issuedAt, jwtId)
+  }
+
+  def withId(id: String): JwtClaim = {
+    JwtClaim(content, issuer, subject, audience, expiration, notBefore, issuedAt, Option(id))
+  }
+
+  def expiresIn(seconds: Long): JwtClaim = {
+    JwtClaim(content, issuer, subject, audience, Option(JwtTime.nowSeconds + seconds), notBefore, issuedAt, jwtId)
+  }
+
+  def expiresAt(seconds: Long): JwtClaim = {
+    JwtClaim(content, issuer, subject, audience, Option(seconds), notBefore, issuedAt, jwtId)
+  }
+
+  def expiresNow: JwtClaim = {
+    JwtClaim(content, issuer, subject, audience, Option(JwtTime.nowSeconds), notBefore, issuedAt, jwtId)
+  }
+
+  def startsIn(seconds: Long): JwtClaim = {
+    JwtClaim(content, issuer, subject, audience, expiration, Option(JwtTime.nowSeconds + seconds), issuedAt, jwtId)
+  }
+
+  def startsAt(seconds: Long): JwtClaim = {
+    JwtClaim(content, issuer, subject, audience, expiration, Option(seconds), issuedAt, jwtId)
+  }
+
+  def startsNow: JwtClaim = {
+    JwtClaim(content, issuer, subject, audience, expiration, Option(JwtTime.nowSeconds), issuedAt, jwtId)
+  }
+
+  def issuedIn(seconds: Long): JwtClaim = {
+    JwtClaim(content, issuer, subject, audience, expiration, notBefore, Option(JwtTime.nowSeconds + seconds), jwtId)
+  }
+
+  def issuedAt(seconds: Long): JwtClaim = {
+    JwtClaim(content, issuer, subject, audience, expiration, notBefore, Option(seconds), jwtId)
+  }
+
+  def issuedNow: JwtClaim = {
+    JwtClaim(content, issuer, subject, audience, expiration, notBefore, Option(JwtTime.nowSeconds), jwtId)
+  }
+
+  def isValid(issuer: String, audience: String): Boolean = this.audience.exists(_ contains audience) && this.isValid(issuer)
+
+  def isValid(issuer: String): Boolean = this.issuer.contains(issuer) && this.isValid
 
   def isValid: Boolean = JwtTime.nowIsBetweenSeconds(this.notBefore, this.expiration)
-  def isValid(issuer: String): Boolean = this.issuer.exists(_ == issuer) && this.isValid
-  def isValid(issuer: String, audience: String): Boolean = this.audience.exists(_ contains audience) && this.isValid(issuer)
+
+  // equality code
+  def canEqual(other: Any): Boolean = other.isInstanceOf[JwtClaim]
+
+  override def equals(other: Any): Boolean = other match {
+    case that: JwtClaim =>
+      (that canEqual this) &&
+        content == that.content &&
+        issuer == that.issuer &&
+        subject == that.subject &&
+        audience == that.audience &&
+        expiration == that.expiration &&
+        notBefore == that.notBefore &&
+        issuedAt == that.issuedAt &&
+        jwtId == that.jwtId
+    case _ => false
+  }
+
+  override def hashCode(): Int = {
+    val state = Seq(content, issuer, subject, audience, expiration, notBefore, issuedAt, jwtId)
+    state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
+  }
 }
