@@ -193,7 +193,7 @@ class JwtSpec extends UnitSpec with Fixture {
       val mock = mockBeforeNotBefore
 
       data foreach { d =>
-        val claimNotBefore = claimClass.copy(notBefore = Option(notBefore))
+        val claimNotBefore = claimClass.startsAt(notBefore)
         val token = Jwt.encode(claimNotBefore, secretKey, d.algo)
 
         intercept[JwtNotBeforeException] { Jwt.validate(token, secretKey, JwtAlgorithm.allHmac) }
@@ -203,7 +203,7 @@ class JwtSpec extends UnitSpec with Fixture {
       }
 
       dataRSA foreach { d =>
-        val claimNotBefore = claimClass.copy(notBefore = Option(notBefore))
+        val claimNotBefore = claimClass.startsAt(notBefore)
         val token = Jwt.encode(claimNotBefore, privateKeyRSA, d.algo)
 
         intercept[JwtNotBeforeException] { Jwt.validate(token, publicKeyRSA, JwtAlgorithm.allRSA) }
@@ -218,7 +218,7 @@ class JwtSpec extends UnitSpec with Fixture {
       val options = JwtOptions(leeway = 60)
 
       data foreach { d =>
-        val claimNotBefore = claimClass.copy(notBefore = Option(notBefore))
+        val claimNotBefore = claimClass.startsAt(notBefore)
         val token = Jwt.encode(claimNotBefore, secretKey, d.algo)
 
         Jwt.validate(token, secretKey, JwtAlgorithm.allHmac, options)
@@ -228,7 +228,7 @@ class JwtSpec extends UnitSpec with Fixture {
       }
 
       dataRSA foreach { d =>
-        val claimNotBefore = claimClass.copy(notBefore = Option(notBefore))
+        val claimNotBefore = claimClass.startsAt(notBefore)
         val token = Jwt.encode(claimNotBefore, privateKeyRSA, d.algo)
 
         intercept[JwtNotBeforeException] { Jwt.validate(token, publicKeyRSA, JwtAlgorithm.allRSA) }
@@ -304,7 +304,7 @@ class JwtSpec extends UnitSpec with Fixture {
       val options = JwtOptions(notBefore = false)
 
       data foreach { d =>
-        val claimNotBefore = claimClass.copy(notBefore = Option(notBefore))
+        val claimNotBefore = claimClass.startsAt(notBefore)
         val token = Jwt.encode(claimNotBefore, secretKey, d.algo)
 
         Jwt.validate(token, secretKey, JwtAlgorithm.allHmac, options)
@@ -314,7 +314,7 @@ class JwtSpec extends UnitSpec with Fixture {
       }
 
       dataRSA foreach { d =>
-        val claimNotBefore = claimClass.copy(notBefore = Option(notBefore))
+        val claimNotBefore = claimClass.startsAt(notBefore)
         val token = Jwt.encode(claimNotBefore, privateKeyRSA, d.algo)
 
         Jwt.validate(token, publicKeyRSA, JwtAlgorithm.allRSA, options)
