@@ -1,4 +1,4 @@
-# JWT Scala 2.0.0
+# JWT Scala 2.1.0
 
 Scala support for JSON Web Token ([JWT](http://tools.ietf.org/html/draft-ietf-oauth-json-web-token)). Supports Java 8+, Scala 2.11.x and Scala 2.12.x. Optional helpers for Play Framework, Play JSON, Json4s Native, Json4s Jackson, Circe, uPickle, Spray JSON and Argonaut.
 
@@ -24,13 +24,13 @@ You can also check a [standalone Play application](https://github.com/pauldijou/
 
 ## Install
 
-In the following snippet, replace `[name]` with the actual name of the project you need. **Using Java 1.6 or 1.7?** Add `-legacy` after the name of the project and use a version before 2.0.0. See [below](#which-java) why.
+In the following snippet, replace `[name]` with the actual name of the project you need. **Using Java 1.6 or 1.7?** Add `-legacy` after the name of the project and use a version before 2.1.0. See [below](#which-java) why.
 
 **build.sbt**
 
 ```scala
 libraryDependencies ++= Seq(
-  "com.pauldijou" %% "[name]" % "2.0.0"
+  "com.pauldijou" %% "[name]" % "2.1.0"
 )
 ```
 
@@ -40,7 +40,7 @@ libraryDependencies ++= Seq(
 
 ```scala
 libraryDependencies ++= Seq(
-  "com.pauldijou" %% "jwt-play-legacy" % "2.0.0"
+  "com.pauldijou" %% "jwt-play-legacy" % "2.1.0"
 )
 ```
 
@@ -71,7 +71,7 @@ Check [ECDSA samples](https://pauldijou.github.io/jwt-scala/samples/jwt-ecdsa) f
 
 ## <a name="which-java"></a>Which Java?
 
-**Java 6 and 7 support has been removed with version 2.0.0**
+**Java 6 and 7 support has been removed with version 2.1.0**
 
 Actually, all sub-projects have two flavours. One target Java 8+, using the new Time API and the new Base64 util. This is the default one. If you are using Java 1.6 or 1.7 (which have both reached end-of-life by the way), you will have to use the "legacy" version of the lib. It's exactly the same (in fact, 99% of the code source is shared) except it's using the old Calendar API and the Base64 util from Apache Commons Codec (introducing **one small dependency** in this particular use-case).
 
