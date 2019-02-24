@@ -54,6 +54,11 @@ class JwtClaim(
     JwtClaim(content, Option(issuer), subject, audience, expiration, notBefore, issuedAt, jwtId)
   }
 
+  // content should be a valid stringified JSON
+  def withContent(content: String): JwtClaim = {
+    JwtClaim(content, issuer, subject, audience, expiration, notBefore, issuedAt, jwtId)
+  }
+
   def to(audience: String): JwtClaim = {
     JwtClaim(content, issuer, subject, Option(Set(audience)), expiration, notBefore, issuedAt, jwtId)
   }

@@ -25,7 +25,7 @@ object JwtJson4sPrivate extends JwtJson4sParser[JwtHeader, JwtPrivateClaim] {
     val claimJson = super.parse(claim)
     val jwtReservedClaim: JwtClaim = super.readClaim(claimJson)
     val content = super.parse(jwtReservedClaim.content)
-    JwtPrivateClaim(super.extractString(content, "user"), jwtReservedClaim.copy(content = "{}"))
+    JwtPrivateClaim(super.extractString(content, "user"), jwtReservedClaim.withContent("{}"))
   }
 
   // here is the only boilerplate (but if you chose to also specify a custom header type then you would make use of this)
