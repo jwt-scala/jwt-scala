@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.0 (24/02/2019)
+
+- Upgrade to play-json 2.7.1 (thanks @etspaceman)
+- Add Scala 2.13.0-M5 to cross compilation for projects supporting it (thanks @2m and @ennru)
+- Move JwtHeader and JwtClaim to basic classes (thanks @fahman)
+
 ## 2.0.0 (13/02/2019)
 
 - Upgrade to Play 2.7.0 (thanks @prakhunov)

@@ -1,21 +1,28 @@
 package pdi.jwt
 
 object JwtClaim {
-  def apply(content: String = "{}",
-            issuer: Option[String] = None,
-            subject: Option[String] = None,
-            audience: Option[Set[String]] = None,
-            expiration: Option[Long] = None,
-            notBefore: Option[Long] = None,
-            issuedAt: Option[Long] = None,
-            jwtId: Option[String] = None
-           ) = new JwtClaim(content, issuer, subject, audience, expiration, notBefore, issuedAt, jwtId)
+  def apply(
+    content: String = "{}",
+    issuer: Option[String] = None,
+    subject: Option[String] = None,
+    audience: Option[Set[String]] = None,
+    expiration: Option[Long] = None,
+    notBefore: Option[Long] = None,
+    issuedAt: Option[Long] = None,
+    jwtId: Option[String] = None
+  ) = new JwtClaim(content, issuer, subject, audience, expiration, notBefore, issuedAt, jwtId)
 }
 
-class JwtClaim(val content: String, val issuer: Option[String], val subject: Option[String],
-               val audience: Option[Set[String]], val expiration: Option[Long], val notBefore: Option[Long],
-               val issuedAt: Option[Long], val jwtId: Option[String]) {
-
+class JwtClaim(
+  val content: String,
+  val issuer: Option[String],
+  val subject: Option[String],
+  val audience: Option[Set[String]],
+  val expiration: Option[Long],
+  val notBefore: Option[Long],
+  val issuedAt: Option[Long],
+  val jwtId: Option[String]
+) {
   def toJson: String = JwtUtils.mergeJson(JwtUtils.hashToJson(Seq(
     "iss" -> issuer,
     "sub" -> subject,
@@ -44,15 +51,15 @@ class JwtClaim(val content: String, val issuer: Option[String], val subject: Opt
   }
 
   def by(issuer: String): JwtClaim = {
-    JwtClaim(content, Some(issuer), subject, audience, expiration, notBefore, issuedAt, jwtId)
+    JwtClaim(content, Option(issuer), subject, audience, expiration, notBefore, issuedAt, jwtId)
   }
 
   def to(audience: String): JwtClaim = {
-    JwtClaim(content, issuer, subject, Some(Set(audience)), expiration, notBefore, issuedAt, jwtId)
+    JwtClaim(content, issuer, subject, Option(Set(audience)), expiration, notBefore, issuedAt, jwtId)
   }
 
   def to(audience: Set[String]): JwtClaim = {
-    JwtClaim(content, issuer, subject, Some(audience), expiration, notBefore, issuedAt, jwtId)
+    JwtClaim(content, issuer, subject, Option(audience), expiration, notBefore, issuedAt, jwtId)
   }
 
   def about(subject: String): JwtClaim = {

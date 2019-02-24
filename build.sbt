@@ -7,8 +7,8 @@ import Dependencies._
 import scala.sys.process._
 import com.typesafe.sbt.pgp.PgpKeys._
 
-val previousVersion = "1.1.0"
-val buildVersion = "2.0.0"
+val previousVersion = "2.0.0"
+val buildVersion = "2.1.0"
 
 val projects = Seq("coreProject", "playJsonProject", "json4sNativeProject", "json4sJacksonProject", "sprayJsonProject", "circeProject", "upickleProject", "argonautProject", "playProject")
 
@@ -43,11 +43,13 @@ cleanScript := {
 
 def jmockitPath(f: Seq[File]) = f.filter(_.name.endsWith("jmockit-1.24.jar")).head
 
+val scala213 = "2.13.0-M5"
+
 val baseSettings = Seq(
   organization := "com.pauldijou",
   version := buildVersion,
   scalaVersion in ThisBuild := "2.12.7",
-  crossScalaVersions := Seq("2.12.7", "2.11.12"),
+  crossScalaVersions := Seq("2.12.7", "2.11.12", scala213),
   crossVersion := CrossVersion.binary,
   autoAPIMappings := true,
   resolvers ++= Seq(
@@ -122,6 +124,7 @@ lazy val jwtScala = project.in(file("."))
   )
   .aggregate(json4sNativeProject, json4sJacksonProject, sprayJsonProject, circeProject, upickleProject, playProject, argonautProject)
   .dependsOn(json4sNativeProject, json4sJacksonProject, sprayJsonProject, circeProject, upickleProject, playProject, argonautProject)
+  .settings(crossScalaVersions := List())
 
 lazy val docs = project.in(file("docs"))
   .enablePlugins(PreprocessPlugin)
@@ -183,6 +186,7 @@ lazy val upickleProject = project.in(file("json/upickle"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-upickle",
+    crossScalaVersions -= scala213,
     libraryDependencies ++= Seq(Libs.upickle)
   )
   .aggregate(jsonCommonProject)
@@ -228,6 +232,7 @@ lazy val argonautProject = project.in(file("json/argonaut"))
     .settings(releaseSettings)
     .settings(
       name := "jwt-argonaut",
+      crossScalaVersions -= scala213,
       libraryDependencies ++= Seq(Libs.argonaut)
     )
     .aggregate(jsonCommonProject)
@@ -242,6 +247,7 @@ lazy val playProject = project.in(file("play"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-play",
+    crossScalaVersions -= scala213,
     libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus, Libs.guice),
     testGrouping in Test := groupPlayTest((definedTests in Test).value, (dependencyClasspath in Test).value.files)
   )
