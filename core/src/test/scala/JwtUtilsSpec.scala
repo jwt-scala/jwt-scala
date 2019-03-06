@@ -5,6 +5,30 @@ import java.security.spec.ECGenParameterSpec
 
 import pdi.jwt.exceptions.JwtSignatureFormatException
 
+/**
+  * Test implementation of [[JwtCore]] using only Strings. Most of the time, you should use a lib
+  * implementing JSON and shouldn't be using this object. But just in case you need pure Scala support,
+  * here it is.
+  *
+  * To see a full list of samples, check the [[http://pauldijou.fr/jwt-scala/samples/jwt-core/ online documentation]].
+  *
+  * '''Warning''': since there is no JSON support in Scala, this object doesn't have any way to parse
+  * a JSON string as an AST, so it only uses regex with all the limitations it implies. Try not to use
+  * keys like `exp` and `nbf` in sub-objects of the claim. For example, if you try to use the following
+  * claim: `{"user":{"exp":1},"exp":1300819380}`, it should be correct but it will fail because the regex
+  * extracting the expiration will return `1` instead of `1300819380`. Sorry about that.
+  */
+class Jwt extends JwtCore[JwtHeader, JwtClaim] {
+  protected def parseHeader(header: String): JwtHeader = JwtHeader()
+  protected def parseClaim(claim: String): JwtClaim = JwtClaim(content = claim)
+
+  protected def extractAlgorithm(header: JwtHeader): Option[JwtAlgorithm] = header.algorithm
+
+  protected def extractExpiration(claim: JwtClaim): Option[Long] = claim.expiration
+
+  protected def extractNotBefore(claim: JwtClaim): Option[Long] = claim.notBefore
+}
+
 case class TestObject(value: String) {
   override def toString(): String = this.value
 }
@@ -137,7 +161,7 @@ class JwtUtilsSpec extends UnitSpec {
         val header = """{"typ":"JWT","alg":"ES512"}"""
         val claim = """{"test":"t"}"""
 
-        val signature = Jwt.encode(header, claim, randomECKey.getPrivate, JwtAlgorithm.ES512).split("\\.")(2)
+        val signature = new Jwt().encode(header, claim, randomECKey.getPrivate, JwtAlgorithm.ES512).split("\\.")(2)
         assertResult(signature) {
           JwtUtils.stringify(JwtUtils.transcodeSignatureToConcat(JwtUtils.transcodeSignatureToDER(JwtUtils.bytify(signature)),
             JwtUtils.getSignatureByteArrayLength(JwtAlgorithm.ES512)))

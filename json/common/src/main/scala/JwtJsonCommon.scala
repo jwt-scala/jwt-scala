@@ -7,14 +7,14 @@ import java.security.{Key, PrivateKey, PublicKey}
 import pdi.jwt.algorithms._
 import pdi.jwt.exceptions.{JwtNonEmptyAlgorithmException, JwtEmptyAlgorithmException, JwtValidationException}
 
-trait JwtJsonCommon[J, H, C] extends JwtCore[H, C] {
+trait JwtJsonCommon[J, H <: JwtHeader, C <: JwtClaim] extends JwtCore[H, C] {
   protected def parse(value: String): J
   protected def stringify(value: J): String
   protected def getAlgorithm(header: J): Option[JwtAlgorithm]
 
-  protected def extractAlgorithm(header: JwtHeader): Option[JwtAlgorithm] = header.algorithm
-  protected def extractExpiration(claim: JwtClaim): Option[Long] = claim.expiration
-  protected def extractNotBefore(claim: JwtClaim): Option[Long] = claim.notBefore
+  protected def extractAlgorithm(header: H): Option[JwtAlgorithm] = header.algorithm
+  protected def extractExpiration(claim: C): Option[Long] = claim.expiration
+  protected def extractNotBefore(claim: C): Option[Long] = claim.notBefore
 
   def encode(header: J, claim: J): String = getAlgorithm(header) match {
     case None => encode(stringify(header), stringify(claim))

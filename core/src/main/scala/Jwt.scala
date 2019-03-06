@@ -7,39 +7,6 @@ import java.security.{Key, PrivateKey, PublicKey}
 import pdi.jwt.algorithms._
 import pdi.jwt.exceptions._
 
-/**
-  * Default implementation of [[JwtCore]] using only Strings. Most of the time, you should use a lib
-  * implementing JSON and shouldn't be using this object. But just in case you need pure Scala support,
-  * here it is.
-  *
-  * To see a full list of samples, check the [[http://pauldijou.fr/jwt-scala/samples/jwt-core/ online documentation]].
-  *
-  * '''Warning''': since there is no JSON support in Scala, this object doesn't have any way to parse
-  * a JSON string as an AST, so it only uses regex with all the limitations it implies. Try not to use
-  * keys like `exp` and `nbf` in sub-objects of the claim. For example, if you try to use the following
-  * claim: `{"user":{"exp":1},"exp":1300819380}`, it should be correct but it will fail because the regex
-  * extracting the expiration will return `1` instead of `1300819380`. Sorry about that.
-  */
-object Jwt extends JwtCore[String, String] {
-  protected def parseHeader(header: String): String = header
-  protected def parseClaim(claim: String): String = claim
-
-  private val extractAlgorithmRegex = "\"alg\" *: *\"([a-zA-Z0-9]+)\"".r
-  protected def extractAlgorithm(header: String): Option[JwtAlgorithm] =
-    (extractAlgorithmRegex findFirstMatchIn header).map(_.group(1)).flatMap {
-      case "none" => None
-      case name: String => Some(JwtAlgorithm.fromString(name))
-    }
-
-  private val extractExpirationRegex = "\"exp\" *: *([0-9]+)".r
-  protected def extractExpiration(claim: String): Option[Long] =
-    (extractExpirationRegex findFirstMatchIn claim).map(_.group(1)).map(_.toLong)
-
-  private val extractNotBeforeRegex = "\"nbf\" *: *([0-9]+)".r
-  protected def extractNotBefore(claim: String): Option[Long] =
-    (extractNotBeforeRegex findFirstMatchIn claim).map(_.group(1)).map(_.toLong)
-}
-
 /** Provide the main logic around Base64 encoding / decoding and signature using the correct algorithm.
   * '''H''' and '''C''' types are respesctively the header type and the claim type. For the core project,
   * they will be String but you are free to extend this trait using other types like
@@ -58,7 +25,7 @@ object Jwt extends JwtCore[String, String] {
   * @define algos a list of possible algorithms that the token can use. See [[http://pauldijou.fr/jwt-scala/#security-concerns Security concerns]] for more infos.
   *
   */
-trait JwtCore[H, C] {
+trait JwtCore[H <: JwtHeader, C <: JwtClaim] {
   // Abstract methods
   protected def parseHeader(header: String): H
   protected def parseClaim(claim: String): C
@@ -136,7 +103,7 @@ trait JwtCore[H, C] {
     * @return $token
     * @param claim the claim of the JSON Web Token
     */
-  def encode(claim: JwtClaim): String = encode(claim.toJson)
+  def encode(claim: C): String = encode(claim.toJson)
 
   /** An alias to `encode` which will provide an automatically generated header and use the claim as a case class.
     *
@@ -145,7 +112,7 @@ trait JwtCore[H, C] {
     * @param key $key
     * @param algorithm $algo
     */
-  def encode(claim: JwtClaim, key: String, algorithm: JwtAlgorithm): String =
+  def encode(claim: C, key: String, algorithm: JwtAlgorithm): String =
     encode(claim.toJson, key, algorithm)
 
   /** An alias to `encode` which will provide an automatically generated header and use the claim as a case class.
@@ -155,7 +122,7 @@ trait JwtCore[H, C] {
     * @param key $key
     * @param algorithm $algo
     */
-  def encode(claim: JwtClaim, key: SecretKey, algorithm: JwtHmacAlgorithm): String =
+  def encode(claim: C, key: SecretKey, algorithm: JwtHmacAlgorithm): String =
     encode(claim.toJson, key, algorithm)
 
   /** An alias to `encode` which will provide an automatically generated header and use the claim as a case class.
@@ -165,7 +132,7 @@ trait JwtCore[H, C] {
     * @param key $key
     * @param algorithm $algo
     */
-  def encode(claim: JwtClaim, key: PrivateKey, algorithm: JwtAsymmetricAlgorithm): String =
+  def encode(claim: C, key: PrivateKey, algorithm: JwtAsymmetricAlgorithm): String =
     encode(claim.toJson, key, algorithm)
 
   /** An alias to `encode` if you want to use case classes for the header and the claim rather than strings, they will just be stringified to JSON format.
@@ -174,7 +141,7 @@ trait JwtCore[H, C] {
     * @param header the header to stringify as a JSON before encoding the token
     * @param claim the claim to stringify as a JSON before encoding the token
     */
-  def encode(header: JwtHeader, claim: JwtClaim): String = header.algorithm match {
+  def encode(header: H, claim: C): String = header.algorithm match {
     case None => encode(header.toJson, claim.toJson)
     case _ => throw new JwtNonEmptyAlgorithmException()
   }
@@ -186,7 +153,7 @@ trait JwtCore[H, C] {
     * @param claim the claim to stringify as a JSON before encoding the token
     * @param key the secret key to use to sign the token (note that the algorithm will be deduced from the header)
     */
-  def encode(header: JwtHeader, claim: JwtClaim, key: String): String = header.algorithm match {
+  def encode(header: H, claim: C, key: String): String = header.algorithm match {
     case Some(algo: JwtAlgorithm) => encode(header.toJson, claim.toJson, key, algo)
     case _ => throw new JwtEmptyAlgorithmException()
   }
@@ -198,7 +165,7 @@ trait JwtCore[H, C] {
     * @param claim the claim to stringify as a JSON before encoding the token
     * @param key the secret key to use to sign the token (note that the algorithm will be deduced from the header)
     */
-  def encode(header: JwtHeader, claim: JwtClaim, key: Key): String = (header.algorithm, key) match {
+  def encode(header: H, claim: C, key: Key): String = (header.algorithm, key) match {
     case (Some(algo: JwtHmacAlgorithm), k: SecretKey) => encode(header.toJson, claim.toJson, k, algo)
     case (Some(algo: JwtAsymmetricAlgorithm), k: PrivateKey) => encode(header.toJson, claim.toJson, k, algo)
     case _ => throw new JwtValidationException("The key type doesn't match the algorithm type. It's either a SecretKey and a HMAC algorithm or a PrivateKey and a RSA or ECDSA algorithm. And an algorithm is required of course.")

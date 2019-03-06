@@ -8,7 +8,7 @@ import pdi.jwt.exceptions.JwtNonStringException
   *
   * To see a full list of samples, check the [[http://pauldijou.fr/jwt-scala/samples/jwt-play-json/ online documentation]].
   */
-trait JwtJsonParser[H, C] extends JwtJsonCommon[JsObject, H, C] with JwtJsonImplicits {
+trait JwtJsonParser[H <: JwtHeader, C <: JwtClaim] extends JwtJsonCommon[JsObject, H, C] with JwtJsonImplicits {
   protected def parse(value: String): JsObject = Json.parse(value).as[JsObject]
 
   protected def stringify(value: JsObject): String = Json.stringify(value)
