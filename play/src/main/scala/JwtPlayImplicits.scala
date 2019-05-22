@@ -1,6 +1,7 @@
 package pdi.jwt
 
 import javax.inject.Inject
+import java.time.Clock
 import play.api.{Configuration, Play}
 import play.api.mvc.{RequestHeader, Result}
 import play.api.libs.json.{JsObject, JsString, Json, Writes}
@@ -14,7 +15,7 @@ trait JwtPlayImplicits {
       header.trim
     }
 
-  private def requestToJwtSession(request: RequestHeader)(implicit conf:Configuration): JwtSession =
+  private def requestToJwtSession(request: RequestHeader)(implicit conf:Configuration, clock: Clock): JwtSession =
     request.headers.get(JwtSession.REQUEST_HEADER_NAME).map(sanitizeHeader).map(JwtSession.deserialize).getOrElse(JwtSession())
 
   /** By adding `import pdi.jwt._`, you will implicitely add all those methods to `Result` allowing you to easily manipulate
@@ -38,7 +39,7 @@ trait JwtPlayImplicits {
     * }
     * }}}
     */
-  implicit class RichResult @Inject()(result: Result)(implicit conf:Configuration) {
+  implicit class RichResult @Inject()(result: Result)(implicit conf:Configuration, clock: Clock) {
     /** Retrieve the current [[JwtSession]] from the headers (first from the Result then from the RequestHeader), if none, create a new one.
       * @return the JwtSession inside the headers or a new one
       */
@@ -106,7 +107,7 @@ trait JwtPlayImplicits {
     * }
     * }}}
     */
-  implicit class RichRequestHeader @Inject()(request: RequestHeader)(implicit conf:Configuration) {
+  implicit class RichRequestHeader @Inject()(request: RequestHeader)(implicit conf:Configuration, clock: Clock) {
     /** Return the current [[JwtSession]] from the request */
     def jwtSession: JwtSession = requestToJwtSession(request)
   }

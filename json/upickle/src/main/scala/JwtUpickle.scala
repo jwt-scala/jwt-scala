@@ -1,5 +1,6 @@
 package pdi.jwt
 
+import java.time.Clock
 import upickle.default._
 
 /**
@@ -22,6 +23,12 @@ trait JwtUpickleParser[H, C] extends JwtJsonCommon[ujson.Value, H, C] with JwtUp
 }
 
 object JwtUpickle extends JwtUpickleParser[JwtHeader, JwtClaim] {
+  def apply(clock: Clock): JwtUpickle = new JwtUpickle(clock)
+  def parseHeader(header: String): JwtHeader = read[JwtHeader](header)
+  def parseClaim(claim: String): JwtClaim = read[JwtClaim](claim)
+}
+
+class JwtUpickle private (override val clock: Clock) extends JwtUpickleParser[JwtHeader, JwtClaim] {
   def parseHeader(header: String): JwtHeader = read[JwtHeader](header)
   def parseClaim(claim: String): JwtClaim = read[JwtClaim](claim)
 }

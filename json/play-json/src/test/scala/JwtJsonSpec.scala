@@ -1,11 +1,12 @@
 package pdi.jwt
 
+import java.time.Clock
 import play.api.libs.json.{Json, JsObject, JsNumber, JsString}
 
 class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
   import pdi.jwt.JwtJson._
 
-  val jwtJsonCommon = JwtJson
+  override def jwtJsonCommon(clock: Clock) = JwtJson(clock)
 
   describe("JwtJson") {
     it("should implicitly convert to JsValue") {
@@ -29,7 +30,7 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
     }
 
     it("should decode token with spaces") {
-      val (header, claim, signature) = jwtJsonCommon.decodeJsonAll(tokenWithSpaces).get
+      val (header, claim, signature) = defaultJwt.decodeJsonAll(tokenWithSpaces).get
       val expiration = BigDecimal("32086368000")
       assertResult(JsNumber(0)) { (claim \ "nbf").get }
       assertResult(JsNumber(expiration)) { (claim \ "exp").get }

@@ -1,5 +1,7 @@
 package pdi.jwt
 
+import java.time.Clock
+
 object JwtClaim {
   def apply(
     content: String = "{}",
@@ -75,7 +77,7 @@ class JwtClaim(
     JwtClaim(content, issuer, subject, audience, expiration, notBefore, issuedAt, Option(id))
   }
 
-  def expiresIn(seconds: Long): JwtClaim = {
+  def expiresIn(seconds: Long)(implicit clock: Clock): JwtClaim = {
     JwtClaim(content, issuer, subject, audience, Option(JwtTime.nowSeconds + seconds), notBefore, issuedAt, jwtId)
   }
 
@@ -83,11 +85,11 @@ class JwtClaim(
     JwtClaim(content, issuer, subject, audience, Option(seconds), notBefore, issuedAt, jwtId)
   }
 
-  def expiresNow: JwtClaim = {
+  def expiresNow(implicit clock: Clock): JwtClaim = {
     JwtClaim(content, issuer, subject, audience, Option(JwtTime.nowSeconds), notBefore, issuedAt, jwtId)
   }
 
-  def startsIn(seconds: Long): JwtClaim = {
+  def startsIn(seconds: Long)(implicit clock: Clock): JwtClaim = {
     JwtClaim(content, issuer, subject, audience, expiration, Option(JwtTime.nowSeconds + seconds), issuedAt, jwtId)
   }
 
@@ -95,11 +97,11 @@ class JwtClaim(
     JwtClaim(content, issuer, subject, audience, expiration, Option(seconds), issuedAt, jwtId)
   }
 
-  def startsNow: JwtClaim = {
+  def startsNow(implicit clock: Clock): JwtClaim = {
     JwtClaim(content, issuer, subject, audience, expiration, Option(JwtTime.nowSeconds), issuedAt, jwtId)
   }
 
-  def issuedIn(seconds: Long): JwtClaim = {
+  def issuedIn(seconds: Long)(implicit clock: Clock): JwtClaim = {
     JwtClaim(content, issuer, subject, audience, expiration, notBefore, Option(JwtTime.nowSeconds + seconds), jwtId)
   }
 
@@ -107,15 +109,15 @@ class JwtClaim(
     JwtClaim(content, issuer, subject, audience, expiration, notBefore, Option(seconds), jwtId)
   }
 
-  def issuedNow: JwtClaim = {
+  def issuedNow(implicit clock: Clock): JwtClaim = {
     JwtClaim(content, issuer, subject, audience, expiration, notBefore, Option(JwtTime.nowSeconds), jwtId)
   }
 
-  def isValid(issuer: String, audience: String): Boolean = this.audience.exists(_ contains audience) && this.isValid(issuer)
+  def isValid(issuer: String, audience: String)(implicit clock: Clock): Boolean = this.audience.exists(_ contains audience) && this.isValid(issuer)
 
-  def isValid(issuer: String): Boolean = this.issuer.contains(issuer) && this.isValid
+  def isValid(issuer: String)(implicit clock: Clock): Boolean = this.issuer.contains(issuer) && this.isValid
 
-  def isValid: Boolean = JwtTime.nowIsBetweenSeconds(this.notBefore, this.expiration)
+  def isValid(implicit clock: Clock): Boolean = JwtTime.nowIsBetweenSeconds(this.notBefore, this.expiration)
 
   // equality code
   def canEqual(other: Any): Boolean = other.isInstanceOf[JwtClaim]

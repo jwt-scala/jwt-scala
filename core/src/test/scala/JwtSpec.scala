@@ -6,13 +6,18 @@ import pdi.jwt.exceptions._
 import scala.util.Success
 
 class JwtSpec extends UnitSpec with Fixture {
-  def battleTestEncode(d: DataEntryBase, key: String) = {
-    assertResult(d.tokenEmpty, d.algo.fullName) { Jwt.encode(claim) }
-    assertResult(d.token, d.algo.fullName) { Jwt.encode(d.header, claim, key, d.algo) }
-    assertResult(d.token, d.algo.fullName) { Jwt.encode(claim, key, d.algo) }
-    assertResult(d.tokenEmpty, d.algo.fullName) { Jwt.encode(claimClass) }
-    assertResult(d.token, d.algo.fullName) { Jwt.encode(claimClass, key, d.algo) }
-    assertResult(d.token, d.algo.fullName) { Jwt.encode(d.headerClass, claimClass, key) }
+  val afterExpirationJwt: Jwt = Jwt(afterExpirationClock)
+  val beforeNotBeforeJwt: Jwt = Jwt(beforeNotBeforeClock)
+  val afterNotBeforeJwt: Jwt = Jwt(afterNotBeforeClock)
+  val validTimeJwt: Jwt = Jwt(validTimeClock)
+
+  def battleTestEncode(d: DataEntryBase, key: String, jwt: Jwt) = {
+    assertResult(d.tokenEmpty, d.algo.fullName) { jwt.encode(claim) }
+    assertResult(d.token, d.algo.fullName) { jwt.encode(d.header, claim, key, d.algo) }
+    assertResult(d.token, d.algo.fullName) { jwt.encode(claim, key, d.algo) }
+    assertResult(d.tokenEmpty, d.algo.fullName) { jwt.encode(claimClass) }
+    assertResult(d.token, d.algo.fullName) { jwt.encode(claimClass, key, d.algo) }
+    assertResult(d.token, d.algo.fullName) { jwt.encode(d.headerClass, claimClass, key) }
   }
 
   describe("Jwt") {
@@ -21,34 +26,29 @@ class JwtSpec extends UnitSpec with Fixture {
     }
 
     it("should encode Hmac") {
-      val mock = mockValidTime
-      data foreach { d => battleTestEncode(d, secretKey) }
-      tearDown(mock)
+      data foreach { d => battleTestEncode(d, secretKey, validTimeJwt) }
     }
 
     it("should encode RSA") {
-      val mock = mockValidTime
-      dataRSA foreach { d => battleTestEncode(d, privateKeyRSA) }
-      tearDown(mock)
+      dataRSA foreach { d => battleTestEncode(d, privateKeyRSA, validTimeJwt) }
     }
 
     it("should be symmetric") {
-      val mock = mockValidTime
       data foreach { d =>
         assertResult((d.header, claim, d.signature), d.algo.fullName) {
-          Jwt.decodeAll(Jwt.encode(d.header, claim, secretKey, d.algo), secretKey, JwtAlgorithm.allHmac).get
+          validTimeJwt.decodeAll(validTimeJwt.encode(d.header, claim, secretKey, d.algo), secretKey, JwtAlgorithm.allHmac).get
         }
       }
 
       dataRSA foreach { d =>
         assert({
-          val (h, c, s) = Jwt.decodeAll(Jwt.encode(d.header, claim, randomRSAKey.getPrivate, d.algo.asInstanceOf[JwtRSAAlgorithm]), randomRSAKey.getPublic, JwtAlgorithm.allRSA).get
+          val (h, c, s) = validTimeJwt.decodeAll(validTimeJwt.encode(d.header, claim, randomRSAKey.getPrivate, d.algo.asInstanceOf[JwtRSAAlgorithm]), randomRSAKey.getPublic, JwtAlgorithm.allRSA).get
 
           h == d.header && c == claim
         }, d.algo.fullName)
 
         assert({
-          val (h, c, s) = Jwt.decodeAll(Jwt.encode(d.header, claim, randomRSAKey.getPrivate, d.algo.asInstanceOf[JwtRSAAlgorithm]), randomRSAKey.getPublic).get
+          val (h, c, s) = validTimeJwt.decodeAll(validTimeJwt.encode(d.header, claim, randomRSAKey.getPrivate, d.algo.asInstanceOf[JwtRSAAlgorithm]), randomRSAKey.getPublic).get
 
           h == d.header && c == claim
         }, d.algo.fullName)
@@ -56,67 +56,55 @@ class JwtSpec extends UnitSpec with Fixture {
 
       dataECDSA foreach { d =>
         assert({
-          val (h, c, s) = Jwt.decodeAll(Jwt.encode(d.header, claim, randomECKey.getPrivate, d.algo.asInstanceOf[JwtECDSAAlgorithm]), randomECKey.getPublic, JwtAlgorithm.allECDSA).get
+          val (h, c, s) = validTimeJwt.decodeAll(validTimeJwt.encode(d.header, claim, randomECKey.getPrivate, d.algo.asInstanceOf[JwtECDSAAlgorithm]), randomECKey.getPublic, JwtAlgorithm.allECDSA).get
 
           h == d.header && c == claim
         }, d.algo.fullName)
       }
-
-      tearDown(mock)
     }
 
     it("should decodeRawAll") {
-      val mock = mockValidTime
       data foreach { d =>
-        assertResult(Success((d.header, claim, d.signature)), d.algo.fullName) { Jwt.decodeRawAll(d.token, secretKey, JwtAlgorithm.allHmac) }
-        assertResult(Success((d.header, claim, d.signature)), d.algo.fullName) { Jwt.decodeRawAll(d.token, secretKeyOf(d.algo)) }
+        assertResult(Success((d.header, claim, d.signature)), d.algo.fullName) { validTimeJwt.decodeRawAll(d.token, secretKey, JwtAlgorithm.allHmac) }
+        assertResult(Success((d.header, claim, d.signature)), d.algo.fullName) { validTimeJwt.decodeRawAll(d.token, secretKeyOf(d.algo)) }
       }
-      tearDown(mock)
     }
 
     it("should decodeRaw") {
-      val mock = mockValidTime
       data foreach { d =>
-        assertResult(Success((claim)), d.algo.fullName) { Jwt.decodeRaw(d.token, secretKey, JwtAlgorithm.allHmac) }
-        assertResult(Success((claim)), d.algo.fullName) { Jwt.decodeRaw(d.token, secretKeyOf(d.algo)) }
+        assertResult(Success((claim)), d.algo.fullName) { validTimeJwt.decodeRaw(d.token, secretKey, JwtAlgorithm.allHmac) }
+        assertResult(Success((claim)), d.algo.fullName) { validTimeJwt.decodeRaw(d.token, secretKeyOf(d.algo)) }
       }
-      tearDown(mock)
     }
 
     it("should decodeAll") {
-      val mock = mockValidTime
       data foreach { d =>
-        assertResult(Success((d.header, claim, d.signature)), d.algo.fullName) { Jwt.decodeAll(d.token, secretKey, JwtAlgorithm.allHmac) }
-        assertResult(Success((d.header, claim, d.signature)), d.algo.fullName) { Jwt.decodeAll(d.token, secretKeyOf(d.algo)) }
+        assertResult(Success((d.header, claim, d.signature)), d.algo.fullName) { validTimeJwt.decodeAll(d.token, secretKey, JwtAlgorithm.allHmac) }
+        assertResult(Success((d.header, claim, d.signature)), d.algo.fullName) { validTimeJwt.decodeAll(d.token, secretKeyOf(d.algo)) }
       }
-      tearDown(mock)
     }
 
     it("should decode") {
-      val mock = mockValidTime
       data foreach { d =>
-        assertResult(Success(claim), d.algo.fullName) { Jwt.decode(d.token, secretKey, JwtAlgorithm.allHmac) }
-        assertResult(Success(claim), d.algo.fullName) { Jwt.decode(d.token, secretKeyOf(d.algo)) }
+        assertResult(Success(claim), d.algo.fullName) { validTimeJwt.decode(d.token, secretKey, JwtAlgorithm.allHmac) }
+        assertResult(Success(claim), d.algo.fullName) { validTimeJwt.decode(d.token, secretKeyOf(d.algo)) }
       }
-      tearDown(mock)
     }
 
     it("should validate correct tokens") {
-      val mock = mockValidTime
 
       data foreach { d =>
-        assertResult((), d.algo.fullName) { Jwt.validate(d.token, secretKey, JwtAlgorithm.allHmac) }
-        assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, secretKey, JwtAlgorithm.allHmac) }
-        assertResult((), d.algo.fullName) { Jwt.validate(d.token, secretKeyOf(d.algo)) }
-        assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, secretKeyOf(d.algo)) }
+        assertResult((), d.algo.fullName) { validTimeJwt.validate(d.token, secretKey, JwtAlgorithm.allHmac) }
+        assertResult(true, d.algo.fullName) { validTimeJwt.isValid(d.token, secretKey, JwtAlgorithm.allHmac) }
+        assertResult((), d.algo.fullName) { validTimeJwt.validate(d.token, secretKeyOf(d.algo)) }
+        assertResult(true, d.algo.fullName) { validTimeJwt.isValid(d.token, secretKeyOf(d.algo)) }
       }
 
       dataRSA foreach { d =>
-        assertResult((), d.algo.fullName) { Jwt.validate(d.token, publicKeyRSA, JwtAlgorithm.allRSA) }
-        assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allRSA) }
+        assertResult((), d.algo.fullName) { validTimeJwt.validate(d.token, publicKeyRSA, JwtAlgorithm.allRSA) }
+        assertResult(true, d.algo.fullName) { validTimeJwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allRSA) }
       }
 
-      tearDown(mock)
     }
 
     it("should validate ECDSA from other implementations") {
@@ -151,125 +139,103 @@ class JwtSpec extends UnitSpec with Fixture {
     }
 
     it("should invalidate expired tokens") {
-      val mock = mockAfterExpiration
-
       data foreach { d =>
-        intercept[JwtExpirationException] { Jwt.validate(d.token, secretKey, JwtAlgorithm.allHmac) }
-        assertResult(false, d.algo.fullName) { Jwt.isValid(d.token, secretKey, JwtAlgorithm.allHmac) }
-        intercept[JwtExpirationException] { Jwt.validate(d.token, secretKeyOf(d.algo)) }
-        assertResult(false, d.algo.fullName) { Jwt.isValid(d.token, secretKeyOf(d.algo)) }
+        intercept[JwtExpirationException] { afterExpirationJwt.validate(d.token, secretKey, JwtAlgorithm.allHmac) }
+        assertResult(false, d.algo.fullName) { afterExpirationJwt.isValid(d.token, secretKey, JwtAlgorithm.allHmac) }
+        intercept[JwtExpirationException] { afterExpirationJwt.validate(d.token, secretKeyOf(d.algo)) }
+        assertResult(false, d.algo.fullName) { afterExpirationJwt.isValid(d.token, secretKeyOf(d.algo)) }
       }
 
       dataRSA foreach { d =>
-        intercept[JwtExpirationException] { Jwt.validate(d.token, publicKeyRSA, JwtAlgorithm.allRSA) }
-        assertResult(false, d.algo.fullName) { Jwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allRSA) }
+        intercept[JwtExpirationException] { afterExpirationJwt.validate(d.token, publicKeyRSA, JwtAlgorithm.allRSA) }
+        assertResult(false, d.algo.fullName) { afterExpirationJwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allRSA) }
       }
-
-      tearDown(mock)
     }
 
     it("should validate expired tokens with leeway") {
-      val mock = mockAfterExpiration
       val options = JwtOptions(leeway = 60)
 
       data foreach { d =>
-        Jwt.validate(d.token, secretKey, JwtAlgorithm.allHmac, options)
-        assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, secretKey, JwtAlgorithm.allHmac, options) }
-        Jwt.validate(d.token, secretKeyOf(d.algo), options)
-        assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, secretKeyOf(d.algo), options) }
+        afterExpirationJwt.validate(d.token, secretKey, JwtAlgorithm.allHmac, options)
+        assertResult(true, d.algo.fullName) { afterExpirationJwt.isValid(d.token, secretKey, JwtAlgorithm.allHmac, options) }
+        afterExpirationJwt.validate(d.token, secretKeyOf(d.algo), options)
+        assertResult(true, d.algo.fullName) { afterExpirationJwt.isValid(d.token, secretKeyOf(d.algo), options) }
       }
 
       dataRSA foreach { d =>
-        Jwt.validate(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options)
-        assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options) }
+        afterExpirationJwt.validate(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options)
+        assertResult(true, d.algo.fullName) { afterExpirationJwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options) }
       }
-
-      tearDown(mock)
     }
 
     it("should invalidate early tokens") {
-      val mock = mockBeforeNotBefore
-
       data foreach { d =>
         val claimNotBefore = claimClass.startsAt(notBefore)
-        val token = Jwt.encode(claimNotBefore, secretKey, d.algo)
+        val token = beforeNotBeforeJwt.encode(claimNotBefore, secretKey, d.algo)
 
-        intercept[JwtNotBeforeException] { Jwt.validate(token, secretKey, JwtAlgorithm.allHmac) }
-        assertResult(false, d.algo.fullName) { Jwt.isValid(token, secretKey, JwtAlgorithm.allHmac) }
-        intercept[JwtNotBeforeException] { Jwt.validate(token, secretKeyOf(d.algo)) }
-        assertResult(false, d.algo.fullName) { Jwt.isValid(token, secretKeyOf(d.algo)) }
+        intercept[JwtNotBeforeException] { beforeNotBeforeJwt.validate(token, secretKey, JwtAlgorithm.allHmac) }
+        assertResult(false, d.algo.fullName) { beforeNotBeforeJwt.isValid(token, secretKey, JwtAlgorithm.allHmac) }
+        intercept[JwtNotBeforeException] { beforeNotBeforeJwt.validate(token, secretKeyOf(d.algo)) }
+        assertResult(false, d.algo.fullName) { beforeNotBeforeJwt.isValid(token, secretKeyOf(d.algo)) }
       }
 
       dataRSA foreach { d =>
         val claimNotBefore = claimClass.startsAt(notBefore)
-        val token = Jwt.encode(claimNotBefore, privateKeyRSA, d.algo)
+        val token = beforeNotBeforeJwt.encode(claimNotBefore, privateKeyRSA, d.algo)
 
-        intercept[JwtNotBeforeException] { Jwt.validate(token, publicKeyRSA, JwtAlgorithm.allRSA) }
-        assertResult(false, d.algo.fullName) { Jwt.isValid(token, publicKeyRSA, JwtAlgorithm.allRSA) }
+        intercept[JwtNotBeforeException] { beforeNotBeforeJwt.validate(token, publicKeyRSA, JwtAlgorithm.allRSA) }
+        assertResult(false, d.algo.fullName) { beforeNotBeforeJwt.isValid(token, publicKeyRSA, JwtAlgorithm.allRSA) }
       }
-
-      tearDown(mock)
     }
 
     it("should validate early tokens with leeway") {
-      val mock = mockBeforeNotBefore
       val options = JwtOptions(leeway = 60)
 
       data foreach { d =>
         val claimNotBefore = claimClass.startsAt(notBefore)
-        val token = Jwt.encode(claimNotBefore, secretKey, d.algo)
+        val token = beforeNotBeforeJwt.encode(claimNotBefore, secretKey, d.algo)
 
-        Jwt.validate(token, secretKey, JwtAlgorithm.allHmac, options)
-        assertResult(true, d.algo.fullName) { Jwt.isValid(token, secretKey, JwtAlgorithm.allHmac, options) }
-        Jwt.validate(token, secretKeyOf(d.algo), options)
-        assertResult(true, d.algo.fullName) { Jwt.isValid(token, secretKeyOf(d.algo), options) }
+        beforeNotBeforeJwt.validate(token, secretKey, JwtAlgorithm.allHmac, options)
+        assertResult(true, d.algo.fullName) { beforeNotBeforeJwt.isValid(token, secretKey, JwtAlgorithm.allHmac, options) }
+        beforeNotBeforeJwt.validate(token, secretKeyOf(d.algo), options)
+        assertResult(true, d.algo.fullName) { beforeNotBeforeJwt.isValid(token, secretKeyOf(d.algo), options) }
       }
 
       dataRSA foreach { d =>
         val claimNotBefore = claimClass.startsAt(notBefore)
-        val token = Jwt.encode(claimNotBefore, privateKeyRSA, d.algo)
+        val token = beforeNotBeforeJwt.encode(claimNotBefore, privateKeyRSA, d.algo)
 
-        intercept[JwtNotBeforeException] { Jwt.validate(token, publicKeyRSA, JwtAlgorithm.allRSA) }
-        assertResult(false, d.algo.fullName) { Jwt.isValid(token, publicKeyRSA, JwtAlgorithm.allRSA) }
+        intercept[JwtNotBeforeException] { beforeNotBeforeJwt.validate(token, publicKeyRSA, JwtAlgorithm.allRSA) }
+        assertResult(false, d.algo.fullName) { beforeNotBeforeJwt.isValid(token, publicKeyRSA, JwtAlgorithm.allRSA) }
       }
-
-      tearDown(mock)
     }
 
     it("should invalidate wrong keys") {
-      val mock = mockValidTime
-
       data foreach { d =>
-        intercept[JwtValidationException] { Jwt.validate(d.token, "wrong key", JwtAlgorithm.allHmac) }
-        assertResult(false, d.algo.fullName) { Jwt.isValid(d.token, "wrong key", JwtAlgorithm.allHmac) }
+        intercept[JwtValidationException] { validTimeJwt.validate(d.token, "wrong key", JwtAlgorithm.allHmac) }
+        assertResult(false, d.algo.fullName) { validTimeJwt.isValid(d.token, "wrong key", JwtAlgorithm.allHmac) }
       }
 
       dataRSA foreach { d =>
-        assertResult(false, d.algo.fullName) { Jwt.isValid(d.token, "wrong key", JwtAlgorithm.allRSA) }
+        assertResult(false, d.algo.fullName) { validTimeJwt.isValid(d.token, "wrong key", JwtAlgorithm.allRSA) }
       }
-
-      tearDown(mock)
     }
 
     it("should fail on non-exposed algorithms") {
-      val mock = mockValidTime
-
       data foreach { d =>
-        intercept[JwtValidationException] { Jwt.validate(d.token, secretKey, Seq.empty[JwtHmacAlgorithm]) }
-        assertResult(false, d.algo.fullName) { Jwt.isValid(d.token, secretKey, Seq.empty[JwtHmacAlgorithm]) }
+        intercept[JwtValidationException] { validTimeJwt.validate(d.token, secretKey, Seq.empty[JwtHmacAlgorithm]) }
+        assertResult(false, d.algo.fullName) { validTimeJwt.isValid(d.token, secretKey, Seq.empty[JwtHmacAlgorithm]) }
       }
 
       data foreach { d =>
-        intercept[JwtValidationException] { Jwt.validate(d.token, secretKey, JwtAlgorithm.allRSA) }
-        assertResult(false, d.algo.fullName) { Jwt.isValid(d.token, secretKey, JwtAlgorithm.allRSA) }
+        intercept[JwtValidationException] { validTimeJwt.validate(d.token, secretKey, JwtAlgorithm.allRSA) }
+        assertResult(false, d.algo.fullName) { validTimeJwt.isValid(d.token, secretKey, JwtAlgorithm.allRSA) }
       }
 
       dataRSA foreach { d =>
-        intercept[JwtValidationException] { Jwt.validate(d.token, publicKeyRSA, JwtAlgorithm.allHmac) }
-        assertResult(false, d.algo.fullName) { Jwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allHmac) }
+        intercept[JwtValidationException] { validTimeJwt.validate(d.token, publicKeyRSA, JwtAlgorithm.allHmac) }
+        assertResult(false, d.algo.fullName) { validTimeJwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allHmac) }
       }
-
-      tearDown(mock)
     }
 
     it("should invalidate wrong algos") {
@@ -279,63 +245,55 @@ class JwtSpec extends UnitSpec with Fixture {
     }
 
     it("should skip expiration validation depending on options") {
-      val mock = mockAfterExpiration
       val options = JwtOptions(expiration = false)
 
       data foreach { d =>
-        Jwt.validate(d.token, secretKey, JwtAlgorithm.allHmac, options)
-        assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, secretKey, JwtAlgorithm.allHmac, options) }
-        Jwt.validate(d.token, secretKeyOf(d.algo), options)
-        assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, secretKeyOf(d.algo), options) }
+        afterExpirationJwt.validate(d.token, secretKey, JwtAlgorithm.allHmac, options)
+        assertResult(true, d.algo.fullName) { afterExpirationJwt.isValid(d.token, secretKey, JwtAlgorithm.allHmac, options) }
+        afterExpirationJwt.validate(d.token, secretKeyOf(d.algo), options)
+        assertResult(true, d.algo.fullName) { afterExpirationJwt.isValid(d.token, secretKeyOf(d.algo), options) }
       }
 
       dataRSA foreach { d =>
-        Jwt.validate(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options)
-        assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options) }
+        afterExpirationJwt.validate(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options)
+        assertResult(true, d.algo.fullName) { afterExpirationJwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allRSA, options) }
       }
 
-      tearDown(mock)
     }
 
     it("should skip notBefore validation depending on options") {
-      val mock = mockBeforeNotBefore
       val options = JwtOptions(notBefore = false)
 
       data foreach { d =>
         val claimNotBefore = claimClass.startsAt(notBefore)
-        val token = Jwt.encode(claimNotBefore, secretKey, d.algo)
+        val token = beforeNotBeforeJwt.encode(claimNotBefore, secretKey, d.algo)
 
-        Jwt.validate(token, secretKey, JwtAlgorithm.allHmac, options)
-        assertResult(true, d.algo.fullName) { Jwt.isValid(token, secretKey, JwtAlgorithm.allHmac, options) }
-        Jwt.validate(token, secretKeyOf(d.algo), options)
-        assertResult(true, d.algo.fullName) { Jwt.isValid(token, secretKeyOf(d.algo), options) }
+        beforeNotBeforeJwt.validate(token, secretKey, JwtAlgorithm.allHmac, options)
+        assertResult(true, d.algo.fullName) { beforeNotBeforeJwt.isValid(token, secretKey, JwtAlgorithm.allHmac, options) }
+        beforeNotBeforeJwt.validate(token, secretKeyOf(d.algo), options)
+        assertResult(true, d.algo.fullName) { beforeNotBeforeJwt.isValid(token, secretKeyOf(d.algo), options) }
       }
 
       dataRSA foreach { d =>
         val claimNotBefore = claimClass.startsAt(notBefore)
-        val token = Jwt.encode(claimNotBefore, privateKeyRSA, d.algo)
+        val token = beforeNotBeforeJwt.encode(claimNotBefore, privateKeyRSA, d.algo)
 
-        Jwt.validate(token, publicKeyRSA, JwtAlgorithm.allRSA, options)
-        assertResult(true, d.algo.fullName) { Jwt.isValid(token, publicKeyRSA, JwtAlgorithm.allRSA, options) }
+        beforeNotBeforeJwt.validate(token, publicKeyRSA, JwtAlgorithm.allRSA, options)
+        assertResult(true, d.algo.fullName) { beforeNotBeforeJwt.isValid(token, publicKeyRSA, JwtAlgorithm.allRSA, options) }
       }
-
-      tearDown(mock)
     }
 
     it("should skip signature validation depending on options") {
-      val mock = mockValidTime
       val options = JwtOptions(signature = false)
 
       data foreach { d =>
-        Jwt.validate(d.token, "wrong key", JwtAlgorithm.allHmac, options)
-        assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, "wrong key", JwtAlgorithm.allHmac, options) }
+        validTimeJwt.validate(d.token, "wrong key", JwtAlgorithm.allHmac, options)
+        assertResult(true, d.algo.fullName) { validTimeJwt.isValid(d.token, "wrong key", JwtAlgorithm.allHmac, options) }
       }
 
       dataRSA foreach { d =>
-        assertResult(true, d.algo.fullName) { Jwt.isValid(d.token, "wrong key", JwtAlgorithm.allRSA, options) }
+        assertResult(true, d.algo.fullName) { validTimeJwt.isValid(d.token, "wrong key", JwtAlgorithm.allRSA, options) }
       }
-
-      tearDown(mock)
     }
   }
 }

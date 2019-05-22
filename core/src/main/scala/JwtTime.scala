@@ -1,6 +1,6 @@
 package pdi.jwt
 
-import java.time.Instant
+import java.time.{ Clock, Instant }
 import pdi.jwt.exceptions.{JwtNotBeforeException, JwtExpirationException}
 
 /** Util object to handle time operations */
@@ -9,13 +9,13 @@ object JwtTime {
     *
     * @return Returns the number of millis since the 01.01.1970
     */
-  def now: Long = Instant.now().toEpochMilli
+  def now(implicit clock: Clock): Long = clock.instant().toEpochMilli
 
   /** Returns the number of seconds since the 01.01.1970
     *
     * @return Returns the number of seconds since the 01.01.1970
     */
-  def nowSeconds: Long = this.now / 1000
+  def nowSeconds(implicit clock: Clock): Long = this.now / 1000
 
   def format(time: Long): String = Instant.ofEpochMilli(time).toString
 
@@ -25,7 +25,7 @@ object JwtTime {
     * @param start if set, the instant that must be before now (in millis)
     * @param end if set, the instant that must be after now (in millis)
     */
-  def nowIsBetween(start: Option[Long], end: Option[Long]): Boolean = {
+  def nowIsBetween(start: Option[Long], end: Option[Long])(implicit clock: Clock): Boolean = {
     try {
       validateNowIsBetween(start, end)
       true
@@ -40,7 +40,7 @@ object JwtTime {
     * @param start if set, the instant that must be before now (in seconds)
     * @param end if set, the instant that must be after now (in seconds)
     */
-  def nowIsBetweenSeconds(start: Option[Long], end: Option[Long]): Boolean =
+  def nowIsBetweenSeconds(start: Option[Long], end: Option[Long])(implicit clock: Clock): Boolean =
     nowIsBetween(start.map(_ * 1000), end.map(_ * 1000))
 
   /** Test if the current time is between the two params and throw an exception if we don't have `start` <= now < `end`
@@ -50,7 +50,7 @@ object JwtTime {
     * @throws JwtNotBeforeException if `start` > now
     * @throws JwtExpirationException if now >= `end`
     */
-  def validateNowIsBetween(start: Option[Long], end: Option[Long]): Unit = {
+  def validateNowIsBetween(start: Option[Long], end: Option[Long])(implicit clock: Clock): Unit = {
     val timeNow = now
 
     if (!start.isEmpty && start.get > timeNow) {
@@ -69,6 +69,6 @@ object JwtTime {
     * @throws JwtNotBeforeException if `start` > now
     * @throws JwtExpirationException if now > `end`
     */
-  def validateNowIsBetweenSeconds(start: Option[Long], end: Option[Long]): Unit =
+  def validateNowIsBetweenSeconds(start: Option[Long], end: Option[Long])(implicit clock: Clock): Unit =
     validateNowIsBetween(start.map(_ * 1000), end.map(_ * 1000))
 }

@@ -1,17 +1,18 @@
 package pdi.jwt
 
-import scala.concurrent.duration.Duration
+import akka.stream.Materializer
+import java.time.Clock
 import org.scalatest._
-import play.api.test._
-import play.api.test.Helpers._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
-import play.api.inject.guice.GuiceApplicationBuilder
-import akka.stream.Materializer
 import play.api.Configuration
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json._
 import play.api.mvc._
 import play.api.mvc.Results._
-import play.api.libs.json._
+import play.api.test._
+import play.api.test.Helpers._
+import scala.concurrent.duration.Duration
 
 class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture {
   import pdi.jwt.JwtSession._
@@ -104,9 +105,7 @@ class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture 
     }
 
     "deserialize" in {
-      val mock = mockValidTime
-      assert(JwtSession.deserialize(token) == session3)
-      tearDown(mock)
+      assert(JwtSession.deserialize(token)(conf, validTimeClock) == session3)
     }
   }
 

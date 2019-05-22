@@ -3,6 +3,7 @@ package pdi.jwt
 import scala.util.Try
 import javax.crypto.SecretKey
 import java.security.{Key, PrivateKey, PublicKey}
+import java.time.Clock
 
 import pdi.jwt.algorithms._
 import pdi.jwt.exceptions._
@@ -21,6 +22,8 @@ import pdi.jwt.exceptions._
   * extracting the expiration will return `1` instead of `1300819380`. Sorry about that.
   */
 object Jwt extends JwtCore[String, String] {
+  def apply(clock: Clock): Jwt = new Jwt(clock)
+
   protected def parseHeader(header: String): String = header
   protected def parseClaim(claim: String): String = claim
 
@@ -38,6 +41,17 @@ object Jwt extends JwtCore[String, String] {
   private val extractNotBeforeRegex = "\"nbf\" *: *([0-9]+)".r
   protected def extractNotBefore(claim: String): Option[Long] =
     (extractNotBeforeRegex findFirstMatchIn claim).map(_.group(1)).map(_.toLong)
+}
+
+class Jwt private (override val clock: Clock) extends JwtCore[String, String] {
+  import Jwt._
+
+  protected def parseHeader(header: String): String = header
+  protected def parseClaim(claim: String): String = claim
+  protected def extractAlgorithm(header: String): Option[JwtAlgorithm] = Jwt.extractAlgorithm(header)
+  protected def extractExpiration(claim: String): Option[Long] = Jwt.extractExpiration(claim)
+  protected def extractNotBefore(claim: String): Option[Long] = Jwt.extractNotBefore(claim)
+
 }
 
 /** Provide the main logic around Base64 encoding / decoding and signature using the correct algorithm.
@@ -59,6 +73,7 @@ object Jwt extends JwtCore[String, String] {
   *
   */
 trait JwtCore[H, C] {
+  implicit private[jwt] val clock: Clock = Clock.systemUTC
   // Abstract methods
   protected def parseHeader(header: String): H
   protected def parseClaim(claim: String): C

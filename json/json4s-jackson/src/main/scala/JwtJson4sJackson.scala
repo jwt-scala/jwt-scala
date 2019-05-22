@@ -1,5 +1,6 @@
 package pdi.jwt
 
+import java.time.Clock
 import org.json4s._
 import org.json4s.JsonDSL.WithBigDecimal._
 import org.json4s.jackson.JsonMethods._
@@ -25,6 +26,12 @@ trait JwtJson4sParser[H, C] extends JwtJson4sCommon[H, C] with JwtJson4sImplicit
 }
 
 object JwtJson4s extends JwtJson4sParser[JwtHeader, JwtClaim] {
+  def apply(clock: Clock): JwtJson4s = new JwtJson4s(clock)
+  def parseHeader(header: String): JwtHeader = readHeader(parse(header))
+  def parseClaim(claim: String): JwtClaim = readClaim(parse(claim))
+}
+
+class JwtJson4s private (override val clock: Clock) extends JwtJson4sParser[JwtHeader, JwtClaim] {
   def parseHeader(header: String): JwtHeader = readHeader(parse(header))
   def parseClaim(claim: String): JwtClaim = readClaim(parse(claim))
 }

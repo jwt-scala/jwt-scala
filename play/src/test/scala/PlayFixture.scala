@@ -1,21 +1,23 @@
 package pdi.jwt
 
+import akka.stream.Materializer
+import akka.util.Timeout
+import java.time.Clock
+import play.api.Configuration
+import play.api.libs.json._
+import play.api.mvc.Results._
+import play.api.mvc._
+import play.api.test.Helpers._
+import play.api.test._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import akka.util.Timeout
-import akka.stream.Materializer
-import play.api.Configuration
-import play.api.mvc._
-import play.api.mvc.Results._
-import play.api.test._
-import play.api.test.Helpers._
-import play.api.libs.json._
 
 case class User(id: Long, name: String)
 
 trait PlayFixture extends Fixture {
   import pdi.jwt.JwtSession._
 
+  implicit var clock: Clock = validTimeClock
 
   def HEADER_NAME: String
 
