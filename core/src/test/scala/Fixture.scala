@@ -1,10 +1,12 @@
 package pdi.jwt
 
-import java.security.spec.{ECPrivateKeySpec, ECPublicKeySpec, ECGenParameterSpec, ECParameterSpec, ECPoint}
-import java.security.{SecureRandom, KeyFactory, KeyPairGenerator}
-import org.bouncycastle.jce.ECNamedCurveTable
-import org.bouncycastle.jce.spec.ECNamedCurveSpec
+import java.security.spec._
+import java.security.{KeyFactory, KeyPairGenerator, SecureRandom, Security}
+
 import javax.crypto.spec.SecretKeySpec
+import org.bouncycastle.jce.ECNamedCurveTable
+import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.bouncycastle.jce.spec.ECNamedCurveSpec
 
 trait DataEntryBase {
   def algo: JwtAlgorithm
@@ -29,6 +31,12 @@ case class DataEntry(
 ) extends DataEntryBase
 
 trait Fixture extends TimeFixture {
+  
+  // Bouncycastle is not included by default. Add it for each test.
+  if (Security.getProvider("BC") == null) {
+    Security.addProvider(new BouncyCastleProvider())
+  }
+  
   val secretKey = "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
   val secretKeyBytes = JwtUtils.bytify(secretKey)
   def secretKeyOf(algo: JwtAlgorithm) = new SecretKeySpec(secretKeyBytes, algo.fullName)
@@ -41,7 +49,7 @@ trait Fixture extends TimeFixture {
   def mockBeforeExpiration = mockTime(beforeExpirationMillis)
   def mockAfterExpiration = mockTime(afterExpirationMillis)
 
-  def tearDown(mock: mockit.MockUp[_]) = mock.tearDown
+  def tearDown(mock: mockit.MockUp[_]) = mock.tearDown()
   // def tearDown(mock: mockit.MockUp[_]) = 1
 
   val notBefore: Long = 1300819320
@@ -56,7 +64,7 @@ trait Fixture extends TimeFixture {
   val validTimeMillis: Long = validTime * 1000
   def mockValidTime = mockTime(validTimeMillis)
 
-  val claim = s"""{"iss":"joe","exp":${expiration},"http://example.com/is_root":true}"""
+  val claim = s"""{"iss":"joe","exp":$expiration,"http://example.com/is_root":true}"""
   val claimClass = JwtClaim("""{"http://example.com/is_root":true}""", issuer = Option("joe"), expiration = Option(expiration))
   val claim64 = "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ"
 
@@ -108,12 +116,12 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
 9f6PIOE1rAmPE8Cfz/GFF5115ZKVlq+2BY8EKNxbCIy2d/vMEvisnXI=
 -----END RSA PRIVATE KEY-----"""
 
-  val generatorRSA = KeyPairGenerator.getInstance(JwtUtils.RSA, JwtUtils.PROVIDER)
+  val generatorRSA = KeyPairGenerator.getInstance(JwtUtils.RSA)
   generatorRSA.initialize(1024)
   val randomRSAKey = generatorRSA.generateKeyPair()
 
   val ecGenSpec = new ECGenParameterSpec("P-521")
-  val generatorEC = KeyPairGenerator.getInstance(JwtUtils.ECDSA, JwtUtils.PROVIDER)
+  val generatorEC = KeyPairGenerator.getInstance(JwtUtils.ECDSA)
   generatorEC.initialize(ecGenSpec, new SecureRandom())
 
   val randomECKey = generatorEC.generateKeyPair()
@@ -123,13 +131,13 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
   val Y = BigInt("b7f22b3c1322beef766cadd1a5f0363840195b7be10d9a518802d8d528e03bc164c9588c5e63f1473d05195510676008b6808508539367d2893e1aa4b7cb9f9dab", 16)
 
   val curveParams = ECNamedCurveTable.getParameterSpec("P-521")
-  val curveSpec: ECParameterSpec = new ECNamedCurveSpec( "P-521", curveParams.getCurve(), curveParams.getG(), curveParams.getN(), curveParams.getH());
+  val curveSpec: ECParameterSpec = new ECNamedCurveSpec( "P-521", curveParams.getCurve(), curveParams.getG(), curveParams.getN(), curveParams.getH())
 
   val privateSpec = new ECPrivateKeySpec(S.underlying(), curveSpec)
   val publicSpec = new ECPublicKeySpec(new ECPoint(X.underlying(), Y.underlying()), curveSpec)
 
-  val privateKeyEC = KeyFactory.getInstance(JwtUtils.ECDSA, JwtUtils.PROVIDER).generatePrivate(privateSpec)
-  val publicKeyEC = KeyFactory.getInstance(JwtUtils.ECDSA, JwtUtils.PROVIDER).generatePublic(publicSpec)
+  val privateKeyEC = KeyFactory.getInstance(JwtUtils.ECDSA).generatePrivate(privateSpec)
+  val publicKeyEC = KeyFactory.getInstance(JwtUtils.ECDSA).generatePublic(publicSpec)
 
   def setToken(entry: DataEntry): DataEntry = {
     entry.copy(

@@ -1,7 +1,7 @@
 package pdi.jwt
 
-import java.security.{KeyPairGenerator, SecureRandom}
 import java.security.spec.ECGenParameterSpec
+import java.security.{KeyPairGenerator, SecureRandom}
 
 import pdi.jwt.exceptions.JwtSignatureFormatException
 
@@ -131,7 +131,7 @@ class JwtUtilsSpec extends UnitSpec {
 
       it("should be symmetric for generated tokens") {
         val ecGenSpec = new ECGenParameterSpec("P-521")
-        val generatorEC = KeyPairGenerator.getInstance(JwtUtils.ECDSA, JwtUtils.PROVIDER)
+        val generatorEC = KeyPairGenerator.getInstance(JwtUtils.ECDSA)
         generatorEC.initialize(ecGenSpec, new SecureRandom())
         val randomECKey = generatorEC.generateKeyPair()
         val header = """{"typ":"JWT","alg":"ES512"}"""
