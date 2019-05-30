@@ -1,11 +1,11 @@
-import sbt._
-import Keys._
-import Tests._
-import play.sbt.Play.autoImport._
-import PlayKeys._
 import Dependencies._
-import scala.sys.process._
 import com.typesafe.sbt.pgp.PgpKeys._
+import play.sbt.Play.autoImport._
+import sbt.Keys._
+import sbt.Tests._
+import sbt._
+
+import scala.sys.process._
 
 val previousVersion = "2.0.0"
 val buildVersion = "2.1.0"
@@ -240,7 +240,7 @@ lazy val argonautProject = project.in(file("json/argonaut"))
 
 def groupPlayTest(tests: Seq[TestDefinition], files: Seq[File]) = tests.map { t =>
   val options = ForkOptions().withRunJVMOptions(Vector(s"-javaagent:${jmockitPath(files)}"))
-  new Group(t.name, Seq(t), new SubProcess(options))
+  Group(t.name, Seq(t), SubProcess(options))
 }
 
 lazy val playProject = project.in(file("play"))

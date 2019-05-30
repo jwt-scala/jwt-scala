@@ -1,10 +1,8 @@
 package pdi.jwt
 
-import org.scalatest._
-
-import scala.util.{Success, Failure}
-
 import pdi.jwt.exceptions._
+
+import scala.util.Success
 
 abstract class JwtJsonCommonSpec[J] extends UnitSpec with JsonCommonFixture[J] {
   def jwtJsonCommon: JwtJsonCommon[J, JwtHeader, JwtClaim]

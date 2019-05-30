@@ -1,11 +1,9 @@
 package pdi.jwt
 
-import org.scalatest._
-
-import scala.util.{Success, Failure}
-
 import pdi.jwt.algorithms._
 import pdi.jwt.exceptions._
+
+import scala.util.Success
 
 class JwtSpec extends UnitSpec with Fixture {
   def battleTestEncode(d: DataEntryBase, key: String) = {

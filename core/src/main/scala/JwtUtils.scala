@@ -1,25 +1,18 @@
 package pdi.jwt
 
-import javax.crypto.{Mac, SecretKey}
-import javax.crypto.spec.SecretKeySpec
-import java.security.{ KeyFactory, PrivateKey, PublicKey, Security, Signature}
 import java.security.spec.{PKCS8EncodedKeySpec, X509EncodedKeySpec}
+import java.security.{KeyFactory, PrivateKey, PublicKey, Signature}
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider
-import org.bouncycastle.util.Arrays
+import javax.crypto.spec.SecretKeySpec
+import javax.crypto.{Mac, SecretKey}
 import pdi.jwt.JwtAlgorithm.{ES256, ES384, ES512}
 import pdi.jwt.algorithms._
 import pdi.jwt.exceptions.{JwtNonSupportedAlgorithm, JwtSignatureFormatException}
 
 object JwtUtils {
   val ENCODING = "UTF-8"
-  val PROVIDER = "BC"
   val RSA = "RSA"
   val ECDSA = "ECDSA"
-
-  if (Security.getProvider(PROVIDER) == null) {
-    Security.addProvider(new BouncyCastleProvider())
-  }
 
   /** Convert an array of bytes to its corresponding string using the default encoding.
     *
@@ -44,7 +37,7 @@ object JwtUtils {
   } else {
     seq.map {
       case value: String => "\"" + escape(value) + "\""
-      case value: Boolean => (if (value) { "true" } else { "false" })
+      case value: Boolean => if (value) { "true" } else { "false" }
       case value: Double => value.toString
       case value: Short => value.toString
       case value: Float => value.toString
@@ -103,22 +96,22 @@ object JwtUtils {
      .replaceAll("\n", "")
      .trim
   )
-
-  private def parsePrivateKey(key: String, keyAlgo: String): PrivateKey = {
+  
+  private def parsePrivateKey(key: String, keyAlgo: String) = {
     val spec = new PKCS8EncodedKeySpec(parseKey(key))
-    KeyFactory.getInstance(keyAlgo, PROVIDER).generatePrivate(spec)
+    KeyFactory.getInstance(keyAlgo).generatePrivate(spec)
   }
 
   private def parsePublicKey(key: String, keyAlgo: String): PublicKey = {
     val spec = new X509EncodedKeySpec(parseKey(key))
-    KeyFactory.getInstance(keyAlgo, PROVIDER).generatePublic(spec)
+    KeyFactory.getInstance(keyAlgo).generatePublic(spec)
   }
 
   /**
     * Generate the signature for a given data using the key and HMAC algorithm provided.
     */
   def sign(data: Array[Byte], key: SecretKey, algorithm: JwtHmacAlgorithm): Array[Byte] = {
-    val mac = Mac.getInstance(algorithm.fullName, PROVIDER)
+    val mac = Mac.getInstance(algorithm.fullName)
     mac.init(key)
     mac.doFinal(data)
   }
@@ -130,7 +123,7 @@ object JwtUtils {
     * Generate the signature for a given data using the key and RSA or ECDSA algorithm provided.
     */
   def sign(data: Array[Byte], key: PrivateKey, algorithm: JwtAsymmetricAlgorithm): Array[Byte] = {
-    val signer = Signature.getInstance(algorithm.fullName, PROVIDER)
+    val signer = Signature.getInstance(algorithm.fullName)
     signer.initSign(key)
     signer.update(data)
     algorithm match {
@@ -162,14 +155,14 @@ object JwtUtils {
     * Check if a signature is valid for a given data using the key and the HMAC algorithm provided.
     */
   def verify(data: Array[Byte], signature: Array[Byte], key: SecretKey, algorithm: JwtHmacAlgorithm): Boolean = {
-    Arrays.constantTimeAreEqual(sign(data, key, algorithm), signature)
+    JwtArrayUtils.constantTimeAreEqual(sign(data, key, algorithm), signature)
   }
 
   /**
     * Check if a signature is valid for a given data using the key and the RSA or ECDSA algorithm provided.
     */
   def verify(data: Array[Byte], signature: Array[Byte], key: PublicKey, algorithm: JwtAsymmetricAlgorithm): Boolean = {
-    val signer = Signature.getInstance(algorithm.fullName, PROVIDER)
+    val signer = Signature.getInstance(algorithm.fullName)
     signer.initVerify(key)
     signer.update(data)
     algorithm match {

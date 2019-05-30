@@ -46,7 +46,7 @@ libraryDependencies ++= Seq(
 
 ## Dependencies
 
-- `"org.bouncycastle" % "bcpkix-jdk15on"`
+- `"org.bouncycastle" % "bcpkix-jdk15on"` (test only)
 - `"commons-codec" % "commons-codec"` (only if Java 1.6 or 1.7)
 
 ## Algorithms
