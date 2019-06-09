@@ -1,5 +1,6 @@
 package pdi.jwt
 
+import java.time.Clock
 import pdi.jwt.exceptions.JwtNonStringException
 import spray.json._
 
@@ -23,8 +24,12 @@ trait JwtSprayJsonParser[H, C] extends JwtJsonCommon[JsObject, H, C] {
 object JwtSprayJson extends JwtSprayJsonParser[JwtHeader, JwtClaim] {
   import DefaultJsonProtocol._
 
+  def apply(clock: Clock): JwtSprayJson = new JwtSprayJson(clock)
+  override def parseHeader(header: String): JwtHeader = parseHeader(header, this.clock)
+  override def parseClaim(header: String): JwtClaim = parseClaim(header, this.clock)
 
-  def parseHeader(header: String): JwtHeader = {
+  private def parseHeader(header: String, clock: Clock): JwtHeader = {
+    implicit val c: Clock = clock
     val jsObj = parse(header)
     JwtHeader(
       algorithm = getAlgorithm(jsObj),
@@ -34,7 +39,8 @@ object JwtSprayJson extends JwtSprayJsonParser[JwtHeader, JwtClaim] {
     )
   }
 
-  def parseClaim(claim: String): JwtClaim = {
+  private def parseClaim(claim: String, clock: Clock): JwtClaim = {
+    implicit val c: Clock = clock
     val jsObj = parse(claim)
     val content = JsObject(
       jsObj.fields - "iss" - "sub" - "aud" - "exp" - "nbf" - "iat" - "jti"
@@ -56,4 +62,12 @@ object JwtSprayJson extends JwtSprayJsonParser[JwtHeader, JwtClaim] {
 
   private[this] def safeGetField[A: JsonReader](js: JsObject, name: String) =
     js.fields.get(name).flatMap(safeRead[A])
+}
+
+class JwtSprayJson private (override val clock: Clock) extends JwtSprayJsonParser[JwtHeader, JwtClaim] {
+  import JwtSprayJson._
+
+  override def parseHeader(header: String): JwtHeader = JwtSprayJson.parseHeader(header, clock)
+  override def parseClaim(header: String): JwtClaim = JwtSprayJson.parseClaim(header, clock)
+
 }

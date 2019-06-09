@@ -41,8 +41,6 @@ cleanScript := {
   "./scripts/clean.sh" !
 }
 
-def jmockitPath(f: Seq[File]) = f.filter(_.name.endsWith("jmockit-1.24.jar")).head
-
 val scala213 = "2.13.0-M5"
 
 val baseSettings = Seq(
@@ -55,12 +53,11 @@ val baseSettings = Seq(
   resolvers ++= Seq(
     "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"
   ),
-  libraryDependencies ++= Seq(Libs.scalatest, Libs.jmockit),
+  libraryDependencies ++= Seq(Libs.scalatest),
   Test / aggregate := false,
   Test / fork := true,
   Test / parallelExecution := false,
   scalacOptions in (Compile, doc) ++= Seq("-unchecked", "-deprecation"),
-  javaOptions in Test += s"-javaagent:${jmockitPath((dependencyClasspath in Test).value.files)}"
 )
 
 val publishSettings = Seq(
@@ -239,7 +236,7 @@ lazy val argonautProject = project.in(file("json/argonaut"))
     .dependsOn(jsonCommonProject % "compile->compile;test->test")
 
 def groupPlayTest(tests: Seq[TestDefinition], files: Seq[File]) = tests.map { t =>
-  val options = ForkOptions().withRunJVMOptions(Vector(s"-javaagent:${jmockitPath(files)}"))
+  val options = ForkOptions()
   Group(t.name, Seq(t), SubProcess(options))
 }
 

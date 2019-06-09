@@ -1,8 +1,8 @@
 package pdi.jwt
 
+import java.security.{ KeyFactory, KeyPairGenerator, SecureRandom, Security }
 import java.security.spec._
-import java.security.{KeyFactory, KeyPairGenerator, SecureRandom, Security}
-
+import java.time.{ Clock, Instant, ZoneOffset }
 import javax.crypto.spec.SecretKeySpec
 import org.bouncycastle.jce.ECNamedCurveTable
 import org.bouncycastle.jce.provider.BouncyCastleProvider
@@ -30,13 +30,13 @@ case class DataEntry(
   tokenEmpty: String = ""
 ) extends DataEntryBase
 
-trait Fixture extends TimeFixture {
-  
+trait Fixture {
+
   // Bouncycastle is not included by default. Add it for each test.
   if (Security.getProvider("BC") == null) {
     Security.addProvider(new BouncyCastleProvider())
   }
-  
+
   val secretKey = "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
   val secretKeyBytes = JwtUtils.bytify(secretKey)
   def secretKeyOf(algo: JwtAlgorithm) = new SecretKeySpec(secretKeyBytes, algo.fullName)
@@ -46,23 +46,21 @@ trait Fixture extends TimeFixture {
   val beforeExpirationMillis: Long = expirationMillis - 1
   val afterExpirationMillis: Long = expirationMillis + 1
 
-  def mockBeforeExpiration = mockTime(beforeExpirationMillis)
-  def mockAfterExpiration = mockTime(afterExpirationMillis)
+  def fixedUTC(millis: Long): Clock = Clock.fixed(Instant.ofEpochMilli(millis), ZoneOffset.UTC)
 
-  def tearDown(mock: mockit.MockUp[_]) = mock.tearDown()
-  // def tearDown(mock: mockit.MockUp[_]) = 1
+  val afterExpirationClock: Clock = fixedUTC(afterExpirationMillis)
 
   val notBefore: Long = 1300819320
   val notBeforeMillis: Long = notBefore * 1000
   val beforeNotBeforeMillis: Long = notBeforeMillis - 1
   val afterNotBeforeMillis: Long = notBeforeMillis + 1
 
-  def mockBeforeNotBefore = mockTime(beforeNotBeforeMillis)
-  def mockAfterNotBefore = mockTime(afterNotBeforeMillis)
+  val beforeNotBeforeClock: Clock = fixedUTC(beforeNotBeforeMillis)
+  val afterNotBeforeClock: Clock = fixedUTC(afterNotBeforeMillis)
 
   val validTime: Long = (expiration + notBefore) / 2
   val validTimeMillis: Long = validTime * 1000
-  def mockValidTime = mockTime(validTimeMillis)
+  val validTimeClock: Clock = fixedUTC(validTimeMillis)
 
   val claim = s"""{"iss":"joe","exp":$expiration,"http://example.com/is_root":true}"""
   val claimClass = JwtClaim("""{"http://example.com/is_root":true}""", issuer = Option("joe"), expiration = Option(expiration))

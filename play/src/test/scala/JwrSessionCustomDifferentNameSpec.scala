@@ -1,16 +1,18 @@
 package pdi.jwt
 
+import akka.stream.Materializer
+import java.time.{ Duration, Clock }
 import org.scalatest._
-import play.api.test._
-import play.api.test.Helpers._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
-import play.api.inject.guice.GuiceApplicationBuilder
-import akka.stream.Materializer
 import play.api.Configuration
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json._
 import play.api.mvc._
 import play.api.mvc.Results._
-import play.api.libs.json._
+import play.api.test._
+import play.api.test.Helpers._
 
 class JwrSessionCustomDifferentNameSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAndAfter with Injecting with PlayFixture {
   import pdi.jwt.JwtSession._
@@ -23,16 +25,6 @@ class JwrSessionCustomDifferentNameSpec extends PlaySpec with GuiceOneAppPerSuit
   def HEADER_NAME = "Auth"
   def RESPONSE_HEADER_NAME = "Set-Auth"
   def sessionTimeout = 10
-  var currentTime = validTimeMillis
-  var mock: mockit.MockUp[_] = null
-
-  before {
-    mock = mockTime(currentTime)
-  }
-
-  after {
-    tearDown(mock)
-  }
 
   override def fakeApplication() =
     new GuiceApplicationBuilder()
@@ -122,7 +114,7 @@ class JwrSessionCustomDifferentNameSpec extends PlaySpec with GuiceOneAppPerSuit
     }
 
     "move to the future!" in {
-      currentTime = currentTime + (sessionTimeout + 1) * 1000
+      this.clock = Clock.offset(this.clock, Duration.ofSeconds(sessionTimeout + 1))
     }
 
     "timeout session" in {

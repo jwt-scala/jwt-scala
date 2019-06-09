@@ -4,6 +4,7 @@ import cats.syntax.either._
 import io.circe._
 import io.circe.syntax._
 import io.circe.jawn.{parse => jawnParse}
+import java.time.Clock
 
 import pdi.jwt.exceptions.JwtNonStringException
 
@@ -27,7 +28,12 @@ trait JwtCirceParser[H, C] extends JwtJsonCommon[Json, H, C] {
 }
 
 object JwtCirce extends JwtCirceParser[JwtHeader, JwtClaim] {
-  def parseHeader(header: String): JwtHeader = {
+  def apply(clock: Clock): JwtCirce = new JwtCirce(clock)
+
+  def parseHeader(header: String): JwtHeader = parseHeaderHelp(header)
+  def parseClaim(claim: String): JwtClaim = parseClaimHelp(claim)
+
+  private def parseHeaderHelp(header: String)(implicit clock: Clock): JwtHeader = {
     val cursor = parse(header).hcursor
     JwtHeader(
         algorithm = getAlg(cursor)
@@ -37,7 +43,7 @@ object JwtCirce extends JwtCirceParser[JwtHeader, JwtClaim] {
     )
   }
 
-  def parseClaim(claim: String): JwtClaim = {
+  private def parseClaimHelp(claim: String)(implicit clock: Clock): JwtClaim = {
     val cursor = parse(claim).hcursor
     val contentCursor = List("iss", "sub", "aud", "exp", "nbf", "iat", "jti").foldLeft(cursor) { (cursor, field) =>
       cursor.downField(field).delete.success match {
@@ -56,4 +62,12 @@ object JwtCirce extends JwtCirceParser[JwtHeader, JwtClaim] {
       , jwtId = cursor.get[String]("jti").toOption
     )
   }
+}
+
+class JwtCirce private (override val clock: Clock) extends JwtCirceParser[JwtHeader, JwtClaim] {
+  import JwtCirce.{ parseHeaderHelp, parseClaimHelp }
+
+  def parseHeader(header: String): JwtHeader = parseHeaderHelp(header)(clock)
+
+  def parseClaim(claim: String): JwtClaim = parseClaimHelp(claim)(clock)
 }
