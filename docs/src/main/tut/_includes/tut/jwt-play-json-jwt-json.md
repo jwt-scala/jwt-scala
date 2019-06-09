@@ -3,8 +3,11 @@
 ### Basic usage
 
 ```tut
+import java.time.Clock
 import pdi.jwt.{JwtJson, JwtAlgorithm}
 import play.api.libs.json.Json
+
+implicit val clock: Clock = Clock.systemUTC
 
 val claim = Json.obj(("user", 1), ("nbf", 1431520421))
 val key = "secretKey"

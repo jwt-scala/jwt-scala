@@ -38,6 +38,7 @@ object Dependencies {
     val argonaut = "io.argonaut" %% "argonaut" % V.argonaut
 
     val bouncyCastle = "org.bouncycastle" % "bcpkix-jdk15on" % V.bouncyCastle % "test"
+    val bouncyCastleTut = "org.bouncycastle" % "bcpkix-jdk15on" % V.bouncyCastle % "tut"
 
     val scalatest = "org.scalatest" %% "scalatest" % V.scalatest % "test"
     val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % V.scalatestPlus % "test"

@@ -132,6 +132,7 @@ lazy val docs = project.in(file("docs"))
   .settings(docSettings)
   .settings(
     libraryDependencies ++= Seq(
+      Libs.bouncyCastleTut,
       Libs.playJson,
       Libs.play,
       Libs.playTestProvided,

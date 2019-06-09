@@ -3,7 +3,9 @@
 ### Basic usage
 
 ```tut
+import java.time.Clock
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtHeader, JwtClaim, JwtOptions}
+implicit val clock: Clock = Clock.systemUTC
 val token = Jwt.encode("""{"user":1}""", "secretKey", JwtAlgorithm.HS256)
 Jwt.decodeRawAll(token, "secretKey", Seq(JwtAlgorithm.HS256))
 Jwt.decodeRawAll(token, "wrongKey", Seq(JwtAlgorithm.HS256))

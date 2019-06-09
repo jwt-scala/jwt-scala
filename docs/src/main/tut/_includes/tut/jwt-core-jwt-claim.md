@@ -1,9 +1,12 @@
-## JwtClaim Case Class
+## JwtClaim Class
 
 ```tut
+import java.time.Clock
 import pdi.jwt.JwtClaim
 
 JwtClaim()
+
+implicit val clock: Clock = Clock.systemUTC
 
 // Specify the content as JSON string
 // (don't use var in your code if possible, this is just to ease the sample)

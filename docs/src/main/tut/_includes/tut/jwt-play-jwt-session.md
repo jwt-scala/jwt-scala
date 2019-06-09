@@ -5,9 +5,11 @@ Provides an API similar to the Play [Session](https://www.playframework.com/docu
 ### Basic usage
 
 ```tut
+import java.time.Clock
 import pdi.jwt.JwtSession
 import play.api.Configuration
 
+implicit val clock: Clock = Clock.systemUTC
 
 //In a real Play! App this should normally be injected in the constructor with @Inject()
 implicit val conf:Configuration = Configuration.reference

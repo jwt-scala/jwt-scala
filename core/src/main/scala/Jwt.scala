@@ -26,11 +26,15 @@ import pdi.jwt.exceptions._
   * @define algos a list of possible algorithms that the token can use. See [[http://pauldijou.fr/jwt-scala/#security-concerns Security concerns]] for more infos.
   *
   */
-trait JwtCore[H <: JwtHeader, C <: JwtClaim] {
+trait JwtCore[H, C] {
   implicit private[jwt] val clock: Clock = Clock.systemUTC
   // Abstract methods
   protected def parseHeader(header: String): H
   protected def parseClaim(claim: String): C
+
+  protected def extractAlgorithm(header: H): Option[JwtAlgorithm]
+  protected def extractExpiration(claim: C): Option[Long]
+  protected def extractNotBefore(claim: C): Option[Long]
 
   def encode(header: String, claim: String): String = {
     JwtBase64.encodeString(header) + "." + JwtBase64.encodeString(claim) + "."
@@ -105,7 +109,7 @@ trait JwtCore[H <: JwtHeader, C <: JwtClaim] {
     * @return $token
     * @param claim the claim of the JSON Web Token
     */
-  def encode(claim: C): String = encode(claim.toJson)
+  def encode(claim: JwtClaim): String = encode(claim.toJson)
 
   /** An alias to `encode` which will provide an automatically generated header and use the claim as a case class.
     *
@@ -114,7 +118,7 @@ trait JwtCore[H <: JwtHeader, C <: JwtClaim] {
     * @param key $key
     * @param algorithm $algo
     */
-  def encode(claim: C, key: String, algorithm: JwtAlgorithm): String =
+  def encode(claim: JwtClaim, key: String, algorithm: JwtAlgorithm): String =
     encode(claim.toJson, key, algorithm)
 
   /** An alias to `encode` which will provide an automatically generated header and use the claim as a case class.
@@ -124,7 +128,7 @@ trait JwtCore[H <: JwtHeader, C <: JwtClaim] {
     * @param key $key
     * @param algorithm $algo
     */
-  def encode(claim: C, key: SecretKey, algorithm: JwtHmacAlgorithm): String =
+  def encode(claim: JwtClaim, key: SecretKey, algorithm: JwtHmacAlgorithm): String =
     encode(claim.toJson, key, algorithm)
 
   /** An alias to `encode` which will provide an automatically generated header and use the claim as a case class.
@@ -134,7 +138,7 @@ trait JwtCore[H <: JwtHeader, C <: JwtClaim] {
     * @param key $key
     * @param algorithm $algo
     */
-  def encode(claim: C, key: PrivateKey, algorithm: JwtAsymmetricAlgorithm): String =
+  def encode(claim: JwtClaim, key: PrivateKey, algorithm: JwtAsymmetricAlgorithm): String =
     encode(claim.toJson, key, algorithm)
 
   /** An alias to `encode` if you want to use case classes for the header and the claim rather than strings, they will just be stringified to JSON format.
@@ -143,7 +147,7 @@ trait JwtCore[H <: JwtHeader, C <: JwtClaim] {
     * @param header the header to stringify as a JSON before encoding the token
     * @param claim the claim to stringify as a JSON before encoding the token
     */
-  def encode(header: H, claim: C): String = header.algorithm match {
+  def encode(header: JwtHeader, claim: JwtClaim): String = header.algorithm match {
     case None => encode(header.toJson, claim.toJson)
     case _ => throw new JwtNonEmptyAlgorithmException()
   }
@@ -155,7 +159,7 @@ trait JwtCore[H <: JwtHeader, C <: JwtClaim] {
     * @param claim the claim to stringify as a JSON before encoding the token
     * @param key the secret key to use to sign the token (note that the algorithm will be deduced from the header)
     */
-  def encode(header: H, claim: C, key: String): String = header.algorithm match {
+  def encode(header: JwtHeader, claim: JwtClaim, key: String): String = header.algorithm match {
     case Some(algo: JwtAlgorithm) => encode(header.toJson, claim.toJson, key, algo)
     case _ => throw new JwtEmptyAlgorithmException()
   }
@@ -167,7 +171,7 @@ trait JwtCore[H <: JwtHeader, C <: JwtClaim] {
     * @param claim the claim to stringify as a JSON before encoding the token
     * @param key the secret key to use to sign the token (note that the algorithm will be deduced from the header)
     */
-  def encode(header: H, claim: C, key: Key): String = (header.algorithm, key) match {
+  def encode(header: JwtHeader, claim: JwtClaim, key: Key): String = (header.algorithm, key) match {
     case (Some(algo: JwtHmacAlgorithm), k: SecretKey) => encode(header.toJson, claim.toJson, k, algo)
     case (Some(algo: JwtAsymmetricAlgorithm), k: PrivateKey) => encode(header.toJson, claim.toJson, k, algo)
     case _ => throw new JwtValidationException("The key type doesn't match the algorithm type. It's either a SecretKey and a HMAC algorithm or a PrivateKey and a RSA or ECDSA algorithm. And an algorithm is required of course.")
@@ -549,10 +553,10 @@ trait JwtCore[H <: JwtHeader, C <: JwtClaim] {
   // Validate
   protected def validateTiming(claim: C, options: JwtOptions) {
     val maybeExpiration: Option[Long] =
-        if (options.expiration) claim.expiration else None
+        if (options.expiration) extractExpiration(claim) else None
 
     val maybeNotBefore: Option[Long] =
-      if (options.notBefore) claim.notBefore else None
+      if (options.notBefore) extractNotBefore(claim) else None
 
     JwtTime.validateNowIsBetweenSeconds(
       maybeNotBefore.map(_ - options.leeway),
@@ -574,7 +578,7 @@ trait JwtCore[H <: JwtHeader, C <: JwtClaim] {
   protected def validate(header: H, claim: C, signature: String, options: JwtOptions) {
     if (options.signature && !signature.isEmpty) {
       throw new JwtNonEmptySignatureException()
-    } else if (options.signature && !header.algorithm.isEmpty) {
+    } else if (options.signature && !extractAlgorithm(header).isEmpty) {
       throw new JwtNonEmptyAlgorithmException()
     }
 
@@ -592,11 +596,13 @@ trait JwtCore[H <: JwtHeader, C <: JwtClaim] {
     verify: (Array[Byte], Array[Byte], JwtAlgorithm) => Boolean): Unit = {
 
     if (options.signature) {
+      val maybeAlgo = extractAlgorithm(header)
+
       if (options.signature && signature.isEmpty) {
         throw new JwtEmptySignatureException()
-      } else if (header.algorithm.isEmpty) {
+      } else if (maybeAlgo.isEmpty) {
         throw new JwtEmptyAlgorithmException()
-      } else if (!verify(JwtUtils.bytify(header64 +"."+ claim64), JwtBase64.decode(signature), header.algorithm.get)) {
+      } else if (!verify(JwtUtils.bytify(header64 +"."+ claim64), JwtBase64.decode(signature), maybeAlgo.get)) {
         throw new JwtValidationException("Invalid signature for this token or wrong algorithm.")
       }
     }

@@ -3,7 +3,7 @@ package pdi.jwt
 import org.json4s._
 import pdi.jwt.exceptions.{JwtNonNumberException, JwtNonStringException, JwtNonStringSetOrStringException}
 
-trait JwtJson4sCommon[H <: JwtHeader, C <: JwtClaim] extends JwtJsonCommon[JObject, H, C] {
+trait JwtJson4sCommon[H, C] extends JwtJsonCommon[JObject, H, C] {
   protected implicit def formats: Formats
 
   protected def getAlgorithm(header: JObject): Option[JwtAlgorithm] = header \ "alg" match {
