@@ -41,7 +41,7 @@ cleanScript := {
   "./scripts/clean.sh" !
 }
 
-val scala213 = "2.13.0-M5"
+val scala213 = "2.13.0-RC2"
 
 val baseSettings = Seq(
   organization := "com.pauldijou",
