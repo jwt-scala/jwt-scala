@@ -6,7 +6,7 @@ import java.time.Clock
 import pdi.jwt.exceptions.JwtNonStringException
 import scala.language.postfixOps
 
-trait JwtArgonautParser[H, C] extends JwtJsonCommon[Json, H, C] {
+trait JwtArgonautParser[H <: JwtHeader, C <: JwtClaim] extends JwtJsonCommon[Json, H, C] {
   override protected def parse(value: String): Json = Parse.parseOption(value).get
 
   override protected def stringify(value: Json): String = value.nospaces

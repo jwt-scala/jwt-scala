@@ -12,7 +12,7 @@ import pdi.jwt.exceptions.JwtNonStringException
 /**
   * Implementation of `JwtCore` using `Json` from Circe.
   */
-trait JwtCirceParser[H, C] extends JwtJsonCommon[Json, H, C] {
+trait JwtCirceParser[H <: JwtHeader, C <: JwtClaim] extends JwtJsonCommon[Json, H, C] {
   protected def parse(value: String): Json = jawnParse(value).toOption.get
   protected def stringify(value: Json): String = value.asJson.noSpaces
   protected def getAlgorithm(header: Json): Option[JwtAlgorithm] = getAlg(header.hcursor)

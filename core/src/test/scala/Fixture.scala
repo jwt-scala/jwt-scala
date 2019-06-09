@@ -1,5 +1,6 @@
 package pdi.jwt
 
+import scala.util.matching.Regex
 import java.security.{ KeyFactory, KeyPairGenerator, SecureRandom, Security }
 import java.security.spec._
 import java.time.{ Clock, Instant, ZoneOffset }
@@ -30,17 +31,105 @@ case class DataEntry(
   tokenEmpty: String = ""
 ) extends DataEntryBase
 
-trait Fixture {
 
-  // Bouncycastle is not included by default. Add it for each test.
-  if (Security.getProvider("BC") == null) {
-    Security.addProvider(new BouncyCastleProvider())
+/**
+  * Test implementation of [[JwtCore]] using only Strings. Most of the time, you should use a lib
+  * implementing JSON and shouldn't be using this object. But just in case you need pure Scala support,
+  * here it is.
+  *
+  * To see a full list of samples, check the [[http://pauldijou.fr/jwt-scala/samples/jwt-core/ online documentation]].
+  *
+  * '''Warning''': since there is no JSON support in Scala, this object doesn't have any way to parse
+  * a JSON string as an AST, so it only uses regex with all the limitations it implies. Try not to use
+  * keys like `exp` and `nbf` in sub-objects of the claim. For example, if you try to use the following
+  * claim: `{"user":{"exp":1},"exp":1300819380}`, it should be correct but it will fail because the regex
+  * extracting the expiration will return `1` instead of `1300819380`. Sorry about that.
+  */
+object Jwt extends JwtCore[JwtHeader, JwtClaim] {
+  def apply(clock: Clock): Jwt = new Jwt(clock)
+
+  private val extractAlgorithmRegex = "\"alg\" *: *\"([a-zA-Z0-9]+)\"".r
+  protected def extractAlgorithm(header: String): Option[JwtAlgorithm] =
+    (extractAlgorithmRegex findFirstMatchIn header).map(_.group(1)).flatMap {
+      case "none" => None
+      case name: String => Some(JwtAlgorithm.fromString(name))
+    }
+
+  private val extractIssuerRegex = "\"iss\" *: *\"([a-zA-Z0-9]+)\"".r
+  protected def extractIssuer(claim: String): Option[String] =
+    (extractIssuerRegex findFirstMatchIn claim).map(_.group(1))
+
+  private val extractSubjectRegex = "\"sub\" *: *\"([a-zA-Z0-9]+)\"".r
+  protected def extractSubject(claim: String): Option[String] =
+    (extractSubjectRegex findFirstMatchIn claim).map(_.group(1))
+
+  private val extractExpirationRegex = "\"exp\" *: *([0-9]+)".r
+  protected def extractExpiration(claim: String): Option[Long] =
+    (extractExpirationRegex findFirstMatchIn claim).map(_.group(1)).map(_.toLong)
+
+  private val extractNotBeforeRegex = "\"nbf\" *: *([0-9]+)".r
+  protected def extractNotBefore(claim: String): Option[Long] =
+    (extractNotBeforeRegex findFirstMatchIn claim).map(_.group(1)).map(_.toLong)
+
+  private val extractIssuedAtRegex = "\"iat\" *: *([0-9]+)".r
+  protected def extractIssuedAt(claim: String): Option[Long] =
+    (extractIssuedAtRegex findFirstMatchIn claim).map(_.group(1)).map(_.toLong)
+
+  private val extractJwtIdRegex = "\"jti\" *: *\"([a-zA-Z0-9]+)\"".r
+  protected def extractJwtId(claim: String): Option[String] =
+    (extractJwtIdRegex findFirstMatchIn claim).map(_.group(1))
+
+  private val clearStartRegex = "\\{ *,".r
+  protected def clearStart(json: String): String =
+    clearStartRegex.replaceFirstIn(json, "{")
+
+  private val clearMiddleRegex = ", *,".r
+  protected def clearMiddle(json: String): String =
+    clearMiddleRegex.replaceAllIn(json, ",")
+
+  private val clearEndRegex = ", *\\}".r
+  protected def clearEnd(json: String): String =
+    clearEndRegex.replaceFirstIn(json, "}")
+
+  protected def clearRegex(json: String, regex: Regex): String =
+    regex.replaceFirstIn(json, "")
+
+  protected def clearAll(json: String): String = {
+    val dirtyJson = List(
+      extractIssuerRegex,
+      extractSubjectRegex,
+      extractExpirationRegex,
+      extractNotBeforeRegex,
+      extractIssuedAtRegex,
+      extractJwtIdRegex
+    ).foldLeft(json)(clearRegex)
+
+    clearStart(clearMiddle(clearEnd(dirtyJson)))
   }
 
-  val secretKey = "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
-  val secretKeyBytes = JwtUtils.bytify(secretKey)
-  def secretKeyOf(algo: JwtAlgorithm) = new SecretKeySpec(secretKeyBytes, algo.fullName)
 
+  protected def parseHeader(header: String): JwtHeader = JwtHeader(extractAlgorithm(header))
+
+  protected def parseClaim(claim: String): JwtClaim =
+    JwtClaim(
+      content = clearAll(claim),
+      issuer = extractIssuer(claim),
+      subject = extractSubject(claim),
+      expiration = extractExpiration(claim),
+      notBefore = extractNotBefore(claim),
+      issuedAt = extractIssuedAt(claim),
+      jwtId = extractJwtId(claim),
+    )
+}
+
+class Jwt private (override val clock: Clock) extends JwtCore[JwtHeader, JwtClaim] {
+  import Jwt._
+
+  protected def parseHeader(header: String): JwtHeader = Jwt.parseHeader(header)
+  protected def parseClaim(claim: String): JwtClaim = Jwt.parseClaim(claim)
+}
+
+trait ClockFixture {
   val expiration: Long = 1300819380
   val expirationMillis: Long = expiration * 1000
   val beforeExpirationMillis: Long = expirationMillis - 1
@@ -61,6 +150,18 @@ trait Fixture {
   val validTime: Long = (expiration + notBefore) / 2
   val validTimeMillis: Long = validTime * 1000
   val validTimeClock: Clock = fixedUTC(validTimeMillis)
+}
+
+trait Fixture extends ClockFixture {
+
+  // Bouncycastle is not included by default. Add it for each test.
+  if (Security.getProvider("BC") == null) {
+    Security.addProvider(new BouncyCastleProvider())
+  }
+
+  val secretKey = "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
+  val secretKeyBytes = JwtUtils.bytify(secretKey)
+  def secretKeyOf(algo: JwtAlgorithm) = new SecretKeySpec(secretKeyBytes, algo.fullName)
 
   val claim = s"""{"iss":"joe","exp":$expiration,"http://example.com/is_root":true}"""
   val claimClass = JwtClaim("""{"http://example.com/is_root":true}""", issuer = Option("joe"), expiration = Option(expiration))

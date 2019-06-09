@@ -8,7 +8,7 @@ import upickle.default._
   *
   * To see a full list of samples, check the [[http://pauldijou.fr/jwt-scala/samples/jwt-upickle/ online documentation]].
   */
-trait JwtUpickleParser[H, C] extends JwtJsonCommon[ujson.Value, H, C] with JwtUpickleImplicits {
+trait JwtUpickleParser[H <: JwtHeader, C <: JwtClaim] extends JwtJsonCommon[ujson.Value, H, C] with JwtUpickleImplicits {
   protected def parse(value: String): ujson.Value = ujson.read(value)
 
   protected def stringify(value: ujson.Value): String = ujson.write(value)

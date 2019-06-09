@@ -35,32 +35,39 @@ class JwtSpec extends UnitSpec with Fixture {
 
     it("should be symmetric") {
       data foreach { d =>
-        assertResult((d.header, claim, d.signature), d.algo.fullName) {
-          validTimeJwt.decodeAll(validTimeJwt.encode(d.header, claim, secretKey, d.algo), secretKey, JwtAlgorithm.allHmac).get
-        }
+        testTryAll(
+          validTimeJwt.decodeAll(validTimeJwt.encode(d.header, claim, secretKey, d.algo), secretKey, JwtAlgorithm.allHmac),
+          (d.headerClass, claimClass, d.signature),
+          d.algo.fullName
+        )
       }
+    }
 
+    it("should be symmetric (RSA)") {
       dataRSA foreach { d =>
-        assert({
-          val (h, c, s) = validTimeJwt.decodeAll(validTimeJwt.encode(d.header, claim, randomRSAKey.getPrivate, d.algo.asInstanceOf[JwtRSAAlgorithm]), randomRSAKey.getPublic, JwtAlgorithm.allRSA).get
+        testTryAllWithoutSignature(
+          validTimeJwt.decodeAll(validTimeJwt.encode(d.header, claim, randomRSAKey.getPrivate, d.algo.asInstanceOf[JwtRSAAlgorithm]), randomRSAKey.getPublic, JwtAlgorithm.allRSA),
+          (d.headerClass, claimClass),
+          d.algo.fullName
+        )
 
-          h == d.header && c == claim
-        }, d.algo.fullName)
-
-        assert({
-          val (h, c, s) = validTimeJwt.decodeAll(validTimeJwt.encode(d.header, claim, randomRSAKey.getPrivate, d.algo.asInstanceOf[JwtRSAAlgorithm]), randomRSAKey.getPublic).get
-
-          h == d.header && c == claim
-        }, d.algo.fullName)
+        testTryAllWithoutSignature(
+          validTimeJwt.decodeAll(validTimeJwt.encode(d.header, claim, randomRSAKey.getPrivate, d.algo.asInstanceOf[JwtRSAAlgorithm]), randomRSAKey.getPublic),
+          (d.headerClass, claimClass),
+          d.algo.fullName
+        )
       }
+    }
 
+    it("should be symmetric (ECDSA)") {
       dataECDSA foreach { d =>
-        assert({
-          val (h, c, s) = validTimeJwt.decodeAll(validTimeJwt.encode(d.header, claim, randomECKey.getPrivate, d.algo.asInstanceOf[JwtECDSAAlgorithm]), randomECKey.getPublic, JwtAlgorithm.allECDSA).get
-
-          h == d.header && c == claim
-        }, d.algo.fullName)
+        testTryAllWithoutSignature(
+          validTimeJwt.decodeAll(validTimeJwt.encode(d.header, claim, randomECKey.getPrivate, d.algo.asInstanceOf[JwtECDSAAlgorithm]), randomECKey.getPublic, JwtAlgorithm.allECDSA),
+          (d.headerClass, claimClass),
+          d.algo.fullName
+        )
       }
+
     }
 
     it("should decodeRawAll") {
@@ -79,15 +86,33 @@ class JwtSpec extends UnitSpec with Fixture {
 
     it("should decodeAll") {
       data foreach { d =>
-        assertResult(Success((d.header, claim, d.signature)), d.algo.fullName) { validTimeJwt.decodeAll(d.token, secretKey, JwtAlgorithm.allHmac) }
-        assertResult(Success((d.header, claim, d.signature)), d.algo.fullName) { validTimeJwt.decodeAll(d.token, secretKeyOf(d.algo)) }
+        testTryAll(
+          validTimeJwt.decodeAll(d.token, secretKey, JwtAlgorithm.allHmac),
+          (d.headerClass, claimClass, d.signature),
+          d.algo.fullName
+        )
+
+        testTryAll(
+          validTimeJwt.decodeAll(d.token, secretKeyOf(d.algo)),
+          (d.headerClass, claimClass, d.signature),
+          d.algo.fullName
+        )
       }
     }
 
     it("should decode") {
       data foreach { d =>
-        assertResult(Success(claim), d.algo.fullName) { validTimeJwt.decode(d.token, secretKey, JwtAlgorithm.allHmac) }
-        assertResult(Success(claim), d.algo.fullName) { validTimeJwt.decode(d.token, secretKeyOf(d.algo)) }
+        testTryClaim(
+          validTimeJwt.decode(d.token, secretKey, JwtAlgorithm.allHmac),
+          claimClass,
+          d.algo.fullName
+        )
+
+        testTryClaim(
+          validTimeJwt.decode(d.token, secretKeyOf(d.algo)),
+          claimClass,
+          d.algo.fullName
+        )
       }
     }
 

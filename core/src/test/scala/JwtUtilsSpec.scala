@@ -9,7 +9,7 @@ case class TestObject(value: String) {
   override def toString(): String = this.value
 }
 
-class JwtUtilsSpec extends UnitSpec {
+class JwtUtilsSpec extends UnitSpec with ClockFixture {
   val ENCODING = JwtUtils.ENCODING
 
   describe("JwtUtils") {
@@ -137,7 +137,7 @@ class JwtUtilsSpec extends UnitSpec {
         val header = """{"typ":"JWT","alg":"ES512"}"""
         val claim = """{"test":"t"}"""
 
-        val signature = Jwt.encode(header, claim, randomECKey.getPrivate, JwtAlgorithm.ES512).split("\\.")(2)
+        val signature = Jwt(validTimeClock).encode(header, claim, randomECKey.getPrivate, JwtAlgorithm.ES512).split("\\.")(2)
         assertResult(signature) {
           JwtUtils.stringify(JwtUtils.transcodeSignatureToConcat(JwtUtils.transcodeSignatureToDER(JwtUtils.bytify(signature)),
             JwtUtils.getSignatureByteArrayLength(JwtAlgorithm.ES512)))
