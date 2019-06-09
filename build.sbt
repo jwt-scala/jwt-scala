@@ -7,8 +7,8 @@ import sbt._
 
 import scala.sys.process._
 
-val previousVersion = "2.0.0"
-val buildVersion = "2.1.0"
+val previousVersion = "2.1.0"
+val buildVersion = "3.0.0"
 
 val projects = Seq("coreProject", "playJsonProject", "json4sNativeProject", "json4sJacksonProject", "sprayJsonProject", "circeProject", "upickleProject", "argonautProject", "playProject")
 
@@ -41,7 +41,7 @@ cleanScript := {
   "./scripts/clean.sh" !
 }
 
-val scala213 = "2.13.0-RC2"
+val scala213 = "2.13.0-M5"
 
 val baseSettings = Seq(
   organization := "com.pauldijou",

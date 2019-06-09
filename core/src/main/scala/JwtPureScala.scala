@@ -89,7 +89,7 @@ object Jwt extends JwtCore[JwtHeader, JwtClaim] {
       expiration = extractExpiration(claim),
       notBefore = extractNotBefore(claim),
       issuedAt = extractIssuedAt(claim),
-      jwtId = extractJwtId(claim),
+      jwtId = extractJwtId(claim)
     )
 
   protected def headerToJson(header: JwtHeader): String = header.toJson

@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.0.0 (09/06/2019)
+
+- Allow override of the system clock, remove jmockit from tests. (thanks @Ophirr33)
+- `JwtHeader` and `JwtClaim` are no longer `case class` so that you can extend them. (thanks @fahman)
+- Fix Play demo app. (thanks @ma3574)
+- Remove dependency on Bouncycastle. (thanks @brakthehack)
+- Deprecate (but also improved) the pure Scala implementation of `JwtCore`. It's very limited, non-performant and should not be used. I will keep it around for tests and if some people need it.
+
 ## 2.1.0 (24/02/2019)
 
 - Upgrade to play-json 2.7.1 (thanks @etspaceman)
