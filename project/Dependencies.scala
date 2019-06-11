@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   object V {
-    val scalatest = "3.0.6-SNAP6"
+    val scalatest = "3.0.7"
     val scalatestPlus = "4.0.0"
     val bouncyCastle = "1.60"
     val guice = "4.2.2"

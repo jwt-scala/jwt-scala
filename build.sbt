@@ -41,13 +41,15 @@ cleanScript := {
   "./scripts/clean.sh" !
 }
 
-val scala213 = "2.13.0-M5"
+val scala211 = "2.11.12"
+val scala212 = "2.12.8"
+val scala213 = "2.13.0"
 
 val baseSettings = Seq(
   organization := "com.pauldijou",
   version := buildVersion,
-  scalaVersion in ThisBuild := "2.12.7",
-  crossScalaVersions := Seq("2.12.7", "2.11.12", scala213),
+  scalaVersion in ThisBuild := scala212,
+  crossScalaVersions := Seq(scala211, scala212, scala213),
   crossVersion := CrossVersion.binary,
   autoAPIMappings := true,
   resolvers ++= Seq(
