@@ -60,6 +60,7 @@ val baseSettings = Seq(
   Test / fork := true,
   Test / parallelExecution := false,
   scalacOptions in (Compile, doc) ++= Seq("-unchecked", "-deprecation"),
+  javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 )
 
 val publishSettings = Seq(
