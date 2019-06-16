@@ -45,11 +45,14 @@ val scala211 = "2.11.12"
 val scala212 = "2.12.8"
 val scala213 = "2.13.0"
 
+val crossVersionAll = Seq(scala211, scala212, scala213)
+val crossVersionLastTwo = Seq(scala212, scala213)
+
 val baseSettings = Seq(
   organization := "com.pauldijou",
   version := buildVersion,
   scalaVersion in ThisBuild := scala212,
-  crossScalaVersions := Seq(scala211, scala212, scala213),
+  crossScalaVersions := crossVersionAll,
   crossVersion := CrossVersion.binary,
   autoAPIMappings := true,
   resolvers ++= Seq(
@@ -187,7 +190,7 @@ lazy val upickleProject = project.in(file("json/upickle"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-upickle",
-    crossScalaVersions -= scala213,
+    crossScalaVersions := crossVersionLastTwo,
     libraryDependencies ++= Seq(Libs.upickle)
   )
   .aggregate(jsonCommonProject)
@@ -233,7 +236,6 @@ lazy val argonautProject = project.in(file("json/argonaut"))
     .settings(releaseSettings)
     .settings(
       name := "jwt-argonaut",
-      crossScalaVersions -= scala213,
       libraryDependencies ++= Seq(Libs.argonaut)
     )
     .aggregate(jsonCommonProject)

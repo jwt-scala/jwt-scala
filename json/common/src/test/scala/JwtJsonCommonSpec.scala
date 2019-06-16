@@ -10,6 +10,8 @@ abstract class JwtJsonCommonSpec[J] extends UnitSpec with JsonCommonFixture[J] {
 
   protected def jwtJsonCommon(clock: Clock): JwtJsonUnderTest[J]
 
+  protected def testEncoding: Boolean = true
+
   lazy val defaultJwt: JwtJsonUnderTest[J] = jwtJsonCommon(Clock.systemUTC)
   lazy val afterExpirationJwt: JwtJsonUnderTest[J] = jwtJsonCommon(afterExpirationClock)
   lazy val validTimeJwt: JwtJsonUnderTest[J] = jwtJsonCommon(validTimeClock)
@@ -21,16 +23,18 @@ abstract class JwtJsonCommonSpec[J] extends UnitSpec with JsonCommonFixture[J] {
   }
 
   describe("JwtJson") {
-    it("should encode with no algorithm") {
-      assertResult(tokenEmpty, "Unsigned key") { defaultJwt.encode(headerEmptyJson, claimJson) }
-    }
+    if (testEncoding) {
+      it("should encode with no algorithm") {
+        assertResult(tokenEmpty, "Unsigned key") { defaultJwt.encode(headerEmptyJson, claimJson) }
+      }
 
-    it("should encode HMAC") {
-      dataJson foreach { d => battleTestEncode(d, secretKey, defaultJwt) }
-    }
+      it("should encode HMAC") {
+        dataJson foreach { d => battleTestEncode(d, secretKey, defaultJwt) }
+      }
 
-    it("should encode RSA") {
-      dataRSAJson foreach { d => battleTestEncode(d, privateKeyRSA, defaultJwt) }
+      it("should encode RSA") {
+        dataRSAJson foreach { d => battleTestEncode(d, privateKeyRSA, defaultJwt) }
+      }
     }
 
     it("should decodeJsonAll") {

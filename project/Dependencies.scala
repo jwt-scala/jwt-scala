@@ -2,18 +2,18 @@ import sbt._
 
 object Dependencies {
   object V {
-    val scalatest = "3.0.7"
+    val scalatest = "3.0.8"
     val scalatestPlus = "4.0.0"
     val bouncyCastle = "1.60"
     val guice = "4.2.2"
 
     val play = "2.7.0"
-    val playJson = "2.7.1"
-    val json4s = "3.6.4"
-    val circe = "0.11.1"
-    val upickle = "0.7.1"
-    val sprayJson = "1.3.4"
-    val argonaut = "6.2.2"
+    val playJson = "2.7.4"
+    val json4s = "3.6.6"
+    val circe = "0.12.0-M3"
+    val upickle = "0.7.5"
+    val sprayJson = "1.3.5"
+    val argonaut = "6.2.3"
   }
 
   object Libs {
