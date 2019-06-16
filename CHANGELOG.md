@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.1 (16/06/2019)
+
+- Fix support for Java 8. (thanks @brakthehack)
+- Improve support for Scala 2.13. (thanks @erwan)
+
 ## 3.0.0 (09/06/2019)
 
 - Allow override of the system clock, remove jmockit from tests. (thanks @Ophirr33)

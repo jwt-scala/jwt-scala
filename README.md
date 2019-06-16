@@ -24,7 +24,7 @@ You can also check a [standalone Play application](https://github.com/pauldijou/
 
 ## Install
 
-In the following snippet, replace `[name]` with the actual name of the project you need. **Using Java 1.6 or 1.7?** Add `-legacy` after the name of the project and use a version before 3.0.0. See [below](#which-java) why.
+In the following snippet, replace `[name]` with the actual name of the project you need. **Using Java 1.6 or 1.7?** Add `-legacy` after the name of the project and use a version before 2.0.0. See [below](#which-java) why.
 
 **build.sbt**
 
@@ -40,7 +40,7 @@ libraryDependencies ++= Seq(
 
 ```scala
 libraryDependencies ++= Seq(
-  "com.pauldijou" %% "jwt-play-legacy" % "3.0.0"
+  "com.pauldijou" %% "jwt-play-legacy" % "1.1.0"
 )
 ```
 
@@ -70,7 +70,7 @@ Check [ECDSA samples](https://pauldijou.github.io/jwt-scala/samples/jwt-ecdsa) f
 
 ## <a name="which-java"></a>Which Java?
 
-**Java 6 and 7 support has been removed with version 3.0.0**
+**Java 6 and 7 support has been removed with version 2.0.0**
 
 Actually, all sub-projects have two flavours. One target Java 8+, using the new Time API and the new Base64 util. This is the default one. If you are using Java 1.6 or 1.7 (which have both reached end-of-life by the way), you will have to use the "legacy" version of the lib. It's exactly the same (in fact, 99% of the code source is shared) except it's using the old Calendar API and the Base64 util from Apache Commons Codec (introducing **one small dependency** in this particular use-case).
 

@@ -7,8 +7,8 @@ import sbt._
 
 import scala.sys.process._
 
-val previousVersion = "2.1.0"
-val buildVersion = "3.0.0"
+val previousVersion = "3.0.0"
+val buildVersion = "3.0.1"
 
 val projects = Seq("coreProject", "playJsonProject", "json4sNativeProject", "json4sJacksonProject", "sprayJsonProject", "circeProject", "upickleProject", "argonautProject", "playProject")
 
