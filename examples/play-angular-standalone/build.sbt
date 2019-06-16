@@ -1,6 +1,6 @@
 name := """play-angular-standalone"""
 
-version := "3.0.0"
+version := "3.0.1"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
