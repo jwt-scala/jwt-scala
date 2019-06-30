@@ -12,7 +12,7 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
     it("should implicitly convert to JsValue") {
       assertResult(Json.obj(
         ("iss" -> "me"),
-        ("aud" -> Set("you")),
+        ("aud" -> Some("you")),
         ("sub" -> "something"),
         ("exp" -> 15),
         ("nbf" -> 10),
@@ -26,6 +26,19 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
         ("alg" -> "HS256")
       ), "Claim") {
         JwtHeader(JwtAlgorithm.HS256).toJsValue
+      }
+    }
+
+    it("should implicitly convert to JsValue when audience is many") {
+      assertResult(Json.obj(
+        ("iss" -> "me"),
+        ("aud" -> Set("you", "another")),
+        ("sub" -> "something"),
+        ("exp" -> 15),
+        ("nbf" -> 10),
+        ("iat" -> 10)
+      ), "Claim") {
+        JwtClaim(audience = Some(Set("you", "another"))).by("me").about("something").issuedAt(10).startsAt(10).expiresAt(15).toJsValue
       }
     }
 
