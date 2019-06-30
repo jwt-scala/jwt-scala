@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.0 (30/06/2019)
+
+- If claim.audience is only one item, it will be stringified as a simple string compared to an array if several values. (thanks @msinton)
+
 ## 3.0.1 (16/06/2019)
 
 - Fix support for Java 8. (thanks @brakthehack)
