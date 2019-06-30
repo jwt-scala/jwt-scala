@@ -26,13 +26,10 @@ class JwtClaim(
   val jwtId: Option[String]
 ) {
 
-  private final def simplifyToSingular[A](set: Set[A]): Option[A] = 
-    if (set.size == 1) set.headOption else None
-
   def toJson: String = JwtUtils.mergeJson(JwtUtils.hashToJson(Seq(
     "iss" -> issuer,
     "sub" -> subject,
-    "aud" -> audience.flatMap(set => simplifyToSingular(set).orElse(Some(set))),
+    "aud" -> audience.map(set => if (set.size == 1) set.head else set),
     "exp" -> expiration,
     "nbf" -> notBefore,
     "iat" -> issuedAt,
