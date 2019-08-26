@@ -24,11 +24,14 @@ trait JwtPlayImplicits {
     * {{{
     * package controllers
     *
+    * import java.time.Clock
     * import play.api._
     * import play.api.mvc._
     * import pdi.jwt._
     *
     * object Application extends Controller {
+    *   implicit val clock: Clock = Clock.systemUTC
+    *
     *   def login = Action { implicit request =>
     *     Ok.addingToJwtSession(("logged", true))
     *   }
