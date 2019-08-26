@@ -56,6 +56,23 @@ class JwtUtilsSpec extends UnitSpec with ClockFixture {
       }
     }
 
+    describe("Claim.toJson") {
+      it ("should correctly encode a Claim to JSON") {
+        val claim = JwtClaim(
+          issuer = Some(""),
+          audience = Some(Set("")),
+          subject = Some("da1b3852-6827-11e9-a923-1681be663d3e"),
+          expiration = Some(1597914901),
+          issuedAt = Some(1566378901),
+          content = "{\"a\":\"da1b3852-6827-11e9-a923-1681be663d3e\",\"b\":123.34}"
+        )
+
+        val jsonClaim = """{"iss":"","sub":"da1b3852-6827-11e9-a923-1681be663d3e","aud":"","exp":1597914901,"iat":1566378901,"a":"da1b3852-6827-11e9-a923-1681be663d3e","b":123.34}"""
+
+        assertResult(jsonClaim) { claim.toJson }
+      }
+    }
+
     val signKey = Option("secret")
     val signMessage = """{"alg": "algo"}.{"user": 1, "admin": true, "value": "foo"}"""
 

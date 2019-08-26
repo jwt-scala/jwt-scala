@@ -26,11 +26,11 @@ object Jwt extends JwtCore[JwtHeader, JwtClaim] {
       case name: String => Some(JwtAlgorithm.fromString(name))
     }
 
-  private val extractIssuerRegex = "\"iss\" *: *\"([a-zA-Z0-9]+)\"".r
+  private val extractIssuerRegex = "\"iss\" *: *\"([a-zA-Z0-9]*)\"".r
   protected def extractIssuer(claim: String): Option[String] =
     (extractIssuerRegex findFirstMatchIn claim).map(_.group(1))
 
-  private val extractSubjectRegex = "\"sub\" *: *\"([a-zA-Z0-9]+)\"".r
+  private val extractSubjectRegex = "\"sub\" *: *\"([a-zA-Z0-9]*)\"".r
   protected def extractSubject(claim: String): Option[String] =
     (extractSubjectRegex findFirstMatchIn claim).map(_.group(1))
 
@@ -46,7 +46,7 @@ object Jwt extends JwtCore[JwtHeader, JwtClaim] {
   protected def extractIssuedAt(claim: String): Option[Long] =
     (extractIssuedAtRegex findFirstMatchIn claim).map(_.group(1)).map(_.toLong)
 
-  private val extractJwtIdRegex = "\"jti\" *: *\"([a-zA-Z0-9]+)\"".r
+  private val extractJwtIdRegex = "\"jti\" *: *\"([a-zA-Z0-9]*)\"".r
   protected def extractJwtId(claim: String): Option[String] =
     (extractJwtIdRegex findFirstMatchIn claim).map(_.group(1))
 
@@ -54,9 +54,9 @@ object Jwt extends JwtCore[JwtHeader, JwtClaim] {
   protected def clearStart(json: String): String =
     clearStartRegex.replaceFirstIn(json, "{")
 
-  private val clearMiddleRegex = ", *,".r
+  private val clearMiddleRegex = ", *(?=,)".r
   protected def clearMiddle(json: String): String =
-    clearMiddleRegex.replaceAllIn(json, ",")
+    clearMiddleRegex.replaceAllIn(json, "")
 
   private val clearEndRegex = ", *\\}".r
   protected def clearEnd(json: String): String =
@@ -75,7 +75,7 @@ object Jwt extends JwtCore[JwtHeader, JwtClaim] {
       extractJwtIdRegex
     ).foldLeft(json)(clearRegex)
 
-    clearStart(clearMiddle(clearEnd(dirtyJson)))
+    clearStart(clearEnd(clearMiddle(dirtyJson)))
   }
 
 
