@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.0.0 (26/08/2019)
+
+This is not really a breaking change release but I did some small adjustements that might break in very specific cases so not taking chances.
+
+- Support Scala 2.13 for Play framework.
+- Revert Circe to 0.11.1. After consideration, it was probably a mistake to use a Release Candidate version, I should stick to official stable releases.
+- Fix an issue in `Jwt` pure Scala implementation around regexp. Again, try not to use this one, mostly for tests and demos.
+- Fix examples.
+
 ## 3.1.0 (30/06/2019)
 
 - If claim.audience is only one item, it will be stringified as a simple string compared to an array if several values. (thanks @msinton)

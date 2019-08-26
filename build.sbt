@@ -7,8 +7,8 @@ import sbt._
 
 import scala.sys.process._
 
-val previousVersion = "3.0.1"
-val buildVersion = "3.1.0"
+val previousVersion = "3.1.0"
+val buildVersion = "4.0.0"
 
 val projects = Seq("coreProject", "playJsonProject", "json4sNativeProject", "json4sJacksonProject", "sprayJsonProject", "circeProject", "upickleProject", "argonautProject", "playProject")
 
@@ -181,6 +181,7 @@ lazy val circeProject = project.in(file("json/circe"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-circe",
+    crossScalaVersions -= scala213,
     libraryDependencies ++= Seq(Libs.circeCore, Libs.circeGeneric, Libs.circeParse)
   )
   .aggregate(jsonCommonProject)
@@ -250,7 +251,6 @@ lazy val playProject = project.in(file("play"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-play",
-    crossScalaVersions -= scala213,
     libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus, Libs.guice),
     testGrouping in Test := groupPlayTest((definedTests in Test).value, (dependencyClasspath in Test).value.files)
   )
