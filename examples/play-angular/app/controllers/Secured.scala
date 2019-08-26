@@ -1,5 +1,6 @@
 package controllers
 
+import java.time.Clock
 import javax.inject.Inject
 import models.User
 import pdi.jwt.JwtSession._
@@ -15,6 +16,8 @@ class AuthenticatedRequest[A](val user: User, request: Request[A]) extends Wrapp
 
 class AuthenticatedActionBuilder @Inject()(parser: BodyParsers.Default)(implicit ec: ExecutionContext, conf:Configuration)
     extends ActionBuilderImpl(parser) {
+  implicit val clock: Clock = Clock.systemUTC
+
   override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
     request.jwtSession.getAs[User]("user") match {
       case Some(user) =>
@@ -27,6 +30,8 @@ class AuthenticatedActionBuilder @Inject()(parser: BodyParsers.Default)(implicit
 
 class AdminActionBuilder @Inject()(parser: BodyParsers.Default)(implicit ec: ExecutionContext, conf:Configuration)
     extends ActionBuilderImpl(parser) {
+  implicit val clock: Clock = Clock.systemUTC
+
   override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
     request.jwtSession.getAs[User]("user") match {
       case Some(user) if user.isAdmin =>

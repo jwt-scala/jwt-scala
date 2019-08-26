@@ -2,6 +2,7 @@ package controllers
 
 import javax.inject.{ Inject, Singleton }
 
+import java.time.Clock
 import models.User
 import pdi.jwt.JwtSession._
 import play.api.libs.functional.syntax._
@@ -19,6 +20,8 @@ class Application @Inject()(scc: SecuredControllerComponents, assets: AssetsFind
 
   private val loginForm: Reads[(String, String)] =
     ((JsPath \ "username").read[String] and (JsPath \ "password").read[String]).tupled
+
+  implicit val clock: Clock = Clock.systemUTC
 
   def index = Action {
     Ok(views.html.index(assets))
