@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.1.0 (22/09/2019)
+
+- Upgrade to Circe 0.12.1 (thanks @erwan)
+
 ## 4.0.0 (26/08/2019)
 
 This is not really a breaking change release but I did some small adjustements that might break in very specific cases so not taking chances.
