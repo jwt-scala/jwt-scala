@@ -4,7 +4,8 @@ case class JwtOptions(
   signature: Boolean = true,
   expiration: Boolean = true,
   notBefore: Boolean = true,
-  leeway: Long = 0 // in seconds
+  leeway: Long = 0, // in seconds
+  allowUnknownAlgos : Boolean = false
 )
 
 object JwtOptions {

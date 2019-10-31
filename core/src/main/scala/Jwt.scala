@@ -578,7 +578,7 @@ trait JwtCore[H, C] {
   protected def validate(header: H, claim: C, signature: String, options: JwtOptions) {
     if (options.signature && !signature.isEmpty) {
       throw new JwtNonEmptySignatureException()
-    } else if (options.signature && !extractAlgorithm(header).isEmpty) {
+    } else if (options.signature && extractAlgorithm(header).isDefined && !options.allowUnknownAlgos) {
       throw new JwtNonEmptyAlgorithmException()
     }
 
