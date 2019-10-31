@@ -266,12 +266,12 @@ class JwtSpec extends UnitSpec with Fixture {
     it("should invalidate wrong algos") {
       val token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJXVEYifQ.e30"
       assert(Jwt.decode(token).isFailure)
-      intercept[JwtNonEmptyAlgorithmException] { Jwt.decode(token).get }
+      intercept[JwtNonSupportedAlgorithm] { Jwt.decode(token).get }
     }
 
     it("should decode tokens with unknown algos depending on options") {
       val token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJXVEYifQ.e30"
-      val decoded = Jwt.decode(token, options = JwtOptions(allowUnknownAlgos = true))
+      val decoded = Jwt.decode(token, options = JwtOptions(signature = false))
       assert(decoded.isSuccess)
     }
 
