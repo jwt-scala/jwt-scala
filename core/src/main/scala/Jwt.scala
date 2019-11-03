@@ -574,11 +574,13 @@ trait JwtCore[H, C] {
     algorithms.contains(algorithm)
   }
 
-  // Validation when no key and no algorithm
+  // Validation when no key and no algorithm (or unknown)
   protected def validate(header: H, claim: C, signature: String, options: JwtOptions) {
-    if (options.signature && !signature.isEmpty) {
-      throw new JwtNonEmptySignatureException()
-    } else if (options.signature) {
+    if (options.signature) {
+      if (!signature.isEmpty) {
+        throw new JwtNonEmptySignatureException()
+      }
+
       extractAlgorithm(header).foreach {
         case JwtUnkwownAlgorithm(name) => throw new JwtNonSupportedAlgorithm(name)
         case _                         => throw new JwtNonEmptyAlgorithmException()
