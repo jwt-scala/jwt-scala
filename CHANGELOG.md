@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.2.0 (03/11/2019)
+
+- No longer fail on unknown algorithm when `signature` is `false` on options (thanks @Baccata)
+- Upgrade upickle to 0.8.0 (thanks @vic)
+
 ## 4.1.0 (22/09/2019)
 
 - Upgrade to Circe 0.12.1 (thanks @erwan)
