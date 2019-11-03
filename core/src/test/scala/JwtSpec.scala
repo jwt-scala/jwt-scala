@@ -269,6 +269,12 @@ class JwtSpec extends UnitSpec with Fixture {
       intercept[JwtNonSupportedAlgorithm] { Jwt.decode(token).get }
     }
 
+    it("should decode tokens with unknown algos depending on options") {
+      val token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJXVEYifQ.e30"
+      val decoded = Jwt.decode(token, options = JwtOptions(signature = false))
+      assert(decoded.isSuccess)
+    }
+
     it("should skip expiration validation depending on options") {
       val options = JwtOptions(expiration = false)
 

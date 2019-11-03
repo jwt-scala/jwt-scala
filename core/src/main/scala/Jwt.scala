@@ -578,8 +578,11 @@ trait JwtCore[H, C] {
   protected def validate(header: H, claim: C, signature: String, options: JwtOptions) {
     if (options.signature && !signature.isEmpty) {
       throw new JwtNonEmptySignatureException()
-    } else if (options.signature && !extractAlgorithm(header).isEmpty) {
-      throw new JwtNonEmptyAlgorithmException()
+    } else if (options.signature) {
+      extractAlgorithm(header).foreach {
+        case JwtUnkwownAlgorithm(name) => throw new JwtNonSupportedAlgorithm(name)
+        case _                         => throw new JwtNonEmptyAlgorithmException()
+      }
     }
 
     validateTiming(claim, options)

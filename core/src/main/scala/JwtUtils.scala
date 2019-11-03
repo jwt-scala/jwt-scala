@@ -96,7 +96,7 @@ object JwtUtils {
      .replaceAll("\n", "")
      .trim
   )
-  
+
   private def parsePrivateKey(key: String, keyAlgo: String) = {
     val spec = new PKCS8EncodedKeySpec(parseKey(key))
     KeyFactory.getInstance(keyAlgo).generatePrivate(spec)
@@ -143,6 +143,7 @@ object JwtUtils {
       case algo: JwtHmacAlgorithm => sign(data, new SecretKeySpec(bytify(key), algo.fullName), algo)
       case algo: JwtRSAAlgorithm => sign(data, parsePrivateKey(key, RSA), algo)
       case algo: JwtECDSAAlgorithm => sign(data, parsePrivateKey(key, ECDSA), algo)
+      case algo: JwtUnkwownAlgorithm => throw new JwtNonSupportedAlgorithm(algo.fullName)
     }
 
   /**
@@ -179,6 +180,7 @@ object JwtUtils {
       case algo: JwtHmacAlgorithm =>  verify(data, signature, new SecretKeySpec(bytify(key), algo.fullName), algo)
       case algo: JwtRSAAlgorithm => verify(data, signature, parsePublicKey(key, RSA), algo)
       case algo: JwtECDSAAlgorithm => verify(data, signature, parsePublicKey(key, ECDSA), algo)
+      case algo: JwtUnkwownAlgorithm => throw new JwtNonSupportedAlgorithm(algo.fullName)
     }
 
   /**
