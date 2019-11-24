@@ -4,7 +4,7 @@ object Dependencies {
   object V {
     val scalatest = "3.0.8"
     val scalatestPlus = "4.0.3"
-    val bouncyCastle = "1.60"
+    val bouncyCastle = "1.64"
     val guice = "4.2.2"
 
     val play = "2.7.3"
