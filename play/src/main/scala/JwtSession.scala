@@ -3,11 +3,11 @@ package pdi.jwt
 import scala.concurrent.duration.Duration
 import javax.inject.Inject
 import java.time.Clock
-import play.api.Play
+
 import play.api.libs.json._
 import play.api.libs.json.Json.JsValueWrapper
 import play.api.Configuration
-import pdi.jwt.algorithms.JwtHmacAlgorithm
+import pdi.jwt.algorithms.{JwtAsymmetricAlgorithm, JwtHmacAlgorithm}
 
 /** Similar to the default Play Session but using JsObject instead of Map[String, String]. The data is separated into two attributes:
   * `headerData` and `claimData`. There is also a optional signature. Most of the time, you should only care about the `claimData` which
@@ -92,21 +92,20 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
   def MAX_AGE(implicit conf: Configuration): Option[Long] =
     conf.getOptional[Duration]("play.http.session.maxAge").map(_.toSeconds)
 
-  def ALGORITHM(implicit conf: Configuration): JwtHmacAlgorithm =
+  def ALGORITHM(implicit conf: Configuration): JwtAlgorithm =
     conf.getOptional[String]("play.http.session.algorithm")
       .map(JwtAlgorithm.fromString)
-      .flatMap {
-        case algo: JwtHmacAlgorithm => Option(algo)
-        case _ => throw new RuntimeException("You can only use HMAC algorithms for [play.http.session.algorithm]")
-      }
       .getOrElse(JwtAlgorithm.HS256)
 
   def TOKEN_PREFIX(implicit conf: Configuration): String = conf.getOptional[String]("play.http.session.tokenPrefix").getOrElse("Bearer ")
 
   private def key(implicit conf: Configuration): Option[String] = conf.getOptional[String]("play.http.secret.key")
 
-  def deserialize(token: String, options: JwtOptions)(implicit conf:Configuration, clock: Clock): JwtSession = (key match {
-      case Some(k) => jwtJson.decodeJsonAll(token, k, Seq(ALGORITHM), options)
+  private def publicKey(implicit conf: Configuration): Option[String] = conf.getOptional[String]("play.http.session.public.key")
+
+  def deserialize(token: String, options: JwtOptions)(implicit conf:Configuration, clock: Clock): JwtSession = ((key, publicKey, ALGORITHM) match {
+      case (Some(k), _, algorithm: JwtHmacAlgorithm) => jwtJson.decodeJsonAll(token, k, Seq(algorithm), options)
+      case (_, Some(pk), algorithm: JwtAsymmetricAlgorithm) => jwtJson.decodeJsonAll(token, pk, Seq(algorithm), options)
       case _ => jwtJson.decodeJsonAll(token, options)
     }).map { tuple =>
       JwtSession(tuple._1, tuple._2, tuple._3)
