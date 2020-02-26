@@ -159,6 +159,15 @@ result.jwtSession.getAs[User]("user")
 
 The secret key is used to secure cryptographics functions. We are using the same key to sign Json Web Tokens so you don't need to worry about it.
 
+
+### Public key
+`play.http.session.public.key`
+
+> Default: none
+
+The public key is used to verify session signed with private key `play.http.secret.key`
+
+
 ### Session timeout
 
 `play.http.session.maxAge`
