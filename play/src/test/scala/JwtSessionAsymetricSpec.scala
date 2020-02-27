@@ -27,8 +27,8 @@ class JwtSessionAsymetricSpec extends PlaySpec with GuiceOneAppPerSuite with Bef
   override def fakeApplication() =
     new GuiceApplicationBuilder()
       .configure(Map(
-        "play.http.secret.key" -> privateKey,
-        "play.http.session.public.key" -> publicKey,
+        "play.http.session.privateKey" -> privateKey,
+        "play.http.session.publicKey" -> publicKey,
         "play.http.session.jwtName" -> HEADER_NAME,
         "play.http.session.maxAge" -> sessionTimeout * 1000, // 10sec... that's really short :)
         "play.http.session.algorithm" -> "RS256",
@@ -43,8 +43,8 @@ class JwtSessionAsymetricSpec extends PlaySpec with GuiceOneAppPerSuite with Bef
 
   "Init FakeApplication" must {
     "have the correct config" in {
-      app.configuration.getOptional[String]("play.http.secret.key") mustEqual Option(privateKey)
-      app.configuration.getOptional[String]("play.http.session.public.key") mustEqual Option(publicKey)
+      app.configuration.getOptional[String]("play.http.session.privateKey") mustEqual Option(privateKey)
+      app.configuration.getOptional[String]("play.http.session.publicKey") mustEqual Option(publicKey)
       app.configuration.getOptional[String]("play.http.session.jwtName") mustEqual Option(HEADER_NAME)
       app.configuration.getOptional[String]("play.http.session.algorithm") mustEqual Option("RS256")
       app.configuration.getOptional[String]("play.http.session.tokenPrefix") mustEqual Option("")

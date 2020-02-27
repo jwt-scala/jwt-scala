@@ -61,11 +61,17 @@ case class JwtSession @Inject()(
   def header: JwtHeader = JwtSession.jwtPlayJsonHeaderReader.reads(headerData).get
 
   /** Encode the session as a JSON Web Token */
-  def serialize: String = JwtSession.key match {
-    // JwtJson.encode doesn't use the implicit clock, so it's safe
-    // to just default to using the JwtJson object
-    case Some(k) => JwtJson.encode(headerData, claimData, k)
-    case _ => JwtJson.encode(headerData, claimData)
+  def serialize: String = {
+    val key = JwtSession.ALGORITHM match {
+      case _: JwtAsymmetricAlgorithm => JwtSession.privateKey
+      case _ => JwtSession.secretKey
+    }
+    key match {
+      // JwtJson.encode doesn't use the implicit clock, so it's safe
+      // to just default to using the JwtJson object
+      case Some(k) => JwtJson.encode(headerData, claimData, k)
+      case _ => JwtJson.encode(headerData, claimData)
+    }
   }
 
   /** Overrride the `claimData` */
@@ -99,12 +105,14 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
 
   def TOKEN_PREFIX(implicit conf: Configuration): String = conf.getOptional[String]("play.http.session.tokenPrefix").getOrElse("Bearer ")
 
-  private def key(implicit conf: Configuration): Option[String] = conf.getOptional[String]("play.http.secret.key")
+  private def secretKey(implicit conf: Configuration): Option[String] = conf.getOptional[String]("play.http.secret.key")
 
-  private def publicKey(implicit conf: Configuration): Option[String] = conf.getOptional[String]("play.http.session.public.key")
+  private def privateKey(implicit conf: Configuration): Option[String] = conf.getOptional[String]("play.http.session.privateKey").orElse(secretKey)
 
-  def deserialize(token: String, options: JwtOptions)(implicit conf:Configuration, clock: Clock): JwtSession = ((key, publicKey, ALGORITHM) match {
-      case (Some(k), _, algorithm: JwtHmacAlgorithm) => jwtJson.decodeJsonAll(token, k, Seq(algorithm), options)
+  private def publicKey(implicit conf: Configuration): Option[String] = conf.getOptional[String]("play.http.session.publicKey")
+
+  def deserialize(token: String, options: JwtOptions)(implicit conf:Configuration, clock: Clock): JwtSession = ((secretKey, publicKey, ALGORITHM) match {
+      case (Some(sk), _, algorithm: JwtHmacAlgorithm) => jwtJson.decodeJsonAll(token, sk, Seq(algorithm), options)
       case (_, Some(pk), algorithm: JwtAsymmetricAlgorithm) => jwtJson.decodeJsonAll(token, pk, Seq(algorithm), options)
       case _ => jwtJson.decodeJsonAll(token, options)
     }).map { tuple =>
@@ -123,7 +131,7 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
     case _ => Json.obj()
   }
 
-  def defaultHeader(implicit conf: Configuration): JwtHeader = key.map(_ => JwtHeader(ALGORITHM)).getOrElse(JwtHeader())
+  def defaultHeader(implicit conf: Configuration): JwtHeader = secretKey.map(_ => JwtHeader(ALGORITHM)).getOrElse(JwtHeader())
 
   def defaultClaim(implicit conf: Configuration, clock: Clock): JwtClaim = MAX_AGE match {
     case Some(seconds) => JwtClaim().expiresIn(seconds)
