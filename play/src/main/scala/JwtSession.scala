@@ -7,7 +7,7 @@ import java.time.Clock
 import play.api.libs.json._
 import play.api.libs.json.Json.JsValueWrapper
 import play.api.Configuration
-import pdi.jwt.algorithms.{JwtAsymmetricAlgorithm, JwtHmacAlgorithm}
+import pdi.jwt.algorithms.{JwtAsymmetricAlgorithm, JwtHmacAlgorithm, JwtUnkwownAlgorithm}
 
 /** Similar to the default Play Session but using JsObject instead of Map[String, String]. The data is separated into two attributes:
   * `headerData` and `claimData`. There is also a optional signature. Most of the time, you should only care about the `claimData` which
@@ -62,11 +62,7 @@ case class JwtSession @Inject()(
 
   /** Encode the session as a JSON Web Token */
   def serialize: String = {
-    val key = JwtSession.ALGORITHM match {
-      case _: JwtAsymmetricAlgorithm => JwtSession.privateKey
-      case _ => JwtSession.secretKey
-    }
-    key match {
+    JwtSession.signingKey match {
       // JwtJson.encode doesn't use the implicit clock, so it's safe
       // to just default to using the JwtJson object
       case Some(k) => JwtJson.encode(headerData, claimData, k)
@@ -111,9 +107,25 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
 
   private def publicKey(implicit conf: Configuration): Option[String] = conf.getOptional[String]("play.http.session.publicKey")
 
-  def deserialize(token: String, options: JwtOptions)(implicit conf:Configuration, clock: Clock): JwtSession = ((secretKey, publicKey, ALGORITHM) match {
-      case (Some(sk), _, algorithm: JwtHmacAlgorithm) => jwtJson.decodeJsonAll(token, sk, Seq(algorithm), options)
-      case (_, Some(pk), algorithm: JwtAsymmetricAlgorithm) => jwtJson.decodeJsonAll(token, pk, Seq(algorithm), options)
+  private def signingKey(implicit conf: Configuration): Option[String] = {
+    ALGORITHM match {
+      case _: JwtAsymmetricAlgorithm => privateKey
+      case _: JwtHmacAlgorithm => secretKey
+      case _ => Option.empty
+    }
+  }
+
+  private def verifyingKey(implicit conf: Configuration): Option[String] = {
+    ALGORITHM match {
+      case _: JwtAsymmetricAlgorithm => publicKey
+      case _: JwtHmacAlgorithm => secretKey
+      case _ => Option.empty
+    }
+  }
+
+  def deserialize(token: String, options: JwtOptions)(implicit conf:Configuration, clock: Clock): JwtSession = ((verifyingKey, ALGORITHM) match {
+      case (Some(sk), algorithm: JwtHmacAlgorithm) => jwtJson.decodeJsonAll(token, sk, Seq(algorithm), options)
+      case (Some(pk), algorithm: JwtAsymmetricAlgorithm) => jwtJson.decodeJsonAll(token, pk, Seq(algorithm), options)
       case _ => jwtJson.decodeJsonAll(token, options)
     }).map { tuple =>
       JwtSession(tuple._1, tuple._2, tuple._3)
@@ -131,7 +143,7 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
     case _ => Json.obj()
   }
 
-  def defaultHeader(implicit conf: Configuration): JwtHeader = secretKey.map(_ => JwtHeader(ALGORITHM)).getOrElse(JwtHeader())
+  def defaultHeader(implicit conf: Configuration): JwtHeader = signingKey.map(_ => JwtHeader(ALGORITHM)).getOrElse(JwtHeader())
 
   def defaultClaim(implicit conf: Configuration, clock: Clock): JwtClaim = MAX_AGE match {
     case Some(seconds) => JwtClaim().expiresIn(seconds)
