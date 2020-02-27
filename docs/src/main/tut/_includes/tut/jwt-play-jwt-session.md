@@ -159,6 +159,22 @@ result.jwtSession.getAs[User]("user")
 
 The secret key is used to secure cryptographics functions. We are using the same key to sign Json Web Tokens so you don't need to worry about it.
 
+### Private key
+`play.http.session.privateKey`
+
+> Default: none
+
+The PKCS8 format private key is used to sign JWT session. If `play.http.session.privateKey` is missing `play.http.secret.key` used instead.
+
+
+### Public key
+`play.http.session.publicKey`
+
+> Default: none
+
+The X.509 format public key is used to verify JWT session signed with private key `play.http.session.privateKey`
+
+
 ### Session timeout
 
 `play.http.session.maxAge`
@@ -173,7 +189,7 @@ Just like for the cookie session, you can use this key to specify the duration, 
 
 > Default: HS256
 >
-> Supported: HMD5, HS1, HS224, HS256, HS384, HS512
+> Supported: HMD5, HS1, HS224, HS256, HS384, HS512, RS256, RS384, RS512, ES256, ES384, ES512
 
 You can specify which algorithm you want to use, among the supported ones, in order to create the signature which will assure you that nobody can actually change the token. You should probably stick with the default one or use HmacSHA512 for maximum security.
 
