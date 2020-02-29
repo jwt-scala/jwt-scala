@@ -7,8 +7,8 @@ import sbt._
 
 import scala.sys.process._
 
-val previousVersion = "4.1.0"
-val buildVersion = "4.2.0"
+val previousVersion = "4.2.0"
+val buildVersion = "4.3.0"
 
 val projects = Seq("coreProject", "playJsonProject", "json4sNativeProject", "json4sJacksonProject", "sprayJsonProject", "circeProject", "upickleProject", "argonautProject", "playProject")
 
@@ -17,6 +17,16 @@ addCommandAlias("scaladoc", ";coreProject/doc;playJsonProject/doc;json4sNativePr
 addCommandAlias("publish-doc", ";docs/makeSite;docs/tut;docs/ghpagesPushSite")
 
 addCommandAlias("testAll", projects.map(p => p + "/test").mkString(";", ";", ""))
+
+// ";+coreProject/publishSigned"
+// ";+playJsonProject/publishSigned"
+// ";+json4sNativeProject/publishSigned"
+// ";+json4sJacksonProject/publishSigned"
+// ";+sprayJsonProject/publishSigned"
+// ";+circeProject/publishSigned"
+// ";+upickleProject/publishSigned"
+// ";+argonautProject/publishSigned"
+// ";+playProject/publishSigned"
 addCommandAlias("publishAll", projects.map(p => "+" + p + "/publishSigned").mkString(";", ";", ""))
 
 addCommandAlias("releaseAll", ";bumpScript;scaladoc;publish-doc;publishAll;sonatypeRelease;pushScript")
@@ -42,8 +52,8 @@ cleanScript := {
 }
 
 val scala211 = "2.11.12"
-val scala212 = "2.12.8"
-val scala213 = "2.13.0"
+val scala212 = "2.12.10"
+val scala213 = "2.13.1"
 
 val crossVersionAll = Seq(scala211, scala212, scala213)
 val crossVersionLastTwo = Seq(scala212, scala213)
@@ -172,6 +182,7 @@ lazy val playJsonProject = project.in(file("json/play-json"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-play-json",
+    crossScalaVersions := crossVersionLastTwo,
     libraryDependencies ++= Seq(Libs.playJson)
   )
   .aggregate(jsonCommonProject)
@@ -251,6 +262,7 @@ lazy val playProject = project.in(file("play"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-play",
+    crossScalaVersions := crossVersionLastTwo,
     libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus, Libs.guice),
     testGrouping in Test := groupPlayTest((definedTests in Test).value, (dependencyClasspath in Test).value.files)
   )

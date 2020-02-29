@@ -233,7 +233,7 @@ the <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSessio
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">RichResult</span><span class="params">(<span name="result">result: <a href="https://www.playframework.com/documentation/2.7.3/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="conf">conf: <a href="https://www.playframework.com/documentation/2.7.3/api/scala/play/api/Configuration.html#play.api.Configuration" class="extype" name="play.api.Configuration">Configuration</a></span>, <span name="clock">clock: <span class="extype" name="java.time.Clock">Clock</span></span>)</span>
+        <span class="name">RichResult</span><span class="params">(<span name="result">result: <a href="https://www.playframework.com/documentation/2.8.0/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="conf">conf: <a href="https://www.playframework.com/documentation/2.8.0/api/scala/play/api/Configuration.html#play.api.Configuration" class="extype" name="play.api.Configuration">Configuration</a></span>, <span name="clock">clock: <span class="extype" name="java.time.Clock">Clock</span></span>)</span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
@@ -310,7 +310,7 @@ the <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSessio
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">addingToJwtSession</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="value">value: <span class="extype" name="pdi.jwt.JwtPlayImplicits.RichResult.addingToJwtSession.A">A</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span class="extype" name="play.api.libs.json.Writes">Writes</span>[<span class="extype" name="pdi.jwt.JwtPlayImplicits.RichResult.addingToJwtSession.A">A</span>]</span>, <span name="request">request: <a href="https://www.playframework.com/documentation/2.7.3/api/scala/play/api/mvc/RequestHeader.html#play.api.mvc.RequestHeader" class="extype" name="play.api.mvc.RequestHeader">RequestHeader</a></span>)</span><span class="result">: <a href="https://www.playframework.com/documentation/2.7.3/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>
+        <span class="name">addingToJwtSession</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="value">value: <span class="extype" name="pdi.jwt.JwtPlayImplicits.RichResult.addingToJwtSession.A">A</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span class="extype" name="play.api.libs.json.Writes">Writes</span>[<span class="extype" name="pdi.jwt.JwtPlayImplicits.RichResult.addingToJwtSession.A">A</span>]</span>, <span name="request">request: <a href="https://www.playframework.com/documentation/2.8.0/api/scala/play/api/mvc/RequestHeader.html#play.api.mvc.RequestHeader" class="extype" name="play.api.mvc.RequestHeader">RequestHeader</a></span>)</span><span class="result">: <a href="https://www.playframework.com/documentation/2.8.0/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>
       </span>
       
       <p class="shortcomment cmt">Keep the current <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSession</a> and add some values in it, if a key is already defined, it will be overriden.</p>
@@ -326,7 +326,7 @@ the <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSessio
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">addingToJwtSession</span><span class="params">(<span name="values">values: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)*</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <a href="https://www.playframework.com/documentation/2.7.3/api/scala/play/api/mvc/RequestHeader.html#play.api.mvc.RequestHeader" class="extype" name="play.api.mvc.RequestHeader">RequestHeader</a></span>)</span><span class="result">: <a href="https://www.playframework.com/documentation/2.7.3/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>
+        <span class="name">addingToJwtSession</span><span class="params">(<span name="values">values: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)*</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <a href="https://www.playframework.com/documentation/2.8.0/api/scala/play/api/mvc/RequestHeader.html#play.api.mvc.RequestHeader" class="extype" name="play.api.mvc.RequestHeader">RequestHeader</a></span>)</span><span class="result">: <a href="https://www.playframework.com/documentation/2.8.0/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>
       </span>
       
       <p class="shortcomment cmt">Keep the current <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSession</a> and add some values in it, if a key is already defined, it will be overriden.</p>
@@ -474,7 +474,7 @@ the <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSessio
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">jwtSession</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <a href="https://www.playframework.com/documentation/2.7.3/api/scala/play/api/mvc/RequestHeader.html#play.api.mvc.RequestHeader" class="extype" name="play.api.mvc.RequestHeader">RequestHeader</a></span>)</span><span class="result">: <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSession</a></span>
+        <span class="name">jwtSession</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <a href="https://www.playframework.com/documentation/2.8.0/api/scala/play/api/mvc/RequestHeader.html#play.api.mvc.RequestHeader" class="extype" name="play.api.mvc.RequestHeader">RequestHeader</a></span>)</span><span class="result">: <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSession</a></span>
       </span>
       
       <p class="shortcomment cmt">Retrieve the current <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSession</a> from the headers (first from the Result then from the RequestHeader), if none, create a new one.</p><div class="fullcomment"><div class="comment cmt"><p>Retrieve the current <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSession</a> from the headers (first from the Result then from the RequestHeader), if none, create a new one.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the JwtSession inside the headers or a new one</p></dd></dl></div>
@@ -548,7 +548,7 @@ the <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSessio
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">refreshJwtSession</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <a href="https://www.playframework.com/documentation/2.7.3/api/scala/play/api/mvc/RequestHeader.html#play.api.mvc.RequestHeader" class="extype" name="play.api.mvc.RequestHeader">RequestHeader</a></span>)</span><span class="result">: <a href="https://www.playframework.com/documentation/2.7.3/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>
+        <span class="name">refreshJwtSession</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <a href="https://www.playframework.com/documentation/2.8.0/api/scala/play/api/mvc/RequestHeader.html#play.api.mvc.RequestHeader" class="extype" name="play.api.mvc.RequestHeader">RequestHeader</a></span>)</span><span class="result">: <a href="https://www.playframework.com/documentation/2.8.0/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>
       </span>
       
       <p class="shortcomment cmt">If the Play app has a session.maxAge config, it will extend the expiration of the <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSession</a> by that time, if not, it will do nothing.</p><div class="fullcomment"><div class="comment cmt"><p>If the Play app has a session.maxAge config, it will extend the expiration of the <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSession</a> by that time, if not, it will do nothing.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the same Result with, eventually, a prolonged <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSession</a></p></dd></dl></div>
@@ -564,7 +564,7 @@ the <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSessio
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">removingFromJwtSession</span><span class="params">(<span name="keys">keys: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <a href="https://www.playframework.com/documentation/2.7.3/api/scala/play/api/mvc/RequestHeader.html#play.api.mvc.RequestHeader" class="extype" name="play.api.mvc.RequestHeader">RequestHeader</a></span>)</span><span class="result">: <a href="https://www.playframework.com/documentation/2.7.3/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>
+        <span class="name">removingFromJwtSession</span><span class="params">(<span name="keys">keys: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <a href="https://www.playframework.com/documentation/2.8.0/api/scala/play/api/mvc/RequestHeader.html#play.api.mvc.RequestHeader" class="extype" name="play.api.mvc.RequestHeader">RequestHeader</a></span>)</span><span class="result">: <a href="https://www.playframework.com/documentation/2.8.0/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>
       </span>
       
       <p class="shortcomment cmt">Remove some keys from the current <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSession</a></p>
@@ -680,7 +680,7 @@ the <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSessio
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">withJwtSession</span><span class="params">(<span name="fields">fields: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="play.api.libs.json.Json.JsValueWrapper">JsValueWrapper</span>)*</span>)</span><span class="result">: <a href="https://www.playframework.com/documentation/2.7.3/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>
+        <span class="name">withJwtSession</span><span class="params">(<span name="fields">fields: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="play.api.libs.json.Json.JsValueWrapper">JsValueWrapper</span>)*</span>)</span><span class="result">: <a href="https://www.playframework.com/documentation/2.8.0/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>
       </span>
       
       <p class="shortcomment cmt">Override the current <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSession</a> with a new one created from a sequence of tuples</p>
@@ -696,7 +696,7 @@ the <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSessio
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">withJwtSession</span><span class="params">(<span name="session">session: <span class="extype" name="play.api.libs.json.JsObject">JsObject</span></span>)</span><span class="result">: <a href="https://www.playframework.com/documentation/2.7.3/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>
+        <span class="name">withJwtSession</span><span class="params">(<span name="session">session: <span class="extype" name="play.api.libs.json.JsObject">JsObject</span></span>)</span><span class="result">: <a href="https://www.playframework.com/documentation/2.8.0/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>
       </span>
       
       <p class="shortcomment cmt">Override the current <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSession</a> with a new one created from a JsObject</p>
@@ -712,7 +712,7 @@ the <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSessio
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">withJwtSession</span><span class="params">(<span name="session">session: <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSession</a></span>)</span><span class="result">: <a href="https://www.playframework.com/documentation/2.7.3/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>
+        <span class="name">withJwtSession</span><span class="params">(<span name="session">session: <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSession</a></span>)</span><span class="result">: <a href="https://www.playframework.com/documentation/2.8.0/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>
       </span>
       
       <p class="shortcomment cmt">Override the current <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSession</a> with a new one</p>
@@ -728,7 +728,7 @@ the <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSessio
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">withNewJwtSession</span><span class="result">: <a href="https://www.playframework.com/documentation/2.7.3/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>
+        <span class="name">withNewJwtSession</span><span class="result">: <a href="https://www.playframework.com/documentation/2.8.0/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>
       </span>
       
       <p class="shortcomment cmt">Override the current <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSession</a> with a new empty one</p>
@@ -744,7 +744,7 @@ the <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSessio
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">withoutJwtSession</span><span class="result">: <a href="https://www.playframework.com/documentation/2.7.3/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>
+        <span class="name">withoutJwtSession</span><span class="result">: <a href="https://www.playframework.com/documentation/2.8.0/api/scala/play/api/mvc/Result.html#play.api.mvc.Result" class="extype" name="play.api.mvc.Result">Result</a></span>
       </span>
       
       <p class="shortcomment cmt">Remove the current <a href="JwtSession.html" class="extype" name="pdi.jwt.JwtSession">JwtSession</a>, which means removing the associated HTTP header</p>

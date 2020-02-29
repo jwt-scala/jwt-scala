@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.3.0 (29/02/2020)
+
+- Add support for asymmetric algorithms for Play framerwork (thanks @Bangalor)
+- Upgrade Circe to 0.13.0 (thanks @howyp)
+- Upgrade Play and play-json to 2.8.0
+- Upgrade upickle to 0.9.5
+
 ## 4.2.0 (03/11/2019)
 
 - No longer fail on unknown algorithm when `signature` is `false` on options (thanks @Baccata)

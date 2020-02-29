@@ -11,7 +11,7 @@ kramdown:
   syntax_highlighter: rouge
   hard_wrap: false
 
-versions: [4.1.0, 4.0.0, 3.1.0, 3.0.0, 3.0.0, 2.1.0, 2.0.0, 1.1.0, 1.0.0, 0.19.0, 0.18.0, 0.17.0, 0.16.0, 0.15.0]
+versions: [4.1.0, 4.1.0, 4.0.0, 3.1.0, 3.0.0, 3.0.0, 2.1.0, 2.0.0, 1.1.0, 1.0.0, 0.19.0, 0.18.0, 0.17.0, 0.16.0, 0.15.0]
 projects:
   - name: jwt-core
     description: pure Scala project.
