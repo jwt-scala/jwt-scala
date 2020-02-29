@@ -160,6 +160,7 @@ result.jwtSession.getAs[User]("user")
 The secret key is used to secure cryptographics functions. We are using the same key to sign Json Web Tokens so you don't need to worry about it.
 
 ### Private key
+
 `play.http.session.privateKey`
 
 > Default: none
@@ -168,6 +169,7 @@ The PKCS8 format private key is used to sign JWT session. If `play.http.session.
 
 
 ### Public key
+
 `play.http.session.publicKey`
 
 > Default: none

@@ -103,29 +103,21 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
 
   private def secretKey(implicit conf: Configuration): Option[String] = conf.getOptional[String]("play.http.secret.key")
 
-  private def privateKey(implicit conf: Configuration): Option[String] = conf.getOptional[String]("play.http.session.privateKey").orElse(secretKey)
+  private def privateKey(implicit conf: Configuration): Option[String] = conf.getOptional[String]("play.http.session.privateKey")
 
   private def publicKey(implicit conf: Configuration): Option[String] = conf.getOptional[String]("play.http.session.publicKey")
 
   private def signingKey(implicit conf: Configuration): Option[String] = {
     ALGORITHM match {
-      case _: JwtAsymmetricAlgorithm => privateKey
+      case _: JwtAsymmetricAlgorithm => privateKey.orElse(secretKey)
       case _: JwtHmacAlgorithm => secretKey
       case _ => Option.empty
     }
   }
 
-  private def verifyingKey(implicit conf: Configuration): Option[String] = {
-    ALGORITHM match {
-      case _: JwtAsymmetricAlgorithm => publicKey
-      case _: JwtHmacAlgorithm => secretKey
-      case _ => Option.empty
-    }
-  }
-
-  def deserialize(token: String, options: JwtOptions)(implicit conf:Configuration, clock: Clock): JwtSession = ((verifyingKey, ALGORITHM) match {
-      case (Some(sk), algorithm: JwtHmacAlgorithm) => jwtJson.decodeJsonAll(token, sk, Seq(algorithm), options)
-      case (Some(pk), algorithm: JwtAsymmetricAlgorithm) => jwtJson.decodeJsonAll(token, pk, Seq(algorithm), options)
+  def deserialize(token: String, options: JwtOptions)(implicit conf:Configuration, clock: Clock): JwtSession = ((ALGORITHM, secretKey, publicKey) match {
+      case (algorithm: JwtHmacAlgorithm, Some(sk), _) => jwtJson.decodeJsonAll(token, sk, Seq(algorithm), options)
+      case (algorithm: JwtAsymmetricAlgorithm, _, Some(pk)) => jwtJson.decodeJsonAll(token, pk, Seq(algorithm), options)
       case _ => jwtJson.decodeJsonAll(token, options)
     }).map { tuple =>
       JwtSession(tuple._1, tuple._2, tuple._3)
