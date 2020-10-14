@@ -65,9 +65,6 @@ val baseSettings = Seq(
   crossScalaVersions := crossVersionAll,
   crossVersion := CrossVersion.binary,
   autoAPIMappings := true,
-  resolvers ++= Seq(
-    "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"
-  ),
   libraryDependencies ++= Seq(Libs.scalatest),
   Test / aggregate := false,
   Test / fork := true,
