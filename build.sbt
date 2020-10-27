@@ -52,8 +52,8 @@ cleanScript := {
 }
 
 val scala211 = "2.11.12"
-val scala212 = "2.12.10"
-val scala213 = "2.13.1"
+val scala212 = "2.12.12"
+val scala213 = "2.13.3"
 
 val crossVersionAll = Seq(scala211, scala212, scala213)
 val crossVersionLastTwo = Seq(scala212, scala213)
@@ -65,9 +65,6 @@ val baseSettings = Seq(
   crossScalaVersions := crossVersionAll,
   crossVersion := CrossVersion.binary,
   autoAPIMappings := true,
-  resolvers ++= Seq(
-    "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/"
-  ),
   libraryDependencies ++= Seq(Libs.scalatest),
   Test / aggregate := false,
   Test / fork := true,
