@@ -1,0 +1,44 @@
+name: scala test
+on:
+  push:
+    branches:
+        - master
+  pull_request:
+    branches:
+        - master
+
+jobs:
+  main:
+    name: scala-simple-matrix
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        scala:
+          - 2.11.12
+          - 2.12.12
+          - 2.13.3
+        project:
+          - playJsonProject
+          - circeProject
+          - upickleProject
+          - json4sCommonProject
+          - json4sJacksonProject
+          - sprayJsonProject
+          - argonautProject
+        exclude:
+          - scala: 2.11.12
+            project: playJsonProject
+          - scala: 2.11.12
+            project: upickleProject
+          - scala: 2.11.12
+            project: circeProject
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: scala ${{ matrix.project }} ${{ matrix.scala }}
+        env:
+          CMD: ${{ matrix.cmd }}
+        run: |
+          sbt ++${{ matrix.scala }} ${{ matrix.project }}/test
