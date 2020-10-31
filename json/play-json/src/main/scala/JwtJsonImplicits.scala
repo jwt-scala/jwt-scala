@@ -1,8 +1,7 @@
 package pdi.jwt
 
-import play.api.libs.json._
-import play.api.libs.functional.syntax._
 import pdi.jwt.exceptions.{JwtNonNumberException, JwtNonStringException, JwtNonStringSetOrStringException, JwtNonSupportedAlgorithm}
+import play.api.libs.json._
 
 trait JwtJsonImplicits {
   private def extractString(json: JsObject, fieldName: String): Option[String] = (json \ fieldName).toOption.flatMap {
@@ -79,6 +78,16 @@ trait JwtJsonImplicits {
 
   implicit class RichJwtClaim(claim: JwtClaim) {
     def toJsValue(): JsValue = jwtPlayJsonClaimWriter.writes(claim)
+
+    def +[A](a: A)(implicit writes: Writes[A]): JwtClaim = {
+      val s = Json.stringify(writes.writes(a))
+      claim + s
+    }
+
+    def withContent[A](a: A)(implicit writes: Writes[A]): JwtClaim = {
+      val s = Json.stringify(writes.writes(a))
+      claim.withContent(s)
+    }
   }
 
   implicit class RichJwtHeader(header: JwtHeader) {

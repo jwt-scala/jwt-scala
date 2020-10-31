@@ -1,9 +1,11 @@
 package pdi.jwt
 
 import java.time.Clock
-import play.api.libs.json.{Json, JsObject, JsNumber, JsString}
+
+import play.api.libs.json.{JsNumber, JsObject, JsString, Json, Writes}
 
 class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
+
   import pdi.jwt.JwtJson._
 
   override def jwtJsonCommon(clock: Clock) = JwtJson(clock)
@@ -45,9 +47,48 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
     it("should decode token with spaces") {
       val (header, claim, signature) = defaultJwt.decodeJsonAll(tokenWithSpaces).get
       val expiration = BigDecimal("32086368000")
-      assertResult(JsNumber(0)) { (claim \ "nbf").get }
-      assertResult(JsNumber(expiration)) { (claim \ "exp").get }
-      assertResult(JsString("bar")) { (claim \ "foo").get }
+      assertResult(JsNumber(0)) {
+        (claim \ "nbf").get
+      }
+      assertResult(JsNumber(expiration)) {
+        (claim \ "exp").get
+      }
+      assertResult(JsString("bar")) {
+        (claim \ "foo").get
+      }
+    }
+  }
+
+
+  case class ContentClass(userId: String)
+  implicit val contentClassWrites: Writes[ContentClass] = Json.writes
+
+  describe("JwtClaim") {
+    it("should add content with Writes") {
+
+      val content = ContentClass(userId = "testId")
+      val claim = JwtClaim().expiresAt(10) + content
+
+      assertResult(Json.obj(
+        "exp" -> 10,
+        "userId" -> "testId"
+      )){
+        claim.toJsValue()
+      }
+    }
+
+    it("should set content with Writes") {
+
+      val content = ContentClass(userId = "testId")
+      val claim = JwtClaim().expiresAt(10).withContent(content)
+
+      assertResult(Json.obj(
+        "exp" -> 10,
+        "userId" -> "testId"
+      )){
+        claim.toJsValue()
+      }
     }
   }
 }
+
