@@ -17,6 +17,9 @@ trait JwtPlayImplicits {
 
   private def requestToJwtSession(request: RequestHeader)(implicit conf:Configuration, clock: Clock): JwtSession =
     request.headers.get(JwtSession.REQUEST_HEADER_NAME).map(sanitizeHeader).map(JwtSession.deserialize).getOrElse(JwtSession())
+  
+  private def requestHasJwtHeader(request: RequestHeader)(implicit conf:Configuration, clock: Clock): Boolean =
+    request.headers.get(JwtSession.REQUEST_HEADER_NAME).isDefined
 
   /** By adding `import pdi.jwt._`, you will implicitely add all those methods to `Result` allowing you to easily manipulate
     * the [[JwtSession]] inside your Play application.
@@ -43,6 +46,13 @@ trait JwtPlayImplicits {
     * }}}
     */
   implicit class RichResult @Inject()(result: Result)(implicit conf:Configuration, clock: Clock) {
+    /** Check if the header for a [[JwtSession]] is present (first from the Result then from the RequestHeader)
+      * @return a Boolean indicating the presence of a JWT header
+      */
+    def hasJwtHeader(implicit request: RequestHeader): Boolean = {
+      result.header.headers.get(JwtSession.RESPONSE_HEADER_NAME).map(_ => true).getOrElse(requestHasJwtHeader(request))
+    }
+
     /** Retrieve the current [[JwtSession]] from the headers (first from the Result then from the RequestHeader), if none, create a new one.
       * @return the JwtSession inside the headers or a new one
       */
@@ -58,7 +68,14 @@ trait JwtPlayImplicits {
       */
     def refreshJwtSession(implicit request: RequestHeader): Result = JwtSession.MAX_AGE match {
       case None => result
-      case _ => result.withJwtSession(jwtSession.refresh)
+      case _ => {
+        // Only refresh if we actually have a proper JWT session
+        if (hasJwtHeader) {
+          result.withJwtSession(jwtSession.refresh)
+        } else {
+          result
+        }
+      }
     }
 
     /** Override the current [[JwtSession]] with a new one */
@@ -113,5 +130,8 @@ trait JwtPlayImplicits {
   implicit class RichRequestHeader @Inject()(request: RequestHeader)(implicit conf:Configuration, clock: Clock) {
     /** Return the current [[JwtSession]] from the request */
     def jwtSession: JwtSession = requestToJwtSession(request)
+
+    /** Check if the request has the JWT header defined */
+    def hasJwtHeader: Boolean = requestHasJwtHeader(request)
   }
 }

@@ -19,10 +19,15 @@ class JwtSessionAsymetricSpec extends PlaySpec with GuiceOneAppPerSuite with Bef
 
   // Just for test, users shouldn't change the header name normally
   def HEADER_NAME = "Auth"
-  def sessionTimeout = 10
+  def sessionTimeout = defaultMaxAge
 
   val privateKey: String = "MIIBOAIBAAJAZbLOel7f+8jUyAxPcrwbWZjxOoEPCXOIQfrv5VeVCxGJMYnsZeCjfN9JEGyMoVXY65nD5crMOGj6oF8V5APL4wIDAQABAkAtiJx4H8iLdEUI+LINvflE6XyAZE52PdsxJ4iHl+oslPG1cHNSiE46Ol1uSWvv6GD3VPjcfi+wTPe6nWQmnZ6ZAiEAqji6dSXzWTYHwHjrBZyUwqD8LXa5mrkGAht1SZhyBK0CIQCY8lFtMM1Td7O9hplwZLGVvXAbDKNaAmvcVZUWD1aUzwIgYKLwCA3Rh3YLFJQRKRBpy8zFHbJnUJV1+cBI580p/ckCICiI6C2xJmm9qsRLHPVdqncOCt0QX2amh6GQiP+ctwyfAiAVMw0Pa3lad/Q2Wt9M7I3FdoGiGlcfMEk1NzvPvtGTjA=="
   val publicKey: String = "MFswDQYJKoZIhvcNAQEBBQADSgAwRwJAZbLOel7f+8jUyAxPcrwbWZjxOoEPCXOIQfrv5VeVCxGJMYnsZeCjfN9JEGyMoVXY65nD5crMOGj6oF8V5APL4wIDAQAB"
+
+  // {"typ":"JWT","alg":"RS256"}
+  val header = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
+  val signature = "WrNldzMwkaki0eK_-S5VyZqJpCmkDtYoehh-R_Dvr6vNvUdZsJtugZReQ74zhm1ntWGIw5EP8G1vrzJ9sirLIQ"
+
 
   override def fakeApplication() =
     new GuiceApplicationBuilder()
@@ -30,7 +35,7 @@ class JwtSessionAsymetricSpec extends PlaySpec with GuiceOneAppPerSuite with Bef
         "play.http.session.privateKey" -> privateKey,
         "play.http.session.publicKey" -> publicKey,
         "play.http.session.jwtName" -> HEADER_NAME,
-        "play.http.session.maxAge" -> sessionTimeout * 1000, // 10sec... that's really short :)
+        "play.http.session.maxAge" -> sessionTimeout * 1000,
         "play.http.session.algorithm" -> "RS256",
         "play.http.session.tokenPrefix" -> ""
       ))
@@ -38,8 +43,8 @@ class JwtSessionAsymetricSpec extends PlaySpec with GuiceOneAppPerSuite with Bef
 
 
   def session = JwtSession()
-  def sessionCustom = JwtSession(JwtHeader(JwtAlgorithm.RS256), claimClass, "NCDbnwlfFuF28QZte2WU6tSl_H9q7O9ujOS8c9FcPvL2kEeb2q9TFcW-v5X8Si5YzRdY78y7pBtsF3pyr15ROA")
-  def tokenCustom = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9." + claim64 + ".NCDbnwlfFuF28QZte2WU6tSl_H9q7O9ujOS8c9FcPvL2kEeb2q9TFcW-v5X8Si5YzRdY78y7pBtsF3pyr15ROA"
+  def sessionCustom = JwtSession(JwtHeader(JwtAlgorithm.RS256), claimClass, signature)
+  def tokenCustom = header + "." + playClaim64 + "." + signature
 
   "Init FakeApplication" must {
     "have the correct config" in {
@@ -66,8 +71,7 @@ class JwtSessionAsymetricSpec extends PlaySpec with GuiceOneAppPerSuite with Bef
     }
 
     "serialize" in {
-      val serialize = sessionCustom.serialize
-      assert(serialize == tokenCustom)
+      assert(sessionCustom.serialize == tokenCustom)
     }
 
     "deserialize" in {
@@ -75,9 +79,8 @@ class JwtSessionAsymetricSpec extends PlaySpec with GuiceOneAppPerSuite with Bef
     }
   }
 
-  val sessionHeaderExp = Some("eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjEzMDA4MTkzNjB9.QC1gE_y1dDLmH2laD9Fl9HkFV5G5Ha7elJ8UkfIt4pC2P-w_1ZJ35B9IUGVH3KCznSNHs4Rnaa28peNpZQ5Pcw")
-  val sessionHeaderUser = Some("eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjEzMDA4MTkzNjAsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJQYXVsIn19.Ahe01ybwB5aK4jFV7VkVkvO7fWHhT5VfDXGqy3GjkGMqur3HwEizbkONRW1uJlSoRHO8xMkAgcKspFYWI-8Ugg")
-  val sessionHeaderExp2 = Some("eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjEzMDA4MTkzNzF9.RtqUk7CddMknQ8hr5fYczW8P5HyA_StKqJoTnSHb4bP5HTHPSBn1dz7Rsur3F8OaHO6bdUhn81kZP2G2309z2w")
+  val sessionHeaderUser = Some(header + ".eyJleHAiOjEzMDA4MTkzODAsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJQYXVsIn19.ZSTobcEIDXJfxhsIhHoe-ySBxHHKsHoYqVW5n0WHTtq3yN3X1eejfvONcaDi8Wq-EK9CM9VMeP1CIPmBX91M8g")
+  val sessionHeaderExp = Some(header + ".eyJleHAiOjEzMDA4MTk0MTF9.Vyr9qnNVAGNAqU1N_JkaiYUhVq3dgBrsjlW4gr4pdO9nIh1QeWABFi3ADKSC5Z7zubvH_WAx3X5A9SaKxp4_bg")
 
   "RichResult" must {
     "access app with no user" in {
@@ -86,7 +89,7 @@ class JwtSessionAsymetricSpec extends PlaySpec with GuiceOneAppPerSuite with Bef
 
       status(result) mustEqual OK
       status(result2) mustEqual UNAUTHORIZED
-      jwtHeader(result) mustEqual sessionHeaderExp
+      jwtHeader(result) mustEqual None
       jwtHeader(result2) mustEqual None
     }
 
@@ -122,7 +125,7 @@ class JwtSessionAsymetricSpec extends PlaySpec with GuiceOneAppPerSuite with Bef
 
       status(result) mustEqual OK
       status(result2) mustEqual UNAUTHORIZED
-      jwtHeader(result) mustEqual sessionHeaderExp2
+      jwtHeader(result) mustEqual sessionHeaderExp
       jwtHeader(result2) mustEqual None
     }
 
@@ -138,7 +141,7 @@ class JwtSessionAsymetricSpec extends PlaySpec with GuiceOneAppPerSuite with Bef
 
       status(result) mustEqual OK
       status(result2) mustEqual UNAUTHORIZED
-      jwtHeader(result) mustEqual sessionHeaderExp2
+      jwtHeader(result) mustEqual None
       jwtHeader(result2) mustEqual None
     }
   }

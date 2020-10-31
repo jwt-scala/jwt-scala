@@ -23,7 +23,7 @@ import pdi.jwt.algorithms.{JwtAsymmetricAlgorithm, JwtHmacAlgorithm, JwtUnkwownA
 case class JwtSession @Inject()(
   headerData: JsObject,
   claimData: JsObject,
-  signature: String)(implicit conf:Configuration, clock: Clock)
+  signature: String)(implicit conf: Configuration, clock: Clock)
  {
   /** Merge the `value` with `claimData` */
   def + (value: JsObject): JwtSession = this.copy(claimData = claimData.deepMerge(value))
@@ -115,7 +115,7 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
     }
   }
 
-  def deserialize(token: String, options: JwtOptions)(implicit conf:Configuration, clock: Clock): JwtSession = ((ALGORITHM, secretKey, publicKey) match {
+  def deserialize(token: String, options: JwtOptions)(implicit conf: Configuration, clock: Clock): JwtSession = ((ALGORITHM, secretKey, publicKey) match {
       case (algorithm: JwtHmacAlgorithm, Some(sk), _) => jwtJson.decodeJsonAll(token, sk, Seq(algorithm), options)
       case (algorithm: JwtAsymmetricAlgorithm, _, Some(pk)) => jwtJson.decodeJsonAll(token, pk, Seq(algorithm), options)
       case _ => jwtJson.decodeJsonAll(token, options)
@@ -145,22 +145,22 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
   def apply(jsClaim: JsObject)(implicit conf: Configuration, clock: Clock): JwtSession =
     JwtSession.apply(asJsObject(defaultHeader), jsClaim)
 
-  def apply(fields: (String, JsValueWrapper)*)(implicit conf:Configuration, clock: Clock): JwtSession =
+  def apply(fields: (String, JsValueWrapper)*)(implicit conf: Configuration, clock: Clock): JwtSession =
     if (fields.isEmpty) {
-      JwtSession.apply(defaultHeader, defaultClaim)
+      JwtSession.apply(defaultHeader, JwtClaim())
     } else {
       JwtSession.apply(Json.obj(fields: _*))
     }
 
-  def apply(jsHeader: JsObject, jsClaim: JsObject)(implicit conf:Configuration, clock: Clock): JwtSession =
-    new JwtSession(jsHeader, jsClaim, "")
+  def apply(jsHeader: JsObject, jsClaim: JsObject)(implicit conf: Configuration, clock: Clock): JwtSession =
+    new JwtSession(jsHeader, jsClaim, "").refresh
 
   def apply(claim: JwtClaim)(implicit conf: Configuration, clock: Clock): JwtSession =
     JwtSession.apply(defaultHeader, claim)
 
-  def apply(header: JwtHeader, claim: JwtClaim)(implicit conf:Configuration, clock: Clock): JwtSession =
-    new JwtSession(asJsObject(header), asJsObject(claim), "")
+  def apply(header: JwtHeader, claim: JwtClaim)(implicit conf: Configuration, clock: Clock): JwtSession =
+    new JwtSession(asJsObject(header), asJsObject(claim), "").refresh
 
-  def apply(header: JwtHeader, claim: JwtClaim, signature: String)(implicit conf:Configuration, clock: Clock): JwtSession =
-    new JwtSession(asJsObject(header), asJsObject(claim), signature)
+  def apply(header: JwtHeader, claim: JwtClaim, signature: String)(implicit conf: Configuration, clock: Clock): JwtSession =
+    new JwtSession(asJsObject(header), asJsObject(claim), signature).refresh
 }

@@ -26,12 +26,19 @@ trait PlayFixture extends Fixture {
   val user = User(1, "Paul")
   val userJson = Json.obj("id" -> 1, "name" -> "Paul")
 
+  var defaultMaxAge = expiration - validTime
+
+  // The expiration is not added in the same way, resulting in JSON properties not in the same order,
+  // meaning a different Base64 encoding
+  val playClaim64 = "eyJpc3MiOiJqb2UiLCJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZSwiZXhwIjoxMzAwODE5MzgwfQ"
+
   def loginAction(implicit conf:Configuration, Action:DefaultActionBuilder): EssentialAction = Action { implicit request =>
-    val username = (request.body.asJson.get \ "username").as[String]
-    val password = (request.body.asJson.get \ "password").as[String]
+    val body = request.body.asJson
+    val username = (body.get \ "username").as[String]
+    val password = (body.get \ "password").as[String]
 
     password match {
-      case "p4ssw0rd" => Ok.addingToJwtSession("user", user)
+      case "p4ssw0rd" => Ok.withJwtSession(Json.obj("user" -> userJson))
       case _ => BadRequest
     }
   }

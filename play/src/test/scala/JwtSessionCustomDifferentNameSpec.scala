@@ -14,7 +14,7 @@ import play.api.mvc.Results._
 import play.api.test._
 import play.api.test.Helpers._
 
-class JwrSessionCustomDifferentNameSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAndAfter with Injecting with PlayFixture {
+class JwtSessionCustomDifferentNameSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAndAfter with Injecting with PlayFixture {
   import pdi.jwt.JwtSession._
 
   implicit lazy val conf:Configuration = app.configuration
@@ -24,7 +24,10 @@ class JwrSessionCustomDifferentNameSpec extends PlaySpec with GuiceOneAppPerSuit
   // Just for test, users shouldn't change the header name normally
   def HEADER_NAME = "Auth"
   def RESPONSE_HEADER_NAME = "Set-Auth"
-  def sessionTimeout = 10
+  def sessionTimeout = defaultMaxAge
+
+  val header = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9"
+  val signature = "3FQn0RsztnK6i8x8Vi8k6WEsvzfnKDF2yx9WPeeiC1gu6yWZAMmCvzZi05A3d9sx2GwFfkVFPXgk_erYoizFxw"
 
   override def fakeApplication() =
     new GuiceApplicationBuilder()
@@ -32,7 +35,7 @@ class JwrSessionCustomDifferentNameSpec extends PlaySpec with GuiceOneAppPerSuit
         "play.http.secret.key" -> secretKey,
         "play.http.session.jwtName" -> HEADER_NAME,
         "play.http.session.jwtResponseName" -> RESPONSE_HEADER_NAME,
-        "play.http.session.maxAge" -> sessionTimeout * 1000, // 10sec... that's really short :)
+        "play.http.session.maxAge" -> sessionTimeout * 1000,
         "play.http.session.algorithm" -> "HS512",
         "play.http.session.tokenPrefix" -> ""
       ))
@@ -40,8 +43,8 @@ class JwrSessionCustomDifferentNameSpec extends PlaySpec with GuiceOneAppPerSuit
 
 
   def session = JwtSession()
-  def sessionCustom = JwtSession(JwtHeader(JwtAlgorithm.HS512), claimClass, "ngZsdQj8p2wvUAo8xCbJPwganGPnG5UnLkg7VrE6NgmQdV16UITjlBajZxcai_U5PjQdeN-yJtyA5kxf8O5BOQ")
-  def tokenCustom = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9." + claim64 + ".ngZsdQj8p2wvUAo8xCbJPwganGPnG5UnLkg7VrE6NgmQdV16UITjlBajZxcai_U5PjQdeN-yJtyA5kxf8O5BOQ"
+  def sessionCustom = JwtSession(JwtHeader(JwtAlgorithm.HS512), claimClass, signature)
+  def tokenCustom = header + "." + playClaim64 + "." + signature
 
   "Init FakeApplication" must {
     "have the correct config" in {
@@ -76,9 +79,8 @@ class JwrSessionCustomDifferentNameSpec extends PlaySpec with GuiceOneAppPerSuit
     }
   }
 
-  val sessionHeaderExp = Some("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJleHAiOjEzMDA4MTkzNjB9.nUA_47EPTArR_imUGiIldicJugWWjlH8miDhiwe3RcAVgCYyO7Q0LXkj504DMkRDUZKPbGKXlNxTKeKGz-xHEQ")
-  val sessionHeaderUser = Some("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJleHAiOjEzMDA4MTkzNjAsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJQYXVsIn19.NfNWg47eQdH6IY-AXo_c_Zl9dMyhBev0E2XmvjLKluLf9w8kqe1Nozp4FxLB1eCEuqUuMnfqgCcq66psH5zYlw")
-  val sessionHeaderExp2 = Some("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJleHAiOjEzMDA4MTkzNzF9.huJo47S37DjyAcS6POb7djzyFL0fOlk9ewaUfbEbHAnBZKpNFPvoo4U0NHrxaolH0RFd3DeN7vHQm61VBBbX5A")
+  val sessionHeaderUser = Some(header + ".eyJleHAiOjEzMDA4MTkzODAsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJQYXVsIn19.nfhPaLvlRjXlq3o-B1FvHk0rG_ZsqMdnr9cR3GCK23iGZ4an6uxOr_FJCXX5sgtnMIx1uqQ3utgW9jyBqqFuUw")
+  val sessionHeaderExp = Some(header + ".eyJleHAiOjEzMDA4MTk0MTF9.B27yGau7FJWE_2ir6B4dqQkXh3DhgryR29nyjA-TuWNfx3H7kcRbWf2XrpMN3cCpU04Oi1cV5I0w8DVyO-h6Ig")
 
   "RichResult" must {
     "access app with no user" in {
@@ -87,7 +89,7 @@ class JwrSessionCustomDifferentNameSpec extends PlaySpec with GuiceOneAppPerSuit
 
       status(result) mustEqual OK
       status(result2) mustEqual UNAUTHORIZED
-      jwtHeader(result) mustEqual sessionHeaderExp
+      jwtHeader(result) mustEqual None
       jwtHeader(result2) mustEqual None
     }
 
@@ -123,7 +125,7 @@ class JwrSessionCustomDifferentNameSpec extends PlaySpec with GuiceOneAppPerSuit
 
       status(result) mustEqual OK
       status(result2) mustEqual UNAUTHORIZED
-      jwtHeader(result) mustEqual sessionHeaderExp2
+      jwtHeader(result) mustEqual sessionHeaderExp
       jwtHeader(result2) mustEqual None
     }
 
@@ -139,7 +141,7 @@ class JwrSessionCustomDifferentNameSpec extends PlaySpec with GuiceOneAppPerSuit
 
       status(result) mustEqual OK
       status(result2) mustEqual UNAUTHORIZED
-      jwtHeader(result) mustEqual sessionHeaderExp2
+      jwtHeader(result) mustEqual None
       jwtHeader(result2) mustEqual None
     }
   }
