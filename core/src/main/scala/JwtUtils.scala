@@ -289,4 +289,20 @@ object JwtUtils {
     signatureDER.toArray
   }
 
+  def splitString(input: String, separator: Char): Array[String] = {
+    val builder = scala.collection.mutable.ArrayBuffer.empty[String]
+    var lastIndex = 0
+    var index = input.indexOf(separator, lastIndex)
+    while (index != -1) {
+      builder += input.substring(lastIndex, index)
+      lastIndex = index + 1
+      index = input.indexOf(separator, lastIndex)
+    }
+    // Add the remainder
+    if (lastIndex < input.length) {
+      builder += input.substring(lastIndex, input.length)
+    }
+    builder.toArray
+  }
+
 }

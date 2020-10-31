@@ -162,6 +162,47 @@ class JwtUtilsSpec extends UnitSpec with ClockFixture {
       }
     }
 
+    describe("splitString") {
+      it("should do nothing") {
+        assertResult(Array("qwerty")) { JwtUtils.splitString("qwerty", 'a') }
+      }
 
+      it("should split once") {
+        assertResult(Array("qwerty", "zxcvb")) { JwtUtils.splitString("qwertyAzxcvb", 'A') }
+      }
+
+      it("should split a token") {
+        assertResult(Array("header", "claim", "signature")) { JwtUtils.splitString("header.claim.signature", '.') }
+      }
+
+      it("should split a token without signature") {
+        assertResult(Array("header", "claim")) { JwtUtils.splitString("header.claim", '.') }
+      }
+
+      it("should split a token with an empty signature") {
+        assertResult(Array("header", "claim")) { JwtUtils.splitString("header.claim.", '.') }
+      }
+
+      it("should split a token with an empty header") {
+        assertResult(Array("", "claim")) { JwtUtils.splitString(".claim.", '.') }
+      }
+
+      it("should be the same as normal split") {
+        var token = "header.claim.signature"
+        assertResult(token.split("\\.")) { JwtUtils.splitString(token, '.') }
+        token = "header.claim."
+        assertResult(token.split("\\.")) { JwtUtils.splitString(token, '.') }
+        token = "header.claim"
+        assertResult(token.split("\\.")) { JwtUtils.splitString(token, '.') }
+        token = ".claim.signature"
+        assertResult(token.split("\\.")) { JwtUtils.splitString(token, '.') }
+        token = ".claim."
+        assertResult(token.split("\\.")) { JwtUtils.splitString(token, '.') }
+        token = "1"
+        assertResult(token.split("\\.")) { JwtUtils.splitString(token, '.') }
+        token = "a.b.c.d"
+        assertResult(token.split("\\.")) { JwtUtils.splitString(token, '.') }
+      }
+    }
   }
 }

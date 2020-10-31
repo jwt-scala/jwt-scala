@@ -182,7 +182,7 @@ trait JwtCore[H, C] {
     * @throws JwtLengthException if there is not 2 or 3 parts in the token
     */
   private def splitToken(token: String): (String, String, String, String, String) = {
-    val parts = token.split("\\.")
+    val parts = JwtUtils.splitString(token, '.')
 
     val signature = parts.length match {
       case 2 => ""
