@@ -1,5 +1,5 @@
 import Dependencies._
-import com.typesafe.sbt.pgp.PgpKeys._
+import com.jsuereth.sbtpgp.PgpKeys._
 import play.sbt.Play.autoImport._
 import sbt.Keys._
 import sbt.Tests._
