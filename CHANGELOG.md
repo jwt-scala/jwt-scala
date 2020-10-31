@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.0.0 (31/10/2020)
+
+- Make `JwtException` a proper exception (thanks @tpolecat)
+- Update SBT and Scala version (thanks @erwan)
+- **Breaking** (a little): `JwtSession` should always have an expiration now if you have set a `play.http.session.maxAge`. Before, a few ways to create the session would forget to add it.
+- **Breaking** (also a little): calling `refreshJwtSession` on a Play Result will now truly refresh and set a session if there was one to begin with. Before, it would always set a session with an expiration even if there was nothing.
+
 ## 4.3.0 (29/02/2020)
 
 - Add support for asymmetric algorithms for Play framerwork (thanks @Bangalor)
