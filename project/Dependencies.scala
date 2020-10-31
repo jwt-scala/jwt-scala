@@ -7,13 +7,13 @@ object Dependencies {
     val bouncyCastle = "1.64"
     val guice = "4.2.2"
 
-    val play = "2.8.0"
-    val playJson = "2.8.0"
-    val json4s = "3.6.7"
+    val play = "2.8.3"
+    val playJson = "2.9.1"
+    val json4s = "3.6.10"
     val circe = "0.13.0"
-    val upickle = "0.9.5"
+    val upickle = "1.2.2"
     val sprayJson = "1.3.5"
-    val argonaut = "6.2.4"
+    val argonaut = "6.3.1"
   }
 
   object Libs {
