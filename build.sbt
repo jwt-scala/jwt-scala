@@ -245,6 +245,7 @@ lazy val argonautProject = project.in(file("json/argonaut"))
     .settings(releaseSettings)
     .settings(
       name := "jwt-argonaut",
+      crossScalaVersions := crossVersionLastTwo,
       libraryDependencies ++= Seq(Libs.argonaut)
     )
     .aggregate(jsonCommonProject)
