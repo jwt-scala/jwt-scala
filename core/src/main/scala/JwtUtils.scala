@@ -12,7 +12,7 @@ import pdi.jwt.exceptions.{JwtNonSupportedAlgorithm, JwtSignatureFormatException
 object JwtUtils {
   val ENCODING = "UTF-8"
   val RSA = "RSA"
-  val ECDSA = "ECDSA"
+  val ECDSA = "EC"
 
   /** Convert an array of bytes to its corresponding string using the default encoding.
     *
