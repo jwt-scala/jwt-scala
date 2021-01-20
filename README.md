@@ -1,6 +1,8 @@
 # JWT Scala 4.2.0
 
-Scala support for JSON Web Token ([JWT](http://tools.ietf.org/html/draft-ietf-oauth-json-web-token)). Supports Java 8+, Scala 2.11.x, Scala 2.12.x and Scala 2.13.0. Dependency free. Optional helpers for Play Framework, Play JSON, Json4s Native, Json4s Jackson, Circe, uPickle, Spray JSON and Argonaut.
+Scala support for JSON Web Token ([JWT](http://tools.ietf.org/html/draft-ietf-oauth-json-web-token)). Supports Java 8+, Scala 2.11, Scala 2.12 and Scala 2.13. Dependency free. Optional helpers for Play Framework, Play JSON, Json4s Native, Json4s Jackson, Circe, uPickle, Spray JSON and Argonaut.
+
+⚠️ Looking for maintainers. This lib is totally production ready, it's used in several projects already and works fine. But I moved away from Scala and won't maintain it anymore. It's been pretty stable over the last few years, most of the work is upgrading dependency versions and ensuring cross-compatibility. If you are using this lib yourself and have some motivation to take care of it, consider reaching out to me.
 
 ## Pick the right tool for the right job
 

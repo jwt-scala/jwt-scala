@@ -1,5 +1,7 @@
 # Changelog
 
+⚠️ Looking for maintainers. This lib is totally production ready, it's used in several projects already and works fine. But I moved away from Scala and won't maintain it anymore. It's been pretty stable over the last few years, most of the work is upgrading dependency versions and ensuring cross-compatibility. If you are using this lib yourself and have some motivation to take care of it, consider reaching out to me.
+
 ## 5.0.0 (31/10/2020)
 
 - Make `JwtException` a proper exception (thanks @tpolecat)
@@ -7,6 +9,7 @@
 - Improve string splitting performance (thanks @jfosback)
 - **Breaking** (a little): `JwtSession` should always have an expiration now if you have set a `play.http.session.maxAge`. Before, a few ways to create the session would forget to add it.
 - **Breaking** (also a little): calling `refreshJwtSession` on a Play Result will now truly refresh and set a session if there was one to begin with. Before, it would always set a session with an expiration even if there was nothing.
+- **Breaking** (maybe, maybe not, unsure): renamed KeyFactory algorithm from "ECDSA" to "EC" to better comply with [Java Security Standard Algorithm Names](https://docs.oracle.com/en/java/javase/14/docs/specs/security/standard-names.html#keyfactory-algorithms), this might impact curve names, check [ParameterSpec Names](https://docs.oracle.com/en/java/javase/14/docs/specs/security/standard-names.html#parameterspec-names) if you are impacted.
 
 ## 4.3.0 (29/02/2020)
 
