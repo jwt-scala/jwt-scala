@@ -51,6 +51,8 @@ trait ClockFixture {
   val validTime: Long = (expiration + notBefore) / 2
   val validTimeMillis: Long = validTime * 1000
   val validTimeClock: Clock = fixedUTC(validTimeMillis)
+
+  val ecCurveName = "secp521r1";
 }
 
 trait Fixture extends ClockFixture {
@@ -120,7 +122,7 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
   generatorRSA.initialize(1024)
   val randomRSAKey = generatorRSA.generateKeyPair()
 
-  val ecGenSpec = new ECGenParameterSpec("P-521")
+  val ecGenSpec = new ECGenParameterSpec(ecCurveName)
   val generatorEC = KeyPairGenerator.getInstance(JwtUtils.ECDSA)
   generatorEC.initialize(ecGenSpec, new SecureRandom())
 
@@ -130,8 +132,8 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
   val X = BigInt("16528ac15dc4c8e0559fad628ac3ffbf5c7cfefe12d50a97c7d088cc10b408d4ab03ac0d543bde862699a74925c1f2fe7c247c00fddc1442099dfa0671fc032e10a", 16)
   val Y = BigInt("b7f22b3c1322beef766cadd1a5f0363840195b7be10d9a518802d8d528e03bc164c9588c5e63f1473d05195510676008b6808508539367d2893e1aa4b7cb9f9dab", 16)
 
-  val curveParams = ECNamedCurveTable.getParameterSpec("P-521")
-  val curveSpec: ECParameterSpec = new ECNamedCurveSpec( "P-521", curveParams.getCurve(), curveParams.getG(), curveParams.getN(), curveParams.getH())
+  val curveParams = ECNamedCurveTable.getParameterSpec(ecCurveName)
+  val curveSpec: ECParameterSpec = new ECNamedCurveSpec(ecCurveName, curveParams.getCurve(), curveParams.getG(), curveParams.getN(), curveParams.getH())
 
   val privateSpec = new ECPrivateKeySpec(S.underlying(), curveSpec)
   val publicSpec = new ECPublicKeySpec(new ECPoint(X.underlying(), Y.underlying()), curveSpec)

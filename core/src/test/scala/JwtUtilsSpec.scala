@@ -147,7 +147,7 @@ class JwtUtilsSpec extends UnitSpec with ClockFixture {
       }
 
       it("should be symmetric for generated tokens") {
-        val ecGenSpec = new ECGenParameterSpec("P-521")
+        val ecGenSpec = new ECGenParameterSpec(ecCurveName)
         val generatorEC = KeyPairGenerator.getInstance(JwtUtils.ECDSA)
         generatorEC.initialize(ecGenSpec, new SecureRandom())
         val randomECKey = generatorEC.generateKeyPair()
