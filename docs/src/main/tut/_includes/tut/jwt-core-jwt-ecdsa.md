@@ -4,7 +4,7 @@
 
 #### Generation
 
-```tut
+```scala
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import java.security.spec.{ECPrivateKeySpec, ECPublicKeySpec, ECGenParameterSpec, ECParameterSpec, ECPoint}
 import java.security.{SecureRandom, KeyFactory, KeyPairGenerator, Security}
@@ -25,7 +25,7 @@ val ecKey = generatorEC.generateKeyPair()
 
 #### Usage
 
-```tut
+```scala
 val token = Jwt.encode("""{"user":1}""", ecKey.getPrivate, JwtAlgorithm.ES512)
 
 Jwt.decode(token, ecKey.getPublic, JwtAlgorithm.allECDSA)
@@ -37,7 +37,7 @@ Let's say you already have your keys, it means you know the **S** param for the 
 
 #### Creation
 
-```tut
+```scala
 import org.bouncycastle.jce.ECNamedCurveTable
 import org.bouncycastle.jce.spec.ECNamedCurveSpec
 
@@ -60,7 +60,7 @@ val publicKeyEC = KeyFactory.getInstance("ECDSA", "BC").generatePublic(publicSpe
 
 #### Usage
 
-```tut
+```scala
 val token = Jwt.encode("""{"user":1}""", privateKeyEC, JwtAlgorithm.ES512)
 
 Jwt.decode(token, publicKeyEC, Seq(JwtAlgorithm.ES512))
