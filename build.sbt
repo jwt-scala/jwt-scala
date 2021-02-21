@@ -75,6 +75,7 @@ val scala213 = "2.13.5"
 val scala3 = "3.0.0-RC1"
 
 val crossVersionAll = Seq(scala212, scala213, scala3)
+val crossVersion2Only = Seq(scala212, scala213)
 
 val baseSettings = Seq(
   organization := "com.github.jwt-scala",
@@ -285,6 +286,7 @@ lazy val playJsonProject = project
   .settings(releaseSettings)
   .settings(
     name := "jwt-play-json",
+    crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.playJson)
   )
   .aggregate(jsonCommonProject)
@@ -295,6 +297,7 @@ lazy val circeProject = project
   .settings(releaseSettings)
   .settings(
     name := "jwt-circe",
+    crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.circeCore, Libs.circeParse, Libs.circeGeneric % "test")
   )
   .aggregate(jsonCommonProject)
@@ -315,6 +318,7 @@ lazy val json4sCommonProject = project
   .settings(releaseSettings)
   .settings(
     name := "jwt-json4s-common",
+    crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.json4sCore)
   )
   .aggregate(jsonCommonProject)
@@ -325,6 +329,7 @@ lazy val json4sNativeProject = project
   .settings(releaseSettings)
   .settings(
     name := "jwt-json4s-native",
+    crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.json4sNative)
   )
   .aggregate(json4sCommonProject)
@@ -335,6 +340,7 @@ lazy val json4sJacksonProject = project
   .settings(releaseSettings)
   .settings(
     name := "jwt-json4s-jackson",
+    crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.json4sJackson)
   )
   .aggregate(json4sCommonProject)
@@ -345,6 +351,7 @@ lazy val sprayJsonProject = project
   .settings(releaseSettings)
   .settings(
     name := "jwt-spray-json",
+    crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.sprayJson)
   )
   .aggregate(jsonCommonProject)
@@ -370,6 +377,7 @@ lazy val playProject = project
   .settings(releaseSettings)
   .settings(
     name := "jwt-play",
+    crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus, Libs.guice),
     testGrouping in Test := groupPlayTest(
       (definedTests in Test).value,
