@@ -56,13 +56,13 @@ object JwtAlgorithm {
     Some(fromString(algo))
   }
 
-  def allHmac(): Seq[algorithms.JwtHmacAlgorithm] = Seq(HMD5, HS224, HS256, HS384, HS512)
+  def allHmac: Seq[algorithms.JwtHmacAlgorithm] = Seq(HMD5, HS224, HS256, HS384, HS512)
 
-  def allAsymmetric(): Seq[algorithms.JwtAsymmetricAlgorithm] = Seq(RS256, RS384, RS512, ES256, ES384, ES512)
+  def allAsymmetric: Seq[algorithms.JwtAsymmetricAlgorithm] = Seq(RS256, RS384, RS512, ES256, ES384, ES512)
 
-  def allRSA(): Seq[algorithms.JwtRSAAlgorithm] = Seq(RS256, RS384, RS512)
+  def allRSA: Seq[algorithms.JwtRSAAlgorithm] = Seq(RS256, RS384, RS512)
 
-  def allECDSA(): Seq[algorithms.JwtECDSAAlgorithm] = Seq(ES256, ES384, ES512)
+  def allECDSA: Seq[algorithms.JwtECDSAAlgorithm] = Seq(ES256, ES384, ES512)
 
   case object HMD5  extends algorithms.JwtHmacAlgorithm  { def name = "HMD5";  def fullName = "HmacMD5" }
   case object HS224 extends algorithms.JwtHmacAlgorithm  { def name = "HS224"; def fullName = "HmacSHA224" }

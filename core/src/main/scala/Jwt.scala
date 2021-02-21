@@ -551,7 +551,7 @@ trait JwtCore[H, C] {
   def decode(token: String, key: PublicKey): Try[C] = decode(token, key, JwtOptions.DEFAULT)
 
   // Validate
-  protected def validateTiming(claim: C, options: JwtOptions) {
+  protected def validateTiming(claim: C, options: JwtOptions) = {
     val maybeExpiration: Option[Long] =
         if (options.expiration) extractExpiration(claim) else None
 
@@ -575,7 +575,7 @@ trait JwtCore[H, C] {
   }
 
   // Validation when no key and no algorithm (or unknown)
-  protected def validate(header: H, claim: C, signature: String, options: JwtOptions) {
+  protected def validate(header: H, claim: C, signature: String, options: JwtOptions) = {
     if (options.signature) {
       if (!signature.isEmpty) {
         throw new JwtNonEmptySignatureException()

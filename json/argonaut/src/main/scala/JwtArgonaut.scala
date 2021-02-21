@@ -13,9 +13,9 @@ trait JwtArgonautParser[H, C] extends JwtJsonCommon[Json, H, C] {
 
   override protected def getAlgorithm(header: Json): Option[JwtAlgorithm] =
     header -| "alg" map (_.stringOrEmpty) flatMap {
-      case "none" ⇒ None
-      case alg: String ⇒ Some(JwtAlgorithm.fromString(alg))
-      case _ ⇒ throw new JwtNonStringException("alg")
+      case "none" => None
+      case alg: String => Some(JwtAlgorithm.fromString(alg))
+      case null => throw new JwtNonStringException("alg")
     }
 }
 
