@@ -20,12 +20,12 @@ trait CirceFixture extends JsonCommonFixture[Json] {
 
   val claimJson = parseString(claim) match {
     case j: Json => j
-    case _       => throw new RuntimeException("I want a Circe Json!")
+    case null    => throw new RuntimeException("I want a Circe Json!")
   }
 
   val headerEmptyJson = parseString(headerEmpty) match {
     case j: Json => j
-    case _       => throw new RuntimeException("I want a Circe Json!")
+    case null    => throw new RuntimeException("I want a Circe Json!")
   }
 
   def mapData(data: DataEntryBase): JsonDataEntry = JsonDataEntry(
@@ -39,7 +39,7 @@ trait CirceFixture extends JsonCommonFixture[Json] {
     tokenEmpty = data.tokenEmpty,
     headerJson = parseString(data.header) match {
       case j: Json => j
-      case _       => throw new RuntimeException("I want a Circe Json!")
+      case null    => throw new RuntimeException("I want a Circe Json!")
     }
   )
 }

@@ -72,8 +72,9 @@ lazy val docsMappingsAPIDir: SettingKey[String] =
 
 val scala212 = "2.12.13"
 val scala213 = "2.13.5"
+val scala3 = "3.0.0-RC1"
 
-val crossVersionAll = Seq(scala212, scala213)
+val crossVersionAll = Seq(scala212, scala213, scala3)
 
 val baseSettings = Seq(
   organization := "com.github.jwt-scala",

@@ -20,7 +20,7 @@ trait JwtCirceParser[H, C] extends JwtJsonCommon[Json, H, C] {
       case "none"         => None
       case s if s == null => None
       case s: String      => Option(JwtAlgorithm.fromString(s))
-      case _              => throw new JwtNonStringException("alg")
+      case null           => throw new JwtNonStringException("alg")
     }
   }
 }
