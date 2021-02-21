@@ -23,8 +23,20 @@ jobs:
           - upickleProject
           - json4sCommonProject
           - json4sJacksonProject
+          - json4sNativeProject
           - sprayJsonProject
           - argonautProject
+        exclude:
+          - scala: 3.0.0-RC1
+            project: json4sCommonProject
+          - scala: 3.0.0-RC1
+            project: json4sJacksonProject
+          - scala: 3.0.0-RC1
+            project: json4sNativeProject
+          - scala: 3.0.0-RC1
+            project: sprayJsonProject
+          - scala: 3.0.0-RC1
+            project: upickleProject
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1

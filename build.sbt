@@ -56,6 +56,7 @@ val scala213 = "2.13.3"
 val scala3 = "3.0.0-RC1"
 
 val crossVersionAll = Seq(scala212, scala213, scala3)
+val crossVersion2Only = Seq(scala212, scala213)
 
 val baseSettings = Seq(
   organization := "com.pauldijou",
@@ -196,6 +197,7 @@ lazy val upickleProject = project.in(file("json/upickle"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-upickle",
+    crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.upickle)
   )
   .aggregate(jsonCommonProject)
@@ -205,6 +207,7 @@ lazy val json4sCommonProject = project.in(file("json/json4s-common"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-json4s-common",
+    crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.json4sCore)
   )
   .aggregate(jsonCommonProject)
@@ -214,6 +217,7 @@ lazy val json4sNativeProject = project.in(file("json/json4s-native"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-json4s-native",
+    crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.json4sNative)
   )
   .aggregate(json4sCommonProject)
@@ -223,6 +227,7 @@ lazy val json4sJacksonProject = project.in(file("json/json4s-jackson"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-json4s-jackson",
+    crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.json4sJackson)
   )
   .aggregate(json4sCommonProject)
@@ -232,6 +237,7 @@ lazy val sprayJsonProject = project.in(file("json/spray-json"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-spray-json",
+    crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.sprayJson)
   )
   .aggregate(jsonCommonProject)
