@@ -4,8 +4,10 @@ import scala.util._
 
 import org.scalatest._
 import org.scalatest.matchers._
+import org.scalatest.funspec._
+import org.scalatest.matchers.should._
 
-abstract class UnitSpec extends FunSpec with Matchers {
+abstract class UnitSpec extends AnyFunSpec with Matchers {
     // HEADER
     def algorithm(expectedValue: Option[JwtAlgorithm]) =
         new HavePropertyMatcher[JwtHeader, Option[JwtAlgorithm]] {
@@ -51,7 +53,7 @@ abstract class UnitSpec extends FunSpec with Matchers {
             )
         }
 
-    def testHeader(h1: JwtHeader, h2: JwtHeader) {
+    def testHeader(h1: JwtHeader, h2: JwtHeader) = {
         h1 should have (
             algorithm (h2.algorithm),
             typ (h2.typ),
@@ -60,7 +62,7 @@ abstract class UnitSpec extends FunSpec with Matchers {
         )
     }
 
-    def testTryHeader(th1: Try[JwtHeader], h2: JwtHeader, clue: String) {
+    def testTryHeader(th1: Try[JwtHeader], h2: JwtHeader, clue: String) = {
         withClue(clue) {
             th1 shouldBe a [Success[_]]
             testHeader(th1.get, h2)
@@ -156,7 +158,7 @@ abstract class UnitSpec extends FunSpec with Matchers {
             )
         }
 
-    def testClaim(c1: JwtClaim, c2: JwtClaim) {
+    def testClaim(c1: JwtClaim, c2: JwtClaim) = {
         c1 should have (
             content (c2.content),
             issuer (c2.issuer),
@@ -169,7 +171,7 @@ abstract class UnitSpec extends FunSpec with Matchers {
         )
     }
 
-    def testTryClaim(tc1: Try[JwtClaim], c2: JwtClaim, clue: String) {
+    def testTryClaim(tc1: Try[JwtClaim], c2: JwtClaim, clue: String) = {
         withClue(clue) {
             tc1 shouldBe a [Success[_]]
             testClaim(tc1.get, c2)
@@ -177,7 +179,7 @@ abstract class UnitSpec extends FunSpec with Matchers {
     }
 
     // ALL
-    def testTryAll(t: Try[(JwtHeader, JwtClaim, String)], exp: (JwtHeader, JwtClaim, String), clue: String) {
+    def testTryAll(t: Try[(JwtHeader, JwtClaim, String)], exp: (JwtHeader, JwtClaim, String), clue: String) = {
         withClue(clue) {
             t shouldBe a [Success[_]]
             val (h1, c1, s1) = t.get
@@ -188,7 +190,7 @@ abstract class UnitSpec extends FunSpec with Matchers {
         }
     }
 
-    def testTryAllWithoutSignature(t: Try[(JwtHeader, JwtClaim, String)], exp: (JwtHeader, JwtClaim), clue: String) {
+    def testTryAllWithoutSignature(t: Try[(JwtHeader, JwtClaim, String)], exp: (JwtHeader, JwtClaim), clue: String) = {
         withClue(clue) {
             t shouldBe a [Success[_]]
             val (h1, c1, s) = t.get
