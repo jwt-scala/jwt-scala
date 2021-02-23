@@ -27,53 +27,49 @@ trait JwtJsonImplicits {
 
   private def keyToPath(key: String): JsPath = new JsPath(List(new KeyPathNode(key)))
 
-  implicit val jwtPlayJsonClaimReader = new Reads[JwtClaim] {
-    def reads(json: JsValue) = json match {
-      case value: JsObject =>
-        try {
-          JsSuccess(JwtClaim.apply(
-            issuer = extractString(value, "iss"),
-            subject = extractString(value, "sub"),
-            audience = extractStringSetOrString(value, "aud"),
-            expiration = extractLong(value, "exp"),
-            notBefore = extractLong(value, "nbf"),
-            issuedAt = extractLong(value, "iat"),
-            jwtId = extractString(value, "jti"),
-            content = Json.stringify(value - "iss" - "sub" - "aud" - "exp" - "nbf" - "iat" - "jti")
-          ))
-        } catch {
-          case e : JwtNonStringException => JsError(keyToPath(e.getKey), "error.expected.string")
-          case e : JwtNonNumberException => JsError(keyToPath(e.getKey), "error.expected.number")
-          case e : JwtNonStringSetOrStringException => JsError(keyToPath(e.getKey), "error.expected.array")
-        }
-      case _ => JsError("error.expected.jsobject")
-    }
+  implicit val jwtPlayJsonClaimReader: Reads[JwtClaim] = Reads {
+    case value: JsObject =>
+      try {
+        JsSuccess(JwtClaim.apply(
+          issuer = extractString(value, "iss"),
+          subject = extractString(value, "sub"),
+          audience = extractStringSetOrString(value, "aud"),
+          expiration = extractLong(value, "exp"),
+          notBefore = extractLong(value, "nbf"),
+          issuedAt = extractLong(value, "iat"),
+          jwtId = extractString(value, "jti"),
+          content = Json.stringify(value - "iss" - "sub" - "aud" - "exp" - "nbf" - "iat" - "jti")
+        ))
+      } catch {
+        case e : JwtNonStringException => JsError(keyToPath(e.getKey), "error.expected.string")
+        case e : JwtNonNumberException => JsError(keyToPath(e.getKey), "error.expected.number")
+        case e : JwtNonStringSetOrStringException => JsError(keyToPath(e.getKey), "error.expected.array")
+      }
+    case _ => JsError("error.expected.jsobject")
   }
 
-  implicit val jwtPlayJsonClaimWriter = new Writes[JwtClaim] {
-    def writes(claim: JwtClaim) = Json.parse(claim.toJson)
+  implicit val jwtPlayJsonClaimWriter: Writes[JwtClaim] = Writes { (claim: JwtClaim) =>
+    Json.parse(claim.toJson)
   }
 
-  implicit val jwtPlayJsonHeaderReader = new Reads[JwtHeader] {
-    def reads(json: JsValue) = json match {
-      case value: JsObject =>
-        try {
-          JsSuccess(JwtHeader.apply(
-            algorithm = extractString(value, "alg").flatMap(JwtAlgorithm.optionFromString),
-            typ = extractString(value, "typ"),
-            contentType = extractString(value, "cty"),
-            keyId = extractString(value, "kid")
-          ))
-        } catch {
-          case e : JwtNonStringException => JsError(keyToPath(e.getKey), "error.expected.string")
-          case e : JwtNonSupportedAlgorithm => JsError(keyToPath("alg"), "error.expected.algorithm")
-        }
-      case _ => JsError("error.expected.jsobject")
-    }
+  implicit val jwtPlayJsonHeaderReader: Reads[JwtHeader] = Reads {
+    case value: JsObject =>
+      try {
+        JsSuccess(JwtHeader.apply(
+          algorithm = extractString(value, "alg").flatMap(JwtAlgorithm.optionFromString),
+          typ = extractString(value, "typ"),
+          contentType = extractString(value, "cty"),
+          keyId = extractString(value, "kid")
+        ))
+      } catch {
+        case e : JwtNonStringException => JsError(keyToPath(e.getKey), "error.expected.string")
+        case e : JwtNonSupportedAlgorithm => JsError(keyToPath("alg"), "error.expected.algorithm")
+      }
+    case _ => JsError("error.expected.jsobject")
   }
 
-  implicit val jwtPlayJsonHeaderWriter = new Writes[JwtHeader] {
-    def writes(header: JwtHeader) = Json.parse(header.toJson)
+  implicit val jwtPlayJsonHeaderWriter: Writes[JwtHeader] = Writes { (header: JwtHeader) =>
+    Json.parse(header.toJson)
   }
 
   implicit class RichJwtClaim(claim: JwtClaim) {

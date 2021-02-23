@@ -20,14 +20,14 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
         ("nbf" -> 10),
         ("iat" -> 10)
       ), "Claim") {
-        JwtClaim().by("me").to("you").about("something").issuedAt(10).startsAt(10).expiresAt(15).toJsValue
+        JwtClaim().by("me").to("you").about("something").issuedAt(10).startsAt(10).expiresAt(15).toJsValue()
       }
 
       assertResult(Json.obj(
         ("typ" -> "JWT"),
         ("alg" -> "HS256")
       ), "Claim") {
-        JwtHeader(JwtAlgorithm.HS256).toJsValue
+        JwtHeader(JwtAlgorithm.HS256).toJsValue()
       }
     }
 
@@ -40,7 +40,7 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
         ("nbf" -> 10),
         ("iat" -> 10)
       ), "Claim") {
-        JwtClaim(audience = Some(Set("you", "another"))).by("me").about("something").issuedAt(10).startsAt(10).expiresAt(15).toJsValue
+        JwtClaim(audience = Some(Set("you", "another"))).by("me").about("something").issuedAt(10).startsAt(10).expiresAt(15).toJsValue()
       }
     }
 
