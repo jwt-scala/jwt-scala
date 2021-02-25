@@ -19,7 +19,6 @@ trait JwtArgonautParser[H, C] extends JwtJsonCommon[Json, H, C] {
     }
 }
 
-
 object JwtArgonaut extends JwtArgonautParser[JwtHeader, JwtClaim] {
   def apply(clock: Clock): JwtArgonaut = new JwtArgonaut(clock)
 
@@ -29,13 +28,13 @@ object JwtArgonaut extends JwtArgonautParser[JwtHeader, JwtClaim] {
       json -| field map f
 
     def -|>>(field: String): Option[String] =
-      (json -|> field) (_.stringOrEmpty)
+      (json -|> field)(_.stringOrEmpty)
 
     def -||>(field: String): Option[Long] =
-      (json -|> field) (_.nospaces.toLong)
+      (json -|> field)(_.nospaces.toLong)
 
     def -|||(field: String): Option[Set[String]] =
-      (json -|> field) (_.arrayOrEmpty.map(_.nospaces).toSet)
+      (json -|> field)(_.arrayOrEmpty.map(_.nospaces).toSet)
   }
 
   override protected def parseClaim(claim: String): JwtClaim = parseClaimHelp(claim)
@@ -72,17 +71,21 @@ object JwtArgonaut extends JwtArgonautParser[JwtHeader, JwtClaim] {
     val notBefore = json -||> "nbf"
     val issuedAt = json -||> "iat"
     val jwtId = json -|>> "jti"
-    val content = json.objectFieldsOrEmpty.filterNot(jwtSpecificFieldNames.contains).map { field ⇒
-      (field, (json -| field).get)
-    }.foldRight(jEmptyObject) { case ((fieldName, field), obj) ⇒
-      (fieldName := field) ->: obj
-    }
+    val content = json.objectFieldsOrEmpty
+      .filterNot(jwtSpecificFieldNames.contains)
+      .map { field ⇒
+        (field, (json -| field).get)
+      }
+      .foldRight(jEmptyObject) { case ((fieldName, field), obj) ⇒
+        (fieldName := field) ->: obj
+      }
     JwtClaim(content.nospaces, issuer, subject, audience, expiration, notBefore, issuedAt, jwtId)
   }
 }
 
-class JwtArgonaut private(override val clock: Clock) extends JwtArgonautParser[JwtHeader, JwtClaim] {
-  import JwtArgonaut.{ parseClaimHelp, parseHeaderHelp, ExtractJsonFieldToType }
+class JwtArgonaut private (override val clock: Clock)
+    extends JwtArgonautParser[JwtHeader, JwtClaim] {
+  import JwtArgonaut.{parseClaimHelp, parseHeaderHelp, ExtractJsonFieldToType}
 
   override protected def parseClaim(claim: String): JwtClaim = parseClaimHelp(claim)(clock)
 

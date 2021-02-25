@@ -14,12 +14,13 @@ trait JwtJsonParser[H, C] extends JwtJsonCommon[JsObject, H, C] with JwtJsonImpl
 
   protected def stringify(value: JsObject): String = Json.stringify(value)
 
-  protected def getAlgorithm(header: JsObject): Option[JwtAlgorithm] = (header \ "alg").toOption.flatMap {
-    case JsString("none") => None
-    case JsString(algo) => Option(JwtAlgorithm.fromString(algo))
-    case JsNull => None
-    case _ => throw new JwtNonStringException("alg")
-  }
+  protected def getAlgorithm(header: JsObject): Option[JwtAlgorithm] =
+    (header \ "alg").toOption.flatMap {
+      case JsString("none") => None
+      case JsString(algo)   => Option(JwtAlgorithm.fromString(algo))
+      case JsNull           => None
+      case _                => throw new JwtNonStringException("alg")
+    }
 
 }
 

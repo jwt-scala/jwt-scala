@@ -35,19 +35,23 @@ object JwtUtils {
   def seqToJson(seq: Seq[Any]): String = if (seq.isEmpty) {
     "[]"
   } else {
-    seq.map {
-      case value: String => "\"" + escape(value) + "\""
-      case value: Boolean => if (value) { "true" } else { "false" }
-      case value: Double => value.toString
-      case value: Short => value.toString
-      case value: Float => value.toString
-      case value: Long => value.toString
-      case value: Int => value.toString
-      case value: BigDecimal => value.toString
-      case value: BigInt => value.toString
-      case value: (String, Any) => hashToJson(Seq(value))
-      case value: Any => "\"" + escape(value.toString) + "\""
-    }.mkString("[", ",", "]")
+    seq
+      .map {
+        case value: String => "\"" + escape(value) + "\""
+        case value: Boolean =>
+          if (value) { "true" }
+          else { "false" }
+        case value: Double        => value.toString
+        case value: Short         => value.toString
+        case value: Float         => value.toString
+        case value: Long          => value.toString
+        case value: Int           => value.toString
+        case value: BigDecimal    => value.toString
+        case value: BigInt        => value.toString
+        case value: (String, Any) => hashToJson(Seq(value))
+        case value: Any           => "\"" + escape(value.toString) + "\""
+      }
+      .mkString("[", ",", "]")
   }
 
   /**
@@ -56,21 +60,25 @@ object JwtUtils {
   def hashToJson(hash: Seq[(String, Any)]): String = if (hash.isEmpty) {
     "{}"
   } else {
-    hash.map {
-      case (key, value: String) => "\"" + escape(key) + "\":\"" + escape(value) + "\""
-      case (key, value: Boolean) => "\"" + escape(key) + "\":" + (if (value) { "true" } else { "false" })
-      case (key, value: Double) => "\"" + escape(key) + "\":" + value.toString
-      case (key, value: Short) => "\"" + escape(key) + "\":" + value.toString
-      case (key, value: Float) => "\"" + escape(key) + "\":" + value.toString
-      case (key, value: Long) => "\"" + escape(key) + "\":" + value.toString
-      case (key, value: Int) => "\"" + escape(key) + "\":" + value.toString
-      case (key, value: BigDecimal) => "\"" + escape(key) + "\":" + value.toString
-      case (key, value: BigInt) => "\"" + escape(key) + "\":" + value.toString
-      case (key, value: (String, Any)) => "\"" + escape(key) + "\":" + hashToJson(Seq(value))
-      case (key, value: Seq[Any]) => "\"" + escape(key) + "\":" + seqToJson(value)
-      case (key, value: Set[Any]) => "\"" + escape(key) + "\":" + seqToJson(value.toSeq)
-      case (key, value: Any) => "\"" + escape(key) + "\":\"" + escape(value.toString) + "\""
-    }.mkString("{", ",", "}")
+    hash
+      .map {
+        case (key, value: String) => "\"" + escape(key) + "\":\"" + escape(value) + "\""
+        case (key, value: Boolean) =>
+          "\"" + escape(key) + "\":" + (if (value) { "true" }
+                                        else { "false" })
+        case (key, value: Double)        => "\"" + escape(key) + "\":" + value.toString
+        case (key, value: Short)         => "\"" + escape(key) + "\":" + value.toString
+        case (key, value: Float)         => "\"" + escape(key) + "\":" + value.toString
+        case (key, value: Long)          => "\"" + escape(key) + "\":" + value.toString
+        case (key, value: Int)           => "\"" + escape(key) + "\":" + value.toString
+        case (key, value: BigDecimal)    => "\"" + escape(key) + "\":" + value.toString
+        case (key, value: BigInt)        => "\"" + escape(key) + "\":" + value.toString
+        case (key, value: (String, Any)) => "\"" + escape(key) + "\":" + hashToJson(Seq(value))
+        case (key, value: Seq[Any])      => "\"" + escape(key) + "\":" + seqToJson(value)
+        case (key, value: Set[Any])      => "\"" + escape(key) + "\":" + seqToJson(value.toSeq)
+        case (key, value: Any)           => "\"" + escape(key) + "\":\"" + escape(value.toString) + "\""
+      }
+      .mkString("{", ",", "}")
   }
 
   /**
@@ -78,23 +86,24 @@ object JwtUtils {
     */
   def mergeJson(json: String, jsonSeq: String*): String = {
     val initJson = json.trim match {
-      case "" => ""
+      case ""    => ""
       case value => value.drop(1).dropRight(1)
     }
 
     "{" + jsonSeq.map(_.trim).fold(initJson) {
       case (j1, result) if j1.length < 5 => result.drop(1).dropRight(1)
       case (result, j2) if j2.length < 7 => result
-      case (j1, j2) => j1 + "," + j2.drop(1).dropRight(1)
+      case (j1, j2)                      => j1 + "," + j2.drop(1).dropRight(1)
     } + "}"
   }
 
   private def parseKey(key: String): Array[Byte] = JwtBase64.decodeNonSafe(
-    key.replaceAll("-----BEGIN (.*)-----", "")
-     .replaceAll("-----END (.*)-----", "")
-     .replaceAll("\r\n", "")
-     .replaceAll("\n", "")
-     .trim
+    key
+      .replaceAll("-----BEGIN (.*)-----", "")
+      .replaceAll("-----END (.*)-----", "")
+      .replaceAll("\r\n", "")
+      .replaceAll("\n", "")
+      .trim
   )
 
   private def parsePrivateKey(key: String, keyAlgo: String) = {
@@ -128,7 +137,8 @@ object JwtUtils {
     signer.update(data)
     algorithm match {
       case algorithm: JwtRSAAlgorithm => signer.sign
-      case algorithm: JwtECDSAAlgorithm => transcodeSignatureToConcat(signer.sign, getSignatureByteArrayLength(algorithm))
+      case algorithm: JwtECDSAAlgorithm =>
+        transcodeSignatureToConcat(signer.sign, getSignatureByteArrayLength(algorithm))
     }
   }
 
@@ -140,9 +150,9 @@ object JwtUtils {
     */
   def sign(data: Array[Byte], key: String, algorithm: JwtAlgorithm): Array[Byte] =
     algorithm match {
-      case algo: JwtHmacAlgorithm => sign(data, new SecretKeySpec(bytify(key), algo.fullName), algo)
-      case algo: JwtRSAAlgorithm => sign(data, parsePrivateKey(key, RSA), algo)
-      case algo: JwtECDSAAlgorithm => sign(data, parsePrivateKey(key, ECDSA), algo)
+      case algo: JwtHmacAlgorithm    => sign(data, new SecretKeySpec(bytify(key), algo.fullName), algo)
+      case algo: JwtRSAAlgorithm     => sign(data, parsePrivateKey(key, RSA), algo)
+      case algo: JwtECDSAAlgorithm   => sign(data, parsePrivateKey(key, ECDSA), algo)
       case algo: JwtUnkwownAlgorithm => throw new JwtNonSupportedAlgorithm(algo.fullName)
     }
 
@@ -155,19 +165,29 @@ object JwtUtils {
   /**
     * Check if a signature is valid for a given data using the key and the HMAC algorithm provided.
     */
-  def verify(data: Array[Byte], signature: Array[Byte], key: SecretKey, algorithm: JwtHmacAlgorithm): Boolean = {
+  def verify(
+      data: Array[Byte],
+      signature: Array[Byte],
+      key: SecretKey,
+      algorithm: JwtHmacAlgorithm
+  ): Boolean = {
     JwtArrayUtils.constantTimeAreEqual(sign(data, key, algorithm), signature)
   }
 
   /**
     * Check if a signature is valid for a given data using the key and the RSA or ECDSA algorithm provided.
     */
-  def verify(data: Array[Byte], signature: Array[Byte], key: PublicKey, algorithm: JwtAsymmetricAlgorithm): Boolean = {
+  def verify(
+      data: Array[Byte],
+      signature: Array[Byte],
+      key: PublicKey,
+      algorithm: JwtAsymmetricAlgorithm
+  ): Boolean = {
     val signer = Signature.getInstance(algorithm.fullName)
     signer.initVerify(key)
     signer.update(data)
     algorithm match {
-      case algo: JwtRSAAlgorithm => signer.verify(signature)
+      case algo: JwtRSAAlgorithm   => signer.verify(signature)
       case algo: JwtECDSAAlgorithm => signer.verify(transcodeSignatureToDER(signature))
     }
   }
@@ -175,11 +195,17 @@ object JwtUtils {
   /**
     * Will try to check if a signature is valid for a given data by parsing the provided key, if parsing fail, please consider retrieving the SecretKey or the PublicKey on your side and then use another "verify" method.
     */
-  def verify(data: Array[Byte], signature: Array[Byte], key: String, algorithm: JwtAlgorithm): Boolean =
+  def verify(
+      data: Array[Byte],
+      signature: Array[Byte],
+      key: String,
+      algorithm: JwtAlgorithm
+  ): Boolean =
     algorithm match {
-      case algo: JwtHmacAlgorithm =>  verify(data, signature, new SecretKeySpec(bytify(key), algo.fullName), algo)
-      case algo: JwtRSAAlgorithm => verify(data, signature, parsePublicKey(key, RSA), algo)
-      case algo: JwtECDSAAlgorithm => verify(data, signature, parsePublicKey(key, ECDSA), algo)
+      case algo: JwtHmacAlgorithm =>
+        verify(data, signature, new SecretKeySpec(bytify(key), algo.fullName), algo)
+      case algo: JwtRSAAlgorithm     => verify(data, signature, parsePublicKey(key, RSA), algo)
+      case algo: JwtECDSAAlgorithm   => verify(data, signature, parsePublicKey(key, ECDSA), algo)
       case algo: JwtUnkwownAlgorithm => throw new JwtNonSupportedAlgorithm(algo.fullName)
     }
 
@@ -240,14 +266,22 @@ object JwtUtils {
     var rawLen: Int = Math.max(i, j)
     rawLen = Math.max(rawLen, outputLength / 2)
 
-    if ((derSignature(offset - 1) & 0xff) != derSignature.length - offset
+    if (
+      (derSignature(offset - 1) & 0xff) != derSignature.length - offset
       || (derSignature(offset - 1) & 0xff) != 2 + rLength + 2 + sLength
-      || derSignature(offset) != 2 || derSignature(offset + 2 + rLength) != 2)
+      || derSignature(offset) != 2 || derSignature(offset + 2 + rLength) != 2
+    )
       throw new JwtSignatureFormatException("Invalid ECDSA signature format")
 
     val concatSignature: Array[Byte] = new Array[Byte](2 * rawLen)
     System.arraycopy(derSignature, (offset + 2 + rLength) - i, concatSignature, rawLen - i, i)
-    System.arraycopy(derSignature, (offset + 2 + rLength + 2 + sLength) - j, concatSignature, 2 * rawLen - j, j)
+    System.arraycopy(
+      derSignature,
+      (offset + 2 + rLength + 2 + sLength) - j,
+      concatSignature,
+      2 * rawLen - j,
+      j
+    )
     concatSignature
   }
 
@@ -263,7 +297,7 @@ object JwtUtils {
     */
   @throws[JwtSignatureFormatException]
   def transcodeSignatureToDER(signature: Array[Byte]): Array[Byte] = {
-    var (r,s) = signature.splitAt(signature.length / 2)
+    var (r, s) = signature.splitAt(signature.length / 2)
     r = r.dropWhile(_ == 0)
     if (r.length > 0 && r(0) < 0)
       r +:= 0.toByte

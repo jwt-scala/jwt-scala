@@ -18,6 +18,10 @@ addCommandAlias("publish-doc", ";docs/makeSite;docs/tut;docs/ghpagesPushSite")
 
 addCommandAlias("testAll", projects.map(p => p + "/test").mkString(";", ";", ""))
 
+addCommandAlias("format", "scalafmt; test:scalafmt")
+
+addCommandAlias("formatCheck", "scalafmtCheck; test:scalafmtCheck")
+
 // ";+coreProject/publishSigned"
 // ";+playJsonProject/publishSigned"
 // ";+json4sNativeProject/publishSigned"

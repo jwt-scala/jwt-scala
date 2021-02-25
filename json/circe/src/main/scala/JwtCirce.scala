@@ -8,7 +8,6 @@ import java.time.Clock
 
 import pdi.jwt.exceptions.JwtNonStringException
 
-
 /**
   * Implementation of `JwtCore` using `Json` from Circe.
   */
@@ -19,10 +18,10 @@ trait JwtCirceParser[H, C] extends JwtJsonCommon[Json, H, C] {
 
   protected def getAlg(cursor: HCursor): Option[JwtAlgorithm] = {
     cursor.get[String]("alg").toOption.flatMap {
-      case "none" => None
+      case "none"         => None
       case s if s == null => None
-      case s: String => Option(JwtAlgorithm.fromString(s))
-      case _ => throw new JwtNonStringException("alg")
+      case s: String      => Option(JwtAlgorithm.fromString(s))
+      case _              => throw new JwtNonStringException("alg")
     }
   }
 }
@@ -36,36 +35,38 @@ object JwtCirce extends JwtCirceParser[JwtHeader, JwtClaim] {
   private def parseHeaderHelp(header: String)(implicit clock: Clock): JwtHeader = {
     val cursor = parse(header).hcursor
     JwtHeader(
-        algorithm = getAlg(cursor)
-      , typ = cursor.get[String]("typ").toOption
-      , contentType = cursor.get[String]("cty").toOption
-      , keyId = cursor.get[String]("kid").toOption
+      algorithm = getAlg(cursor),
+      typ = cursor.get[String]("typ").toOption,
+      contentType = cursor.get[String]("cty").toOption,
+      keyId = cursor.get[String]("kid").toOption
     )
   }
 
   private def parseClaimHelp(claim: String)(implicit clock: Clock): JwtClaim = {
     val cursor = parse(claim).hcursor
-    val contentCursor = List("iss", "sub", "aud", "exp", "nbf", "iat", "jti").foldLeft(cursor) { (cursor, field) =>
-      cursor.downField(field).delete.success match {
-        case Some(newCursor) => newCursor
-        case None => cursor
-      }
+    val contentCursor = List("iss", "sub", "aud", "exp", "nbf", "iat", "jti").foldLeft(cursor) {
+      (cursor, field) =>
+        cursor.downField(field).delete.success match {
+          case Some(newCursor) => newCursor
+          case None            => cursor
+        }
     }
     JwtClaim(
-        content = contentCursor.top.asJson.noSpaces
-      , issuer = cursor.get[String]("iss").toOption
-      , subject = cursor.get[String]("sub").toOption
-      , audience = cursor.get[Set[String]]("aud").orElse(cursor.get[String]("aud").map(s => Set(s))).toOption
-      , expiration = cursor.get[Long]("exp").toOption
-      , notBefore = cursor.get[Long]("nbf").toOption
-      , issuedAt = cursor.get[Long]("iat").toOption
-      , jwtId = cursor.get[String]("jti").toOption
+      content = contentCursor.top.asJson.noSpaces,
+      issuer = cursor.get[String]("iss").toOption,
+      subject = cursor.get[String]("sub").toOption,
+      audience =
+        cursor.get[Set[String]]("aud").orElse(cursor.get[String]("aud").map(s => Set(s))).toOption,
+      expiration = cursor.get[Long]("exp").toOption,
+      notBefore = cursor.get[Long]("nbf").toOption,
+      issuedAt = cursor.get[Long]("iat").toOption,
+      jwtId = cursor.get[String]("jti").toOption
     )
   }
 }
 
 class JwtCirce private (override val clock: Clock) extends JwtCirceParser[JwtHeader, JwtClaim] {
-  import JwtCirce.{ parseHeaderHelp, parseClaimHelp }
+  import JwtCirce.{parseHeaderHelp, parseClaimHelp}
 
   def parseHeader(header: String): JwtHeader = parseHeaderHelp(header)(clock)
 

@@ -1,5 +1,6 @@
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.8.0")
 
+addSbtPlugin("org.scalameta"     % "sbt-scalafmt"           % "2.4.2")
 addSbtPlugin("com.typesafe.sbt"  % "sbt-site"               % "1.3.0")
 addSbtPlugin("com.typesafe.sbt"  % "sbt-ghpages"            % "0.6.2")
 addSbtPlugin("org.tpolecat"      % "tut-plugin"             % "0.6.13")
