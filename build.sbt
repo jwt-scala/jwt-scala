@@ -55,12 +55,10 @@ cleanScript := {
   "./scripts/clean.sh" !
 }
 
-val scala211 = "2.11.12"
 val scala212 = "2.12.13"
 val scala213 = "2.13.5"
 
-val crossVersionAll = Seq(scala211, scala212, scala213)
-val crossVersionLastTwo = Seq(scala212, scala213)
+val crossVersionAll = Seq(scala212, scala213)
 
 val baseSettings = Seq(
   organization := "com.pauldijou",
@@ -183,7 +181,6 @@ lazy val playJsonProject = project.in(file("json/play-json"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-play-json",
-    crossScalaVersions := crossVersionLastTwo,
     libraryDependencies ++= Seq(Libs.playJson)
   )
   .aggregate(jsonCommonProject)
@@ -193,7 +190,6 @@ lazy val circeProject = project.in(file("json/circe"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-circe",
-    crossScalaVersions := crossVersionLastTwo,
     libraryDependencies ++= Seq(Libs.circeCore, Libs.circeParse, Libs.circeGeneric % "test")
   )
   .aggregate(jsonCommonProject)
@@ -203,7 +199,6 @@ lazy val upickleProject = project.in(file("json/upickle"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-upickle",
-    crossScalaVersions := crossVersionLastTwo,
     libraryDependencies ++= Seq(Libs.upickle)
   )
   .aggregate(jsonCommonProject)
@@ -249,7 +244,6 @@ lazy val argonautProject = project.in(file("json/argonaut"))
     .settings(releaseSettings)
     .settings(
       name := "jwt-argonaut",
-      crossScalaVersions := crossVersionLastTwo,
       libraryDependencies ++= Seq(Libs.argonaut)
     )
     .aggregate(jsonCommonProject)
@@ -264,7 +258,6 @@ lazy val playProject = project.in(file("play"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-play",
-    crossScalaVersions := crossVersionLastTwo,
     libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus, Libs.guice),
     testGrouping in Test := groupPlayTest((definedTests in Test).value, (dependencyClasspath in Test).value.files)
   )

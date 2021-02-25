@@ -23,7 +23,6 @@ jobs:
     strategy:
       matrix:
         scala:
-          - 2.11.12
           - 2.12.13
           - 2.13.5
         project:
@@ -34,15 +33,6 @@ jobs:
           - json4sJacksonProject
           - sprayJsonProject
           - argonautProject
-        exclude:
-          - scala: 2.11.12
-            project: argonautProject
-          - scala: 2.11.12
-            project: playJsonProject
-          - scala: 2.11.12
-            project: upickleProject
-          - scala: 2.11.12
-            project: circeProject
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
