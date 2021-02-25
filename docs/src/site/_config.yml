@@ -3,7 +3,7 @@ description: "JSON Web Token (JWT) support for Scala. Optional helpers for Play 
 version: 5.0.0
 permalink: pretty
 baseurl: "/jwt-scala"
-url: "https://pauldijou.github.io"
+url: "https://jwt-scala.github.io"
 highlighter: rouge
 markdown: kramdown
 kramdown:

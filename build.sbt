@@ -116,10 +116,10 @@ val releaseSettings = baseSettings ++ publishSettings
 val localSettings = baseSettings ++ noPublishSettings
 
 val docSettings = Seq(
-  git.remoteRepo := "git@github.com:pauldijou/jwt-scala.git",
+  git.remoteRepo := "git@github.com:jwt-scala/jwt-scala.git",
   sourceDirectory in Preprocess := tutTargetDirectory.value,
   ghpagesNoJekyll := false,
-  git.remoteRepo := "git@github.com:pauldijou/jwt-scala.git",
+  git.remoteRepo := "git@github.com:jwt-scala/jwt-scala.git",
   mappings in makeSite ++= Seq(
     file("README.md") -> "_includes/README.md"
   ),
