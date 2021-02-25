@@ -22,7 +22,7 @@ object Jwt extends JwtCore[JwtHeader, JwtClaim] {
   private val extractAlgorithmRegex = "\"alg\" *: *\"([a-zA-Z0-9]+)\"".r
   protected def extractAlgorithm(header: String): Option[JwtAlgorithm] =
     (extractAlgorithmRegex findFirstMatchIn header).map(_.group(1)).flatMap {
-      case "none" => None
+      case "none"       => None
       case name: String => Some(JwtAlgorithm.fromString(name))
     }
 
@@ -77,7 +77,6 @@ object Jwt extends JwtCore[JwtHeader, JwtClaim] {
 
     clearStart(clearEnd(clearMiddle(dirtyJson)))
   }
-
 
   protected def parseHeader(header: String): JwtHeader = JwtHeader(extractAlgorithm(header))
 

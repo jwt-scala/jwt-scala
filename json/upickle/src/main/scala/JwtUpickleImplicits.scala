@@ -12,7 +12,10 @@ trait JwtUpickleImplicits {
           case obj: ujson.Obj =>
             val fieldMap = obj.value.toMap
             JwtHeader(
-              algorithm = fieldMap.get("alg").map(_.str.toString()).flatMap(alg => JwtAlgorithm.optionFromString(alg)),
+              algorithm = fieldMap
+                .get("alg")
+                .map(_.str.toString())
+                .flatMap(alg => JwtAlgorithm.optionFromString(alg)),
               typ = fieldMap.get("typ").map(_.str.toString()),
               contentType = fieldMap.get("cty").map(_.str.toString()),
               keyId = fieldMap.get("kid").map(_.str.toString())
@@ -33,10 +36,10 @@ trait JwtUpickleImplicits {
               content = write(content),
               issuer = fieldMap.get("iss").map(_.str.toString()),
               subject = fieldMap.get("sub").map(_.str.toString()),
-              audience = fieldMap.get("aud").map{
+              audience = fieldMap.get("aud").map {
                 case ujson.Arr(arr) => arr.map(_.str.toString()).toSet
-                case ujson.Str(s) => Set(s.toString)
-                case _ => throw new JwtNonStringSetOrStringException("aud")
+                case ujson.Str(s)   => Set(s.toString)
+                case _              => throw new JwtNonStringSetOrStringException("aud")
               },
               expiration = fieldMap.get("exp").map(_.num.toLong),
               notBefore = fieldMap.get("nbf").map(_.num.toLong),

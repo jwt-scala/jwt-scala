@@ -1,10 +1,11 @@
 package pdi.jwt
 
-import java.time.{ Clock, Instant }
+import java.time.{Clock, Instant}
 import pdi.jwt.exceptions.{JwtNotBeforeException, JwtExpirationException}
 
 /** Util object to handle time operations */
 object JwtTime {
+
   /** Returns the number of millis since the 01.01.1970
     *
     * @return Returns the number of millis since the 01.01.1970
@@ -30,8 +31,8 @@ object JwtTime {
       validateNowIsBetween(start, end)
       true
     } catch {
-      case _ : JwtNotBeforeException => false
-      case _ : JwtExpirationException => false
+      case _: JwtNotBeforeException  => false
+      case _: JwtExpirationException => false
     }
   }
 
@@ -69,6 +70,8 @@ object JwtTime {
     * @throws JwtNotBeforeException if `start` > now
     * @throws JwtExpirationException if now > `end`
     */
-  def validateNowIsBetweenSeconds(start: Option[Long], end: Option[Long])(implicit clock: Clock): Unit =
+  def validateNowIsBetweenSeconds(start: Option[Long], end: Option[Long])(implicit
+      clock: Clock
+  ): Unit =
     validateNowIsBetween(start.map(_ * 1000), end.map(_ * 1000))
 }

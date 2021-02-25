@@ -4,20 +4,22 @@ object JwtHeader {
   val DEFAULT_TYPE = "JWT"
 
   def apply(
-    algorithm: Option[JwtAlgorithm] = None,
-    typ: Option[String] = None,
-    contentType: Option[String] = None,
-    keyId: Option[String] = None
+      algorithm: Option[JwtAlgorithm] = None,
+      typ: Option[String] = None,
+      contentType: Option[String] = None,
+      keyId: Option[String] = None
   ) = new JwtHeader(algorithm, typ, contentType, keyId)
 
   def apply(algorithm: Option[JwtAlgorithm]): JwtHeader = algorithm match {
     case Some(algo) => JwtHeader(algo)
-    case _ => new JwtHeader(None, None, None, None)
+    case _          => new JwtHeader(None, None, None, None)
   }
 
-  def apply(algorithm: JwtAlgorithm): JwtHeader = new JwtHeader(Option(algorithm), Option(DEFAULT_TYPE), None, None)
+  def apply(algorithm: JwtAlgorithm): JwtHeader =
+    new JwtHeader(Option(algorithm), Option(DEFAULT_TYPE), None, None)
 
-  def apply(algorithm: JwtAlgorithm, typ: String): JwtHeader = new JwtHeader(Option(algorithm), Option(typ), None, None)
+  def apply(algorithm: JwtAlgorithm, typ: String): JwtHeader =
+    new JwtHeader(Option(algorithm), Option(typ), None, None)
 
   def apply(algorithm: JwtAlgorithm, typ: String, contentType: String): JwtHeader =
     new JwtHeader(Option(algorithm), Option(typ), Option(contentType), None)
@@ -27,19 +29,21 @@ object JwtHeader {
 }
 
 class JwtHeader(
-  val algorithm: Option[JwtAlgorithm],
-  val typ: Option[String],
-  val contentType: Option[String],
-  val keyId: Option[String]
+    val algorithm: Option[JwtAlgorithm],
+    val typ: Option[String],
+    val contentType: Option[String],
+    val keyId: Option[String]
 ) {
-  def toJson: String = JwtUtils.hashToJson(Seq(
-    "typ" -> typ,
-    "alg" -> algorithm.map(_.name).orElse(Option("none")),
-    "cty" -> contentType,
-    "kid" -> keyId
-  ).collect {
-    case (key, Some(value)) => (key -> value)
-  })
+  def toJson: String = JwtUtils.hashToJson(
+    Seq(
+      "typ" -> typ,
+      "alg" -> algorithm.map(_.name).orElse(Option("none")),
+      "cty" -> contentType,
+      "kid" -> keyId
+    ).collect { case (key, Some(value)) =>
+      (key -> value)
+    }
+  )
 
   /** Assign the type to the header */
   def withType(typ: String): JwtHeader = {

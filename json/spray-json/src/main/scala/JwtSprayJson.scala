@@ -12,12 +12,13 @@ trait JwtSprayJsonParser[H, C] extends JwtJsonCommon[JsObject, H, C] {
 
   protected def stringify(value: JsObject): String = value.compactPrint
 
-  protected def getAlgorithm(header: JsObject): Option[JwtAlgorithm] = header.fields.get("alg").flatMap {
-    case JsString("none") => None
-    case JsString(algo) => Option(JwtAlgorithm.fromString(algo))
-    case JsNull => None
-    case _ => throw new JwtNonStringException("alg")
-  }
+  protected def getAlgorithm(header: JsObject): Option[JwtAlgorithm] =
+    header.fields.get("alg").flatMap {
+      case JsString("none") => None
+      case JsString(algo)   => Option(JwtAlgorithm.fromString(algo))
+      case JsNull           => None
+      case _                => throw new JwtNonStringException("alg")
+    }
 
 }
 
@@ -58,13 +59,15 @@ object JwtSprayJson extends JwtSprayJsonParser[JwtHeader, JwtClaim] {
     )
   }
 
-  private[this] def safeRead[A: JsonReader](js: JsValue) = safeReader[A].read(js).fold(e => Option.empty, a => Option(a))
+  private[this] def safeRead[A: JsonReader](js: JsValue) =
+    safeReader[A].read(js).fold(e => Option.empty, a => Option(a))
 
   private[this] def safeGetField[A: JsonReader](js: JsObject, name: String) =
     js.fields.get(name).flatMap(safeRead[A])
 }
 
-class JwtSprayJson private (override val clock: Clock) extends JwtSprayJsonParser[JwtHeader, JwtClaim] {
+class JwtSprayJson private (override val clock: Clock)
+    extends JwtSprayJsonParser[JwtHeader, JwtClaim] {
   import JwtSprayJson._
 
   override def parseHeader(header: String): JwtHeader = JwtSprayJson.parseHeader(header, clock)

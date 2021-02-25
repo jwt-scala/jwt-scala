@@ -18,30 +18,31 @@ import pdi.jwt.algorithms.{JwtAsymmetricAlgorithm, JwtHmacAlgorithm, JwtUnkwownA
   *
   * '''Warning''' Be aware that if you override the `claimData` (using `withClaim` for example), you might override some attributes that
   * were automatically put inside the claim such as the expiration of the token.
-  *
   */
-case class JwtSession @Inject()(
-  headerData: JsObject,
-  claimData: JsObject,
-  signature: String)(implicit conf: Configuration, clock: Clock)
- {
+case class JwtSession @Inject() (headerData: JsObject, claimData: JsObject, signature: String)(
+    implicit
+    conf: Configuration,
+    clock: Clock
+) {
+
   /** Merge the `value` with `claimData` */
-  def + (value: JsObject): JwtSession = this.copy(claimData = claimData.deepMerge(value))
+  def +(value: JsObject): JwtSession = this.copy(claimData = claimData.deepMerge(value))
 
   /** Add this (key, value) to `claimData` (existing key will be overriden) */
-  def + (key: String, value: JsValueWrapper): JwtSession = this + Json.obj(key -> value)
+  def +(key: String, value: JsValueWrapper): JwtSession = this + Json.obj(key -> value)
 
   /** Convert `value` to its JSON counterpart and add it to `claimData` */
-  def + [T](key: String, value: T)(implicit writer: Writes[T]): JwtSession = this + Json.obj(key -> writer.writes(value))
+  def +[T](key: String, value: T)(implicit writer: Writes[T]): JwtSession =
+    this + Json.obj(key -> writer.writes(value))
 
   /** Add a sequence of (key, value) to `claimData` */
-  def ++ (fields: (String, JsValueWrapper)*): JwtSession = this + Json.obj(fields: _*)
+  def ++(fields: (String, JsValueWrapper)*): JwtSession = this + Json.obj(fields: _*)
 
   /** Remove one key from `claimData` */
-  def - (fieldName: String): JwtSession = this.copy(claimData = claimData - fieldName)
+  def -(fieldName: String): JwtSession = this.copy(claimData = claimData - fieldName)
 
   /** Remove a sequence of keys from `claimData` */
-  def -- (fieldNames: String*): JwtSession = this.copy(claimData = fieldNames.foldLeft(claimData) {
+  def --(fieldNames: String*): JwtSession = this.copy(claimData = fieldNames.foldLeft(claimData) {
     (data, fieldName) => (data - fieldName)
   })
 
@@ -66,7 +67,7 @@ case class JwtSession @Inject()(
       // JwtJson.encode doesn't use the implicit clock, so it's safe
       // to just default to using the JwtJson object
       case Some(k) => JwtJson.encode(headerData, claimData, k)
-      case _ => JwtJson.encode(headerData, claimData)
+      case _       => JwtJson.encode(headerData, claimData)
     }
   }
 
@@ -82,85 +83,112 @@ case class JwtSession @Inject()(
   def withSignature(signature: String): JwtSession = this.copy(signature = signature)
 
   /** If your Play app config has a `session.maxAge`, it will extend the expiration by that amount */
-  def refresh(): JwtSession = JwtSession.MAX_AGE.map(sec => this + ("exp", JwtTime.nowSeconds + sec)).getOrElse(this)
+  def refresh(): JwtSession =
+    JwtSession.MAX_AGE.map(sec => this + ("exp", JwtTime.nowSeconds + sec)).getOrElse(this)
 }
 
 object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
-  def REQUEST_HEADER_NAME(implicit conf: Configuration): String = conf.getOptional[String]("play.http.session.jwtName").getOrElse("Authorization")
+  def REQUEST_HEADER_NAME(implicit conf: Configuration): String =
+    conf.getOptional[String]("play.http.session.jwtName").getOrElse("Authorization")
 
-  def RESPONSE_HEADER_NAME(implicit conf: Configuration): String = conf.getOptional[String]("play.http.session.jwtResponseName").getOrElse(REQUEST_HEADER_NAME)
+  def RESPONSE_HEADER_NAME(implicit conf: Configuration): String =
+    conf.getOptional[String]("play.http.session.jwtResponseName").getOrElse(REQUEST_HEADER_NAME)
 
   // in seconds
   def MAX_AGE(implicit conf: Configuration): Option[Long] =
     conf.getOptional[Duration]("play.http.session.maxAge").map(_.toSeconds)
 
   def ALGORITHM(implicit conf: Configuration): JwtAlgorithm =
-    conf.getOptional[String]("play.http.session.algorithm")
+    conf
+      .getOptional[String]("play.http.session.algorithm")
       .map(JwtAlgorithm.fromString)
       .getOrElse(JwtAlgorithm.HS256)
 
-  def TOKEN_PREFIX(implicit conf: Configuration): String = conf.getOptional[String]("play.http.session.tokenPrefix").getOrElse("Bearer ")
+  def TOKEN_PREFIX(implicit conf: Configuration): String =
+    conf.getOptional[String]("play.http.session.tokenPrefix").getOrElse("Bearer ")
 
-  private def secretKey(implicit conf: Configuration): Option[String] = conf.getOptional[String]("play.http.secret.key")
+  private def secretKey(implicit conf: Configuration): Option[String] =
+    conf.getOptional[String]("play.http.secret.key")
 
-  private def privateKey(implicit conf: Configuration): Option[String] = conf.getOptional[String]("play.http.session.privateKey")
+  private def privateKey(implicit conf: Configuration): Option[String] =
+    conf.getOptional[String]("play.http.session.privateKey")
 
-  private def publicKey(implicit conf: Configuration): Option[String] = conf.getOptional[String]("play.http.session.publicKey")
+  private def publicKey(implicit conf: Configuration): Option[String] =
+    conf.getOptional[String]("play.http.session.publicKey")
 
   private def signingKey(implicit conf: Configuration): Option[String] = {
     ALGORITHM match {
       case _: JwtAsymmetricAlgorithm => privateKey.orElse(secretKey)
-      case _: JwtHmacAlgorithm => secretKey
-      case _ => Option.empty
+      case _: JwtHmacAlgorithm       => secretKey
+      case _                         => Option.empty
     }
   }
 
-  def deserialize(token: String, options: JwtOptions)(implicit conf: Configuration, clock: Clock): JwtSession = ((ALGORITHM, secretKey, publicKey) match {
-      case (algorithm: JwtHmacAlgorithm, Some(sk), _) => jwtJson.decodeJsonAll(token, sk, Seq(algorithm), options)
-      case (algorithm: JwtAsymmetricAlgorithm, _, Some(pk)) => jwtJson.decodeJsonAll(token, pk, Seq(algorithm), options)
-      case _ => jwtJson.decodeJsonAll(token, options)
-    }).map { tuple =>
-      JwtSession(tuple._1, tuple._2, tuple._3)
-    }.getOrElse(JwtSession())
+  def deserialize(token: String, options: JwtOptions)(implicit
+      conf: Configuration,
+      clock: Clock
+  ): JwtSession = ((ALGORITHM, secretKey, publicKey) match {
+    case (algorithm: JwtHmacAlgorithm, Some(sk), _) =>
+      jwtJson.decodeJsonAll(token, sk, Seq(algorithm), options)
+    case (algorithm: JwtAsymmetricAlgorithm, _, Some(pk)) =>
+      jwtJson.decodeJsonAll(token, pk, Seq(algorithm), options)
+    case _ => jwtJson.decodeJsonAll(token, options)
+  }).map { tuple =>
+    JwtSession(tuple._1, tuple._2, tuple._3)
+  }.getOrElse(JwtSession())
 
   private def jwtJson(implicit clock: Clock): JwtJsonParser[JwtHeader, JwtClaim] =
     // In the majority of cases, the user is just using the default JwtCore.clock.
     // If so, we can just use the existing JwtJson instead of constructing a new one.
     if (clock eq JwtJson.clock) JwtJson else JwtJson(clock)
 
-  def deserialize(token: String)(implicit conf: Configuration, clock: Clock): JwtSession = deserialize(token, JwtOptions.DEFAULT)
+  def deserialize(token: String)(implicit conf: Configuration, clock: Clock): JwtSession =
+    deserialize(token, JwtOptions.DEFAULT)
 
-  private def asJsObject[A](value: A)(implicit writer: Writes[A]): JsObject = writer.writes(value) match {
-    case value: JsObject => value
-    case _ => Json.obj()
-  }
+  private def asJsObject[A](value: A)(implicit writer: Writes[A]): JsObject =
+    writer.writes(value) match {
+      case value: JsObject => value
+      case _               => Json.obj()
+    }
 
-  def defaultHeader(implicit conf: Configuration): JwtHeader = signingKey.map(_ => JwtHeader(ALGORITHM)).getOrElse(JwtHeader())
+  def defaultHeader(implicit conf: Configuration): JwtHeader =
+    signingKey.map(_ => JwtHeader(ALGORITHM)).getOrElse(JwtHeader())
 
   def defaultClaim(implicit conf: Configuration, clock: Clock): JwtClaim = MAX_AGE match {
     case Some(seconds) => JwtClaim().expiresIn(seconds)
-    case _ => JwtClaim()
+    case _             => JwtClaim()
   }
 
   def apply(jsClaim: JsObject)(implicit conf: Configuration, clock: Clock): JwtSession =
     JwtSession.apply(asJsObject(defaultHeader), jsClaim)
 
-  def apply(fields: (String, JsValueWrapper)*)(implicit conf: Configuration, clock: Clock): JwtSession =
+  def apply(
+      fields: (String, JsValueWrapper)*
+  )(implicit conf: Configuration, clock: Clock): JwtSession =
     if (fields.isEmpty) {
       JwtSession.apply(defaultHeader, JwtClaim())
     } else {
       JwtSession.apply(Json.obj(fields: _*))
     }
 
-  def apply(jsHeader: JsObject, jsClaim: JsObject)(implicit conf: Configuration, clock: Clock): JwtSession =
+  def apply(jsHeader: JsObject, jsClaim: JsObject)(implicit
+      conf: Configuration,
+      clock: Clock
+  ): JwtSession =
     new JwtSession(jsHeader, jsClaim, "").refresh
 
   def apply(claim: JwtClaim)(implicit conf: Configuration, clock: Clock): JwtSession =
     JwtSession.apply(defaultHeader, claim)
 
-  def apply(header: JwtHeader, claim: JwtClaim)(implicit conf: Configuration, clock: Clock): JwtSession =
+  def apply(header: JwtHeader, claim: JwtClaim)(implicit
+      conf: Configuration,
+      clock: Clock
+  ): JwtSession =
     new JwtSession(asJsObject(header), asJsObject(claim), "").refresh
 
-  def apply(header: JwtHeader, claim: JwtClaim, signature: String)(implicit conf: Configuration, clock: Clock): JwtSession =
+  def apply(header: JwtHeader, claim: JwtClaim, signature: String)(implicit
+      conf: Configuration,
+      clock: Clock
+  ): JwtSession =
     new JwtSession(asJsObject(header), asJsObject(claim), signature).refresh
 }
