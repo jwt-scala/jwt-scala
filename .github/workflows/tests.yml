@@ -27,6 +27,8 @@ jobs:
           - argonautProject
         exclude:
           - scala: 2.11.12
+            project: argonautProject
+          - scala: 2.11.12
             project: playJsonProject
           - scala: 2.11.12
             project: upickleProject
