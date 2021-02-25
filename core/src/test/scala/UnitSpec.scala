@@ -2,7 +2,6 @@ package pdi.jwt
 
 import scala.util._
 
-import org.scalatest._
 import org.scalatest.matchers._
 import org.scalatest.funspec._
 import org.scalatest.matchers.should._
@@ -201,7 +200,7 @@ abstract class UnitSpec extends AnyFunSpec with Matchers {
   ) = {
     withClue(clue) {
       t shouldBe a[Success[_]]
-      val (h1, c1, s) = t.get
+      val (h1, c1, _) = t.get
       val (h2, c2) = exp
       testHeader(h1, h2)
       testClaim(c1, c2)

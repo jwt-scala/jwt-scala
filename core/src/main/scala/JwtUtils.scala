@@ -5,6 +5,7 @@ import java.security.{KeyFactory, PrivateKey, PublicKey, Signature}
 
 import javax.crypto.spec.SecretKeySpec
 import javax.crypto.{Mac, SecretKey}
+import scala.annotation.nowarn
 import pdi.jwt.JwtAlgorithm.{ES256, ES384, ES512}
 import pdi.jwt.algorithms._
 import pdi.jwt.exceptions.{JwtNonSupportedAlgorithm, JwtSignatureFormatException}
@@ -32,6 +33,7 @@ object JwtUtils {
 
   /** Convert a sequence to a JSON array
     */
+  @nowarn
   def seqToJson(seq: Seq[Any]): String = if (seq.isEmpty) {
     "[]"
   } else {
@@ -57,6 +59,7 @@ object JwtUtils {
   /**
     * Convert a sequence of tuples to a JSON object
     */
+  @nowarn
   def hashToJson(hash: Seq[(String, Any)]): String = if (hash.isEmpty) {
     "{}"
   } else {
@@ -136,7 +139,7 @@ object JwtUtils {
     signer.initSign(key)
     signer.update(data)
     algorithm match {
-      case algorithm: JwtRSAAlgorithm => signer.sign
+      case _: JwtRSAAlgorithm => signer.sign
       case algorithm: JwtECDSAAlgorithm =>
         transcodeSignatureToConcat(signer.sign, getSignatureByteArrayLength(algorithm))
     }
@@ -187,8 +190,8 @@ object JwtUtils {
     signer.initVerify(key)
     signer.update(data)
     algorithm match {
-      case algo: JwtRSAAlgorithm   => signer.verify(signature)
-      case algo: JwtECDSAAlgorithm => signer.verify(transcodeSignatureToDER(signature))
+      case _: JwtRSAAlgorithm   => signer.verify(signature)
+      case _: JwtECDSAAlgorithm => signer.verify(transcodeSignatureToDER(signature))
     }
   }
 
@@ -252,13 +255,13 @@ object JwtUtils {
     else throw new JwtSignatureFormatException("Invalid ECDSA signature format")
 
     val rLength: Byte = derSignature(offset + 1)
-    var i: Int = rLength
+    var i = rLength.toInt
     while ((i > 0) && (derSignature((offset + 2 + rLength) - i) == 0)) {
       i -= 1
     }
 
     val sLength: Byte = derSignature(offset + 2 + rLength + 1)
-    var j: Int = sLength
+    var j = sLength.toInt
     while ((j > 0) && (derSignature((offset + 2 + rLength + 2 + sLength) - j) == 0)) {
       j -= 1
     }
@@ -311,7 +314,7 @@ object JwtUtils {
     if (signatureLength > 255)
       throw new JwtSignatureFormatException("Invalid ECDSA signature format")
 
-    var signatureDER = scala.collection.mutable.ListBuffer.empty[Byte]
+    val signatureDER = scala.collection.mutable.ListBuffer.empty[Byte]
     signatureDER += 48
     if (signatureLength >= 128)
       signatureDER += 0x81.toByte
@@ -326,11 +329,11 @@ object JwtUtils {
   def splitString(input: String, separator: Char): Array[String] = {
     val builder = scala.collection.mutable.ArrayBuffer.empty[String]
     var lastIndex = 0
-    var index = input.indexOf(separator, lastIndex)
+    var index = input.indexOf(separator.toInt, lastIndex)
     while (index != -1) {
       builder += input.substring(lastIndex, index)
       lastIndex = index + 1
-      index = input.indexOf(separator, lastIndex)
+      index = input.indexOf(separator.toInt, lastIndex)
     }
     // Add the remainder
     if (lastIndex < input.length) {

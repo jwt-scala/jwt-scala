@@ -80,7 +80,7 @@ trait JwtJsonImplicits {
           )
         } catch {
           case e: JwtNonStringException    => JsError(keyToPath(e.getKey), "error.expected.string")
-          case e: JwtNonSupportedAlgorithm => JsError(keyToPath("alg"), "error.expected.algorithm")
+          case _: JwtNonSupportedAlgorithm => JsError(keyToPath("alg"), "error.expected.algorithm")
         }
       case _ => JsError("error.expected.jsobject")
     }

@@ -20,14 +20,14 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
         ("nbf" -> 10),
         ("iat" -> 10)
       ), "Claim") {
-        JwtClaim().by("me").to("you").about("something").issuedAt(10).startsAt(10).expiresAt(15).toJsValue
+        JwtClaim().by("me").to("you").about("something").issuedAt(10).startsAt(10).expiresAt(15).toJsValue()
       }
 
       assertResult(Json.obj(
         ("typ" -> "JWT"),
         ("alg" -> "HS256")
       ), "Claim") {
-        JwtHeader(JwtAlgorithm.HS256).toJsValue
+        JwtHeader(JwtAlgorithm.HS256).toJsValue()
       }
     }
 
@@ -40,12 +40,12 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
         ("nbf" -> 10),
         ("iat" -> 10)
       ), "Claim") {
-        JwtClaim(audience = Some(Set("you", "another"))).by("me").about("something").issuedAt(10).startsAt(10).expiresAt(15).toJsValue
+        JwtClaim(audience = Some(Set("you", "another"))).by("me").about("something").issuedAt(10).startsAt(10).expiresAt(15).toJsValue()
       }
     }
 
     it("should decode token with spaces") {
-      val (header, claim, signature) = defaultJwt.decodeJsonAll(tokenWithSpaces).get
+      val (_, claim, _) = defaultJwt.decodeJsonAll(tokenWithSpaces).get
       val expiration = BigDecimal("32086368000")
       assertResult(JsNumber(0)) {
         (claim \ "nbf").get

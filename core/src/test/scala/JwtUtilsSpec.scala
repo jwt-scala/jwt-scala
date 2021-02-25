@@ -73,32 +73,6 @@ class JwtUtilsSpec extends UnitSpec with ClockFixture {
       }
     }
 
-    val signKey = Option("secret")
-    val signMessage = """{"alg": "algo"}.{"user": 1, "admin": true, "value": "foo"}"""
-
-    // Seq[(result, algo)]
-    val signValues: Seq[(String, String)] = Seq(
-      ("媉㶩஥ᐎ䗼ⲑΠ", "HmacMD5"),
-      ("媉㶩஥ᐎ䗼ⲑΠ", "HMD5"),
-      ("ﹰﱉ녙죀빊署▢륧婍", "HmacSHA1")
-    )
-
-    /*describe("sign byte array") {
-      it("should correctly handle string") {
-        signValues.foreach {
-          value => assertResult(value._1.getBytes(ENCODING)) { JwtUtils.sign(signMessage.getBytes(ENCODING), signKey, Option(value._2)) }
-        }
-      }
-    }
-
-    describe("sign string") {
-      it("should correctly handle string") {
-        signValues.foreach {
-          value => assertResult(value._1.getBytes(ENCODING)) { JwtUtils.sign(signMessage, signKey, Option(value._2)) }
-        }
-      }
-    }*/
-
     describe("transcodeSignatureToDER") {
       it("should throw JwtValidationException if signature is too long") {
         val signature = JwtUtils.bytify("AU6-jw28DX1QMY0Ar8CTcnIAc0WKGe3nNVHkE7ayHSxvOLxE5YQSiZtbPn3y-vDHoQCOMId4rPdIJhD_NOUqnH_rAKA5w9ZlhtW0GwgpvOg1_5oLWnWXQvPjJjC5YsLqEssoMITtOmfkBsQMgLAF_LElaaCWhkJkOCtcZmroUW_b5CXB")

@@ -26,11 +26,8 @@ object JwtSprayJson extends JwtSprayJsonParser[JwtHeader, JwtClaim] {
   import DefaultJsonProtocol._
 
   def apply(clock: Clock): JwtSprayJson = new JwtSprayJson(clock)
-  override def parseHeader(header: String): JwtHeader = parseHeader(header, this.clock)
-  override def parseClaim(header: String): JwtClaim = parseClaim(header, this.clock)
 
-  private def parseHeader(header: String, clock: Clock): JwtHeader = {
-    implicit val c: Clock = clock
+  override def parseHeader(header: String): JwtHeader = {
     val jsObj = parse(header)
     JwtHeader(
       algorithm = getAlgorithm(jsObj),
@@ -40,8 +37,7 @@ object JwtSprayJson extends JwtSprayJsonParser[JwtHeader, JwtClaim] {
     )
   }
 
-  private def parseClaim(claim: String, clock: Clock): JwtClaim = {
-    implicit val c: Clock = clock
+  override def parseClaim(claim: String): JwtClaim = {
     val jsObj = parse(claim)
     val content = JsObject(
       jsObj.fields - "iss" - "sub" - "aud" - "exp" - "nbf" - "iat" - "jti"
@@ -60,7 +56,7 @@ object JwtSprayJson extends JwtSprayJsonParser[JwtHeader, JwtClaim] {
   }
 
   private[this] def safeRead[A: JsonReader](js: JsValue) =
-    safeReader[A].read(js).fold(e => Option.empty, a => Option(a))
+    safeReader[A].read(js).fold(_ => None, a => Option(a))
 
   private[this] def safeGetField[A: JsonReader](js: JsObject, name: String) =
     js.fields.get(name).flatMap(safeRead[A])
@@ -68,9 +64,6 @@ object JwtSprayJson extends JwtSprayJsonParser[JwtHeader, JwtClaim] {
 
 class JwtSprayJson private (override val clock: Clock)
     extends JwtSprayJsonParser[JwtHeader, JwtClaim] {
-  import JwtSprayJson._
-
-  override def parseHeader(header: String): JwtHeader = JwtSprayJson.parseHeader(header, clock)
-  override def parseClaim(header: String): JwtClaim = JwtSprayJson.parseClaim(header, clock)
-
+  override def parseHeader(header: String): JwtHeader = JwtSprayJson.parseHeader(header)
+  override def parseClaim(header: String): JwtClaim = JwtSprayJson.parseClaim(header)
 }

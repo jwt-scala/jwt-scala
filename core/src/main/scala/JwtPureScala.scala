@@ -100,8 +100,6 @@ object Jwt extends JwtCore[JwtHeader, JwtClaim] {
 }
 
 class Jwt private (override val clock: Clock) extends JwtCore[JwtHeader, JwtClaim] {
-  import Jwt._
-
   protected def parseHeader(header: String): JwtHeader = Jwt.parseHeader(header)
   protected def parseClaim(claim: String): JwtClaim = Jwt.parseClaim(claim)
 

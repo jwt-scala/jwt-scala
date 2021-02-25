@@ -2,9 +2,9 @@ package pdi.jwt
 
 import javax.inject.Inject
 import java.time.Clock
-import play.api.{Configuration, Play}
+import play.api.Configuration
 import play.api.mvc.{RequestHeader, Result}
-import play.api.libs.json.{JsObject, JsString, Json, Writes}
+import play.api.libs.json.{JsObject, JsString, Writes}
 import play.api.libs.json.Json.JsValueWrapper
 
 trait JwtPlayImplicits {
@@ -24,9 +24,7 @@ trait JwtPlayImplicits {
       .map(JwtSession.deserialize)
       .getOrElse(JwtSession())
 
-  private def requestHasJwtHeader(
-      request: RequestHeader
-  )(implicit conf: Configuration, clock: Clock): Boolean =
+  private def requestHasJwtHeader(request: RequestHeader)(implicit conf: Configuration): Boolean =
     request.headers.get(JwtSession.REQUEST_HEADER_NAME).isDefined
 
   /** By adding `import pdi.jwt._`, you will implicitely add all those methods to `Result` allowing you to easily manipulate
@@ -83,7 +81,7 @@ trait JwtPlayImplicits {
       case _ => {
         // Only refresh if we actually have a proper JWT session
         if (hasJwtHeader) {
-          result.withJwtSession(jwtSession.refresh)
+          result.withJwtSession(jwtSession.refresh())
         } else {
           result
         }

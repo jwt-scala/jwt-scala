@@ -2,11 +2,9 @@ package pdi.jwt
 
 import java.time.Clock
 import org.json4s._
-import org.json4s.JsonDSL.WithBigDecimal._
 import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.JsonMethods.{parse => jparse}
 import org.json4s.jackson.Serialization
-import org.json4s.jackson.Serialization.{read, write}
 
 /**
   * Implementation of `JwtCore` using `JObject` from Json4s Jackson.
