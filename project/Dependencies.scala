@@ -17,23 +17,23 @@ object Dependencies {
   }
 
   object Libs {
-    val play             = "com.typesafe.play" %% "play"      % V.play
-    val playJson         = "com.typesafe.play" %% "play-json" % V.playJson
-    val playTest         = "com.typesafe.play" %% "play-test" % V.play  % "test"
+    val play = "com.typesafe.play" %% "play" % V.play
+    val playJson = "com.typesafe.play" %% "play-json" % V.playJson
+    val playTest = "com.typesafe.play" %% "play-test" % V.play % "test"
     val playTestProvided = "com.typesafe.play" %% "play-test" % V.play
-    val guice            = "com.google.inject" %  "guice"     % V.guice % "test"
+    val guice = "com.google.inject" % "guice" % V.guice % "test"
 
-    val json4sCore    = "org.json4s" %% "json4s-core"    % V.json4s
-    val json4sNative  = "org.json4s" %% "json4s-native"  % V.json4s
+    val json4sCore = "org.json4s" %% "json4s-core" % V.json4s
+    val json4sNative = "org.json4s" %% "json4s-native" % V.json4s
     val json4sJackson = "org.json4s" %% "json4s-jackson" % V.json4s
 
-    val circeCore     = "io.circe" %% "circe-core"    % V.circe
-    val circeGeneric  = "io.circe" %% "circe-generic" % V.circe
-    val circeParse    = "io.circe" %% "circe-parser"  % V.circe
+    val circeCore = "io.circe" %% "circe-core" % V.circe
+    val circeGeneric = "io.circe" %% "circe-generic" % V.circe
+    val circeParse = "io.circe" %% "circe-parser" % V.circe
 
     val upickle = "com.lihaoyi" %% "upickle" % V.upickle
 
-    val sprayJson = "io.spray" %%  "spray-json" % V.sprayJson
+    val sprayJson = "io.spray" %% "spray-json" % V.sprayJson
 
     val argonaut = "io.argonaut" %% "argonaut" % V.argonaut
 
