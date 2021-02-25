@@ -7,7 +7,7 @@ import java.time.Clock
 import play.api.libs.json._
 import play.api.libs.json.Json.JsValueWrapper
 import play.api.Configuration
-import pdi.jwt.algorithms.{JwtAsymmetricAlgorithm, JwtHmacAlgorithm, JwtUnkwownAlgorithm}
+import pdi.jwt.algorithms.{JwtAsymmetricAlgorithm, JwtHmacAlgorithm}
 
 /** Similar to the default Play Session but using JsObject instead of Map[String, String]. The data is separated into two attributes:
   * `headerData` and `claimData`. There is also a optional signature. Most of the time, you should only care about the `claimData` which
@@ -175,7 +175,7 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
       conf: Configuration,
       clock: Clock
   ): JwtSession =
-    new JwtSession(jsHeader, jsClaim, "").refresh
+    new JwtSession(jsHeader, jsClaim, "").refresh()
 
   def apply(claim: JwtClaim)(implicit conf: Configuration, clock: Clock): JwtSession =
     JwtSession.apply(defaultHeader, claim)
@@ -184,11 +184,11 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
       conf: Configuration,
       clock: Clock
   ): JwtSession =
-    new JwtSession(asJsObject(header), asJsObject(claim), "").refresh
+    new JwtSession(asJsObject(header), asJsObject(claim), "").refresh()
 
   def apply(header: JwtHeader, claim: JwtClaim, signature: String)(implicit
       conf: Configuration,
       clock: Clock
   ): JwtSession =
-    new JwtSession(asJsObject(header), asJsObject(claim), signature).refresh
+    new JwtSession(asJsObject(header), asJsObject(claim), signature).refresh()
 }

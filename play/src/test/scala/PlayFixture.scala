@@ -34,7 +34,6 @@ trait PlayFixture extends Fixture {
 
   def loginAction(implicit conf:Configuration, Action:DefaultActionBuilder): EssentialAction = Action { implicit request =>
     val body = request.body.asJson
-    val username = (body.get \ "username").as[String]
     val password = (body.get \ "password").as[String]
 
     password match {

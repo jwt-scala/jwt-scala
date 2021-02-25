@@ -1,6 +1,5 @@
 package pdi.jwt
 
-import pdi.jwt.exceptions.JwtNonSupportedAlgorithm
 import pdi.jwt.algorithms.JwtUnkwownAlgorithm
 
 sealed trait JwtAlgorithm {

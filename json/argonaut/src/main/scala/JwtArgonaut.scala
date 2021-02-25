@@ -4,7 +4,6 @@ import argonaut._
 import argonaut.Argonaut._
 import java.time.Clock
 import pdi.jwt.exceptions.JwtNonStringException
-import scala.language.postfixOps
 
 trait JwtArgonautParser[H, C] extends JwtJsonCommon[Json, H, C] {
   override protected def parse(value: String): Json = Parse.parseOption(value).get
@@ -13,9 +12,9 @@ trait JwtArgonautParser[H, C] extends JwtJsonCommon[Json, H, C] {
 
   override protected def getAlgorithm(header: Json): Option[JwtAlgorithm] =
     header -| "alg" map (_.stringOrEmpty) flatMap {
-      case "none" ⇒ None
-      case alg: String ⇒ Some(JwtAlgorithm.fromString(alg))
-      case _ ⇒ throw new JwtNonStringException("alg")
+      case "none"      => None
+      case alg: String => Some(JwtAlgorithm.fromString(alg))
+      case _           => throw new JwtNonStringException("alg")
     }
 }
 
@@ -24,7 +23,7 @@ object JwtArgonaut extends JwtArgonautParser[JwtHeader, JwtClaim] {
 
   implicit class ExtractJsonFieldToType(json: Json) {
 
-    def -|>[T](field: String)(f: Json ⇒ T): Option[T] =
+    def -|>[T](field: String)(f: Json => T): Option[T] =
       json -| field map f
 
     def -|>>(field: String): Option[String] =
@@ -41,16 +40,16 @@ object JwtArgonaut extends JwtArgonautParser[JwtHeader, JwtClaim] {
 
   override protected def parseHeader(header: String): JwtHeader = parseHeaderHelp(header)
 
-  private def parseClaimHelp(claim: String)(implicit clock: Clock): JwtClaim =
+  private def parseClaimHelp(claim: String): JwtClaim =
     Parse.parseOption(claim) match {
-      case Some(value) ⇒ jsonToJwtClaim(value)
-      case None ⇒ JwtClaim()
+      case Some(value) => jsonToJwtClaim(value)
+      case None        => JwtClaim()
     }
 
-  private def parseHeaderHelp(header: String)(implicit clock: Clock): JwtHeader =
+  private def parseHeaderHelp(header: String): JwtHeader =
     Parse.parseOption(header) map jsonToJwtHeader match {
-      case Some(value) ⇒ value
-      case None ⇒ JwtHeader(None)
+      case Some(value) => value
+      case None        => JwtHeader(None)
     }
 
   private def jsonToJwtHeader(json: Json): JwtHeader = {
@@ -73,10 +72,10 @@ object JwtArgonaut extends JwtArgonautParser[JwtHeader, JwtClaim] {
     val jwtId = json -|>> "jti"
     val content = json.objectFieldsOrEmpty
       .filterNot(jwtSpecificFieldNames.contains)
-      .map { field ⇒
+      .map { field =>
         (field, (json -| field).get)
       }
-      .foldRight(jEmptyObject) { case ((fieldName, field), obj) ⇒
+      .foldRight(jEmptyObject) { case ((fieldName, field), obj) =>
         (fieldName := field) ->: obj
       }
     JwtClaim(content.nospaces, issuer, subject, audience, expiration, notBefore, issuedAt, jwtId)
@@ -85,9 +84,9 @@ object JwtArgonaut extends JwtArgonautParser[JwtHeader, JwtClaim] {
 
 class JwtArgonaut private (override val clock: Clock)
     extends JwtArgonautParser[JwtHeader, JwtClaim] {
-  import JwtArgonaut.{parseClaimHelp, parseHeaderHelp, ExtractJsonFieldToType}
+  import JwtArgonaut.{parseClaimHelp, parseHeaderHelp}
 
-  override protected def parseClaim(claim: String): JwtClaim = parseClaimHelp(claim)(clock)
+  override protected def parseClaim(claim: String): JwtClaim = parseClaimHelp(claim)
 
-  override protected def parseHeader(header: String): JwtHeader = parseHeaderHelp(header)(clock)
+  override protected def parseHeader(header: String): JwtHeader = parseHeaderHelp(header)
 }

@@ -111,7 +111,7 @@ trait JwtJsonCommon[J, H, C] extends JwtCore[H, C] {
     decodeJsonAll(token, key, algorithms, JwtOptions.DEFAULT)
 
   def decodeJsonAll(token: String, key: SecretKey, options: JwtOptions): Try[(J, J, String)] =
-    decodeJsonAll(token, key, JwtAlgorithm.allHmac, options)
+    decodeJsonAll(token, key, JwtAlgorithm.allHmac(), options)
 
   def decodeJsonAll(token: String, key: SecretKey): Try[(J, J, String)] =
     decodeJsonAll(token, key, JwtOptions.DEFAULT)
@@ -134,7 +134,7 @@ trait JwtJsonCommon[J, H, C] extends JwtCore[H, C] {
     decodeJsonAll(token, key, algorithms, JwtOptions.DEFAULT)
 
   def decodeJsonAll(token: String, key: PublicKey, options: JwtOptions): Try[(J, J, String)] =
-    decodeJsonAll(token, key, JwtAlgorithm.allAsymmetric, options)
+    decodeJsonAll(token, key, JwtAlgorithm.allAsymmetric(), options)
 
   def decodeJsonAll(token: String, key: PublicKey): Try[(J, J, String)] =
     decodeJsonAll(token, key, JwtOptions.DEFAULT)
@@ -179,7 +179,7 @@ trait JwtJsonCommon[J, H, C] extends JwtCore[H, C] {
     decodeJson(token, key, algorithms, JwtOptions.DEFAULT)
 
   def decodeJson(token: String, key: SecretKey, options: JwtOptions): Try[J] =
-    decodeJson(token, key, JwtAlgorithm.allHmac, options)
+    decodeJson(token, key, JwtAlgorithm.allHmac(), options)
 
   def decodeJson(token: String, key: SecretKey): Try[J] =
     decodeJson(token, key, JwtOptions.DEFAULT)
@@ -196,7 +196,7 @@ trait JwtJsonCommon[J, H, C] extends JwtCore[H, C] {
     decodeJson(token, key, algorithms, JwtOptions.DEFAULT)
 
   def decodeJson(token: String, key: PublicKey, options: JwtOptions): Try[J] =
-    decodeJson(token, key, JwtAlgorithm.allAsymmetric, options)
+    decodeJson(token, key, JwtAlgorithm.allAsymmetric(), options)
 
   def decodeJson(token: String, key: PublicKey): Try[J] =
     decodeJson(token, key, JwtOptions.DEFAULT)

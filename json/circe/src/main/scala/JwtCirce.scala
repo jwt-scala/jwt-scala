@@ -1,12 +1,12 @@
 package pdi.jwt
 
-import cats.syntax.either._
 import io.circe._
 import io.circe.syntax._
 import io.circe.jawn.{parse => jawnParse}
 import java.time.Clock
 
 import pdi.jwt.exceptions.JwtNonStringException
+import scala.annotation.nowarn
 
 /**
   * Implementation of `JwtCore` using `Json` from Circe.
@@ -32,7 +32,7 @@ object JwtCirce extends JwtCirceParser[JwtHeader, JwtClaim] {
   def parseHeader(header: String): JwtHeader = parseHeaderHelp(header)
   def parseClaim(claim: String): JwtClaim = parseClaimHelp(claim)
 
-  private def parseHeaderHelp(header: String)(implicit clock: Clock): JwtHeader = {
+  private def parseHeaderHelp(header: String): JwtHeader = {
     val cursor = parse(header).hcursor
     JwtHeader(
       algorithm = getAlg(cursor),
@@ -42,7 +42,10 @@ object JwtCirce extends JwtCirceParser[JwtHeader, JwtClaim] {
     )
   }
 
-  private def parseClaimHelp(claim: String)(implicit clock: Clock): JwtClaim = {
+  @nowarn // The cats import is necessary for 2.12 but not for 2.13, causing a warning
+  private def parseClaimHelp(claim: String): JwtClaim = {
+    import cats.syntax.either._
+
     val cursor = parse(claim).hcursor
     val contentCursor = List("iss", "sub", "aud", "exp", "nbf", "iat", "jti").foldLeft(cursor) {
       (cursor, field) =>
@@ -68,7 +71,7 @@ object JwtCirce extends JwtCirceParser[JwtHeader, JwtClaim] {
 class JwtCirce private (override val clock: Clock) extends JwtCirceParser[JwtHeader, JwtClaim] {
   import JwtCirce.{parseHeaderHelp, parseClaimHelp}
 
-  def parseHeader(header: String): JwtHeader = parseHeaderHelp(header)(clock)
+  def parseHeader(header: String): JwtHeader = parseHeaderHelp(header)
 
-  def parseClaim(claim: String): JwtClaim = parseClaimHelp(claim)(clock)
+  def parseClaim(claim: String): JwtClaim = parseClaimHelp(claim)
 }

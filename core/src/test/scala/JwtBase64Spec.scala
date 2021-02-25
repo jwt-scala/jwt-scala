@@ -1,7 +1,5 @@
 package pdi.jwt
 
-import org.scalatest._
-
 class JwtBase64Spec extends UnitSpec {
   val eol = System.getProperty( "line.separator" )
 
