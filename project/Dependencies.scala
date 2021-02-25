@@ -3,17 +3,17 @@ import sbt._
 object Dependencies {
   object V {
     val scalatest = "3.2.5"
-    val scalatestPlus = "4.0.3"
-    val bouncyCastle = "1.64"
+    val scalatestPlus = "5.1.0"
+    val bouncyCastle = "1.68"
     val guice = "4.2.2"
 
-    val play = "2.8.3"
-    val playJson = "2.9.1"
+    val play = "2.8.7"
+    val playJson = "2.9.2"
     val json4s = "3.6.10"
     val circe = "0.13.0"
-    val upickle = "1.2.2"
+    val upickle = "1.2.3"
     val sprayJson = "1.3.5"
-    val argonaut = "6.3.1"
+    val argonaut = "6.3.3"
   }
 
   object Libs {
