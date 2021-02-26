@@ -1,7 +1,5 @@
 # Changelog
 
-⚠️ Looking for maintainers. This lib is totally production ready, it's used in several projects already and works fine. But I moved away from Scala and won't maintain it anymore. It's been pretty stable over the last few years, most of the work is upgrading dependency versions and ensuring cross-compatibility. If you are using this lib yourself and have some motivation to take care of it, consider reaching out to me.
-
 ## 5.0.0 (31/10/2020)
 
 - Make `JwtException` a proper exception (thanks @tpolecat)
