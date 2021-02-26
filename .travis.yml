@@ -1,9 +1,0 @@
-language: scala
-scala:
-  - 2.11.11
-  - 2.12.7
-jdk:
-  - openjdk8
-
-script:
-  - sbt clean testAll
