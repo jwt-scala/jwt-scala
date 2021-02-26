@@ -77,7 +77,7 @@ val scala213 = "2.13.5"
 val crossVersionAll = Seq(scala212, scala213)
 
 val baseSettings = Seq(
-  organization := "io.github.jwt-scala",
+  organization := "com.github.jwt-scala",
   version := buildVersion,
   scalaVersion in ThisBuild := scala212,
   crossScalaVersions := crossVersionAll,

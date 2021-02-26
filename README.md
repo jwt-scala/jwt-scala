@@ -1,26 +1,32 @@
-# JWT Scala 5.0.0
+# JWT Scala
 
-Scala support for JSON Web Token ([JWT](http://tools.ietf.org/html/draft-ietf-oauth-json-web-token)). Supports Java 8+, Scala 2.12 and Scala 2.13. Dependency free. Optional helpers for Play Framework, Play JSON, Json4s Native, Json4s Jackson, Circe, uPickle, Spray JSON and Argonaut.
+Scala support for JSON Web Token ([JWT](http://tools.ietf.org/html/draft-ietf-oauth-json-web-token)).
+Supports Java 8+, Scala 2.12 and Scala 2.13.
+Dependency free.
+Optional helpers for Play Framework, Play JSON, Json4s Native, Json4s Jackson, Circe, uPickle, Spray JSON and Argonaut.
+
+This library was originally created by [Paul Dijou](http://pauldijou.fr/), you can check the
+[older repository for JWT Scala](https://github.com/pauldijou/jwt-scala) for older versions.
 
 ## Pick the right tool for the right job
 
-JWT Scala is divided in several sub-projects each targeting a specific use-case. Depending on your need, you want to pick the right one.
+JWT Scala is divided in several sub-projects each targeting a specific JSON library.
 
 | Name | Description | Samples | Scaladoc |
 |------|-------------|---------|----------|
-|`jwt-core`|Pure Scala|[Jwt](https://pauldijou.github.io/jwt-scala/samples/jwt-core)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-core)|
-|`jwt-play-json`|[play-json](https://www.playframework.com/) lib|[JwtJson](https://pauldijou.github.io/jwt-scala/samples/jwt-play-json)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-play-json)|
-|`jwt-play`|[Play framework](https://www.playframework.com/)|[JwtSession](https://pauldijou.github.io/jwt-scala/samples/jwt-play)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-play)|
-|`jwt-json4s-native`|[json4s](http://json4s.org/) Native implementation|[JwtJson4s](https://pauldijou.github.io/jwt-scala/samples/jwt-json4s)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-json4s)|
-|`jwt-json4s-jackson`|[json4s](http://json4s.org/) Jackson implementation|[JwtJson4s](https://pauldijou.github.io/jwt-scala/samples/jwt-json4s)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-json4s)|
-|`jwt-spray-json`|[spray-json](https://github.com/spray/spray-json) lib|[JwtSprayJson](https://pauldijou.github.io/jwt-scala/samples/jwt-spray-json)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-spray-json)|
-|`jwt-circe`|[circe](https://circe.github.io/circe/) lib|[JwtCirce](https://pauldijou.github.io/jwt-scala/samples/jwt-circe)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-circe)|
-|`jwt-upickle`|[uPickle](http://www.lihaoyi.com/upickle-pprint/upickle/) lib|[JwtUpickle](https://pauldijou.github.io/jwt-scala/samples/jwt-upickle)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-upickle)|
-|`jwt-argonaut`|[Argonaut](http://argonaut.io/) lib|[JwtArgonaut](https://pauldijou.github.io/jwt-scala/samples/jwt-argonaut)|[API](https://pauldijou.github.io/jwt-scala/api/latest/jwt-argonaut)|
+|`jwt-core`|Pure Scala|[Jwt](https://jwt-scala.github.io/jwt-scala/samples/jwt-core)|[API](https://jwt-scala.github.io/jwt-scala/api/latest/jwt-core)|
+|`jwt-play-json`|[play-json](https://www.playframework.com/) lib|[JwtJson](https://jwt-scala.github.io/jwt-scala/samples/jwt-play-json)|[API](https://jwt-scala.github.io/jwt-scala/api/latest/jwt-play-json)|
+|`jwt-play`|[Play framework](https://www.playframework.com/)|[JwtSession](https://jwt-scala.github.io/jwt-scala/samples/jwt-play)|[API](https://jwt-scala.github.io/jwt-scala/api/latest/jwt-play)|
+|`jwt-json4s-native`|[json4s](http://json4s.org/) Native implementation|[JwtJson4s](https://jwt-scala.github.io/jwt-scala/samples/jwt-json4s)|[API](https://jwt-scala.github.io/jwt-scala/api/latest/jwt-json4s)|
+|`jwt-json4s-jackson`|[json4s](http://json4s.org/) Jackson implementation|[JwtJson4s](https://jwt-scala.github.io/jwt-scala/samples/jwt-json4s)|[API](https://jwt-scala.github.io/jwt-scala/api/latest/jwt-json4s)|
+|`jwt-spray-json`|[spray-json](https://github.com/spray/spray-json) lib|[JwtSprayJson](https://jwt-scala.github.io/jwt-scala/samples/jwt-spray-json)|[API](https://jwt-scala.github.io/jwt-scala/api/latest/jwt-spray-json)|
+|`jwt-circe`|[circe](https://circe.github.io/circe/) lib|[JwtCirce](https://jwt-scala.github.io/jwt-scala/samples/jwt-circe)|[API](https://jwt-scala.github.io/jwt-scala/api/latest/jwt-circe)|
+|`jwt-upickle`|[uPickle](http://www.lihaoyi.com/upickle-pprint/upickle/) lib|[JwtUpickle](https://jwt-scala.github.io/jwt-scala/samples/jwt-upickle)|[API](https://jwt-scala.github.io/jwt-scala/api/latest/jwt-upickle)|
+|`jwt-argonaut`|[Argonaut](http://argonaut.io/) lib|[JwtArgonaut](https://jwt-scala.github.io/jwt-scala/samples/jwt-argonaut)|[API](https://jwt-scala.github.io/jwt-scala/api/latest/jwt-argonaut)|
 
-If you need a previous version of the Scaladoc API, check [the bottom of this page](https://pauldijou.github.io/jwt-scala/api/#old-apis)
+If you need a previous version of the Scaladoc API, check [the bottom of this page](https://jwt-scala.github.io/jwt-scala/api/#old-apis)
 
-You can also check a [standalone Play application](https://github.com/pauldijou/jwt-scala/tree/master/examples/play-angular-standalone) using `jwt-play` and implementating a small REST API with authentication and admin role (include a UI too!).
+You can also check a [standalone Play application](https://github.com/jwt-scala/jwt-scala/tree/master/examples/play-angular-standalone) using `jwt-play` and implementating a small REST API with authentication and admin role (include a UI too!).
 
 ## Install
 
@@ -30,7 +36,7 @@ In the following snippet, replace `[name]` with the actual name of the project y
 
 ```scala
 libraryDependencies ++= Seq(
-  "com.pauldijou" %% "[name]" % "5.0.0"
+  "com.jwt-scala" %% "[name]" % "5.0.0"
 )
 ```
 
@@ -40,19 +46,15 @@ libraryDependencies ++= Seq(
 
 ```scala
 libraryDependencies ++= Seq(
-  "com.pauldijou" %% "jwt-play-legacy" % "1.1.0"
+  "com.jwt-scala" %% "jwt-play-legacy" % "1.1.0"
 )
 ```
-
-## Dependencies
-
-None
 
 ## Algorithms
 
 If you are using `String` key, please keep in mind that such keys need to be parsed. Rather than implementing a super complex parser, the one in JWT Scala is pretty simple and might not work for all use-cases (especially for ECDSA keys). In such case, consider using `SecretKey` or `PrivateKey` or `PublicKey` directly. It is way better for you. All API support all those types.
 
-Check [ECDSA samples](https://pauldijou.github.io/jwt-scala/samples/jwt-ecdsa) for more infos.
+Check [ECDSA samples](https://jwt-scala.github.io/jwt-scala/samples/jwt-ecdsa) for more infos.
 
 |Name|Description|
 |----|-----------|
@@ -68,21 +70,19 @@ Check [ECDSA samples](https://pauldijou.github.io/jwt-scala/samples/jwt-ecdsa) f
 |ES384|ECDSA using SHA-384 algorithm|
 |ES512|ECDSA using SHA-512 algorithm|
 
-## <a name="which-java"></a>Which Java?
-
-**Java 6 and 7 support has been removed with version 2.0.0**
-
-Actually, all sub-projects have two flavours. One target Java 8+, using the new Time API and the new Base64 util. This is the default one. If you are using Java 1.6 or 1.7 (which have both reached end-of-life by the way), you will have to use the "legacy" version of the lib. It's exactly the same (in fact, 99% of the code source is shared) except it's using the old Calendar API and the Base64 util from Apache Commons Codec (introducing **one small dependency** in this particular use-case).
-
 ## Security concerns
 
-This lib doesn't want to impose anything, that's why, by default, a JWT claim is totally empty. That said, you should always add an `issuedAt` attribute to it, probably using `claim.issuedNow`. The reason is that even HTTPS isn't perfect and having always the same chunk of data transfered can be of a big help to crack it. Generating a slightly different token at each request is way better even if it adds a bit of payload to the response. If you are using a session timeout through the `expiration` attribute which is extended at each request, that's fine too. I can't find the article I read about that vulnerability but if someone has some resources about the topic, I would be glad to link them.
+This lib doesn't want to impose anything, that's why, by default, a JWT claim is totally empty. That said, you should always add an `issuedAt` attribute to it, probably using `claim.issuedNow`.
+The reason is that even HTTPS isn't perfect and having always the same chunk of data transfered can be of a big help to crack it. Generating a slightly different token at each request is way better even if it adds a bit of payload to the response.
+If you are using a session timeout through the `expiration` attribute which is extended at each request, that's fine too. I can't find the article I read about that vulnerability but if someone has some resources about the topic, I would be glad to link them.
 
-## Got a problem?
+## Contributing
 
-If you found any bug or need more documentation, immediately feel an [issue in GitHub](https://github.com/pauldijou/jwt-scala/issues). I should read most of them.
+If you found any bug or need more documentation, feel free to fill an [issue in GitHub](https://github.com/jwt-scala/jwt-scala/issues).
 
-If you want to submit a PR to improve the project, that would be awesome. If, in top of that, you want to run the tests (yeah, because there are tests! A few of them...) before submitting it, you are just amasing but also don't run the tests globally. If you do `sbt test`, the whole universe will nearly collapse due to classpath errors that are totally beyond the understanding of the current me. Run them by project, like `playEdge/test` inside an `sbt` console. And even so, they might fail because of a `LinkageError`, just run them twice and it will work... I don't know why... I drank too much whisky trying to understand it so I just stopped. If you are a classpath God, just ping me and I will have questions for you.
+If you want to submit a PR to improve the project, that would be awesome.
+You can run tests locally for the impacted project, then when your PR is created all tests and linting will be run on
+github actions. Obviously the PR will have to be green to be merged!
 
 ## Notes
 
