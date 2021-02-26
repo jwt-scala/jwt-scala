@@ -19,6 +19,10 @@ options:
     url: jwt-play-json.html
     menu_section: play-json
 
+  - title: Play
+    url: jwt-play-jwt-session.html
+    menu_section: play
+
   - title: Spray Json
     url: jwt-spray-json.html
     menu_section: spray-json

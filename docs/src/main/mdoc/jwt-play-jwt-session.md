@@ -1,3 +1,9 @@
+---
+layout: docs
+title:  "Play"
+position: 60
+---
+
 ## JwtSession case class
 
 Provides an API similar to the Play [Session](https://www.playframework.com/documentation/2.3.x/api/scala/index.html#play.api.mvc.Session) but using `JsValue` rather than `String` as values. It also separates `headerData` from `claimData` rather than having only one `data`.

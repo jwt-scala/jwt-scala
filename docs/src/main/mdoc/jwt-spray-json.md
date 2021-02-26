@@ -1,7 +1,7 @@
 ---
 layout: docs
 title:  "Spray Json"
-position: 60
+position: 70
 ---
 
 ## JwtSprayJson Object
