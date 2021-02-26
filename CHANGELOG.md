@@ -1,5 +1,15 @@
 # Changelog
 
+## 6.0.0 (26/02/2021)
+
+- Change groupId to `com.github.jwt-scala`
+- Upgrade Play to 2.8.7
+- Upgrade Play Json to 2.9.2
+- Upgrade uPickle to 1.2.3
+- Upgrade Argonaut to 6.3.3
+- Upgrade Bouncycastle to 1.68
+- Drop support for Scala 2.11
+
 ## 5.0.0 (31/10/2020)
 
 - Make `JwtException` a proper exception (thanks @tpolecat)
