@@ -1,0 +1,28 @@
+options:
+  - title: Native
+    url: jwt-circe.html
+    menu_section: native
+
+  - title: Argonaut
+    url: jwt-argonaut.html
+    menu_section: argonaut
+
+  - title: Circe
+    url: jwt-circe.html
+    menu_section: circe
+
+  - title: json4s
+    url: jwt-json4s.html
+    menu_section: circe
+
+  - title: Play Json
+    url: jwt-play-json.html
+    menu_section: play-json
+
+  - title: Spray Json
+    url: jwt-spray-json.html
+    menu_section: spray-json
+
+  - title: upickle
+    url: jwt-upickle.html
+    menu_section: upickle

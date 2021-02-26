@@ -8,21 +8,23 @@ Optional helpers for Play Framework, Play JSON, Json4s Native, Json4s Jackson, C
 This library was originally created by [Paul Dijou](http://pauldijou.fr/), you can check the
 [older repository for JWT Scala](https://github.com/pauldijou/jwt-scala) for older versions.
 
+Detailed documentation is on the [Microsite](https://jwt-scala.github.io/jwt-scala).
+
 ## Pick the right tool for the right job
 
 JWT Scala is divided in several sub-projects each targeting a specific JSON library.
 
-| Name | Description | Samples | Scaladoc |
-|------|-------------|---------|----------|
-|`jwt-core`|Pure Scala|[Jwt](https://jwt-scala.github.io/jwt-scala/samples/jwt-core)|[API](https://jwt-scala.github.io/jwt-scala/api/latest/jwt-core)|
-|`jwt-play-json`|[play-json](https://www.playframework.com/) lib|[JwtJson](https://jwt-scala.github.io/jwt-scala/samples/jwt-play-json)|[API](https://jwt-scala.github.io/jwt-scala/api/latest/jwt-play-json)|
-|`jwt-play`|[Play framework](https://www.playframework.com/)|[JwtSession](https://jwt-scala.github.io/jwt-scala/samples/jwt-play)|[API](https://jwt-scala.github.io/jwt-scala/api/latest/jwt-play)|
-|`jwt-json4s-native`|[json4s](http://json4s.org/) Native implementation|[JwtJson4s](https://jwt-scala.github.io/jwt-scala/samples/jwt-json4s)|[API](https://jwt-scala.github.io/jwt-scala/api/latest/jwt-json4s)|
-|`jwt-json4s-jackson`|[json4s](http://json4s.org/) Jackson implementation|[JwtJson4s](https://jwt-scala.github.io/jwt-scala/samples/jwt-json4s)|[API](https://jwt-scala.github.io/jwt-scala/api/latest/jwt-json4s)|
-|`jwt-spray-json`|[spray-json](https://github.com/spray/spray-json) lib|[JwtSprayJson](https://jwt-scala.github.io/jwt-scala/samples/jwt-spray-json)|[API](https://jwt-scala.github.io/jwt-scala/api/latest/jwt-spray-json)|
-|`jwt-circe`|[circe](https://circe.github.io/circe/) lib|[JwtCirce](https://jwt-scala.github.io/jwt-scala/samples/jwt-circe)|[API](https://jwt-scala.github.io/jwt-scala/api/latest/jwt-circe)|
-|`jwt-upickle`|[uPickle](http://www.lihaoyi.com/upickle-pprint/upickle/) lib|[JwtUpickle](https://jwt-scala.github.io/jwt-scala/samples/jwt-upickle)|[API](https://jwt-scala.github.io/jwt-scala/api/latest/jwt-upickle)|
-|`jwt-argonaut`|[Argonaut](http://argonaut.io/) lib|[JwtArgonaut](https://jwt-scala.github.io/jwt-scala/samples/jwt-argonaut)|[API](https://jwt-scala.github.io/jwt-scala/api/latest/jwt-argonaut)|
+| Name | Description | 
+|------|-------------|
+|`jwt-core`|Pure Scala|
+|`jwt-play-json`|[play-json](https://www.playframework.com/) lib|
+|`jwt-play`|[Play framework](https://www.playframework.com/)|
+|`jwt-json4s-native`|[json4s](http://json4s.org/) Native implementation|
+|`jwt-json4s-jackson`|[json4s](http://json4s.org/) Jackson implementation|
+|`jwt-spray-json`|[spray-json](https://github.com/spray/spray-json) lib|
+|`jwt-circe`|[circe](https://circe.github.io/circe/) lib|
+|`jwt-upickle`|[uPickle](http://www.lihaoyi.com/upickle-pprint/upickle/) lib|
+|`jwt-argonaut`|[Argonaut](http://argonaut.io/) lib|
 
 If you need a previous version of the Scaladoc API, check [the bottom of this page](https://jwt-scala.github.io/jwt-scala/api/#old-apis)
 
