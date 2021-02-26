@@ -7,8 +7,8 @@ import sbt._
 
 import scala.sys.process._
 
-val previousVersion = "4.3.0"
-val buildVersion = "5.0.0"
+val previousVersion = "5.0.0"
+val buildVersion = "6.0.0"
 
 val projects = Seq(
   "coreProject",
@@ -87,7 +87,7 @@ val baseSettings = Seq(
   Test / aggregate := false,
   Test / fork := true,
   Test / parallelExecution := false,
-  scalacOptions in (Compile, doc) ++= Seq("-unchecked", "-deprecation"),
+  scalacOptions in (Compile, doc) ~= (_ filterNot (_ == "-Xfatal-warnings")),
   javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 )
 
@@ -98,7 +98,7 @@ val publishSettings = Seq(
   publishArtifact in Test := false,
   licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0")),
   publishTo := {
-    val nexus = "https://oss.sonatype.org/"
+    val nexus = "https://s01.oss.sonatype.org/"
     if (isSnapshot.value)
       Some("snapshots" at nexus + "content/repositories/snapshots")
     else

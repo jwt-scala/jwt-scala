@@ -36,7 +36,7 @@ In the following snippet, replace `[name]` with the actual name of the project y
 
 ```scala
 libraryDependencies ++= Seq(
-  "com.jwt-scala" %% "[name]" % "5.0.0"
+  "com.jwt-scala" %% "[name]" % "6.0.0"
 )
 ```
 
