@@ -10,6 +10,8 @@ This library was originally created by [Paul Dijou](http://pauldijou.fr/), you c
 
 Detailed documentation is on the [Microsite](https://jwt-scala.github.io/jwt-scala).
 
+[Contributor's guide](https://github.com/jwt-scala/jwt-scala/blob/master/CONTRIBUTING.md)
+
 ## Pick the right tool for the right job
 
 JWT Scala is divided in several sub-projects each targeting a specific JSON library.
@@ -77,25 +79,6 @@ Check [ECDSA samples](https://jwt-scala.github.io/jwt-scala/jwt-core-jwt-ecdsa.h
 This lib doesn't want to impose anything, that's why, by default, a JWT claim is totally empty. That said, you should always add an `issuedAt` attribute to it, probably using `claim.issuedNow`.
 The reason is that even HTTPS isn't perfect and having always the same chunk of data transfered can be of a big help to crack it. Generating a slightly different token at each request is way better even if it adds a bit of payload to the response.
 If you are using a session timeout through the `expiration` attribute which is extended at each request, that's fine too. I can't find the article I read about that vulnerability but if someone has some resources about the topic, I would be glad to link them.
-
-## Contributing
-
-If you found any bug or need more documentation, feel free to fill an [issue in GitHub](https://github.com/jwt-scala/jwt-scala/issues).
-
-If you want to submit a PR to improve the project, that would be awesome.
-You can run tests locally for the impacted project, then when your PR is created all tests and linting will be run on
-github actions. Obviously the PR will have to be green to be merged!
-
-## Notes
-
-- **Test**: run all tests with `sbt testAll` (if `java.lang.LinkageError`, just re-run the command)
-- **Publish**: update version numbers in `build.sbt` and run `sbt release` (be sure to either `reload` inside sbt or start a new sbt)
-- **Publish docs**: to manually build and push online the doc website, run `sbt publish-doc`
-- **Docs**: to have a locally running doc website:
-  - `sbt ~docs/makeMicrosite`
-  - `cd docs/target/site`
-  - `jekyll serve -b /jwt-scala`
-  - Go to [http://localhost:4000/jwt-scala/](http://localhost:4000/jwt-scala/)
 
 ## License
 
