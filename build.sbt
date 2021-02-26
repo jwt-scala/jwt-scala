@@ -166,6 +166,7 @@ val docSettings = Seq(
     )
   ),
   micrositeGithubRepo := "jwt-scala",
+  micrositeSearchEnabled := false,
   unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(
     playProject,
     json4sNativeProject,
