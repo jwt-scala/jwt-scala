@@ -1,6 +1,7 @@
 import Dependencies._
 import com.jsuereth.sbtpgp.PgpKeys._
 import play.sbt.Play.autoImport._
+import microsites._
 import sbt.Keys._
 import sbt.Tests._
 import sbt._
@@ -22,12 +23,7 @@ val projects = Seq(
   "playProject"
 )
 
-addCommandAlias(
-  "scaladoc",
-  ";coreProject/doc;playJsonProject/doc;json4sNativeProject/doc;sprayJsonProject/doc;circeProject/doc;upickleProject/doc;argonautProject/doc;playProject/doc;scaladocScript;cleanScript"
-)
-
-addCommandAlias("publish-doc", ";docs/makeSite;docs/tut;docs/ghpagesPushSite")
+addCommandAlias("publish-doc", "docs/makeMicrosite; docs/publishMicrosite")
 
 addCommandAlias("testAll", projects.map(p => p + "/test").mkString(";", ";", ""))
 
@@ -48,7 +44,7 @@ addCommandAlias("publishAll", projects.map(p => "+" + p + "/publishSigned").mkSt
 
 addCommandAlias(
   "releaseAll",
-  ";bumpScript;scaladoc;publish-doc;publishAll;sonatypeRelease;pushScript"
+  ";bumpScript;publish-doc;publishAll;sonatypeRelease;pushScript"
 )
 
 lazy val scaladocScript = taskKey[Unit]("Generate scaladoc and copy it to docs site")
@@ -70,6 +66,9 @@ lazy val cleanScript = taskKey[Unit]("Clean tmp files")
 cleanScript := {
   "./scripts/clean.sh" !
 }
+
+lazy val docsMappingsAPIDir: SettingKey[String] =
+  settingKey[String]("Name of subdirectory in site target directory for api docs")
 
 val scala212 = "2.12.13"
 val scala213 = "2.13.5"
@@ -144,15 +143,61 @@ val releaseSettings = baseSettings ++ publishSettings
 val localSettings = baseSettings ++ noPublishSettings
 
 val docSettings = Seq(
-  git.remoteRepo := "git@github.com:jwt-scala/jwt-scala.git",
-  sourceDirectory in Preprocess := tutTargetDirectory.value,
-  ghpagesNoJekyll := false,
-  git.remoteRepo := "git@github.com:jwt-scala/jwt-scala.git",
-  mappings in makeSite ++= Seq(
-    file("README.md") -> "_includes/README.md"
+  micrositeName := "JWT Scala",
+  micrositeDescription := "JWT Scala",
+  micrositeAuthor := "JWT Scala contributors",
+  micrositeFooterText := Some(
+    """
+      |<p>© 2020 <a href="https://github.com/jwt-scala/jwt-scala">The JWT Scala Maintainers</a></p>
+      |<p style="font-size: 80%; margin-top: 10px">Website built with <a href="https://47deg.github.io/sbt-microsites/">sbt-microsites © 2020 47 Degrees</a></p>
+      |""".stripMargin
   ),
-  includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md" | "*.scss",
-  fork in tut := true
+  micrositeHighlightTheme := "atom-one-light",
+  micrositeHomepage := "https://jwt-scala.github.io/jwt-scala/",
+  micrositeBaseUrl := "jwt-scala",
+  micrositeDocumentationUrl := "/jwt-scala/api/index.html",
+  micrositeGitterChannel := false,
+  micrositeDocumentationLabelDescription := "API Documentation",
+  micrositeExtraMdFilesOutput := resourceManaged.value / "main" / "jekyll",
+  micrositeExtraMdFiles := Map(
+    file("README.md") -> ExtraMdFileConfig(
+      "index.md",
+      "home",
+      Map("title" -> "Home", "section" -> "home", "position" -> "0")
+    )
+  ),
+  micrositeGithubRepo := "jwt-scala",
+  unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(
+    playProject,
+    json4sNativeProject,
+    sprayJsonProject,
+    circeProject,
+    upickleProject,
+    argonautProject
+  ),
+  docsMappingsAPIDir in ScalaUnidoc := "api",
+  addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir in ScalaUnidoc),
+  autoAPIMappings := true,
+  ghpagesNoJekyll := false,
+  fork in mdoc := true,
+  fork in (ScalaUnidoc, unidoc) := true,
+  scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
+    "-Xfatal-warnings",
+    "-groups",
+    "-doc-source-url",
+    scmInfo.value.get.browseUrl + "/tree/master€{FILE_PATH}.scala",
+    "-sourcepath",
+    baseDirectory.in(LocalRootProject).value.getAbsolutePath,
+    "-diagrams"
+  ),
+  scalacOptions ~= (_.filterNot(
+    Set("-Ywarn-unused-import", "-Ywarn-unused:imports", "-Ywarn-dead-code", "-Xfatal-warnings")
+  )),
+  git.remoteRepo := "git@github.com:jwt-scala/jwt-scala.git",
+  includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.yml" | "*.md" | "*.svg",
+  includeFilter in Jekyll := (includeFilter in makeSite).value,
+  mdocIn := baseDirectory.in(LocalRootProject).value / "docs" / "src" / "main" / "mdoc",
+  mdocExtraArguments := Seq("--no-link-hygiene")
 )
 
 lazy val jwtScala = project
@@ -185,7 +230,8 @@ lazy val docs = project
   .in(file("docs"))
   .enablePlugins(PreprocessPlugin)
   .enablePlugins(GhpagesPlugin)
-  .enablePlugins(TutPlugin)
+  .enablePlugins(MicrositesPlugin)
+  .enablePlugins(ScalaUnidocPlugin)
   .settings(name := "jwt-docs")
   .settings(localSettings)
   .settings(docSettings)
