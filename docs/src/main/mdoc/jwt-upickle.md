@@ -8,7 +8,7 @@ position: 70
 
 ### Basic usage
 
-```tut
+```scala mdoc:reset:silent
 import java.time.Instant
 import upickle.default._
 import pdi.jwt.{JwtUpickle, JwtAlgorithm, JwtClaim}
@@ -28,7 +28,11 @@ JwtUpickle.decode(token, key, Seq(JwtAlgorithm.HS256))
 
 ### Encoding
 
-```tut
+```scala mdoc:reset:silent
+import java.time.Instant
+import upickle.default._
+import pdi.jwt.{JwtUpickle, JwtAlgorithm, JwtClaim}
+
 val key = "secretKey"
 val algo = JwtAlgorithm.HS256
 
@@ -42,7 +46,11 @@ JwtUpickle.encode(header, claimJson, key)
 
 ### Decoding
 
-```tut
+```scala mdoc:reset:silent
+import java.time.Instant
+import upickle.default._
+import pdi.jwt.{JwtUpickle, JwtAlgorithm, JwtClaim}
+
 val claim = JwtClaim(
   expiration = Some(Instant.now.plusSeconds(157784760).getEpochSecond),
   issuedAt = Some(Instant.now.getEpochSecond)

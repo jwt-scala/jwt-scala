@@ -6,7 +6,7 @@ Given that there may be many of these public/private claims, rather than parsing
 
 Here is an example where reserved headers, along with a private "user" claim, is used:
 
-```tut
+```scala mdoc:reset:silent
 import pdi.jwt.{Jwt, JwtHeader, JwtClaim, JwtUtils, JwtJson4sParser}
 // define your network-specific claims, and compose them with the usual reservedClaims
 case class JwtPrivateClaim(user: Option[String] = None, reservedClaims: JwtClaim = JwtClaim()) {
@@ -39,7 +39,7 @@ object JwtJson4sPrivate extends JwtJson4sParser[JwtHeader, JwtPrivateClaim] {
 
 You can then use the same decodeAll method as you would before, now with your fully objectified claims:
 
-```tut
+```scala mdoc:silent
 import scala.util.Try
 // this example chose to use JwtJson4s, but any Json implementation would work the same
 val token: String = Jwt.encode("""{"user":"someone", "iss": "me"}""");

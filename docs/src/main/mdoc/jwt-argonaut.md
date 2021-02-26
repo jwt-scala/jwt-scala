@@ -10,7 +10,8 @@ scaladoc: "#pdi.jwt.JwtArgonaut"
 
 ### Basic usage
 
-```tut
+```scala mdoc:reset:silent
+
 import java.time.Instant
 import scala.util.Try
 
@@ -33,7 +34,9 @@ val decodedClaim: Try[JwtClaim] = JwtArgonaut.decode(token, key, Seq(alg))
 
 ### Encoding
 
-```tut
+```scala mdoc:reset:silent
+import java.time.Instant
+import scala.util.Try
 import argonaut.Parse
 import pdi.jwt.{JwtAlgorithm, JwtArgonaut}
 
@@ -50,9 +53,9 @@ val token3: String = JwtArgonaut.encode(jsonHeader, jsonClaim, key)
 
 ### Decoding
 
-```tut
+```scala mdoc:reset:silent
 import scala.util.Try
-
+import java.time.Instant
 import argonaut.Json
 import pdi.jwt.{JwtAlgorithm, JwtArgonaut, JwtClaim, JwtHeader}
 

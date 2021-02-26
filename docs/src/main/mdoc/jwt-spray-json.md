@@ -8,7 +8,7 @@ position: 60
 
 ### Basic usage
 
-```tut
+```scala mdoc:reset:silent
 import java.time.Instant
 import pdi.jwt.{JwtSprayJson, JwtAlgorithm, JwtClaim}
 
@@ -27,7 +27,7 @@ JwtSprayJson.decode(token, key, Seq(JwtAlgorithm.HS256))
 
 ### Encoding
 
-```tut
+```scala mdoc:reset:silent
 import java.time.Instant
 import spray.json._
 import pdi.jwt.{JwtSprayJson, JwtAlgorithm, JwtClaim}
@@ -45,7 +45,7 @@ JwtSprayJson.encode(header, claimJson, key)
 
 ### Decoding
 
-```tut
+```scala mdoc:reset:silent
 import java.time.Instant
 import pdi.jwt.{JwtSprayJson, JwtAlgorithm, JwtClaim}
 

@@ -8,7 +8,7 @@ position: 50
 
 ### Basic usage
 
-```tut
+```scala mdoc:silent
 import java.time.Clock
 import pdi.jwt.{JwtJson, JwtAlgorithm}
 import play.api.libs.json.Json
@@ -30,7 +30,7 @@ JwtJson.decode(token, key, Seq(JwtAlgorithm.HS256))
 
 ### Encoding
 
-```tut
+```scala mdoc:silent
 val header = Json.obj(("typ", "JWT"), ("alg", "HS256"))
 // From just the claim to all possible attributes
 JwtJson.encode(claim)
@@ -40,7 +40,7 @@ JwtJson.encode(header, claim, key)
 
 ### Decoding
 
-```tut
+```scala mdoc:silent
 // You can decode to JsObject
 JwtJson.decodeJson(token, key, Seq(JwtAlgorithm.HS256))
 JwtJson.decodeJsonAll(token, key, Seq(JwtAlgorithm.HS256))
@@ -53,7 +53,7 @@ JwtJson.decodeAll(token, key, Seq(JwtAlgorithm.HS256))
 
 The project provides implicit reader and writer for both `JwtHeader` and `JwtClaim`
 
-```tut
+```scala mdoc:silent
 import pdi.jwt._
 import pdi.jwt.JwtJson._
 

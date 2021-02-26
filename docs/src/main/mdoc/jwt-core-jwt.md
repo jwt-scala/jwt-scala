@@ -8,7 +8,7 @@ position: 10
 
 ### Basic usage
 
-```tut
+```scala mdoc:reset:silent
 import java.time.Clock
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtHeader, JwtClaim, JwtOptions}
 implicit val clock: Clock = Clock.systemUTC
@@ -19,7 +19,7 @@ Jwt.decodeRawAll(token, "wrongKey", Seq(JwtAlgorithm.HS256))
 
 ### Encoding
 
-```tut
+```scala mdoc:silent
 // Encode from string, header automatically generated
 Jwt.encode("""{"user":1}""", "secretKey", JwtAlgorithm.HS384)
 
@@ -45,7 +45,7 @@ In JWT Scala, espcially when using raw strings which are not typesafe at all, th
 
 Take note that nearly all decoding methods (including those from helper libs) support either a String key, or a PrivateKey with a Hmac algorithm or a PublicKey with a RSA or ECDSA algorithm.
 
-```tut
+```scala mdoc:silent
 // Decode all parts of the token as string
 Jwt.decodeRawAll(token, "secretKey", JwtAlgorithm.allHmac)
 
@@ -78,7 +78,7 @@ Jwt.decode(Jwt.encode(JwtClaim().startsIn(5)))
 
 If you only want to check if a token is valid without decoding it. You have two options: `validate` functions that will throw the exceptions we saw in the decoding section, so you know what went wrong, or `isValid` functions that will return a boolean in case you don't care about the actual error and don't want to bother with catching exception.
 
-```tut:nofail
+```scala mdoc:crash
 // All good
 Jwt.validate(token, "secretKey", Seq(JwtAlgorithm.HS256))
 Jwt.isValid(token, "secretKey", Seq(JwtAlgorithm.HS256))
@@ -108,7 +108,7 @@ Jwt.isValid("a.b.c")
 
 All validating and decoding methods support a final optional argument as a `JwtOptions` which allow you to disable validation checks. This is useful if you need to access data from an expired token for example. You can disable `expiration`, `notBefore` and `signature` checks. Be warned that if you disable the last one, you have no guarantee that the user didn't change the content of the token.
 
-```tut:nofail
+```scala mdoc:silent
 val expiredToken = Jwt.encode(JwtClaim().by("me").expiresIn(-1));
 
 // Fail since the token is expired
@@ -122,7 +122,7 @@ Jwt.decode(expiredToken, JwtOptions(expiration = false))
 
 You can also specify a leeway, in seconds, to account for clock skew.
 
-```tut
+```scala mdoc:silent
 // Allow 30sec leeway
 Jwt.isValid(expiredToken, JwtOptions(leeway = 30))
 Jwt.decode(expiredToken, JwtOptions(leeway = 30))

@@ -1,6 +1,6 @@
 ## JwtHeader Case Class
 
-```tut
+```scala mdoc:reset:silent
 import pdi.jwt.{JwtHeader, JwtAlgorithm}
 
 JwtHeader()

@@ -152,7 +152,6 @@ val docSettings = Seq(
       |<p style="font-size: 80%; margin-top: 10px">Website built with <a href="https://47deg.github.io/sbt-microsites/">sbt-microsites © 2020 47 Degrees</a></p>
       |""".stripMargin
   ),
-  micrositeHighlightTheme := "atom-one-light",
   micrositeHomepage := "https://jwt-scala.github.io/jwt-scala/",
   micrositeBaseUrl := "jwt-scala",
   micrositeDocumentationUrl := "/jwt-scala/api/index.html",

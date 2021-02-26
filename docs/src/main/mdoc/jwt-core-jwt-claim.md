@@ -1,6 +1,6 @@
 ## JwtClaim Class
 
-```tut
+```scala mdoc:reset:silent
 import java.time.Clock
 import pdi.jwt.JwtClaim
 

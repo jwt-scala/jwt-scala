@@ -4,7 +4,7 @@ Provides an API similar to the Play [Session](https://www.playframework.com/docu
 
 ### Basic usage
 
-```tut
+```scala mdoc:silent
 import java.time.Clock
 import pdi.jwt.JwtSession
 import play.api.Configuration
@@ -12,7 +12,7 @@ import play.api.Configuration
 implicit val clock: Clock = Clock.systemUTC
 
 //In a real Play! App this should normally be injected in the constructor with @Inject()
-implicit val conf:Configuration = Configuration.reference
+implicit val conf: Configuration = Configuration.reference
 
 // Let's create a session, it will automatically assign a default header. No
 // In your app, the default header would be generated from "application.conf" file
@@ -54,15 +54,11 @@ session = session.refresh
 
 If you have implicit `Reads` and/or `Writes`, you can access and/or add data directly as case class or object.
 
-```tut
+```scala mdoc:silent
 // First, creating the implicits
 import play.api.libs.json.Json
 import play.api.libs.functional.syntax._
-
-import play.api.Configuration
-
-//In a real Play! App this should normally be injected in the constructor with @Inject()
-implicit val conf:Configuration = Configuration.reference
+import pdi.jwt.JwtSession
 
 case class User(id: Long, name: String)
 implicit val formatUser = Json.format[User]
@@ -78,15 +74,12 @@ session2.getAs[User]("user")
 
 You can extract a `JwtSession` from a `RequestHeader`.
 
-```tut
+```scala mdoc:silent
 import pdi.jwt._
 import pdi.jwt.JwtSession._
 import play.api.test.{FakeRequest, FakeHeaders}
 
 import play.api.Configuration
-
-//In a real Play! App this should normally be injected in the constructor with @Inject()
-implicit val conf:Configuration = Configuration.reference
 
 // Default JwtSession
 FakeRequest().jwtSession
@@ -105,14 +98,7 @@ request.jwtSession.getAs[User]("user")
 
 There are also implicit helpers around `Result` to help you manipulate the session inside it.
 
-```tut
-// Several functions will need an implicit RequestHeader
-// since this is the only way to read the headers of the Result
-import play.api.Configuration
-
-//In a real Play! App this should normally be injected in the constructor with @Inject()
-implicit val conf:Configuration = Configuration.reference
-
+```scala mdoc:silent
 implicit val implRequest = request
 
 // Let's begin by creating a Result

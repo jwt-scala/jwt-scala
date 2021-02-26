@@ -1,6 +1,6 @@
 options:
   - title: Native
-    url: jwt-circe.html
+    url: jwt-core-jwt.html
     menu_section: native
 
   - title: Argonaut

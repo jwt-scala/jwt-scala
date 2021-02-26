@@ -8,7 +8,7 @@ position: 30
 
 ### Basic usage
 
-```tut
+```scala mdoc:reset:silent
 import java.time.Instant
 import pdi.jwt.{JwtCirce, JwtAlgorithm, JwtClaim}
 
@@ -27,7 +27,7 @@ JwtCirce.decode(token, key, Seq(JwtAlgorithm.HS256))
 
 ### Encoding
 
-```tut
+```scala mdoc:reset:silent
 import java.time.Instant
 import cats.syntax.either._
 import io.circe._, syntax._, jawn.{parse => jawnParse}
@@ -46,7 +46,7 @@ JwtCirce.encode(header, claimJson, key)
 
 ### Decoding
 
-```tut
+```scala mdoc:reset:silent
 import java.time.Instant
 import pdi.jwt.{JwtCirce, JwtAlgorithm, JwtClaim}
 
