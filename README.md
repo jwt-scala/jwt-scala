@@ -56,7 +56,7 @@ libraryDependencies ++= Seq(
 
 If you are using `String` key, please keep in mind that such keys need to be parsed. Rather than implementing a super complex parser, the one in JWT Scala is pretty simple and might not work for all use-cases (especially for ECDSA keys). In such case, consider using `SecretKey` or `PrivateKey` or `PublicKey` directly. It is way better for you. All API support all those types.
 
-Check [ECDSA samples](https://jwt-scala.github.io/jwt-scala/samples/jwt-ecdsa) for more infos.
+Check [ECDSA samples](https://jwt-scala.github.io/jwt-scala/jwt-core-jwt-ecdsa.html) for more infos.
 
 |Name|Description|
 |----|-----------|
@@ -90,12 +90,11 @@ github actions. Obviously the PR will have to be green to be merged!
 
 - **Test**: run all tests with `sbt testAll` (if `java.lang.LinkageError`, just re-run the command)
 - **Publish**: update version numbers in `build.sbt` and run `sbt release` (be sure to either `reload` inside sbt or start a new sbt)
-- **Scaladoc**: to manually generate all scaladoc, run `sbt scaladoc`
 - **Publish docs**: to manually build and push online the doc website, run `sbt publish-doc`
 - **Docs**: to have a locally running doc website:
-  - `sbt ~docs/makeSite`
+  - `sbt ~docs/makeMicrosite`
   - `cd docs/target/site`
-  - `jekyll serve`
+  - `jekyll serve -b /jwt-scala`
   - Go to [http://localhost:4000/jwt-scala/](http://localhost:4000/jwt-scala/)
 
 ## License

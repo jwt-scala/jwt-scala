@@ -8,6 +8,14 @@ scaladoc: "#pdi.jwt.JwtArgonaut"
 
 ## JwtArgonaut object
 
+### Installation
+
+```scala
+libraryDependencies ++= Seq(
+  "com.github.jwt-scala" %% "jwt-argonaut" % "6.0.0"
+)
+```
+
 ### Basic usage
 
 ```scala mdoc:reset:silent
