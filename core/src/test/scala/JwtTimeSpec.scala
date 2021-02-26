@@ -1,5 +1,3 @@
 package pdi.jwt
 
-class JwtTimeSpec extends UnitSpec {
-  
-}
+class JwtTimeSpec extends UnitSpec {}

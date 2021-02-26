@@ -1,7 +1,7 @@
 package pdi.jwt
 
 import akka.stream.Materializer
-import java.time.{ Clock, Duration }
+import java.time.{Clock, Duration}
 import org.scalatest._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
@@ -14,31 +14,38 @@ import play.api.mvc.Results._
 import play.api.test._
 import play.api.test.Helpers._
 
-class JwtSessionCustomSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAndAfter with PlayFixture {
+class JwtSessionCustomSpec
+    extends PlaySpec
+    with GuiceOneAppPerSuite
+    with BeforeAndAfter
+    with PlayFixture {
   import pdi.jwt.JwtSession._
 
-  implicit lazy val conf:Configuration = app.configuration
+  implicit lazy val conf: Configuration = app.configuration
   implicit lazy val materializer: Materializer = app.materializer
-  implicit lazy val Action:DefaultActionBuilder = app.injector.instanceOf(classOf[DefaultActionBuilder])
+  implicit lazy val Action: DefaultActionBuilder =
+    app.injector.instanceOf(classOf[DefaultActionBuilder])
 
   // Just for test, users shouldn't change the header name normally
   def HEADER_NAME = "Auth"
   def sessionTimeout = defaultMaxAge
 
   val header = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9"
-  val signature = "3FQn0RsztnK6i8x8Vi8k6WEsvzfnKDF2yx9WPeeiC1gu6yWZAMmCvzZi05A3d9sx2GwFfkVFPXgk_erYoizFxw"
+  val signature =
+    "3FQn0RsztnK6i8x8Vi8k6WEsvzfnKDF2yx9WPeeiC1gu6yWZAMmCvzZi05A3d9sx2GwFfkVFPXgk_erYoizFxw"
 
   override def fakeApplication() =
     new GuiceApplicationBuilder()
-      .configure(Map(
-        "play.http.secret.key" -> secretKey,
-        "play.http.session.jwtName" -> HEADER_NAME,
-        "play.http.session.maxAge" -> sessionTimeout * 1000,
-        "play.http.session.algorithm" -> "HS512",
-        "play.http.session.tokenPrefix" -> ""
-      ))
+      .configure(
+        Map(
+          "play.http.secret.key" -> secretKey,
+          "play.http.session.jwtName" -> HEADER_NAME,
+          "play.http.session.maxAge" -> sessionTimeout * 1000,
+          "play.http.session.algorithm" -> "HS512",
+          "play.http.session.tokenPrefix" -> ""
+        )
+      )
       .build()
-
 
   def session = JwtSession()
   def sessionCustom = JwtSession(JwtHeader(JwtAlgorithm.HS512), claimClass, signature)
@@ -47,10 +54,14 @@ class JwtSessionCustomSpec extends PlaySpec with GuiceOneAppPerSuite with Before
   "Init FakeApplication" must {
     "have the correct config" in {
       app.configuration.getOptional[String]("play.http.secret.key") mustEqual Option(secretKey)
-      app.configuration.getOptional[String]("play.http.session.jwtName") mustEqual Option(HEADER_NAME)
+      app.configuration.getOptional[String]("play.http.session.jwtName") mustEqual Option(
+        HEADER_NAME
+      )
       app.configuration.getOptional[String]("play.http.session.algorithm") mustEqual Option("HS512")
       app.configuration.getOptional[String]("play.http.session.tokenPrefix") mustEqual Option("")
-      app.configuration.getOptional[Int]("play.http.session.maxAge") mustEqual Option(sessionTimeout * 1000)
+      app.configuration.getOptional[Int]("play.http.session.maxAge") mustEqual Option(
+        sessionTimeout * 1000
+      )
     }
   }
 
@@ -76,10 +87,15 @@ class JwtSessionCustomSpec extends PlaySpec with GuiceOneAppPerSuite with Before
     }
   }
 
-  val sessionHeaderExp = Some(header + ".eyJleHAiOjEzMDA4MTk0MTF9.B27yGau7FJWE_2ir6B4dqQkXh3DhgryR29nyjA-TuWNfx3H7kcRbWf2XrpMN3cCpU04Oi1cV5I0w8DVyO-h6Ig")
-  val sessionHeaderUser = Some(header + ".eyJleHAiOjEzMDA4MTkzODAsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJQYXVsIn19.nfhPaLvlRjXlq3o-B1FvHk0rG_ZsqMdnr9cR3GCK23iGZ4an6uxOr_FJCXX5sgtnMIx1uqQ3utgW9jyBqqFuUw")
-  val sessionHeaderUser2 = Some(header + ".eyJleHAiOjEzMDA4MTk0MTEsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJQYXVsIn19.WaMPSgHoJ84DeYdYoVouGDuZc4ZnntHMR17FHdHHq4idpptKZvOt-lv1UUEt7tc6rtgzL3uo8QWRVXgooONAQA")
-  
+  val sessionHeaderExp = Some(
+    header + ".eyJleHAiOjEzMDA4MTk0MTF9.B27yGau7FJWE_2ir6B4dqQkXh3DhgryR29nyjA-TuWNfx3H7kcRbWf2XrpMN3cCpU04Oi1cV5I0w8DVyO-h6Ig"
+  )
+  val sessionHeaderUser = Some(
+    header + ".eyJleHAiOjEzMDA4MTkzODAsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJQYXVsIn19.nfhPaLvlRjXlq3o-B1FvHk0rG_ZsqMdnr9cR3GCK23iGZ4an6uxOr_FJCXX5sgtnMIx1uqQ3utgW9jyBqqFuUw"
+  )
+  val sessionHeaderUser2 = Some(
+    header + ".eyJleHAiOjEzMDA4MTk0MTEsInVzZXIiOnsiaWQiOjEsIm5hbWUiOiJQYXVsIn19.WaMPSgHoJ84DeYdYoVouGDuZc4ZnntHMR17FHdHHq4idpptKZvOt-lv1UUEt7tc6rtgzL3uo8QWRVXgooONAQA"
+  )
 
   "RichResult" must {
     "access app with no user" in {

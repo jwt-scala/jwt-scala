@@ -12,35 +12,57 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
 
   describe("JwtJson") {
     it("should implicitly convert to JsValue") {
-      assertResult(Json.obj(
-        ("iss" -> "me"),
-        ("aud" -> Some("you")),
-        ("sub" -> "something"),
-        ("exp" -> 15),
-        ("nbf" -> 10),
-        ("iat" -> 10)
-      ), "Claim") {
-        JwtClaim().by("me").to("you").about("something").issuedAt(10).startsAt(10).expiresAt(15).toJsValue()
+      assertResult(
+        Json.obj(
+          ("iss" -> "me"),
+          ("aud" -> Some("you")),
+          ("sub" -> "something"),
+          ("exp" -> 15),
+          ("nbf" -> 10),
+          ("iat" -> 10)
+        ),
+        "Claim"
+      ) {
+        JwtClaim()
+          .by("me")
+          .to("you")
+          .about("something")
+          .issuedAt(10)
+          .startsAt(10)
+          .expiresAt(15)
+          .toJsValue()
       }
 
-      assertResult(Json.obj(
-        ("typ" -> "JWT"),
-        ("alg" -> "HS256")
-      ), "Claim") {
+      assertResult(
+        Json.obj(
+          ("typ" -> "JWT"),
+          ("alg" -> "HS256")
+        ),
+        "Claim"
+      ) {
         JwtHeader(JwtAlgorithm.HS256).toJsValue()
       }
     }
 
     it("should implicitly convert to JsValue when audience is many") {
-      assertResult(Json.obj(
-        ("iss" -> "me"),
-        ("aud" -> Set("you", "another")),
-        ("sub" -> "something"),
-        ("exp" -> 15),
-        ("nbf" -> 10),
-        ("iat" -> 10)
-      ), "Claim") {
-        JwtClaim(audience = Some(Set("you", "another"))).by("me").about("something").issuedAt(10).startsAt(10).expiresAt(15).toJsValue()
+      assertResult(
+        Json.obj(
+          ("iss" -> "me"),
+          ("aud" -> Set("you", "another")),
+          ("sub" -> "something"),
+          ("exp" -> 15),
+          ("nbf" -> 10),
+          ("iat" -> 10)
+        ),
+        "Claim"
+      ) {
+        JwtClaim(audience = Some(Set("you", "another")))
+          .by("me")
+          .about("something")
+          .issuedAt(10)
+          .startsAt(10)
+          .expiresAt(15)
+          .toJsValue()
       }
     }
 
@@ -59,7 +81,6 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
     }
   }
 
-
   case class ContentClass(userId: String)
   implicit val contentClassWrites: Writes[ContentClass] = Json.writes
 
@@ -69,10 +90,12 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
       val content = ContentClass(userId = "testId")
       val claim = JwtClaim().expiresAt(10) + content
 
-      assertResult(Json.obj(
-        "exp" -> 10,
-        "userId" -> "testId"
-      )){
+      assertResult(
+        Json.obj(
+          "exp" -> 10,
+          "userId" -> "testId"
+        )
+      ) {
         claim.toJsValue()
       }
     }
@@ -82,13 +105,14 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
       val content = ContentClass(userId = "testId")
       val claim = JwtClaim().expiresAt(10).withContent(content)
 
-      assertResult(Json.obj(
-        "exp" -> 10,
-        "userId" -> "testId"
-      )){
+      assertResult(
+        Json.obj(
+          "exp" -> 10,
+          "userId" -> "testId"
+        )
+      ) {
         claim.toJsValue()
       }
     }
   }
 }
-

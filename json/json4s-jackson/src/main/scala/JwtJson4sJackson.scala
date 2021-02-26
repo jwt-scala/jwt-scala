@@ -6,8 +6,7 @@ import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.JsonMethods.{parse => jparse}
 import org.json4s.jackson.Serialization
 
-/**
-  * Implementation of `JwtCore` using `JObject` from Json4s Jackson.
+/** Implementation of `JwtCore` using `JObject` from Json4s Jackson.
   *
   * To see a full list of samples, check the [[http://pauldijou.fr/jwt-scala/samples/jwt-json4s/ online documentation]].
   */

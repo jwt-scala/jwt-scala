@@ -12,8 +12,10 @@ import play.api.mvc._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class Application @Inject()(scc: SecuredControllerComponents, assets: AssetsFinder)(implicit ec: ExecutionContext, conf:Configuration)
-    extends SecuredController(scc) {
+class Application @Inject() (scc: SecuredControllerComponents, assets: AssetsFinder)(implicit
+    ec: ExecutionContext,
+    conf: Configuration
+) extends SecuredController(scc) {
 
   private val passwords = Seq("red", "blue", "green")
 
@@ -32,12 +34,12 @@ class Application @Inject()(scc: SecuredControllerComponents, assets: AssetsFind
       .fold(
         errors => {
           BadRequest(JsError.toJson(errors))
-        }, {
-          case (username, password) =>
-            if (passwords.contains(password))
-              Ok.addingToJwtSession("user", User(username))
-            else
-              Unauthorized
+        },
+        { case (username, password) =>
+          if (passwords.contains(password))
+            Ok.addingToJwtSession("user", User(username))
+          else
+            Unauthorized
         }
       )
 

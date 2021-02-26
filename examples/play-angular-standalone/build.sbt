@@ -10,5 +10,5 @@ routesGenerator := play.sbt.routes.RoutesKeys.InjectedRoutesGenerator
 
 libraryDependencies ++= Seq(
   guice,
-  "com.pauldijou"     %% "jwt-play" % "5.0.0"
+  "com.pauldijou" %% "jwt-play" % "5.0.0"
 )

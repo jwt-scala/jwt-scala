@@ -1,16 +1,16 @@
 package pdi.jwt
 
 case class JsonDataEntry(
-  algo: JwtAlgorithm,
-  header: String,
-  headerClass: JwtHeader,
-  header64: String,
-  signature: String,
-  token: String,
-  tokenUnsigned: String,
-  tokenEmpty: String,
-  headerJson: ujson.Value) extends JsonDataEntryTrait[ujson.Value]
-
+    algo: JwtAlgorithm,
+    header: String,
+    headerClass: JwtHeader,
+    header64: String,
+    signature: String,
+    token: String,
+    tokenUnsigned: String,
+    tokenEmpty: String,
+    headerJson: ujson.Value
+) extends JsonDataEntryTrait[ujson.Value]
 
 trait JwtUpickleFixture extends JsonCommonFixture[ujson.Value] {
 

@@ -32,8 +32,8 @@ class JwtUtilsSpec extends UnitSpec with ClockFixture {
           )
         )
 
-        values.zipWithIndex.foreach {
-          case (value, index) => assertResult(value._1, "at index "+index) { JwtUtils.hashToJson(value._2) }
+        values.zipWithIndex.foreach { case (value, index) =>
+          assertResult(value._1, "at index " + index) { JwtUtils.hashToJson(value._2) }
         }
       }
     }
@@ -50,14 +50,14 @@ class JwtUtilsSpec extends UnitSpec with ClockFixture {
           ("""{"a":1,"b":2,"c":"d"}""", """{"a":1}""", Seq("""{"b":2}""", """{"c":"d"}"""))
         )
 
-        values.zipWithIndex.foreach {
-          case (value, index) => assertResult(value._1, "at index "+index) { JwtUtils.mergeJson(value._2, value._3: _*) }
+        values.zipWithIndex.foreach { case (value, index) =>
+          assertResult(value._1, "at index " + index) { JwtUtils.mergeJson(value._2, value._3: _*) }
         }
       }
     }
 
     describe("Claim.toJson") {
-      it ("should correctly encode a Claim to JSON") {
+      it("should correctly encode a Claim to JSON") {
         val claim = JwtClaim(
           issuer = Some(""),
           audience = Some(Set("")),
@@ -67,7 +67,8 @@ class JwtUtilsSpec extends UnitSpec with ClockFixture {
           content = "{\"a\":\"da1b3852-6827-11e9-a923-1681be663d3e\",\"b\":123.34}"
         )
 
-        val jsonClaim = """{"iss":"","sub":"da1b3852-6827-11e9-a923-1681be663d3e","aud":"","exp":1597914901,"iat":1566378901,"a":"da1b3852-6827-11e9-a923-1681be663d3e","b":123.34}"""
+        val jsonClaim =
+          """{"iss":"","sub":"da1b3852-6827-11e9-a923-1681be663d3e","aud":"","exp":1597914901,"iat":1566378901,"a":"da1b3852-6827-11e9-a923-1681be663d3e","b":123.34}"""
 
         assertResult(jsonClaim) { claim.toJson }
       }
@@ -75,7 +76,9 @@ class JwtUtilsSpec extends UnitSpec with ClockFixture {
 
     describe("transcodeSignatureToDER") {
       it("should throw JwtValidationException if signature is too long") {
-        val signature = JwtUtils.bytify("AU6-jw28DX1QMY0Ar8CTcnIAc0WKGe3nNVHkE7ayHSxvOLxE5YQSiZtbPn3y-vDHoQCOMId4rPdIJhD_NOUqnH_rAKA5w9ZlhtW0GwgpvOg1_5oLWnWXQvPjJjC5YsLqEssoMITtOmfkBsQMgLAF_LElaaCWhkJkOCtcZmroUW_b5CXB")
+        val signature = JwtUtils.bytify(
+          "AU6-jw28DX1QMY0Ar8CTcnIAc0WKGe3nNVHkE7ayHSxvOLxE5YQSiZtbPn3y-vDHoQCOMId4rPdIJhD_NOUqnH_rAKA5w9ZlhtW0GwgpvOg1_5oLWnWXQvPjJjC5YsLqEssoMITtOmfkBsQMgLAF_LElaaCWhkJkOCtcZmroUW_b5CXB"
+        )
         the[JwtSignatureFormatException] thrownBy {
           JwtUtils.transcodeSignatureToDER(signature ++ signature)
         } should have message "Invalid ECDSA signature format"
@@ -89,21 +92,27 @@ class JwtUtilsSpec extends UnitSpec with ClockFixture {
 
     describe("transcodeSignatureToConcat") {
       it("should throw JwtValidationException if length incorrect") {
-        val signature = JwtUtils.bytify("MIEAAGg3OVb/ZeX12cYrhK3c07TsMKo7Kc6SiqW++4CAZWCX72DkZPGTdCv2duqlupsnZL53hiG3rfdOLj8drndCU+KHGrn5EotCATdMSLCXJSMMJoHMM/ZPG+QOHHPlOWnAvpC1v4lJb32WxMFNz1VAIWrl9Aa6RPG1GcjCTScKjvEE")
+        val signature = JwtUtils.bytify(
+          "MIEAAGg3OVb/ZeX12cYrhK3c07TsMKo7Kc6SiqW++4CAZWCX72DkZPGTdCv2duqlupsnZL53hiG3rfdOLj8drndCU+KHGrn5EotCATdMSLCXJSMMJoHMM/ZPG+QOHHPlOWnAvpC1v4lJb32WxMFNz1VAIWrl9Aa6RPG1GcjCTScKjvEE"
+        )
         the[JwtSignatureFormatException] thrownBy {
           JwtUtils.transcodeSignatureToConcat(signature, 132)
         } should have message "Invalid ECDSA signature format"
       }
 
       it("should throw JwtValidationException if signature is incorrect ") {
-        val signature = JwtUtils.bytify("MIGBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        val signature = JwtUtils.bytify(
+          "MIGBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        )
         the[JwtSignatureFormatException] thrownBy {
           JwtUtils.transcodeSignatureToConcat(signature, 132)
         } should have message "Invalid ECDSA signature format"
       }
 
       it("should throw JwtValidationException if signature is incorrect 2") {
-        val signature = JwtUtils.bytify("MIGBAD4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        val signature = JwtUtils.bytify(
+          "MIGBAD4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        )
         the[JwtSignatureFormatException] thrownBy {
           JwtUtils.transcodeSignatureToConcat(signature, 132)
         } should have message "Invalid ECDSA signature format"
@@ -112,9 +121,14 @@ class JwtUtilsSpec extends UnitSpec with ClockFixture {
 
     describe("transcodeSignatureToConcat and transcodeSignatureToDER") {
       it("should be symmetric") {
-        val signature = JwtUtils.bytify("AbxLPbA3dm9V0jt6c_ahf8PYioFvnryTe3odgolhcgwBUl4ifpwUBJ--GgiXC8vms45c8vI40ZSdkm5NoNn1wTHOAfkepNy-RRKHmBzAoWrWmBIb76yPa0lsjdAPEAXcbGfaQV8pKq7W10dpB2B-KeJxVonMuCLJHPuqsUl9S7CfASu2")
+        val signature = JwtUtils.bytify(
+          "AbxLPbA3dm9V0jt6c_ahf8PYioFvnryTe3odgolhcgwBUl4ifpwUBJ--GgiXC8vms45c8vI40ZSdkm5NoNn1wTHOAfkepNy-RRKHmBzAoWrWmBIb76yPa0lsjdAPEAXcbGfaQV8pKq7W10dpB2B-KeJxVonMuCLJHPuqsUl9S7CfASu2"
+        )
         val dER: Array[Byte] = JwtUtils.transcodeSignatureToDER(signature)
-        val result = JwtUtils.transcodeSignatureToConcat(dER, JwtUtils.getSignatureByteArrayLength(JwtAlgorithm.ES512))
+        val result = JwtUtils.transcodeSignatureToConcat(
+          dER,
+          JwtUtils.getSignatureByteArrayLength(JwtAlgorithm.ES512)
+        )
         assertResult(signature) {
           result
         }
@@ -128,10 +142,16 @@ class JwtUtilsSpec extends UnitSpec with ClockFixture {
         val header = """{"typ":"JWT","alg":"ES512"}"""
         val claim = """{"test":"t"}"""
 
-        val signature = Jwt(validTimeClock).encode(header, claim, randomECKey.getPrivate, JwtAlgorithm.ES512).split("\\.")(2)
+        val signature = Jwt(validTimeClock)
+          .encode(header, claim, randomECKey.getPrivate, JwtAlgorithm.ES512)
+          .split("\\.")(2)
         assertResult(signature) {
-          JwtUtils.stringify(JwtUtils.transcodeSignatureToConcat(JwtUtils.transcodeSignatureToDER(JwtUtils.bytify(signature)),
-            JwtUtils.getSignatureByteArrayLength(JwtAlgorithm.ES512)))
+          JwtUtils.stringify(
+            JwtUtils.transcodeSignatureToConcat(
+              JwtUtils.transcodeSignatureToDER(JwtUtils.bytify(signature)),
+              JwtUtils.getSignatureByteArrayLength(JwtAlgorithm.ES512)
+            )
+          )
         }
       }
     }
@@ -146,7 +166,9 @@ class JwtUtilsSpec extends UnitSpec with ClockFixture {
       }
 
       it("should split a token") {
-        assertResult(Array("header", "claim", "signature")) { JwtUtils.splitString("header.claim.signature", '.') }
+        assertResult(Array("header", "claim", "signature")) {
+          JwtUtils.splitString("header.claim.signature", '.')
+        }
       }
 
       it("should split a token without signature") {
