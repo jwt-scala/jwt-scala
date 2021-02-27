@@ -14,7 +14,7 @@ import pdi.jwt.algorithms.{JwtAsymmetricAlgorithm, JwtHmacAlgorithm}
   * stores the claim of the token containing the custom values you eventually put in it. That's why all methods of `JwtSession` (such as
   * add and removing values) only modifiy the `claimData`.
   *
-  * To see a full list of samples, check the [[http://pauldijou.fr/jwt-scala/samples/jwt-play/ online documentation]].
+  * To see a full list of samples, check the [[https://jwt-scala.github.io/jwt-scala/jwt-play-jwt-session.html online documentation]].
   *
   * '''Warning''' Be aware that if you override the `claimData` (using `withClaim` for example), you might override some attributes that
   * were automatically put inside the claim such as the expiration of the token.

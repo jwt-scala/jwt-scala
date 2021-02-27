@@ -23,7 +23,7 @@ import pdi.jwt.exceptions._
   * @define claimString a valid stringified JSON representing the claim of the token
   * @define key the key that will be used to check the token signature
   * @define algo the algorithm to sign the token
-  * @define algos a list of possible algorithms that the token can use. See [[http://pauldijou.fr/jwt-scala/#security-concerns Security concerns]] for more infos.
+  * @define algos a list of possible algorithms that the token can use. See [[https://jwt-scala.github.io/jwt-scala/#security-concerns Security concerns]] for more infos.
   */
 trait JwtCore[H, C] {
   implicit private[jwt] val clock: Clock = Clock.systemUTC

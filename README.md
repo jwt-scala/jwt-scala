@@ -34,23 +34,13 @@ You can also check a [standalone Play application](https://github.com/jwt-scala/
 
 ## Install
 
-In the following snippet, replace `[name]` with the actual name of the project you need. **Using Java 1.6 or 1.7?** Add `-legacy` after the name of the project and use a version before 2.0.0. See [below](#which-java) why.
+In the following snippet, replace `[name]` with the actual name of the project you need.
 
 **build.sbt**
 
 ```scala
 libraryDependencies ++= Seq(
   "com.github.jwt-scala" %% "[name]" % "6.0.0"
-)
-```
-
-### Example for `jwt-play` using Java 1.6
-
-**build.sbt**
-
-```scala
-libraryDependencies ++= Seq(
-  "com.pauldijou" %% "jwt-play-legacy" % "1.1.0"
 )
 ```
 
