@@ -1,15 +1,12 @@
 package pdi.jwt
 
-import org.scalatest._
 import play.api.test._
-import play.api.test.Helpers._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
 import play.api.inject.guice.GuiceApplicationBuilder
 import akka.stream.Materializer
 import play.api.Configuration
 import play.api.mvc._
-import play.api.mvc.Results._
 import play.api.libs.json._
 
 class JwtResultSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting with PlayFixture {

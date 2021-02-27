@@ -1,5 +1,6 @@
 package pdi.jwt
 import java.time.{Clock, Duration}
+import scala.annotation.nowarn
 
 import akka.stream.Materializer
 import org.scalatest._
@@ -11,6 +12,7 @@ import play.api.libs.json._
 import play.api.mvc._
 import play.api.test.Helpers._
 
+@nowarn
 class JwtSessionAsymetricSpec
     extends PlaySpec
     with GuiceOneAppPerSuite
@@ -53,6 +55,9 @@ class JwtSessionAsymetricSpec
   def session = JwtSession()
   def sessionCustom = JwtSession(JwtHeader(JwtAlgorithm.RS256), claimClass, signature)
   def tokenCustom = header + "." + playClaim64 + "." + signature
+  // Order in the Json changed for Scala 2.13 so this is correct too
+  def tokenCustom2 =
+    "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZSwiaXNzIjoiam9lIiwiZXhwIjoxMzAwODE5MzgwfQ.XCvpOGm7aPRy5hozuniyxFJJOMSdo5VYykpZmiGJ3d37WZAIHCrUI1TtkEIU3IbOny2fevilILBliPNgrXl3tA"
 
   "Init FakeApplication" must {
     "have the correct config" in {
@@ -83,11 +88,11 @@ class JwtSessionAsymetricSpec
       assert(session.headerData == Json.obj("typ" -> "JWT", "alg" -> "RS256"))
       assert(session.claimData == Json.obj("exp" -> (validTime + sessionTimeout)))
       assert(session.signature == "")
-      assert(!session.isEmpty) // There is the expiration date in the claim
+      assert(!session.isEmpty()) // There is the expiration date in the claim
     }
 
     "serialize" in {
-      assert(sessionCustom.serialize == tokenCustom)
+      assert(Set(tokenCustom, tokenCustom2).contains(sessionCustom.serialize))
     }
 
     "deserialize" in {
