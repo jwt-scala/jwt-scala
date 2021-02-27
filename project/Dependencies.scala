@@ -5,7 +5,7 @@ object Dependencies {
     val scalatest = "3.2.5"
     val scalatestPlus = "5.1.0"
     val bouncyCastle = "1.68"
-    val guice = "4.2.2"
+    val guice = "4.3.2"
 
     val play = "2.8.7"
     val playJson = "2.9.2"
