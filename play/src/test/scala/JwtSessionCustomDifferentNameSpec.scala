@@ -2,26 +2,24 @@ package pdi.jwt
 
 import akka.stream.Materializer
 import java.time.{Duration, Clock}
+import scala.annotation.nowarn
 import org.scalatest._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
 import play.api.Configuration
-import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json._
 import play.api.mvc._
-import play.api.mvc.Results._
 import play.api.test._
 import play.api.test.Helpers._
 
+@nowarn
 class JwtSessionCustomDifferentNameSpec
     extends PlaySpec
     with GuiceOneAppPerSuite
     with BeforeAndAfter
     with Injecting
     with PlayFixture {
-  import pdi.jwt.JwtSession._
-
   implicit lazy val conf: Configuration = app.configuration
   implicit lazy val materializer: Materializer = app.materializer
   implicit lazy val Action: DefaultActionBuilder =
@@ -53,6 +51,9 @@ class JwtSessionCustomDifferentNameSpec
   def session = JwtSession()
   def sessionCustom = JwtSession(JwtHeader(JwtAlgorithm.HS512), claimClass, signature)
   def tokenCustom = header + "." + playClaim64 + "." + signature
+  // Order in the Json changed for Scala 2.13 so this is correct too
+  def tokenCustom2 =
+    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZSwiaXNzIjoiam9lIiwiZXhwIjoxMzAwODE5MzgwfQ.aK_C250FUCSYbfjAfUgvAHoOfqa3EAdadSYkO0xEt1LJijGR0b89t2bl9AZJXdM4azAFj4RbzPyxSpIVczlchA"
 
   "Init FakeApplication" must {
     "have the correct config" in {
@@ -81,11 +82,11 @@ class JwtSessionCustomDifferentNameSpec
       assert(session.headerData == Json.obj("typ" -> "JWT", "alg" -> "HS512"))
       assert(session.claimData == Json.obj("exp" -> (validTime + sessionTimeout)))
       assert(session.signature == "")
-      assert(!session.isEmpty) // There is the expiration date in the claim
+      assert(!session.isEmpty()) // There is the expiration date in the claim
     }
 
     "serialize" in {
-      assert(sessionCustom.serialize == tokenCustom)
+      assert(Set(tokenCustom, tokenCustom2).contains(sessionCustom.serialize))
     }
 
     "deserialize" in {

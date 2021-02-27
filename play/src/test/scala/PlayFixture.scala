@@ -9,7 +9,6 @@ import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.test.Helpers._
 import play.api.test._
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 case class User(id: Long, name: String)
@@ -57,17 +56,16 @@ trait PlayFixture extends Fixture {
   def securedAction(implicit conf: Configuration, Action: DefaultActionBuilder): EssentialAction =
     Action { implicit request =>
       request.jwtSession.getAs[User]("user") match {
-        case Some(u) => Ok.refreshJwtSession
+        case Some(_) => Ok.refreshJwtSession
         case _       => Unauthorized.withoutJwtSession
       }
     }
 
   def get(action: EssentialAction, header: Option[String] = None)(implicit
       conf: Configuration,
-      mat: Materializer,
-      Action: DefaultActionBuilder
+      mat: Materializer
   ) = {
-    var request = header match {
+    val request = header match {
       case Some(h) =>
         FakeRequest(GET, "/something").withHeaders((JwtSession.REQUEST_HEADER_NAME, h))
       case _ => FakeRequest(GET, "/something")
@@ -76,10 +74,7 @@ trait PlayFixture extends Fixture {
     call(action, request)
   }
 
-  def post(action: EssentialAction, body: JsObject)(implicit
-      mat: Materializer,
-      Action: DefaultActionBuilder
-  ) = {
+  def post(action: EssentialAction, body: JsObject)(implicit mat: Materializer) = {
     call(action, FakeRequest(POST, "/something").withJsonBody(body))
   }
 

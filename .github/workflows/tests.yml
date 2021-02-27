@@ -27,9 +27,9 @@ jobs:
           - 2.13.5
         project:
           - playJsonProject
+          - playProject
           - circeProject
           - upickleProject
-          - json4sCommonProject
           - json4sNativeProject
           - json4sJacksonProject
           - sprayJsonProject

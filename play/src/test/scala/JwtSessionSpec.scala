@@ -1,22 +1,18 @@
 package pdi.jwt
 
 import akka.stream.Materializer
-import java.time.Clock
-import org.scalatest._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
 import play.api.Configuration
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json._
 import play.api.mvc._
-import play.api.mvc.Results._
-import play.api.test._
 import play.api.test.Helpers._
 import scala.concurrent.duration.Duration
+import scala.annotation.nowarn
 
+@nowarn
 class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture {
-  import pdi.jwt.JwtSession._
-
   implicit lazy val conf: Configuration = app.configuration
   implicit lazy val materializer: Materializer = app.materializer
   implicit lazy val Action: DefaultActionBuilder =
@@ -44,6 +40,9 @@ class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture 
   // This is session3 serialized (if no bug...)
   val token =
     "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." + claim64 + ".IPSERPZc5wyxrZ4Yiq7l31wFk_qaDY5YrnfLjIC0Lmc"
+  // Order in the Json changed for Scala 2.13 so this is correct too
+  val token2 =
+    "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZSwiaXNzIjoiam9lIiwiZXhwIjoxMzAwODE5MzgwfQ.XCvpOGm7aPRy5hozuniyxFJJOMSdo5VYykpZmiGJ3d37WZAIHCrUI1TtkEIU3IbOny2fevilILBliPNgrXl3tA"
 
   "Init FakeApplication" must {
     "have the correct config" in {
@@ -64,7 +63,7 @@ class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture 
       assert(session.headerData == Json.obj("typ" -> "JWT", "alg" -> "HS256"))
       assert(session.claimData == Json.obj())
       assert(session.signature == "")
-      assert(session.isEmpty)
+      assert(session.isEmpty())
     }
 
     "add stuff" in {
@@ -116,12 +115,12 @@ class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture 
     }
 
     "test emptiness" in {
-      assert(session.isEmpty)
-      assert(!session2.isEmpty)
+      assert(session.isEmpty())
+      assert(!session2.isEmpty())
     }
 
     "serialize" in {
-      assert(session3.serialize == token)
+      assert(Set(token, token2).contains(session3.serialize))
     }
 
     "deserialize" in {
