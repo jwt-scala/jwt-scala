@@ -186,8 +186,7 @@ trait JwtCore[H, C] {
       )
   }
 
-  /**
-    * @return a tuple of (header64, header, claim64, claim, signature or empty string if none)
+  /** @return a tuple of (header64, header, claim64, claim, signature or empty string if none)
     * @throws JwtLengthException if there is not 2 or 3 parts in the token
     */
   private def splitToken(token: String): (String, String, String, String, String) = {

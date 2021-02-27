@@ -56,8 +56,7 @@ object JwtUtils {
       .mkString("[", ",", "]")
   }
 
-  /**
-    * Convert a sequence of tuples to a JSON object
+  /** Convert a sequence of tuples to a JSON object
     */
   @nowarn
   def hashToJson(hash: Seq[(String, Any)]): String = if (hash.isEmpty) {
@@ -84,8 +83,7 @@ object JwtUtils {
       .mkString("{", ",", "}")
   }
 
-  /**
-    * Merge multiple JSON strings to a unique one
+  /** Merge multiple JSON strings to a unique one
     */
   def mergeJson(json: String, jsonSeq: String*): String = {
     val initJson = json.trim match {
@@ -119,8 +117,7 @@ object JwtUtils {
     KeyFactory.getInstance(keyAlgo).generatePublic(spec)
   }
 
-  /**
-    * Generate the signature for a given data using the key and HMAC algorithm provided.
+  /** Generate the signature for a given data using the key and HMAC algorithm provided.
     */
   def sign(data: Array[Byte], key: SecretKey, algorithm: JwtHmacAlgorithm): Array[Byte] = {
     val mac = Mac.getInstance(algorithm.fullName)
@@ -131,8 +128,7 @@ object JwtUtils {
   def sign(data: String, key: SecretKey, algorithm: JwtHmacAlgorithm): Array[Byte] =
     sign(bytify(data), key, algorithm)
 
-  /**
-    * Generate the signature for a given data using the key and RSA or ECDSA algorithm provided.
+  /** Generate the signature for a given data using the key and RSA or ECDSA algorithm provided.
     */
   def sign(data: Array[Byte], key: PrivateKey, algorithm: JwtAsymmetricAlgorithm): Array[Byte] = {
     val signer = Signature.getInstance(algorithm.fullName)
@@ -148,8 +144,7 @@ object JwtUtils {
   def sign(data: String, key: PrivateKey, algorithm: JwtAsymmetricAlgorithm): Array[Byte] =
     sign(bytify(data), key, algorithm)
 
-  /**
-    * Will try to sign some given data by parsing the provided key, if parsing fail, please consider retrieving the SecretKey or the PrivateKey on your side and then use another "sign" method.
+  /** Will try to sign some given data by parsing the provided key, if parsing fail, please consider retrieving the SecretKey or the PrivateKey on your side and then use another "sign" method.
     */
   def sign(data: Array[Byte], key: String, algorithm: JwtAlgorithm): Array[Byte] =
     algorithm match {
@@ -159,14 +154,12 @@ object JwtUtils {
       case algo: JwtUnkwownAlgorithm => throw new JwtNonSupportedAlgorithm(algo.fullName)
     }
 
-  /**
-    * Alias to `sign` using a String data which will be converted to an array of bytes.
+  /** Alias to `sign` using a String data which will be converted to an array of bytes.
     */
   def sign(data: String, key: String, algorithm: JwtAlgorithm): Array[Byte] =
     sign(bytify(data), key, algorithm)
 
-  /**
-    * Check if a signature is valid for a given data using the key and the HMAC algorithm provided.
+  /** Check if a signature is valid for a given data using the key and the HMAC algorithm provided.
     */
   def verify(
       data: Array[Byte],
@@ -177,8 +170,7 @@ object JwtUtils {
     JwtArrayUtils.constantTimeAreEqual(sign(data, key, algorithm), signature)
   }
 
-  /**
-    * Check if a signature is valid for a given data using the key and the RSA or ECDSA algorithm provided.
+  /** Check if a signature is valid for a given data using the key and the RSA or ECDSA algorithm provided.
     */
   def verify(
       data: Array[Byte],
@@ -195,8 +187,7 @@ object JwtUtils {
     }
   }
 
-  /**
-    * Will try to check if a signature is valid for a given data by parsing the provided key, if parsing fail, please consider retrieving the SecretKey or the PublicKey on your side and then use another "verify" method.
+  /** Will try to check if a signature is valid for a given data by parsing the provided key, if parsing fail, please consider retrieving the SecretKey or the PublicKey on your side and then use another "verify" method.
     */
   def verify(
       data: Array[Byte],
@@ -212,14 +203,12 @@ object JwtUtils {
       case algo: JwtUnkwownAlgorithm => throw new JwtNonSupportedAlgorithm(algo.fullName)
     }
 
-  /**
-    * Alias for `verify`
+  /** Alias for `verify`
     */
   def verify(data: String, signature: String, key: String, algorithm: JwtAlgorithm): Boolean =
     verify(bytify(data), bytify(signature), key, algorithm)
 
-  /**
-    * Returns the expected signature byte array length (R + S parts) for
+  /** Returns the expected signature byte array length (R + S parts) for
     * the specified ECDSA algorithm.
     *
     * @param algorithm The ECDSA algorithm. Must be supported and not { @code null}.
@@ -235,8 +224,7 @@ object JwtUtils {
     }
   }
 
-  /**
-    * Transcodes the JCA ASN.1/DER-encoded signature into the concatenated
+  /** Transcodes the JCA ASN.1/DER-encoded signature into the concatenated
     * R + S format expected by ECDSA JWS.
     *
     * @param derSignature The ASN1./DER-encoded. Must not be { @code null}.
@@ -288,8 +276,7 @@ object JwtUtils {
     concatSignature
   }
 
-  /**
-    * Transcodes the ECDSA JWS signature into ASN.1/DER format for use by
+  /** Transcodes the ECDSA JWS signature into ASN.1/DER format for use by
     * the JCA verifier.
     *
     * @param signature The JWS signature, consisting of the

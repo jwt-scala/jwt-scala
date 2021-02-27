@@ -8,8 +8,7 @@ import java.time.Clock
 import pdi.jwt.exceptions.JwtNonStringException
 import scala.annotation.nowarn
 
-/**
-  * Implementation of `JwtCore` using `Json` from Circe.
+/** Implementation of `JwtCore` using `Json` from Circe.
   */
 trait JwtCirceParser[H, C] extends JwtJsonCommon[Json, H, C] {
   protected def parse(value: String): Json = jawnParse(value).fold(throw _, identity)

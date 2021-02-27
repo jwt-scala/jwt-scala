@@ -4,8 +4,7 @@ import java.time.Clock
 import play.api.libs.json._
 import pdi.jwt.exceptions.JwtNonStringException
 
-/**
-  * Implementation of `JwtCore` using `JsObject` from Play JSON.
+/** Implementation of `JwtCore` using `JsObject` from Play JSON.
   *
   * To see a full list of samples, check the [[http://pauldijou.fr/jwt-scala/samples/jwt-play-json/ online documentation]].
   */

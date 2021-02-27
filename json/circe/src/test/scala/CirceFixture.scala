@@ -3,28 +3,29 @@ package pdi.jwt
 import io.circe._
 import io.circe.jawn.{parse => jawnParse}
 
-case class JsonDataEntry (
-  algo: JwtAlgorithm,
-  header: String,
-  headerClass: JwtHeader,
-  header64: String,
-  signature: String,
-  token: String,
-  tokenUnsigned: String,
-  tokenEmpty: String,
-  headerJson: Json) extends JsonDataEntryTrait[Json]
+case class JsonDataEntry(
+    algo: JwtAlgorithm,
+    header: String,
+    headerClass: JwtHeader,
+    header64: String,
+    signature: String,
+    token: String,
+    tokenUnsigned: String,
+    tokenEmpty: String,
+    headerJson: Json
+) extends JsonDataEntryTrait[Json]
 
 trait CirceFixture extends JsonCommonFixture[Json] {
   def parseString(value: String): Json = jawnParse(value).toOption.get
 
   val claimJson = parseString(claim) match {
     case j: Json => j
-    case _ => throw new RuntimeException("I want a Circe Json!")
+    case _       => throw new RuntimeException("I want a Circe Json!")
   }
 
   val headerEmptyJson = parseString(headerEmpty) match {
     case j: Json => j
-    case _ => throw new RuntimeException("I want a Circe Json!")
+    case _       => throw new RuntimeException("I want a Circe Json!")
   }
 
   def mapData(data: DataEntryBase): JsonDataEntry = JsonDataEntry(
@@ -38,7 +39,7 @@ trait CirceFixture extends JsonCommonFixture[Json] {
     tokenEmpty = data.tokenEmpty,
     headerJson = parseString(data.header) match {
       case j: Json => j
-      case _ => throw new RuntimeException("I want a Circe Json!")
+      case _       => throw new RuntimeException("I want a Circe Json!")
     }
   )
 }

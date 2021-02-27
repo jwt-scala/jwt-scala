@@ -3,8 +3,7 @@ package pdi.jwt
 import scala.util.matching.Regex
 import java.time.Clock
 
-/**
-  * Test implementation of [[JwtCore]] using only Strings. Most of the time, you should use a lib
+/** Test implementation of [[JwtCore]] using only Strings. Most of the time, you should use a lib
   * implementing JSON and shouldn't be using this object. But just in case you need pure Scala support,
   * here it is.
   *

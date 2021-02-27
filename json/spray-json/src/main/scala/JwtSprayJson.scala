@@ -4,8 +4,7 @@ import java.time.Clock
 import pdi.jwt.exceptions.JwtNonStringException
 import spray.json._
 
-/**
-  * Implementation of `JwtCore` using `JsObject` from spray-json.
+/** Implementation of `JwtCore` using `JsObject` from spray-json.
   */
 trait JwtSprayJsonParser[H, C] extends JwtJsonCommon[JsObject, H, C] {
   protected def parse(value: String): JsObject = value.parseJson.asJsObject
