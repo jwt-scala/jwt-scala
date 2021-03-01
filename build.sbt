@@ -374,15 +374,3 @@ lazy val playProject = project
   )
   .aggregate(playJsonProject)
   .dependsOn(playJsonProject % "compile->compile;test->test")
-
-lazy val examplePlayAngularProject = project
-  .in(file("examples/play-angular"))
-  .settings(localSettings)
-  .settings(
-    name := "playAngular",
-    libraryDependencies ++= Seq(guice),
-    routesGenerator := play.sbt.routes.RoutesKeys.InjectedRoutesGenerator
-  )
-  .enablePlugins(PlayScala)
-  .aggregate(playProject)
-  .dependsOn(playProject)

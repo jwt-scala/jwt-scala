@@ -28,10 +28,6 @@ JWT Scala is divided in several sub-projects each targeting a specific JSON libr
 |`jwt-upickle`|[uPickle](http://www.lihaoyi.com/upickle-pprint/upickle/) lib|
 |`jwt-argonaut`|[Argonaut](http://argonaut.io/) lib|
 
-If you need a previous version of the Scaladoc API, check [the bottom of this page](https://jwt-scala.github.io/jwt-scala/api/#old-apis)
-
-You can also check a [standalone Play application](https://github.com/jwt-scala/jwt-scala/tree/master/examples/play-angular-standalone) using `jwt-play` and implementating a small REST API with authentication and admin role (include a UI too!).
-
 ## Install
 
 In the following snippet, replace `[name]` with the actual name of the project you need.
