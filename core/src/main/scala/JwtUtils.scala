@@ -5,7 +5,6 @@ import java.security.{KeyFactory, PrivateKey, PublicKey, Signature}
 
 import javax.crypto.spec.SecretKeySpec
 import javax.crypto.{Mac, SecretKey}
-import scala.annotation.nowarn
 import pdi.jwt.JwtAlgorithm.{ES256, ES384, ES512}
 import pdi.jwt.algorithms._
 import pdi.jwt.exceptions.{JwtNonSupportedAlgorithm, JwtSignatureFormatException}
@@ -33,7 +32,6 @@ object JwtUtils {
 
   /** Convert a sequence to a JSON array
     */
-  @nowarn
   def seqToJson(seq: Seq[Any]): String = if (seq.isEmpty) {
     "[]"
   } else {
@@ -50,7 +48,7 @@ object JwtUtils {
         case value: Int           => value.toString
         case value: BigDecimal    => value.toString
         case value: BigInt        => value.toString
-        case value: (String, Any) => hashToJson(Seq(value))
+        case (key: String, value) => hashToJson(Seq(key -> value))
         case value: Any           => "\"" + escape(value.toString) + "\""
       }
       .mkString("[", ",", "]")
@@ -58,7 +56,6 @@ object JwtUtils {
 
   /** Convert a sequence of tuples to a JSON object
     */
-  @nowarn
   def hashToJson(hash: Seq[(String, Any)]): String = if (hash.isEmpty) {
     "{}"
   } else {
@@ -68,17 +65,18 @@ object JwtUtils {
         case (key, value: Boolean) =>
           "\"" + escape(key) + "\":" + (if (value) { "true" }
                                         else { "false" })
-        case (key, value: Double)        => "\"" + escape(key) + "\":" + value.toString
-        case (key, value: Short)         => "\"" + escape(key) + "\":" + value.toString
-        case (key, value: Float)         => "\"" + escape(key) + "\":" + value.toString
-        case (key, value: Long)          => "\"" + escape(key) + "\":" + value.toString
-        case (key, value: Int)           => "\"" + escape(key) + "\":" + value.toString
-        case (key, value: BigDecimal)    => "\"" + escape(key) + "\":" + value.toString
-        case (key, value: BigInt)        => "\"" + escape(key) + "\":" + value.toString
-        case (key, value: (String, Any)) => "\"" + escape(key) + "\":" + hashToJson(Seq(value))
-        case (key, value: Seq[Any])      => "\"" + escape(key) + "\":" + seqToJson(value)
-        case (key, value: Set[Any])      => "\"" + escape(key) + "\":" + seqToJson(value.toSeq)
-        case (key, value: Any)           => "\"" + escape(key) + "\":\"" + escape(value.toString) + "\""
+        case (key, value: Double)     => "\"" + escape(key) + "\":" + value.toString
+        case (key, value: Short)      => "\"" + escape(key) + "\":" + value.toString
+        case (key, value: Float)      => "\"" + escape(key) + "\":" + value.toString
+        case (key, value: Long)       => "\"" + escape(key) + "\":" + value.toString
+        case (key, value: Int)        => "\"" + escape(key) + "\":" + value.toString
+        case (key, value: BigDecimal) => "\"" + escape(key) + "\":" + value.toString
+        case (key, value: BigInt)     => "\"" + escape(key) + "\":" + value.toString
+        case (key, (vKey: String, vValue)) =>
+          "\"" + escape(key) + "\":" + hashToJson(Seq(vKey -> vValue))
+        case (key, value: Seq[Any]) => "\"" + escape(key) + "\":" + seqToJson(value)
+        case (key, value: Set[_])   => "\"" + escape(key) + "\":" + seqToJson(value.toSeq)
+        case (key, value: Any)      => "\"" + escape(key) + "\":\"" + escape(value.toString) + "\""
       }
       .mkString("{", ",", "}")
   }
