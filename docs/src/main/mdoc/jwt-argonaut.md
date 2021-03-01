@@ -2,11 +2,11 @@
 layout: docs
 title:  "Argonaut"
 position: 20
-source: "json/argonaut/src/main/scala/JwtArgonaut.scala"
-scaladoc: "#pdi.jwt.JwtArgonaut"
 ---
 
 ## JwtArgonaut object
+
+- [API Documentation](https://jwt-scala.github.io/jwt-scala/api/pdi/jwt/JwtArgonaut$.html)
 
 {% include_relative _install.md artifact="jwt-argonaut" %}
 

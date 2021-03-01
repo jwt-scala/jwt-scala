@@ -6,6 +6,8 @@ position: 50
 
 ## JwtJson Object
 
+- [API Documentation](https://jwt-scala.github.io/jwt-scala/api/pdi/jwt/JwtJson$.html)
+
 {% include_relative _install.md artifact="jwt-play-json" %}
 
 ### Basic usage

@@ -6,6 +6,8 @@ position: 10
 
 ## Jwt object
 
+- [API Documentation](https://jwt-scala.github.io/jwt-scala/api/pdi/jwt/Jwt$.html)
+
 {% include_relative _install.md artifact="jwt-core" %}
 
 ### Basic usage

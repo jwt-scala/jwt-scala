@@ -6,6 +6,8 @@ position: 80
 
 ## JwtUpickle Object
 
+- [API Documentation](https://jwt-scala.github.io/jwt-scala/api/pdi/jwt/JwtUpickle$.html)
+
 {% include_relative _install.md artifact="jwt-upickle" %}
 
 ### Basic usage

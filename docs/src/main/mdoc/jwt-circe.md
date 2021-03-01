@@ -6,6 +6,8 @@ position: 30
 
 ## JwtCirce Object
 
+- [API Documentation](https://jwt-scala.github.io/jwt-scala/api/pdi/jwt/JwtCirce$.html)
+
 {% include_relative _install.md artifact="jwt-circe" %}
 
 ### Basic usage
