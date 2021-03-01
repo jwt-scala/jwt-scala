@@ -87,6 +87,9 @@ val baseSettings = Seq(
   Test / fork := true,
   Test / parallelExecution := false,
   scalacOptions in (Compile, doc) ~= (_ filterNot (_ == "-Xfatal-warnings")),
+  scalacOptions in (Compile, doc) ++= Seq(
+    "-no-link-warnings" // Suppresses problems with Scaladoc @throws links
+  ),
   javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 )
 
