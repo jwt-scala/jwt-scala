@@ -12,7 +12,7 @@ position: 80
 
 ### Basic usage
 
-```scala mdoc:reset:silent
+```scala mdoc:reset
 import java.time.Instant
 import upickle.default._
 import pdi.jwt.{JwtUpickle, JwtAlgorithm, JwtClaim}
@@ -32,7 +32,7 @@ JwtUpickle.decode(token, key, Seq(JwtAlgorithm.HS256))
 
 ### Encoding
 
-```scala mdoc:reset:silent
+```scala mdoc:reset
 import java.time.Instant
 import upickle.default._
 import pdi.jwt.{JwtUpickle, JwtAlgorithm, JwtClaim}
@@ -50,7 +50,7 @@ JwtUpickle.encode(header, claimJson, key)
 
 ### Decoding
 
-```scala mdoc:reset:silent
+```scala mdoc:reset
 import java.time.Instant
 import upickle.default._
 import pdi.jwt.{JwtUpickle, JwtAlgorithm, JwtClaim}

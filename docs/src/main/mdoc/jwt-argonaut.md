@@ -12,7 +12,7 @@ position: 20
 
 ### Basic usage
 
-```scala mdoc:reset:silent
+```scala mdoc:reset
 
 import java.time.Instant
 import scala.util.Try
@@ -36,7 +36,7 @@ val decodedClaim: Try[JwtClaim] = JwtArgonaut.decode(token, key, Seq(alg))
 
 ### Encoding
 
-```scala mdoc:reset:silent
+```scala mdoc:reset
 import java.time.Instant
 import scala.util.Try
 import argonaut.Parse
@@ -55,7 +55,7 @@ val token3: String = JwtArgonaut.encode(jsonHeader, jsonClaim, key)
 
 ### Decoding
 
-```scala mdoc:reset:silent
+```scala mdoc:reset
 import scala.util.Try
 import java.time.Instant
 import argonaut.Json

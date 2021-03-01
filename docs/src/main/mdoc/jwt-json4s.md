@@ -12,7 +12,7 @@ position: 40
 
 ### Basic usage
 
-```scala mdoc:silent
+```scala mdoc
 import pdi.jwt.{JwtJson4s, JwtAlgorithm}, org.json4s._, org.json4s.JsonDSL.WithBigDecimal._, org.json4s.native.JsonMethods._
 val claim = JObject(("user", 1), ("nbf", 1431520421))
 val key = "secretKey"
@@ -29,7 +29,7 @@ JwtJson4s.decode(token, key, Seq(JwtAlgorithm.HS256))
 
 ### Encoding
 
-```scala mdoc:silent
+```scala mdoc
 val header = JObject(("typ", "JWT"), ("alg", "HS256"))
 
 JwtJson4s.encode(claim)
@@ -39,7 +39,7 @@ JwtJson4s.encode(header, claim, key)
 
 ### Decoding
 
-```scala mdoc:silent
+```scala mdoc
 // You can decode to JsObject
 JwtJson4s.decodeJson(token, key, Seq(JwtAlgorithm.HS256))
 JwtJson4s.decodeJsonAll(token, key, Seq(JwtAlgorithm.HS256))

@@ -12,7 +12,7 @@ position: 10
 
 ### Basic usage
 
-```scala mdoc:reset:silent
+```scala mdoc:reset
 import java.time.Clock
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtHeader, JwtClaim, JwtOptions}
 implicit val clock: Clock = Clock.systemUTC
@@ -23,7 +23,7 @@ Jwt.decodeRawAll(token, "wrongKey", Seq(JwtAlgorithm.HS256))
 
 ### Encoding
 
-```scala mdoc:silent
+```scala mdoc
 // Encode from string, header automatically generated
 Jwt.encode("""{"user":1}""", "secretKey", JwtAlgorithm.HS384)
 
@@ -49,7 +49,7 @@ In JWT Scala, espcially when using raw strings which are not typesafe at all, th
 
 Take note that nearly all decoding methods (including those from helper libs) support either a String key, or a PrivateKey with a Hmac algorithm or a PublicKey with a RSA or ECDSA algorithm.
 
-```scala mdoc:silent
+```scala mdoc
 // Decode all parts of the token as string
 Jwt.decodeRawAll(token, "secretKey", JwtAlgorithm.allHmac)
 
@@ -112,7 +112,7 @@ Jwt.isValid("a.b.c")
 
 All validating and decoding methods support a final optional argument as a `JwtOptions` which allow you to disable validation checks. This is useful if you need to access data from an expired token for example. You can disable `expiration`, `notBefore` and `signature` checks. Be warned that if you disable the last one, you have no guarantee that the user didn't change the content of the token.
 
-```scala mdoc:silent
+```scala mdoc
 val expiredToken = Jwt.encode(JwtClaim().by("me").expiresIn(-1));
 
 // Fail since the token is expired
@@ -126,7 +126,7 @@ Jwt.decode(expiredToken, JwtOptions(expiration = false))
 
 You can also specify a leeway, in seconds, to account for clock skew.
 
-```scala mdoc:silent
+```scala mdoc
 // Allow 30sec leeway
 Jwt.isValid(expiredToken, JwtOptions(leeway = 30))
 Jwt.decode(expiredToken, JwtOptions(leeway = 30))
