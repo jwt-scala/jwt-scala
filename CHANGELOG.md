@@ -2,7 +2,13 @@
 
 ## 6.0.0 (26/02/2021)
 
-- Change groupId to `com.github.jwt-scala`
+Important: the groupId changed from `fr.pauldijou` to `com.github.jwt-scala`,
+so you need to update your dependencies:
+
+```
+libraryDependencies += "com.github.jwt-scala" %% "<artifact>" % "6.0.0"
+```
+
 - Upgrade Play to 2.8.7
 - Upgrade Play Json to 2.9.2
 - Upgrade uPickle to 1.2.3
