@@ -33,6 +33,9 @@ jobs:
       - name: Checking code formatting
         run: sbt formatCheck
 
+      - name: Run scalafix
+        run: sbt scalafixAll
+
   tests:
     runs-on: ubuntu-latest
     strategy:
