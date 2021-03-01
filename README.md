@@ -8,37 +8,14 @@ Optional helpers for Play Framework, Play JSON, Json4s Native, Json4s Jackson, C
 This library was originally created by [Paul Dijou](http://pauldijou.fr/), you can check the
 [older repository for JWT Scala](https://github.com/pauldijou/jwt-scala) for older versions.
 
-Detailed documentation is on the [Microsite](https://jwt-scala.github.io/jwt-scala).
-
 [Contributor's guide](https://github.com/jwt-scala/jwt-scala/blob/master/CONTRIBUTING.md)
 
-## Pick the right tool for the right job
+## Usage
 
-JWT Scala is divided in several sub-projects each targeting a specific JSON library.
+Detailed documentation is on the [Microsite](https://jwt-scala.github.io/jwt-scala).
 
-| Name | Description | 
-|------|-------------|
-|`jwt-core`|Pure Scala|
-|`jwt-play-json`|[play-json](https://www.playframework.com/) lib|
-|`jwt-play`|[Play framework](https://www.playframework.com/)|
-|`jwt-json4s-native`|[json4s](http://json4s.org/) Native implementation|
-|`jwt-json4s-jackson`|[json4s](http://json4s.org/) Jackson implementation|
-|`jwt-spray-json`|[spray-json](https://github.com/spray/spray-json) lib|
-|`jwt-circe`|[circe](https://circe.github.io/circe/) lib|
-|`jwt-upickle`|[uPickle](http://www.lihaoyi.com/upickle-pprint/upickle/) lib|
-|`jwt-argonaut`|[Argonaut](http://argonaut.io/) lib|
-
-## Install
-
-In the following snippet, replace `[name]` with the actual name of the project you need.
-
-**build.sbt**
-
-```scala
-libraryDependencies ++= Seq(
-  "com.github.jwt-scala" %% "[name]" % "6.0.0"
-)
-```
+JWT Scala is divided in several sub-projects each targeting a specific JSON library,
+check the doc from the menu of the Microsite for installation and usage instructions.
 
 ## Algorithms
 
