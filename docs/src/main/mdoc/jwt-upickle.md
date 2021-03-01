@@ -6,6 +6,8 @@ position: 80
 
 ## JwtUpickle Object
 
+{% include_relative _install.md artifact="jwt-upickle" %}
+
 ### Basic usage
 
 ```scala mdoc:reset:silent

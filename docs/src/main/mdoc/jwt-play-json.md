@@ -6,6 +6,8 @@ position: 50
 
 ## JwtJson Object
 
+{% include_relative _install.md artifact="jwt-play-json" %}
+
 ### Basic usage
 
 ```scala mdoc:silent

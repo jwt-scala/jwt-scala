@@ -6,6 +6,8 @@ position: 10
 
 ## Jwt object
 
+{% include_relative _install.md artifact="jwt-core" %}
+
 ### Basic usage
 
 ```scala mdoc:reset:silent

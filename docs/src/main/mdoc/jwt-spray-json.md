@@ -6,6 +6,8 @@ position: 70
 
 ## JwtSprayJson Object
 
+{% include_relative _install.md artifact="jwt-spray-json" %}
+
 ### Basic usage
 
 ```scala mdoc:reset:silent

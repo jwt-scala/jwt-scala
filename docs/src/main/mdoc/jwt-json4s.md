@@ -6,6 +6,8 @@ position: 40
 
 ## JwtJson4s Object
 
+{% include_relative _install.md artifact="jwt-json4s-native" %}
+
 ### Basic usage
 
 ```scala mdoc:silent

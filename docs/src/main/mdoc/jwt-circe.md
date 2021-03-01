@@ -6,6 +6,8 @@ position: 30
 
 ## JwtCirce Object
 
+{% include_relative _install.md artifact="jwt-circe" %}
+
 ### Basic usage
 
 ```scala mdoc:reset:silent
