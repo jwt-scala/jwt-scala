@@ -5,9 +5,6 @@ Supports Java 8+, Scala 2.12 and Scala 2.13.
 Dependency free.
 Optional helpers for Play Framework, Play JSON, Json4s Native, Json4s Jackson, Circe, uPickle, Spray JSON and Argonaut.
 
-This library was originally created by [Paul Dijou](http://pauldijou.fr/), you can check the
-[older repository for JWT Scala](https://github.com/pauldijou/jwt-scala) for older versions.
-
 [Contributor's guide](https://github.com/jwt-scala/jwt-scala/blob/master/CONTRIBUTING.md)
 
 ## Usage
