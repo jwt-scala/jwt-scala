@@ -1,6 +1,6 @@
 package pdi.jwt
 
-import pdi.jwt.algorithms.JwtUnkwownAlgorithm
+import pdi.jwt.algorithms.JwtUnknownAlgorithm
 
 sealed trait JwtAlgorithm {
   def name: String
@@ -13,7 +13,7 @@ package algorithms {
   sealed trait JwtHmacAlgorithm extends JwtAlgorithm {}
   sealed trait JwtRSAAlgorithm extends JwtAsymmetricAlgorithm {}
   sealed trait JwtECDSAAlgorithm extends JwtAsymmetricAlgorithm {}
-  final case class JwtUnkwownAlgorithm(name: String) extends JwtAlgorithm {
+  final case class JwtUnknownAlgorithm(name: String) extends JwtAlgorithm {
     def fullName: String = name
   }
 }
@@ -39,7 +39,7 @@ object JwtAlgorithm {
     case "ES256" => ES256
     case "ES384" => ES384
     case "ES512" => ES512
-    case other   => JwtUnkwownAlgorithm(other)
+    case other   => JwtUnknownAlgorithm(other)
     // Missing PS256 PS384 PS512
   }
 

@@ -777,7 +777,7 @@ trait JwtCore[H, C] {
       }
 
       extractAlgorithm(header).foreach {
-        case JwtUnkwownAlgorithm(name) => throw new JwtNonSupportedAlgorithm(name)
+        case JwtUnknownAlgorithm(name) => throw new JwtNonSupportedAlgorithm(name)
         case _                         => throw new JwtNonEmptyAlgorithmException()
       }
     }
