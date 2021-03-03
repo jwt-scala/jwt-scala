@@ -149,7 +149,7 @@ object JwtUtils {
       case algo: JwtHmacAlgorithm    => sign(data, new SecretKeySpec(bytify(key), algo.fullName), algo)
       case algo: JwtRSAAlgorithm     => sign(data, parsePrivateKey(key, RSA), algo)
       case algo: JwtECDSAAlgorithm   => sign(data, parsePrivateKey(key, ECDSA), algo)
-      case algo: JwtUnkwownAlgorithm => throw new JwtNonSupportedAlgorithm(algo.fullName)
+      case algo: JwtUnknownAlgorithm => throw new JwtNonSupportedAlgorithm(algo.fullName)
     }
 
   /** Alias to `sign` using a String data which will be converted to an array of bytes.
@@ -198,7 +198,7 @@ object JwtUtils {
         verify(data, signature, new SecretKeySpec(bytify(key), algo.fullName), algo)
       case algo: JwtRSAAlgorithm     => verify(data, signature, parsePublicKey(key, RSA), algo)
       case algo: JwtECDSAAlgorithm   => verify(data, signature, parsePublicKey(key, ECDSA), algo)
-      case algo: JwtUnkwownAlgorithm => throw new JwtNonSupportedAlgorithm(algo.fullName)
+      case algo: JwtUnknownAlgorithm => throw new JwtNonSupportedAlgorithm(algo.fullName)
     }
 
   /** Alias for `verify`
