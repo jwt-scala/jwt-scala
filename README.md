@@ -1,5 +1,7 @@
 # JWT Scala
 
+[![codecov](https://codecov.io/gh/jwt-scala/jwt-scala/branch/master/graph/badge.svg?token=q5p4MAH3YS)](https://codecov.io/gh/jwt-scala/jwt-scala)
+
 Scala support for JSON Web Token ([JWT](http://tools.ietf.org/html/draft-ietf-oauth-json-web-token)).
 Supports Java 8+, Scala 2.12 and Scala 2.13.
 Dependency free.
