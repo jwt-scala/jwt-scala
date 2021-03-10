@@ -184,8 +184,6 @@ val docSettings = Seq(
   addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir in ScalaUnidoc),
   autoAPIMappings := true,
   ghpagesNoJekyll := false,
-  fork in mdoc := true,
-  fork in (ScalaUnidoc, unidoc) := true,
   scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
     "-Xfatal-warnings",
     "-groups",
