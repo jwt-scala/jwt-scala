@@ -1,4 +1,4 @@
-name: scala test
+name: CI
 on:
   push:
     branches:
@@ -28,7 +28,7 @@ jobs:
             ~/.cache/coursier/v1
             ~/AppData/Local/Coursier/Cache/v1
             ~/Library/Caches/Coursier/v1
-          key: ${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
+          key: ${{ runner.os }}-${{ matrix.scala }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
 
       - name: Checking code formatting
         run: sbt formatCheck
@@ -67,10 +67,16 @@ jobs:
             ~/.cache/coursier/v1
             ~/AppData/Local/Coursier/Cache/v1
             ~/Library/Caches/Coursier/v1
-          key: ${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
+          key: ${{ runner.os }}-${{ matrix.scala }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
 
-      - name: scala ${{ matrix.project }} ${{ matrix.scala }}
-        env:
-          CMD: ${{ matrix.cmd }}
-        run: |
-          sbt ++${{ matrix.scala }} ${{ matrix.project }}/test
+      - name: Test
+        if: "!startsWith(matrix.scala, '2.13')"
+        run: sbt ++${{ matrix.scala }} ${{ matrix.project }}/test
+
+      - name: Test with coverage
+        if: "startsWith(matrix.scala, '2.13')"
+        run: sbt ++${{ matrix.scala }} coverage ${{ matrix.project }}/test coverageReport
+
+      - name: Publish coverage
+        if: "startsWith(matrix.scala, '2.13')"
+        uses: codecov/codecov-action@v1
