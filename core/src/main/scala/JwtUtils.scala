@@ -14,7 +14,6 @@ object JwtUtils {
   val RSA = "RSA"
   val ECDSA = "EC"
   val EdDSA = "EdDSA"
-  val Ed25519 = "Ed25519"
 
   /** Convert an array of bytes to its corresponding string using the default encoding.
     *

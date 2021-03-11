@@ -52,7 +52,7 @@ trait ClockFixture {
   val validTimeMillis: Long = validTime * 1000
   val validTimeClock: Clock = fixedUTC(validTimeMillis)
 
-  val ecCurveName = "secp521r1";
+  val ecCurveName = "secp521r1"
 }
 
 trait Fixture extends ClockFixture {
@@ -61,6 +61,8 @@ trait Fixture extends ClockFixture {
   if (Security.getProvider("BC") == null) {
     Security.addProvider(new BouncyCastleProvider())
   }
+
+  val Ed25519 = "Ed25519"
 
   val secretKey =
     "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
@@ -174,7 +176,7 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
   val privateKeyEd25519 = "MC4CAQAwBQYDK2VwBCIEIHf3EQMqRKbBYOEjmrRm6Zu5hIYombr3DoWaRjZqK7uv"
   val publicKeyEd25519 = "MCowBQYDK2VwAyEAMGx9f797iAEdcI/QULMQFxgnt3ANZAqlTHavvAf3nD4="
 
-  val generatorEd25519 = KeyPairGenerator.getInstance(JwtUtils.Ed25519)
+  val generatorEd25519 = KeyPairGenerator.getInstance(Ed25519)
   val randomEd25519Key = generatorEd25519.generateKeyPair()
 
   val data = Seq(
