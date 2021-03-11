@@ -3,6 +3,8 @@ package pdi.jwt
 import java.time.Clock
 
 import play.api.libs.json.{JsNumber, JsObject, JsString, Json, Writes}
+import scala.util.Failure
+import scala.util.Success
 
 class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
 
@@ -77,6 +79,28 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
       }
       assertResult(JsString("bar")) {
         (claim \ "foo").get
+      }
+    }
+
+    it("should fail on an invalid issuer") {
+      val header = """{"alg": "none"}"""
+      val claim = """{"iss": 42}"""
+      val token = s"${JwtBase64.encodeString(header)}.${JwtBase64.encodeString(claim)}."
+      defaultJwt.decodeJsonAll(token) match {
+        case Failure(_: NoSuchElementException) => succeed
+        case Failure(e)                         => fail(s"Expected JwtNonStringException, got $e")
+        case Success(_)                         => fail(s"Expected JwtNonStringException, got success")
+      }
+    }
+
+    it("should fail on an invalid expiration") {
+      val header = """{"alg": "none"}"""
+      val claim = """{"iss": "me", "exp": "wrong"}"""
+      val token = s"${JwtBase64.encodeString(header)}.${JwtBase64.encodeString(claim)}."
+      defaultJwt.decodeJsonAll(token) match {
+        case Failure(_: NoSuchElementException) => succeed
+        case Failure(e)                         => fail(s"Expected JwtNonStringException, got $e")
+        case Success(_)                         => fail(s"Expected JwtNonStringException, got success")
       }
     }
   }
