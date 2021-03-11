@@ -770,7 +770,7 @@ trait JwtCore[H, C] {
   }
 
   // Validation when no key and no algorithm (or unknown)
-  protected def validate(header: H, claim: C, signature: String, options: JwtOptions) = {
+  protected def validate(header: H, claim: C, signature: String, options: JwtOptions): Unit = {
     if (options.signature) {
       if (!signature.isEmpty) {
         throw new JwtNonEmptySignatureException()
@@ -782,7 +782,7 @@ trait JwtCore[H, C] {
       }
     }
 
-    validateTiming(claim, options)
+    validateTiming(claim, options).get
   }
 
   // Validation when both key and algorithm
@@ -813,7 +813,7 @@ trait JwtCore[H, C] {
         throw new JwtValidationException("Invalid signature for this token or wrong algorithm.")
       }
     }
-    validateTiming(claim, options)
+    validateTiming(claim, options).get
   }
 
   // Generic validation on String Key for HMAC algorithms
