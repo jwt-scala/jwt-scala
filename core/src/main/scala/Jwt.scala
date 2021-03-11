@@ -7,6 +7,8 @@ import java.time.Clock
 
 import pdi.jwt.algorithms._
 import pdi.jwt.exceptions._
+import scala.util.Success
+import scala.util.Failure
 
 /** Provide the main logic around Base64 encoding / decoding and signature using the correct algorithm.
   * '''H''' and '''C''' types are respesctively the header type and the claim type. For the core project,
@@ -189,25 +191,25 @@ trait JwtCore[H, C] {
   /** @return a tuple of (header64, header, claim64, claim, signature or empty string if none)
     * @throws JwtLengthException if there is not 2 or 3 parts in the token
     */
-  private def splitToken(token: String): (String, String, String, String, String) = {
+  private def splitToken(token: String): Try[(String, String, String, String, String)] = {
     val parts = JwtUtils.splitString(token, '.')
 
-    val signature = parts.length match {
-      case 2 => ""
-      case 3 => parts(2)
-      case _ =>
-        throw new JwtLengthException(
-          s"Expected token [$token] to be composed of 2 or 3 parts separated by dots."
-        )
-    }
-
-    (
-      parts(0),
-      JwtBase64.decodeString(parts(0)),
-      parts(1),
-      JwtBase64.decodeString(parts(1)),
-      signature
-    )
+    for {
+      signature <- parts.length match {
+        case 2 => Success("")
+        case 3 => Success(parts(2))
+        case _ =>
+          Failure(
+            new JwtLengthException(
+              s"Expected token [$token] to be composed of 2 or 3 parts separated by dots."
+            )
+          )
+      }
+      header64 = parts(0)
+      header <- Try(JwtBase64.decodeString(header64))
+      claim64 = parts(1)
+      claim <- Try(JwtBase64.decodeString(claim64))
+    } yield (header64, header, claim64, claim, signature)
   }
 
   /** Will try to decode a JSON Web Token to raw strings
@@ -215,11 +217,10 @@ trait JwtCore[H, C] {
     * @return if successful, a tuple of 3 strings, the header, the claim and the signature
     * @param token $token
     */
-  def decodeRawAll(token: String, options: JwtOptions): Try[(String, String, String)] = Try {
-    val (_, header, _, claim, signature) = splitToken(token)
-    validate(parseHeader(header), parseClaim(claim), signature, options)
-    (header, claim, signature)
-  }
+  def decodeRawAll(token: String, options: JwtOptions): Try[(String, String, String)] = for {
+    (_, header, _, claim, signature) <- splitToken(token)
+    _ <- Try(validate(parseHeader(header), parseClaim(claim), signature, options))
+  } yield (header, claim, signature)
 
   def decodeRawAll(token: String): Try[(String, String, String)] =
     decodeRawAll(token, JwtOptions.DEFAULT)
@@ -236,20 +237,21 @@ trait JwtCore[H, C] {
       key: String,
       algorithms: Seq[JwtHmacAlgorithm],
       options: JwtOptions
-  ): Try[(String, String, String)] = Try {
-    val (header64, header, claim64, claim, signature) = splitToken(token)
-    validate(
-      header64,
-      parseHeader(header),
-      claim64,
-      parseClaim(claim),
-      signature,
-      key,
-      algorithms,
-      options
+  ): Try[(String, String, String)] = for {
+    (header64, header, claim64, claim, signature) <- splitToken(token)
+    _ <- Try(
+      validate(
+        header64,
+        parseHeader(header),
+        claim64,
+        parseClaim(claim),
+        signature,
+        key,
+        algorithms,
+        options
+      )
     )
-    (header, claim, signature)
-  }
+  } yield (header, claim, signature)
 
   def decodeRawAll(
       token: String,
@@ -270,20 +272,21 @@ trait JwtCore[H, C] {
       key: String,
       algorithms: => Seq[JwtAsymmetricAlgorithm],
       options: JwtOptions
-  ): Try[(String, String, String)] = Try {
-    val (header64, header, claim64, claim, signature) = splitToken(token)
-    validate(
-      header64,
-      parseHeader(header),
-      claim64,
-      parseClaim(claim),
-      signature,
-      key,
-      algorithms,
-      options
+  ): Try[(String, String, String)] = for {
+    (header64, header, claim64, claim, signature) <- splitToken(token)
+    _ <- Try(
+      validate(
+        header64,
+        parseHeader(header),
+        claim64,
+        parseClaim(claim),
+        signature,
+        key,
+        algorithms,
+        options
+      )
     )
-    (header, claim, signature)
-  }
+  } yield (header, claim, signature)
 
   def decodeRawAll(
       token: String,
@@ -304,20 +307,21 @@ trait JwtCore[H, C] {
       key: SecretKey,
       algorithms: Seq[JwtHmacAlgorithm],
       options: JwtOptions
-  ): Try[(String, String, String)] = Try {
-    val (header64, header, claim64, claim, signature) = splitToken(token)
-    validate(
-      header64,
-      parseHeader(header),
-      claim64,
-      parseClaim(claim),
-      signature,
-      key,
-      algorithms,
-      options
+  ): Try[(String, String, String)] = for {
+    (header64, header, claim64, claim, signature) <- splitToken(token)
+    _ <- Try(
+      validate(
+        header64,
+        parseHeader(header),
+        claim64,
+        parseClaim(claim),
+        signature,
+        key,
+        algorithms,
+        options
+      )
     )
-    (header, claim, signature)
-  }
+  } yield (header, claim, signature)
 
   def decodeRawAll(
       token: String,
@@ -348,20 +352,21 @@ trait JwtCore[H, C] {
       key: PublicKey,
       algorithms: Seq[JwtAsymmetricAlgorithm],
       options: JwtOptions
-  ): Try[(String, String, String)] = Try {
-    val (header64, header, claim64, claim, signature) = splitToken(token)
-    validate(
-      header64,
-      parseHeader(header),
-      claim64,
-      parseClaim(claim),
-      signature,
-      key,
-      algorithms,
-      options
+  ): Try[(String, String, String)] = for {
+    (header64, header, claim64, claim, signature) <- splitToken(token)
+    _ <- Try(
+      validate(
+        header64,
+        parseHeader(header),
+        claim64,
+        parseClaim(claim),
+        signature,
+        key,
+        algorithms,
+        options
+      )
     )
-    (header, claim, signature)
-  }
+  } yield (header, claim, signature)
 
   def decodeRawAll(
       token: String,
@@ -499,12 +504,12 @@ trait JwtCore[H, C] {
     * @return if successful, a tuple representing the header, the claim and eventually the signature
     * @param token $token
     */
-  def decodeAll(token: String, options: JwtOptions): Try[(H, C, String)] = Try {
-    val (_, header, _, claim, signature) = splitToken(token)
-    val (h, c) = (parseHeader(header), parseClaim(claim))
-    validate(h, c, signature, options)
-    (h, c, signature)
-  }
+  def decodeAll(token: String, options: JwtOptions): Try[(H, C, String)] = for {
+    (_, header, _, claim, signature) <- splitToken(token)
+    h <- Try(parseHeader(header))
+    c <- Try(parseClaim(claim))
+    _ <- Try(validate(h, c, signature, options))
+  } yield (h, c, signature)
 
   def decodeAll(token: String): Try[(H, C, String)] = decodeAll(token, JwtOptions.DEFAULT)
 
@@ -520,12 +525,12 @@ trait JwtCore[H, C] {
       key: String,
       algorithms: Seq[JwtHmacAlgorithm],
       options: JwtOptions
-  ): Try[(H, C, String)] = Try {
-    val (header64, header, claim64, claim, signature) = splitToken(token)
-    val (h, c) = (parseHeader(header), parseClaim(claim))
-    validate(header64, h, claim64, c, signature, key, algorithms, options)
-    (h, c, signature)
-  }
+  ): Try[(H, C, String)] = for {
+    (header64, header, claim64, claim, signature) <- splitToken(token)
+    h <- Try(parseHeader(header))
+    c <- Try(parseClaim(claim))
+    _ <- Try(validate(header64, h, claim64, c, signature, key, algorithms, options))
+  } yield (h, c, signature)
 
   def decodeAll(
       token: String,
@@ -546,12 +551,12 @@ trait JwtCore[H, C] {
       key: String,
       algorithms: => Seq[JwtAsymmetricAlgorithm],
       options: JwtOptions
-  ): Try[(H, C, String)] = Try {
-    val (header64, header, claim64, claim, signature) = splitToken(token)
-    val (h, c) = (parseHeader(header), parseClaim(claim))
-    validate(header64, h, claim64, c, signature, key, algorithms, options)
-    (h, c, signature)
-  }
+  ): Try[(H, C, String)] = for {
+    (header64, header, claim64, claim, signature) <- splitToken(token)
+    h <- Try(parseHeader(header))
+    c <- Try(parseClaim(claim))
+    _ <- Try(validate(header64, h, claim64, c, signature, key, algorithms, options))
+  } yield (h, c, signature)
 
   def decodeAll(
       token: String,
@@ -572,12 +577,12 @@ trait JwtCore[H, C] {
       key: SecretKey,
       algorithms: Seq[JwtHmacAlgorithm],
       options: JwtOptions
-  ): Try[(H, C, String)] = Try {
-    val (header64, header, claim64, claim, signature) = splitToken(token)
-    val (h, c) = (parseHeader(header), parseClaim(claim))
-    validate(header64, h, claim64, c, signature, key, algorithms, options)
-    (h, c, signature)
-  }
+  ): Try[(H, C, String)] = for {
+    (header64, header, claim64, claim, signature) <- splitToken(token)
+    h <- Try(parseHeader(header))
+    c <- Try(parseClaim(claim))
+    _ <- Try(validate(header64, h, claim64, c, signature, key, algorithms, options))
+  } yield (h, c, signature)
 
   def decodeAll(
       token: String,
@@ -610,12 +615,12 @@ trait JwtCore[H, C] {
       key: PublicKey,
       algorithms: Seq[JwtAsymmetricAlgorithm],
       options: JwtOptions
-  ): Try[(H, C, String)] = Try {
-    val (header64, header, claim64, claim, signature) = splitToken(token)
-    val (h, c) = (parseHeader(header), parseClaim(claim))
-    validate(header64, h, claim64, c, signature, key, algorithms, options)
-    (h, c, signature)
-  }
+  ): Try[(H, C, String)] = for {
+    (header64, header, claim64, claim, signature) <- splitToken(token)
+    h <- Try(parseHeader(header))
+    c <- Try(parseClaim(claim))
+    _ <- Try(validate(header64, h, claim64, c, signature, key, algorithms, options))
+  } yield (h, c, signature)
 
   def decodeAll(
       token: String,
@@ -944,7 +949,7 @@ trait JwtCore[H, C] {
     * @throws IllegalArgumentException couldn't decode the token since it's not a valid base64 string
     */
   def validate(token: String, options: JwtOptions): Unit = {
-    val (_, header, _, claim, signature) = splitToken(token)
+    val (_, header, _, claim, signature) = splitToken(token).get
     validate(parseHeader(header), parseClaim(claim), signature, options)
   }
 
@@ -967,7 +972,7 @@ trait JwtCore[H, C] {
       algorithms: Seq[JwtHmacAlgorithm],
       options: JwtOptions
   ): Unit = {
-    val (header64, header, claim64, claim, signature) = splitToken(token)
+    val (header64, header, claim64, claim, signature) = splitToken(token).get
     validate(
       header64,
       parseHeader(header),
@@ -1000,7 +1005,7 @@ trait JwtCore[H, C] {
       algorithms: => Seq[JwtAsymmetricAlgorithm],
       options: JwtOptions
   ): Unit = {
-    val (header64, header, claim64, claim, signature) = splitToken(token)
+    val (header64, header, claim64, claim, signature) = splitToken(token).get
     validate(
       header64,
       parseHeader(header),
@@ -1033,7 +1038,7 @@ trait JwtCore[H, C] {
       algorithms: Seq[JwtHmacAlgorithm],
       options: JwtOptions
   ): Unit = {
-    val (header64, header, claim64, claim, signature) = splitToken(token)
+    val (header64, header, claim64, claim, signature) = splitToken(token).get
     validate(
       header64,
       parseHeader(header),
@@ -1071,7 +1076,7 @@ trait JwtCore[H, C] {
       algorithms: Seq[JwtAsymmetricAlgorithm],
       options: JwtOptions
   ): Unit = {
-    val (header64, header, claim64, claim, signature) = splitToken(token)
+    val (header64, header, claim64, claim, signature) = splitToken(token).get
     validate(
       header64,
       parseHeader(header),
