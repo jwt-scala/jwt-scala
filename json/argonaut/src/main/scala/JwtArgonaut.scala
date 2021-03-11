@@ -14,7 +14,7 @@ trait JwtArgonautParser[H, C] extends JwtJsonCommon[Json, H, C] {
     header -| "alg" map (_.stringOrEmpty) flatMap {
       case "none"      => None
       case alg: String => Some(JwtAlgorithm.fromString(alg))
-      case _           => throw new JwtNonStringException("alg")
+      case null        => throw new JwtNonStringException("alg")
     }
 }
 

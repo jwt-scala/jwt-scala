@@ -4,6 +4,7 @@ import java.security.spec.ECGenParameterSpec
 import java.security.{KeyPairGenerator, SecureRandom}
 
 import pdi.jwt.exceptions.JwtSignatureFormatException
+import org.scalatest.enablers.Messaging.messagingNatureOfAnyRefWithGetMessageMethod
 
 case class TestObject(value: String) {
   override def toString(): String = this.value

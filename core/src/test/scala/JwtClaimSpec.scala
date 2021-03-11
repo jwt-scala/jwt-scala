@@ -9,7 +9,7 @@ import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 class JwtClaimSpec extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyChecks {
 
   val fakeNowSeconds = 1615411490L
-  implicit val clock = Clock.fixed(Instant.ofEpochSecond(fakeNowSeconds), ZoneOffset.UTC)
+  implicit val clock: Clock = Clock.fixed(Instant.ofEpochSecond(fakeNowSeconds), ZoneOffset.UTC)
   val claim = JwtClaim()
 
   test("JwtClaim.+ should add a json") {
