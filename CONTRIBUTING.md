@@ -33,7 +33,7 @@ To have a locally running doc website and test your documentation changes:
 
 This is only for maintainers with write access (just one for now!) but a new version can be published to Sonatype:
 - Update version numbers in `build.sbt`
-- `sbt release`
+- `sbt releaseAll`
 
-Documentation (microsite + scaladoc) can be published with:0
+Documentation (microsite + scaladoc) can be published with:
 - `sbt publish-doc`
