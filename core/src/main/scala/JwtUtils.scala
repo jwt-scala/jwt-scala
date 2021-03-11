@@ -13,6 +13,7 @@ object JwtUtils {
   val ENCODING = "UTF-8"
   val RSA = "RSA"
   val ECDSA = "EC"
+  val EdDSA = "EdDSA"
 
   /** Convert an array of bytes to its corresponding string using the default encoding.
     *
@@ -136,6 +137,7 @@ object JwtUtils {
       case _: JwtRSAAlgorithm => signer.sign
       case algorithm: JwtECDSAAlgorithm =>
         transcodeSignatureToConcat(signer.sign, getSignatureByteArrayLength(algorithm))
+      case _: JwtEdDSAAlgorithm => signer.sign
     }
   }
 
@@ -149,6 +151,7 @@ object JwtUtils {
       case algo: JwtHmacAlgorithm    => sign(data, new SecretKeySpec(bytify(key), algo.fullName), algo)
       case algo: JwtRSAAlgorithm     => sign(data, parsePrivateKey(key, RSA), algo)
       case algo: JwtECDSAAlgorithm   => sign(data, parsePrivateKey(key, ECDSA), algo)
+      case algo: JwtEdDSAAlgorithm   => sign(data, parsePrivateKey(key, EdDSA), algo)
       case algo: JwtUnknownAlgorithm => throw new JwtNonSupportedAlgorithm(algo.fullName)
     }
 
@@ -182,6 +185,7 @@ object JwtUtils {
     algorithm match {
       case _: JwtRSAAlgorithm   => signer.verify(signature)
       case _: JwtECDSAAlgorithm => signer.verify(transcodeSignatureToDER(signature))
+      case _: JwtEdDSAAlgorithm => signer.verify(signature)
     }
   }
 
@@ -198,6 +202,7 @@ object JwtUtils {
         verify(data, signature, new SecretKeySpec(bytify(key), algo.fullName), algo)
       case algo: JwtRSAAlgorithm     => verify(data, signature, parsePublicKey(key, RSA), algo)
       case algo: JwtECDSAAlgorithm   => verify(data, signature, parsePublicKey(key, ECDSA), algo)
+      case algo: JwtEdDSAAlgorithm   => verify(data, signature, parsePublicKey(key, EdDSA), algo)
       case algo: JwtUnknownAlgorithm => throw new JwtNonSupportedAlgorithm(algo.fullName)
     }
 

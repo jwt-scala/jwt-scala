@@ -52,7 +52,7 @@ trait ClockFixture {
   val validTimeMillis: Long = validTime * 1000
   val validTimeClock: Clock = fixedUTC(validTimeMillis)
 
-  val ecCurveName = "secp521r1";
+  val ecCurveName = "secp521r1"
 }
 
 trait Fixture extends ClockFixture {
@@ -61,6 +61,8 @@ trait Fixture extends ClockFixture {
   if (Security.getProvider("BC") == null) {
     Security.addProvider(new BouncyCastleProvider())
   }
+
+  val Ed25519 = "Ed25519"
 
   val secretKey =
     "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
@@ -171,6 +173,12 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
     )
   }
 
+  val privateKeyEd25519 = "MC4CAQAwBQYDK2VwBCIEIHf3EQMqRKbBYOEjmrRm6Zu5hIYombr3DoWaRjZqK7uv"
+  val publicKeyEd25519 = "MCowBQYDK2VwAyEAMGx9f797iAEdcI/QULMQFxgnt3ANZAqlTHavvAf3nD4="
+
+  val generatorEd25519 = KeyPairGenerator.getInstance(Ed25519)
+  val randomEd25519Key = generatorEd25519.generateKeyPair()
+
   val data = Seq(
     DataEntry(
       JwtAlgorithm.HMD5,
@@ -247,6 +255,16 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
       JwtHeader(JwtAlgorithm.ES512, "JWT"),
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9",
       "MEUCICcluU9j5N40Mcr_Mo5_r5KVexcgrXH0LMVC_k1EPswPAiEA-8W2vz2bVZCzPv-S6CNDlbxNktEkOtTAg0XXiZ0ghLk"
+    )
+  ).map(setToken)
+
+  val dataEdDSA = Seq(
+    DataEntry(
+      JwtAlgorithm.Ed25519,
+      """{"typ":"JWT","alg":"Ed25519"}""",
+      JwtHeader(JwtAlgorithm.Ed25519, "JWT"),
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZDI1NTE5In0",
+      "Y1L7qIIxk022Bi6RfybVXRI1YrTmchD8gc6ExiGFoHMyNTamrmsbRQi7EHF2ha4vSvuK8cFH2e89k4c8T0eGBA"
     )
   ).map(setToken)
 }
