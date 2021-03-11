@@ -8,8 +8,8 @@ import sbt._
 
 import scala.sys.process._
 
-val previousVersion = "7.0.0"
-val buildVersion = "7.1.0"
+val previousVersion = "7.1.0"
+val buildVersion = "7.1.1"
 
 val projects = Seq(
   "coreProject",
