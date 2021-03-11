@@ -174,7 +174,7 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
   val privateKeyEd25519 = "MC4CAQAwBQYDK2VwBCIEIHf3EQMqRKbBYOEjmrRm6Zu5hIYombr3DoWaRjZqK7uv"
   val publicKeyEd25519 = "MCowBQYDK2VwAyEAMGx9f797iAEdcI/QULMQFxgnt3ANZAqlTHavvAf3nD4="
 
-  val generatorEd25519 = KeyPairGenerator.getInstance(JwtUtils.EdDSA)
+  val generatorEd25519 = KeyPairGenerator.getInstance(JwtUtils.Ed25519)
   val randomEd25519Key = generatorEd25519.generateKeyPair()
 
   val data = Seq(
