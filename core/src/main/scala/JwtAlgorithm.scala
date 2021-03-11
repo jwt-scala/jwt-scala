@@ -13,6 +13,7 @@ package algorithms {
   sealed trait JwtHmacAlgorithm extends JwtAlgorithm {}
   sealed trait JwtRSAAlgorithm extends JwtAsymmetricAlgorithm {}
   sealed trait JwtECDSAAlgorithm extends JwtAsymmetricAlgorithm {}
+  sealed trait JwtEdDSAAlgorithm extends JwtAsymmetricAlgorithm {}
   final case class JwtUnknownAlgorithm(name: String) extends JwtAlgorithm {
     def fullName: String = name
   }
@@ -28,18 +29,19 @@ object JwtAlgorithm {
     * @throws JwtNonSupportedAlgorithm in case the string doesn't match any known algorithm
     */
   def fromString(algo: String): JwtAlgorithm = algo match {
-    case "HMD5"  => HMD5
-    case "HS224" => HS224
-    case "HS256" => HS256
-    case "HS384" => HS384
-    case "HS512" => HS512
-    case "RS256" => RS256
-    case "RS384" => RS384
-    case "RS512" => RS512
-    case "ES256" => ES256
-    case "ES384" => ES384
-    case "ES512" => ES512
-    case other   => JwtUnknownAlgorithm(other)
+    case "HMD5"    => HMD5
+    case "HS224"   => HS224
+    case "HS256"   => HS256
+    case "HS384"   => HS384
+    case "HS512"   => HS512
+    case "RS256"   => RS256
+    case "RS384"   => RS384
+    case "RS512"   => RS512
+    case "ES256"   => ES256
+    case "ES384"   => ES384
+    case "ES512"   => ES512
+    case "Ed25519" => Ed25519
+    case other     => JwtUnknownAlgorithm(other)
     // Missing PS256 PS384 PS512
   }
 
@@ -59,11 +61,13 @@ object JwtAlgorithm {
   def allHmac(): Seq[algorithms.JwtHmacAlgorithm] = Seq(HMD5, HS224, HS256, HS384, HS512)
 
   def allAsymmetric(): Seq[algorithms.JwtAsymmetricAlgorithm] =
-    Seq(RS256, RS384, RS512, ES256, ES384, ES512)
+    Seq(RS256, RS384, RS512, ES256, ES384, ES512, Ed25519)
 
   def allRSA(): Seq[algorithms.JwtRSAAlgorithm] = Seq(RS256, RS384, RS512)
 
   def allECDSA(): Seq[algorithms.JwtECDSAAlgorithm] = Seq(ES256, ES384, ES512)
+
+  def allEdDSA(): Seq[algorithms.JwtEdDSAAlgorithm] = Seq(Ed25519)
 
   case object HMD5 extends algorithms.JwtHmacAlgorithm {
     def name = "HMD5"; def fullName = "HmacMD5"
@@ -97,5 +101,8 @@ object JwtAlgorithm {
   }
   case object ES512 extends algorithms.JwtECDSAAlgorithm {
     def name = "ES512"; def fullName = "SHA512withECDSA"
+  }
+  case object Ed25519 extends algorithms.JwtEdDSAAlgorithm {
+    def name = "Ed25519"; def fullName = "Ed25519"
   }
 }
