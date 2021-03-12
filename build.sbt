@@ -101,6 +101,7 @@ val publishSettings = Seq(
   publishMavenStyle := true,
   publishArtifact in Test := false,
   licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0")),
+  sonatypeCredentialHost := "s01.oss.sonatype.org",
   publishTo := {
     val nexus = "https://s01.oss.sonatype.org/"
     if (isSnapshot.value)
