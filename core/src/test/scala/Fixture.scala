@@ -8,6 +8,8 @@ import org.bouncycastle.jce.ECNamedCurveTable
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.jce.spec.ECNamedCurveSpec
 
+import pdi.jwt.algorithms.{JwtHmacAlgorithm, JwtRSAAlgorithm, JwtECDSAAlgorithm}
+
 trait DataEntryBase {
   def algo: JwtAlgorithm
   def header: String
@@ -19,8 +21,8 @@ trait DataEntryBase {
   def tokenEmpty: String
 }
 
-case class DataEntry(
-    algo: JwtAlgorithm,
+case class DataEntry[A <: JwtAlgorithm](
+    algo: A,
     header: String,
     headerClass: JwtHeader,
     header64: String,
@@ -165,7 +167,7 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
   val privateKeyEC = KeyFactory.getInstance(JwtUtils.ECDSA).generatePrivate(privateSpec)
   val publicKeyEC = KeyFactory.getInstance(JwtUtils.ECDSA).generatePublic(publicSpec)
 
-  def setToken(entry: DataEntry): DataEntry = {
+  def setToken[A <: JwtAlgorithm](entry: DataEntry[A]): DataEntry[A] = {
     entry.copy(
       token = Seq(entry.header64, claim64, entry.signature).mkString("."),
       tokenUnsigned = Seq(entry.header64, claim64, "").mkString("."),
@@ -180,28 +182,28 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
   val randomEd25519Key = generatorEd25519.generateKeyPair()
 
   val data = Seq(
-    DataEntry(
+    DataEntry[JwtHmacAlgorithm](
       JwtAlgorithm.HMD5,
       """{"typ":"JWT","alg":"HMD5"}""",
       JwtHeader(JwtAlgorithm.HMD5, "JWT"),
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJITUQ1In0",
       "BVRxj65Lk3DXIug2IosRvw"
     ),
-    DataEntry(
+    DataEntry[JwtHmacAlgorithm](
       JwtAlgorithm.HS256,
       """{"typ":"JWT","alg":"HS256"}""",
       JwtHeader(JwtAlgorithm.HS256, "JWT"),
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9",
       "IPSERPZc5wyxrZ4Yiq7l31wFk_qaDY5YrnfLjIC0Lmc"
     ),
-    DataEntry(
+    DataEntry[JwtHmacAlgorithm](
       JwtAlgorithm.HS384,
       """{"typ":"JWT","alg":"HS384"}""",
       JwtHeader(JwtAlgorithm.HS384, "JWT"),
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzM4NCJ9",
       "tCjCk4PefnNV6E_PByT5xumMVm6KAt_asxP8DXwcDnwsldVJi_Y7SfTVJzvyuGBY"
     ),
-    DataEntry(
+    DataEntry[JwtHmacAlgorithm](
       JwtAlgorithm.HS512,
       """{"typ":"JWT","alg":"HS512"}""",
       JwtHeader(JwtAlgorithm.HS512, "JWT"),
@@ -211,21 +213,21 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
   ).map(setToken)
 
   val dataRSA = Seq(
-    DataEntry(
+    DataEntry[JwtRSAAlgorithm](
       JwtAlgorithm.RS256,
       """{"typ":"JWT","alg":"RS256"}""",
       JwtHeader(JwtAlgorithm.RS256, "JWT"),
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9",
       "h943pccw-3rOGJW_RlURooRk7SawDZcQiyP9iziq_LUKHtZME_UMGATeVpoc1aoGK0SlWPlVgV1HaB9fNEyziRYPi7i2K_l9XysRHhdo-luCL_D2rNK4Kv_034knQdC_pZPQ4vMviLDqHVL7w0edG-5-96fzFiP3jwV7FIz7r86fvtNgmKw8cH-cSZfEbj_vgWXT_bE_MHcCE0g4UBiXvTUbd9FpkiTugM6Lr9SXLiFKUtAraOxaKKeZ0VSLMTATK8M2PqLq4I0NnJMaZpcIp1pP9DFz07GomTpMP49Ag4CGzutFIUXz-J277OYDrLjfIT7jDnQIYuzrwE3vatwp2g"
     ),
-    DataEntry(
+    DataEntry[JwtRSAAlgorithm](
       JwtAlgorithm.RS384,
       """{"typ":"JWT","alg":"RS384"}""",
       JwtHeader(JwtAlgorithm.RS384, "JWT"),
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzM4NCJ9",
       "jpusk3t1NPdT7VaZLB6mO3_L4R59gSbgRM866HVZzN6qkH3vYy9y91eMs6YQZLXgg1nBi1ZY8pb4R9G_on4Xsenh-K7odRCHX-XzVbzAtnljMMChdqKp7zTAlAWF03ZrFyv91kxAQeyQSkwxDP4vP70SCLtt3_kevAzon5fE1L1DD1TNySe52TDCofd2RUPFhWzsfdAPvo_Qj1s_zG-DThHSMXXMY9GOtugyJjbDCDrl8uGeF_0XQm-wBuYQ_EGw0S9TsoI_8dggmeEyv8XwT2XKB20fKOc298GNWJ6q6E01hI0EjmWKXEtTyLG0edAF-QrNkXtkz-yX9WJmjmyVfA"
     ),
-    DataEntry(
+    DataEntry[JwtRSAAlgorithm](
       JwtAlgorithm.RS512,
       """{"typ":"JWT","alg":"RS512"}""",
       JwtHeader(JwtAlgorithm.RS512, "JWT"),
@@ -235,21 +237,21 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
   ).map(setToken)
 
   val dataECDSA = Seq(
-    DataEntry(
+    DataEntry[JwtECDSAAlgorithm](
       JwtAlgorithm.ES256,
       """{"typ":"JWT","alg":"ES256"}""",
       JwtHeader(JwtAlgorithm.ES256, "JWT"),
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9",
       "MIGIAkIBFmPwOO2eBdtkCko3pjjJs5Wpdi2GBhRywwptlosRQVlQxmT95uOoKE9BUjqVdyjd8o9TcNHHqM6ayPmQml0aTYICQgGDYkPc5EUfJ1F9VFvbPW1bIpX_sZ3XwyXIeL_4jt7BeKmB_LPorgeO-agmx4UdqMyCG1-Y31m8cJEPNm7h5x5V-Q"
     ),
-    DataEntry(
+    DataEntry[JwtECDSAAlgorithm](
       JwtAlgorithm.ES384,
       """{"typ":"JWT","alg":"ES384"}""",
       JwtHeader(JwtAlgorithm.ES384, "JWT"),
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzM4NCJ9",
       "MEUCIQC5trx72Z6QKUKxoK_DIX9S3X5QOJBu9tC3f5i6C_1gRQIgOYnA7NoLI3CNVLbibqAwQHSyU44f-yLYGn0YaJvReMA"
     ),
-    DataEntry(
+    DataEntry[JwtECDSAAlgorithm](
       JwtAlgorithm.ES512,
       """{"typ":"JWT","alg":"ES512"}""",
       JwtHeader(JwtAlgorithm.ES512, "JWT"),
