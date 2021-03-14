@@ -1,6 +1,7 @@
 package pdi.jwt
 
 import java.time.Clock
+import scala.util.Try
 import upickle.default._
 
 /** Implementation of `JwtCore` using `Js.Value` from uPickle.
@@ -8,7 +9,7 @@ import upickle.default._
   * To see a full list of samples, check the [[https://jwt-scala.github.io/jwt-scala/jwt-upickle.html online documentation]].
   */
 trait JwtUpickleParser[H, C] extends JwtJsonCommon[ujson.Value, H, C] with JwtUpickleImplicits {
-  protected def parse(value: String): ujson.Value = ujson.read(value)
+  protected def parse(value: String): Try[ujson.Value] = Try(ujson.read(value))
 
   protected def stringify(value: ujson.Value): String = ujson.write(value)
 
@@ -23,11 +24,11 @@ trait JwtUpickleParser[H, C] extends JwtJsonCommon[ujson.Value, H, C] with JwtUp
 
 object JwtUpickle extends JwtUpickleParser[JwtHeader, JwtClaim] {
   def apply(clock: Clock): JwtUpickle = new JwtUpickle(clock)
-  def parseHeader(header: String): JwtHeader = read[JwtHeader](header)
-  def parseClaim(claim: String): JwtClaim = read[JwtClaim](claim)
+  def parseHeader(header: String): Try[JwtHeader] = Try(read[JwtHeader](header))
+  def parseClaim(claim: String): Try[JwtClaim] = Try(read[JwtClaim](claim))
 }
 
 class JwtUpickle private (override val clock: Clock) extends JwtUpickleParser[JwtHeader, JwtClaim] {
-  def parseHeader(header: String): JwtHeader = read[JwtHeader](header)
-  def parseClaim(claim: String): JwtClaim = read[JwtClaim](claim)
+  def parseHeader(header: String): Try[JwtHeader] = Try(read[JwtHeader](header))
+  def parseClaim(claim: String): Try[JwtClaim] = Try(read[JwtClaim](claim))
 }

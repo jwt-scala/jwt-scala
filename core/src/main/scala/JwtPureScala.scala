@@ -1,7 +1,8 @@
 package pdi.jwt
 
-import scala.util.matching.Regex
 import java.time.Clock
+import scala.util.matching.Regex
+import scala.util.Try
 
 /** Test implementation of [[JwtCore]] using only Strings. Most of the time, you should use a lib
   * implementing JSON and shouldn't be using this object. But just in case you need pure Scala support,
@@ -77,17 +78,21 @@ object Jwt extends JwtCore[JwtHeader, JwtClaim] {
     clearStart(clearEnd(clearMiddle(dirtyJson)))
   }
 
-  protected def parseHeader(header: String): JwtHeader = JwtHeader(extractAlgorithm(header))
+  protected def parseHeader(header: String): Try[JwtHeader] = Try(
+    JwtHeader(extractAlgorithm(header))
+  )
 
-  protected def parseClaim(claim: String): JwtClaim =
-    JwtClaim(
-      content = clearAll(claim),
-      issuer = extractIssuer(claim),
-      subject = extractSubject(claim),
-      expiration = extractExpiration(claim),
-      notBefore = extractNotBefore(claim),
-      issuedAt = extractIssuedAt(claim),
-      jwtId = extractJwtId(claim)
+  protected def parseClaim(claim: String): Try[JwtClaim] =
+    Try(
+      JwtClaim(
+        content = clearAll(claim),
+        issuer = extractIssuer(claim),
+        subject = extractSubject(claim),
+        expiration = extractExpiration(claim),
+        notBefore = extractNotBefore(claim),
+        issuedAt = extractIssuedAt(claim),
+        jwtId = extractJwtId(claim)
+      )
     )
 
   protected def headerToJson(header: JwtHeader): String = header.toJson
@@ -99,8 +104,8 @@ object Jwt extends JwtCore[JwtHeader, JwtClaim] {
 }
 
 class Jwt private (override val clock: Clock) extends JwtCore[JwtHeader, JwtClaim] {
-  protected def parseHeader(header: String): JwtHeader = Jwt.parseHeader(header)
-  protected def parseClaim(claim: String): JwtClaim = Jwt.parseClaim(claim)
+  protected def parseHeader(header: String): Try[JwtHeader] = Jwt.parseHeader(header)
+  protected def parseClaim(claim: String): Try[JwtClaim] = Jwt.parseClaim(claim)
 
   protected def extractAlgorithm(header: JwtHeader): Option[JwtAlgorithm] = header.algorithm
   protected def extractExpiration(claim: JwtClaim): Option[Long] = claim.expiration

@@ -38,7 +38,7 @@ object JwtTime {
   def nowIsBetweenSeconds(start: Option[Long], end: Option[Long])(implicit clock: Clock): Boolean =
     nowIsBetween(start.map(_ * 1000), end.map(_ * 1000))
 
-  /** Test if the current time is between the two params and throw an exception if we don't have `start` <= now < `end`
+  /** Test if the current time is between the two params and return a Failure if we don't have `start` <= now < `end`
     *
     * @param start if set, the instant that must be before now (in millis)
     * @param end if set, the instant that must be after now (in millis)
@@ -61,8 +61,8 @@ object JwtTime {
     *
     * @param start if set, the instant that must be before now (in seconds)
     * @param end if set, the instant that must be after now (in seconds)
-    * @throws JwtNotBeforeException if `start` > now
-    * @throws JwtExpirationException if now > `end`
+    * @return Failure(JwtNotBeforeException) if `start` > now
+    * @return Failure(JwtExpirationException) if now > `end`
     */
   def validateNowIsBetweenSeconds(start: Option[Long], end: Option[Long])(implicit
       clock: Clock

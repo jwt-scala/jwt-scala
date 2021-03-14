@@ -4,10 +4,10 @@ import org.json4s.JValue
 
 trait JwtJson4sImplicits {
   implicit class RichJwtClaim(claim: JwtClaim) {
-    def toJValue(): JValue = JwtJson4s.writeClaim(claim)
+    def toJValue(): JValue = JwtJson4s.writeClaim(claim).get
   }
 
   implicit class RichJwtHeader(header: JwtHeader) {
-    def toJValue(): JValue = JwtJson4s.writeHeader(header)
+    def toJValue(): JValue = JwtJson4s.writeHeader(header).get
   }
 }

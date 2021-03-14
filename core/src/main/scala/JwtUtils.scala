@@ -187,10 +187,10 @@ object JwtUtils {
   ): Boolean = algorithm match {
     case algo: JwtHmacAlgorithm =>
       verify(data, signature, new SecretKeySpec(bytify(key), algo.fullName), algo)
-    case algo: JwtRSAAlgorithm     => verify(data, signature, parsePublicKey(key, RSA), algo)
-    case algo: JwtECDSAAlgorithm   => verify(data, signature, parsePublicKey(key, ECDSA), algo)
-    case algo: JwtEdDSAAlgorithm   => verify(data, signature, parsePublicKey(key, EdDSA), algo)
-    case algo: JwtUnknownAlgorithm => throw new JwtNonSupportedAlgorithm(algo.fullName)
+    case algo: JwtRSAAlgorithm   => verify(data, signature, parsePublicKey(key, RSA), algo)
+    case algo: JwtECDSAAlgorithm => verify(data, signature, parsePublicKey(key, ECDSA), algo)
+    case algo: JwtEdDSAAlgorithm => verify(data, signature, parsePublicKey(key, EdDSA), algo)
+    case _: JwtUnknownAlgorithm  => false // Unsupported algorithm
   }
 
   /** Alias for `verify`

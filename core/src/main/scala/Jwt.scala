@@ -30,8 +30,8 @@ import scala.util.Failure
 trait JwtCore[H, C] {
   implicit private[jwt] val clock: Clock = Clock.systemUTC
   // Abstract methods
-  protected def parseHeader(header: String): H
-  protected def parseClaim(claim: String): C
+  protected def parseHeader(header: String): Try[H]
+  protected def parseClaim(claim: String): Try[C]
 
   protected def extractAlgorithm(header: H): Option[JwtAlgorithm]
   protected def extractExpiration(claim: C): Option[Long]
@@ -219,7 +219,9 @@ trait JwtCore[H, C] {
     */
   def decodeRawAll(token: String, options: JwtOptions): Try[(String, String, String)] = for {
     (_, header, _, claim, signature) <- splitToken(token)
-    _ <- validate(parseHeader(header), parseClaim(claim), signature, options)
+    h <- parseHeader(header)
+    c <- parseClaim(claim)
+    _ <- validate(h, c, signature, options)
   } yield (header, claim, signature)
 
   def decodeRawAll(token: String): Try[(String, String, String)] =
@@ -239,16 +241,9 @@ trait JwtCore[H, C] {
       options: JwtOptions
   ): Try[(String, String, String)] = for {
     (header64, header, claim64, claim, signature) <- splitToken(token)
-    _ <- validate(
-      header64,
-      parseHeader(header),
-      claim64,
-      parseClaim(claim),
-      signature,
-      key,
-      algorithms,
-      options
-    )
+    h <- parseHeader(header)
+    c <- parseClaim(claim)
+    _ <- validate(header64, h, claim64, c, signature, key, algorithms, options)
   } yield (header, claim, signature)
 
   def decodeRawAll(
@@ -272,16 +267,9 @@ trait JwtCore[H, C] {
       options: JwtOptions
   ): Try[(String, String, String)] = for {
     (header64, header, claim64, claim, signature) <- splitToken(token)
-    _ <- validate(
-      header64,
-      parseHeader(header),
-      claim64,
-      parseClaim(claim),
-      signature,
-      key,
-      algorithms,
-      options
-    )
+    h <- parseHeader(header)
+    c <- parseClaim(claim)
+    _ <- validate(header64, h, claim64, c, signature, key, algorithms, options)
   } yield (header, claim, signature)
 
   def decodeRawAll(
@@ -305,16 +293,9 @@ trait JwtCore[H, C] {
       options: JwtOptions
   ): Try[(String, String, String)] = for {
     (header64, header, claim64, claim, signature) <- splitToken(token)
-    _ <- validate(
-      header64,
-      parseHeader(header),
-      claim64,
-      parseClaim(claim),
-      signature,
-      key,
-      algorithms,
-      options
-    )
+    h <- parseHeader(header)
+    c <- parseClaim(claim)
+    _ <- validate(header64, h, claim64, c, signature, key, algorithms, options)
   } yield (header, claim, signature)
 
   def decodeRawAll(
@@ -348,16 +329,9 @@ trait JwtCore[H, C] {
       options: JwtOptions
   ): Try[(String, String, String)] = for {
     (header64, header, claim64, claim, signature) <- splitToken(token)
-    _ <- validate(
-      header64,
-      parseHeader(header),
-      claim64,
-      parseClaim(claim),
-      signature,
-      key,
-      algorithms,
-      options
-    )
+    h <- parseHeader(header)
+    c <- parseClaim(claim)
+    _ <- validate(header64, h, claim64, c, signature, key, algorithms, options)
   } yield (header, claim, signature)
 
   def decodeRawAll(
@@ -498,8 +472,8 @@ trait JwtCore[H, C] {
     */
   def decodeAll(token: String, options: JwtOptions): Try[(H, C, String)] = for {
     (_, header, _, claim, signature) <- splitToken(token)
-    h <- Try(parseHeader(header))
-    c <- Try(parseClaim(claim))
+    h <- parseHeader(header)
+    c <- parseClaim(claim)
     _ <- validate(h, c, signature, options)
   } yield (h, c, signature)
 
@@ -519,8 +493,8 @@ trait JwtCore[H, C] {
       options: JwtOptions
   ): Try[(H, C, String)] = for {
     (header64, header, claim64, claim, signature) <- splitToken(token)
-    h <- Try(parseHeader(header))
-    c <- Try(parseClaim(claim))
+    h <- parseHeader(header)
+    c <- parseClaim(claim)
     _ <- validate(header64, h, claim64, c, signature, key, algorithms, options)
   } yield (h, c, signature)
 
@@ -545,8 +519,8 @@ trait JwtCore[H, C] {
       options: JwtOptions
   ): Try[(H, C, String)] = for {
     (header64, header, claim64, claim, signature) <- splitToken(token)
-    h <- Try(parseHeader(header))
-    c <- Try(parseClaim(claim))
+    h <- parseHeader(header)
+    c <- parseClaim(claim)
     _ <- validate(header64, h, claim64, c, signature, key, algorithms, options)
   } yield (h, c, signature)
 
@@ -571,8 +545,8 @@ trait JwtCore[H, C] {
       options: JwtOptions
   ): Try[(H, C, String)] = for {
     (header64, header, claim64, claim, signature) <- splitToken(token)
-    h <- Try(parseHeader(header))
-    c <- Try(parseClaim(claim))
+    h <- parseHeader(header)
+    c <- parseClaim(claim)
     _ <- validate(header64, h, claim64, c, signature, key, algorithms, options)
   } yield (h, c, signature)
 
@@ -609,8 +583,8 @@ trait JwtCore[H, C] {
       options: JwtOptions
   ): Try[(H, C, String)] = for {
     (header64, header, claim64, claim, signature) <- splitToken(token)
-    h <- Try(parseHeader(header))
-    c <- Try(parseClaim(claim))
+    h <- parseHeader(header)
+    c <- parseClaim(claim)
     _ <- validate(header64, h, claim64, c, signature, key, algorithms, options)
   } yield (h, c, signature)
 
@@ -946,7 +920,9 @@ trait JwtCore[H, C] {
     */
   def validate(token: String, options: JwtOptions): Try[Unit] = for {
     (_, header, _, claim, signature) <- splitToken(token)
-    _ <- validate(parseHeader(header), parseClaim(claim), signature, options)
+    h <- parseHeader(header)
+    c <- parseClaim(claim)
+    _ <- validate(h, c, signature, options)
   } yield ()
 
   def validate(token: String): Try[Unit] = validate(token, JwtOptions.DEFAULT)
@@ -969,16 +945,9 @@ trait JwtCore[H, C] {
       options: JwtOptions
   ): Try[Unit] = for {
     (header64, header, claim64, claim, signature) <- splitToken(token)
-    _ <- validate(
-      header64,
-      parseHeader(header),
-      claim64,
-      parseClaim(claim),
-      signature,
-      key,
-      algorithms,
-      options
-    )
+    h <- parseHeader(header)
+    c <- parseClaim(claim)
+    _ <- validate(header64, h, claim64, c, signature, key, algorithms, options)
   } yield ()
 
   def validate(token: String, key: String, algorithms: Seq[JwtHmacAlgorithm]): Try[Unit] =
@@ -1002,16 +971,9 @@ trait JwtCore[H, C] {
       options: JwtOptions
   ): Try[Unit] = for {
     (header64, header, claim64, claim, signature) <- splitToken(token)
-    _ <- validate(
-      header64,
-      parseHeader(header),
-      claim64,
-      parseClaim(claim),
-      signature,
-      key,
-      algorithms,
-      options
-    )
+    h <- parseHeader(header)
+    c <- parseClaim(claim)
+    _ <- validate(header64, h, claim64, c, signature, key, algorithms, options)
   } yield ()
 
   def validate(token: String, key: String, algorithms: => Seq[JwtAsymmetricAlgorithm]): Try[Unit] =
@@ -1035,16 +997,9 @@ trait JwtCore[H, C] {
       options: JwtOptions
   ): Try[Unit] = for {
     (header64, header, claim64, claim, signature) <- splitToken(token)
-    _ <- validate(
-      header64,
-      parseHeader(header),
-      claim64,
-      parseClaim(claim),
-      signature,
-      key,
-      algorithms,
-      options
-    )
+    h <- parseHeader(header)
+    c <- parseClaim(claim)
+    _ <- validate(header64, h, claim64, c, signature, key, algorithms, options)
   } yield ()
 
   def validate(token: String, key: SecretKey, algorithms: Seq[JwtHmacAlgorithm]): Try[Unit] =
@@ -1073,16 +1028,9 @@ trait JwtCore[H, C] {
       options: JwtOptions
   ): Try[Unit] = for {
     (header64, header, claim64, claim, signature) <- splitToken(token)
-    _ <- validate(
-      header64,
-      parseHeader(header),
-      claim64,
-      parseClaim(claim),
-      signature,
-      key,
-      algorithms,
-      options
-    )
+    h <- parseHeader(header)
+    c <- parseClaim(claim)
+    _ <- validate(header64, h, claim64, c, signature, key, algorithms, options)
   } yield ()
 
   def validate(token: String, key: PublicKey, algorithms: Seq[JwtAsymmetricAlgorithm]): Try[Unit] =

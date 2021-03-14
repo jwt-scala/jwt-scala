@@ -1,6 +1,7 @@
 package pdi.jwt
 
 import java.time.Clock
+import scala.util.Try
 import play.api.libs.json._
 import pdi.jwt.exceptions.JwtNonStringException
 
@@ -9,7 +10,7 @@ import pdi.jwt.exceptions.JwtNonStringException
   * To see a full list of samples, check the [[https://jwt-scala.github.io/jwt-scala/jwt-play-json.html online documentation]].
   */
 trait JwtJsonParser[H, C] extends JwtJsonCommon[JsObject, H, C] with JwtJsonImplicits {
-  protected def parse(value: String): JsObject = Json.parse(value).as[JsObject]
+  protected def parse(value: String): Try[JsObject] = Try(Json.parse(value).as[JsObject])
 
   protected def stringify(value: JsObject): String = Json.stringify(value)
 
@@ -25,11 +26,19 @@ trait JwtJsonParser[H, C] extends JwtJsonCommon[JsObject, H, C] with JwtJsonImpl
 
 object JwtJson extends JwtJsonParser[JwtHeader, JwtClaim] {
   def apply(clock: Clock): JwtJson = new JwtJson(clock)
-  def parseHeader(header: String): JwtHeader = jwtPlayJsonHeaderReader.reads(Json.parse(header)).get
-  def parseClaim(claim: String): JwtClaim = jwtPlayJsonClaimReader.reads(Json.parse(claim)).get
+  def parseHeader(header: String): Try[JwtHeader] = Try(
+    jwtPlayJsonHeaderReader.reads(Json.parse(header)).get
+  )
+  def parseClaim(claim: String): Try[JwtClaim] = Try(
+    jwtPlayJsonClaimReader.reads(Json.parse(claim)).get
+  )
 }
 
 class JwtJson private (override val clock: Clock) extends JwtJsonParser[JwtHeader, JwtClaim] {
-  def parseHeader(header: String): JwtHeader = jwtPlayJsonHeaderReader.reads(Json.parse(header)).get
-  def parseClaim(claim: String): JwtClaim = jwtPlayJsonClaimReader.reads(Json.parse(claim)).get
+  def parseHeader(header: String): Try[JwtHeader] = Try(
+    jwtPlayJsonHeaderReader.reads(Json.parse(header)).get
+  )
+  def parseClaim(claim: String): Try[JwtClaim] = Try(
+    jwtPlayJsonClaimReader.reads(Json.parse(claim)).get
+  )
 }

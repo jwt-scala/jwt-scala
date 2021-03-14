@@ -7,6 +7,7 @@ Given that there may be many of these public/private claims, rather than parsing
 Here is an example where reserved headers, along with a private "user" claim, is used:
 
 ```scala mdoc:reset
+import scala.util.Try
 import pdi.jwt.{Jwt, JwtHeader, JwtClaim, JwtUtils, JwtJson4sParser}
 // define your network-specific claims, and compose them with the usual reservedClaims
 case class JwtPrivateClaim(user: Option[String] = None, reservedClaims: JwtClaim = JwtClaim()) {
@@ -21,15 +22,19 @@ case class JwtPrivateClaim(user: Option[String] = None, reservedClaims: JwtClaim
 // create a parser with claim type set to the one you just defined
 // notice that the default `JwtHeader` class was used since we're only interested in overriding with a custom private claims type in this example
 object JwtJson4sPrivate extends JwtJson4sParser[JwtHeader, JwtPrivateClaim] {
-  override protected def parseClaim(claim: String): JwtPrivateClaim = {
-    val claimJson = super.parse(claim)
-    val jwtReservedClaim: JwtClaim = super.readClaim(claimJson)
-    val content = super.parse(jwtReservedClaim.content)
-    JwtPrivateClaim(super.extractString(content, "user"), jwtReservedClaim.withContent("{}"))
+  override protected def parseClaim(claim: String): Try[JwtPrivateClaim] = {
+    for {
+      claimJson <- super.parse(claim)
+      jwtReservedClaim: JwtClaim <- super.readClaim(claimJson)
+      content <- super.parse(jwtReservedClaim.content)
+    } yield JwtPrivateClaim(super.extractString(content, "user"), jwtReservedClaim.withContent("{}"))
   }
 
   // here is the only boilerplate (but if you chose to also specify a custom header type then you would make use of this)
-  override protected def parseHeader(header: String): JwtHeader = super.readHeader(parse(header))
+  override protected def parseHeader(header: String): Try[JwtHeader] = for {
+    json <- parse(header)
+    jwtHeader <- super.readHeader(json)
+  } yield jwtHeader
 
   // marginal boilerplate to ensure consistency with isValid checks now that your nesting reserved claims into your custom private claims
   override protected def extractExpiration(claim: JwtPrivateClaim): Option[Long] = claim.reservedClaims.expiration

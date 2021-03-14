@@ -80,9 +80,11 @@ Jwt.decode(Jwt.encode(JwtClaim().startsIn(5)))
 
 ### Validating
 
-If you only want to check if a token is valid without decoding it. You have two options: `validate` functions that will throw the exceptions we saw in the decoding section, so you know what went wrong, or `isValid` functions that will return a boolean in case you don't care about the actual error and don't want to bother with catching exception.
+If you only want to check if a token is valid without decoding it. You have two options: `validate` functions that
+return a `Try[Unit]` with the exceptions we saw in the decoding section, so you know what went wrong,
+or `isValid` functions that will return a boolean in case you don't care about the actual error.
 
-```scala mdoc:crash
+```scala mdoc
 // All good
 Jwt.validate(token, "secretKey", Seq(JwtAlgorithm.HS256))
 Jwt.isValid(token, "secretKey", Seq(JwtAlgorithm.HS256))

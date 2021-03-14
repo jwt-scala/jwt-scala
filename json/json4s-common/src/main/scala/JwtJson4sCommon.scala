@@ -6,6 +6,7 @@ import pdi.jwt.exceptions.{
   JwtNonStringException,
   JwtNonStringSetOrStringException
 }
+import scala.util.{Failure, Try, Success}
 
 trait JwtJson4sCommon[H, C] extends JwtJsonCommon[JObject, H, C] {
   protected implicit def formats: Formats
@@ -18,35 +19,39 @@ trait JwtJson4sCommon[H, C] extends JwtJsonCommon[JObject, H, C] {
     case _               => throw new JwtNonStringException("alg")
   }
 
-  def readClaim(json: JValue): JwtClaim = json match {
+  def readClaim(json: JValue): Try[JwtClaim] = json match {
     case value: JObject =>
-      JwtClaim.apply(
-        issuer = extractString(value, "iss"),
-        subject = extractString(value, "sub"),
-        audience = extractStringSetOrString(value, "aud"),
-        expiration = extractLong(value, "exp"),
-        notBefore = extractLong(value, "nbf"),
-        issuedAt = extractLong(value, "iat"),
-        jwtId = extractString(value, "jti"),
-        content = stringify(filterClaimFields(value))
+      Success(
+        JwtClaim.apply(
+          issuer = extractString(value, "iss"),
+          subject = extractString(value, "sub"),
+          audience = extractStringSetOrString(value, "aud"),
+          expiration = extractLong(value, "exp"),
+          notBefore = extractLong(value, "nbf"),
+          issuedAt = extractLong(value, "iat"),
+          jwtId = extractString(value, "jti"),
+          content = stringify(filterClaimFields(value))
+        )
       )
-    case _ => throw new RuntimeException("Expected a JObject")
+    case _ => Failure(new RuntimeException("Expected a JObject"))
   }
 
-  def writeClaim(claim: JwtClaim): JValue = parse(claim.toJson)
+  def writeClaim(claim: JwtClaim): Try[JValue] = parse(claim.toJson)
 
-  def readHeader(json: JValue): JwtHeader = json match {
+  def readHeader(json: JValue): Try[JwtHeader] = json match {
     case value: JObject =>
-      JwtHeader.apply(
-        algorithm = extractString(value, "alg").flatMap(JwtAlgorithm.optionFromString),
-        typ = extractString(value, "typ"),
-        contentType = extractString(value, "cty"),
-        keyId = extractString(value, "kid")
+      Success(
+        JwtHeader.apply(
+          algorithm = extractString(value, "alg").flatMap(JwtAlgorithm.optionFromString),
+          typ = extractString(value, "typ"),
+          contentType = extractString(value, "cty"),
+          keyId = extractString(value, "kid")
+        )
       )
-    case _ => throw new RuntimeException("Expected a JObject")
+    case _ => Failure(new RuntimeException("Expected a JObject"))
   }
 
-  def writeHeader(header: JwtHeader): JValue = parse(header.toJson)
+  def writeHeader(header: JwtHeader): Try[JValue] = parse(header.toJson)
 
   protected def extractString(json: JObject, fieldName: String): Option[String] =
     (json \ fieldName) match {

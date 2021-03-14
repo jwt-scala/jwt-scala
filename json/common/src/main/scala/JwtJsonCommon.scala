@@ -12,7 +12,7 @@ import pdi.jwt.exceptions.{
 }
 
 trait JwtJsonCommon[J, H, C] extends JwtCore[H, C] {
-  protected def parse(value: String): J
+  protected def parse(value: String): Try[J]
   protected def stringify(value: J): String
   protected def getAlgorithm(header: J): Option[JwtAlgorithm]
 
@@ -53,8 +53,11 @@ trait JwtJsonCommon[J, H, C] extends JwtCore[H, C] {
   def encode(claim: J, key: PrivateKey, algorithm: JwtAsymmetricAlgorithm): String =
     encode(stringify(claim), key, algorithm)
 
-  def decodeJsonAll(token: String, options: JwtOptions): Try[(J, J, String)] =
-    decodeRawAll(token, options).map { tuple => (parse(tuple._1), parse(tuple._2), tuple._3) }
+  def decodeJsonAll(token: String, options: JwtOptions): Try[(J, J, String)] = for {
+    (header, claim, signature) <- decodeRawAll(token, options)
+    headerJson <- parse(header)
+    claimJson <- parse(claim)
+  } yield (headerJson, claimJson, signature)
 
   def decodeJsonAll(token: String): Try[(J, J, String)] =
     decodeJsonAll(token, JwtOptions.DEFAULT)
@@ -64,10 +67,11 @@ trait JwtJsonCommon[J, H, C] extends JwtCore[H, C] {
       key: String,
       algorithms: Seq[JwtHmacAlgorithm],
       options: JwtOptions
-  ): Try[(J, J, String)] =
-    decodeRawAll(token, key, algorithms, options).map { tuple =>
-      (parse(tuple._1), parse(tuple._2), tuple._3)
-    }
+  ): Try[(J, J, String)] = for {
+    (header, claim, signature) <- decodeRawAll(token, key, algorithms, options)
+    headerJson <- parse(header)
+    claimJson <- parse(claim)
+  } yield (headerJson, claimJson, signature)
 
   def decodeJsonAll(
       token: String,
@@ -81,10 +85,11 @@ trait JwtJsonCommon[J, H, C] extends JwtCore[H, C] {
       key: String,
       algorithms: => Seq[JwtAsymmetricAlgorithm],
       options: JwtOptions
-  ): Try[(J, J, String)] =
-    decodeRawAll(token, key, algorithms, options).map { tuple =>
-      (parse(tuple._1), parse(tuple._2), tuple._3)
-    }
+  ): Try[(J, J, String)] = for {
+    (header, claim, signature) <- decodeRawAll(token, key, algorithms, options)
+    headerJson <- parse(header)
+    claimJson <- parse(claim)
+  } yield (headerJson, claimJson, signature)
 
   def decodeJsonAll(
       token: String,
@@ -98,10 +103,11 @@ trait JwtJsonCommon[J, H, C] extends JwtCore[H, C] {
       key: SecretKey,
       algorithms: Seq[JwtHmacAlgorithm],
       options: JwtOptions
-  ): Try[(J, J, String)] =
-    decodeRawAll(token, key, algorithms, options).map { tuple =>
-      (parse(tuple._1), parse(tuple._2), tuple._3)
-    }
+  ): Try[(J, J, String)] = for {
+    (header, claim, signature) <- decodeRawAll(token, key, algorithms, options)
+    headerJson <- parse(header)
+    claimJson <- parse(claim)
+  } yield (headerJson, claimJson, signature)
 
   def decodeJsonAll(
       token: String,
@@ -121,10 +127,11 @@ trait JwtJsonCommon[J, H, C] extends JwtCore[H, C] {
       key: PublicKey,
       algorithms: Seq[JwtAsymmetricAlgorithm],
       options: JwtOptions
-  ): Try[(J, J, String)] =
-    decodeRawAll(token, key, algorithms, options).map { tuple =>
-      (parse(tuple._1), parse(tuple._2), tuple._3)
-    }
+  ): Try[(J, J, String)] = for {
+    (header, claim, signature) <- decodeRawAll(token, key, algorithms, options)
+    headerJson <- parse(header)
+    claimJson <- parse(claim)
+  } yield (headerJson, claimJson, signature)
 
   def decodeJsonAll(
       token: String,

@@ -3,9 +3,11 @@ package pdi.jwt
 import argonaut._
 import argonaut.Argonaut._
 import java.time.Clock
+import scala.util.{Failure, Try, Success}
 
 trait JwtArgonautParser[H, C] extends JwtJsonCommon[Json, H, C] {
-  override protected def parse(value: String): Json = Parse.parseOption(value).get
+  override protected def parse(value: String): Try[Json] =
+    Parse.parse(value).fold({ (e: String) => Failure(new Exception(e)) }, Success(_))
 
   override protected def stringify(value: Json): String = value.nospaces
 
@@ -34,21 +36,21 @@ object JwtArgonaut extends JwtArgonautParser[JwtHeader, JwtClaim] {
       (json -|> field)(_.arrayOrEmpty.map(_.nospaces).toSet)
   }
 
-  override protected def parseClaim(claim: String): JwtClaim = parseClaimHelp(claim)
+  override protected def parseClaim(claim: String): Try[JwtClaim] = parseClaimHelp(claim)
 
-  override protected def parseHeader(header: String): JwtHeader = parseHeaderHelp(header)
+  override protected def parseHeader(header: String): Try[JwtHeader] = parseHeaderHelp(header)
 
-  private def parseClaimHelp(claim: String): JwtClaim =
-    Parse.parseOption(claim) match {
+  private def parseClaimHelp(claim: String): Try[JwtClaim] =
+    Try(Parse.parseOption(claim) match {
       case Some(value) => jsonToJwtClaim(value)
       case None        => JwtClaim()
-    }
+    })
 
-  private def parseHeaderHelp(header: String): JwtHeader =
-    Parse.parseOption(header) map jsonToJwtHeader match {
+  private def parseHeaderHelp(header: String): Try[JwtHeader] =
+    Try(Parse.parseOption(header) map jsonToJwtHeader match {
       case Some(value) => value
       case None        => JwtHeader(None)
-    }
+    })
 
   private def jsonToJwtHeader(json: Json): JwtHeader = {
     val alg = getAlgorithm(json)
@@ -84,7 +86,7 @@ class JwtArgonaut private (override val clock: Clock)
     extends JwtArgonautParser[JwtHeader, JwtClaim] {
   import JwtArgonaut.{parseClaimHelp, parseHeaderHelp}
 
-  override protected def parseClaim(claim: String): JwtClaim = parseClaimHelp(claim)
+  override protected def parseClaim(claim: String): Try[JwtClaim] = parseClaimHelp(claim)
 
-  override protected def parseHeader(header: String): JwtHeader = parseHeaderHelp(header)
+  override protected def parseHeader(header: String): Try[JwtHeader] = parseHeaderHelp(header)
 }
