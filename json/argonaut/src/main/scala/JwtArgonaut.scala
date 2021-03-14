@@ -3,19 +3,17 @@ package pdi.jwt
 import argonaut._
 import argonaut.Argonaut._
 import java.time.Clock
-import pdi.jwt.exceptions.JwtNonStringException
 
 trait JwtArgonautParser[H, C] extends JwtJsonCommon[Json, H, C] {
   override protected def parse(value: String): Json = Parse.parseOption(value).get
 
   override protected def stringify(value: Json): String = value.nospaces
 
-  override protected def getAlgorithm(header: Json): Option[JwtAlgorithm] =
-    header -| "alg" map (_.stringOrEmpty) flatMap {
-      case "none"      => None
-      case alg: String => Some(JwtAlgorithm.fromString(alg))
-      case null        => throw new JwtNonStringException("alg")
-    }
+  override protected def getAlgorithm(header: Json): Option[JwtAlgorithm] = header
+    .field("alg")
+    .map(_.stringOrEmpty)
+    .filterNot(_ == "none")
+    .map(JwtAlgorithm.fromString)
 }
 
 object JwtArgonaut extends JwtArgonautParser[JwtHeader, JwtClaim] {

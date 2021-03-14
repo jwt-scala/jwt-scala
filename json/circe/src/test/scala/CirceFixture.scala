@@ -18,15 +18,8 @@ case class JsonDataEntry(
 trait CirceFixture extends JsonCommonFixture[Json] {
   def parseString(value: String): Json = jawnParse(value).toOption.get
 
-  val claimJson = parseString(claim) match {
-    case j: Json => j
-    case null    => throw new RuntimeException("I want a Circe Json!")
-  }
-
-  val headerEmptyJson = parseString(headerEmpty) match {
-    case j: Json => j
-    case null    => throw new RuntimeException("I want a Circe Json!")
-  }
+  val claimJson = parseString(claim)
+  val headerEmptyJson = parseString(headerEmpty)
 
   def mapData(data: DataEntryBase): JsonDataEntry = JsonDataEntry(
     algo = data.algo,
@@ -37,9 +30,6 @@ trait CirceFixture extends JsonCommonFixture[Json] {
     token = data.token,
     tokenUnsigned = data.tokenUnsigned,
     tokenEmpty = data.tokenEmpty,
-    headerJson = parseString(data.header) match {
-      case j: Json => j
-      case null    => throw new RuntimeException("I want a Circe Json!")
-    }
+    headerJson = parseString(data.header)
   )
 }

@@ -196,15 +196,14 @@ object JwtUtils {
       signature: Array[Byte],
       key: String,
       algorithm: JwtAlgorithm
-  ): Boolean =
-    algorithm match {
-      case algo: JwtHmacAlgorithm =>
-        verify(data, signature, new SecretKeySpec(bytify(key), algo.fullName), algo)
-      case algo: JwtRSAAlgorithm     => verify(data, signature, parsePublicKey(key, RSA), algo)
-      case algo: JwtECDSAAlgorithm   => verify(data, signature, parsePublicKey(key, ECDSA), algo)
-      case algo: JwtEdDSAAlgorithm   => verify(data, signature, parsePublicKey(key, EdDSA), algo)
-      case algo: JwtUnknownAlgorithm => throw new JwtNonSupportedAlgorithm(algo.fullName)
-    }
+  ): Boolean = algorithm match {
+    case algo: JwtHmacAlgorithm =>
+      verify(data, signature, new SecretKeySpec(bytify(key), algo.fullName), algo)
+    case algo: JwtRSAAlgorithm     => verify(data, signature, parsePublicKey(key, RSA), algo)
+    case algo: JwtECDSAAlgorithm   => verify(data, signature, parsePublicKey(key, ECDSA), algo)
+    case algo: JwtEdDSAAlgorithm   => verify(data, signature, parsePublicKey(key, EdDSA), algo)
+    case algo: JwtUnknownAlgorithm => throw new JwtNonSupportedAlgorithm(algo.fullName)
+  }
 
   /** Alias for `verify`
     */
@@ -219,12 +218,10 @@ object JwtUtils {
     * @throws JwtNonSupportedAlgorithm If the algorithm is not supported.
     */
   @throws[JwtNonSupportedAlgorithm]
-  def getSignatureByteArrayLength(algorithm: JwtECDSAAlgorithm): Int = {
-    algorithm match {
-      case ES256 => 64
-      case ES384 => 96
-      case ES512 => 132
-    }
+  def getSignatureByteArrayLength(algorithm: JwtECDSAAlgorithm): Int = algorithm match {
+    case ES256 => 64
+    case ES384 => 96
+    case ES512 => 132
   }
 
   /** Transcodes the JCA ASN.1/DER-encoded signature into the concatenated

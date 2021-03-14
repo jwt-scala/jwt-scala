@@ -5,7 +5,6 @@ import io.circe.syntax._
 import io.circe.jawn.{parse => jawnParse}
 import java.time.Clock
 
-import pdi.jwt.exceptions.JwtNonStringException
 import scala.annotation.nowarn
 
 /** Implementation of `JwtCore` using `Json` from Circe.
@@ -15,14 +14,11 @@ trait JwtCirceParser[H, C] extends JwtJsonCommon[Json, H, C] {
   protected def stringify(value: Json): String = value.asJson.noSpaces
   protected def getAlgorithm(header: Json): Option[JwtAlgorithm] = getAlg(header.hcursor)
 
-  protected def getAlg(cursor: HCursor): Option[JwtAlgorithm] = {
-    cursor.get[String]("alg").toOption.flatMap {
-      case "none"         => None
-      case s if s == null => None
-      case s: String      => Option(JwtAlgorithm.fromString(s))
-      case null           => throw new JwtNonStringException("alg")
-    }
-  }
+  protected def getAlg(cursor: HCursor): Option[JwtAlgorithm] = cursor
+    .get[String]("alg")
+    .toOption
+    .filterNot(_ == "none")
+    .map(JwtAlgorithm.fromString)
 }
 
 object JwtCirce extends JwtCirceParser[JwtHeader, JwtClaim] {
