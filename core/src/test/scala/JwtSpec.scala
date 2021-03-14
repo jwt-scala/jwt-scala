@@ -55,12 +55,7 @@ class JwtSpec extends UnitSpec with Fixture {
       dataRSA foreach { d =>
         testTryAllWithoutSignature(
           validTimeJwt.decodeAll(
-            validTimeJwt.encode(
-              d.header,
-              claim,
-              randomRSAKey.getPrivate,
-              d.algo.asInstanceOf[JwtRSAAlgorithm]
-            ),
+            validTimeJwt.encode(d.header, claim, randomRSAKey.getPrivate, d.algo),
             randomRSAKey.getPublic,
             JwtAlgorithm.allRSA()
           ),
@@ -70,12 +65,7 @@ class JwtSpec extends UnitSpec with Fixture {
 
         testTryAllWithoutSignature(
           validTimeJwt.decodeAll(
-            validTimeJwt.encode(
-              d.header,
-              claim,
-              randomRSAKey.getPrivate,
-              d.algo.asInstanceOf[JwtRSAAlgorithm]
-            ),
+            validTimeJwt.encode(d.header, claim, randomRSAKey.getPrivate, d.algo),
             randomRSAKey.getPublic
           ),
           (d.headerClass, claimClass),
@@ -88,12 +78,7 @@ class JwtSpec extends UnitSpec with Fixture {
       dataECDSA foreach { d =>
         testTryAllWithoutSignature(
           validTimeJwt.decodeAll(
-            validTimeJwt.encode(
-              d.header,
-              claim,
-              randomECKey.getPrivate,
-              d.algo.asInstanceOf[JwtECDSAAlgorithm]
-            ),
+            validTimeJwt.encode(d.header, claim, randomECKey.getPrivate, d.algo),
             randomECKey.getPublic,
             JwtAlgorithm.allECDSA()
           ),
@@ -108,12 +93,7 @@ class JwtSpec extends UnitSpec with Fixture {
       dataEdDSA foreach { d =>
         testTryAllWithoutSignature(
           validTimeJwt.decodeAll(
-            validTimeJwt.encode(
-              d.header,
-              claim,
-              randomEd25519Key.getPrivate,
-              d.algo.asInstanceOf[JwtEdDSAAlgorithm]
-            ),
+            validTimeJwt.encode(d.header, claim, randomEd25519Key.getPrivate, d.algo),
             randomEd25519Key.getPublic,
             JwtAlgorithm.allEdDSA()
           ),
@@ -123,12 +103,7 @@ class JwtSpec extends UnitSpec with Fixture {
 
         testTryAllWithoutSignature(
           validTimeJwt.decodeAll(
-            validTimeJwt.encode(
-              d.header,
-              claim,
-              randomEd25519Key.getPrivate,
-              d.algo.asInstanceOf[JwtEdDSAAlgorithm]
-            ),
+            validTimeJwt.encode(d.header, claim, randomEd25519Key.getPrivate, d.algo),
             randomEd25519Key.getPublic
           ),
           (d.headerClass, claimClass),
