@@ -219,7 +219,7 @@ trait JwtCore[H, C] {
     */
   def decodeRawAll(token: String, options: JwtOptions): Try[(String, String, String)] = for {
     (_, header, _, claim, signature) <- splitToken(token)
-    _ <- Try(validate(parseHeader(header), parseClaim(claim), signature, options))
+    _ <- validate(parseHeader(header), parseClaim(claim), signature, options)
   } yield (header, claim, signature)
 
   def decodeRawAll(token: String): Try[(String, String, String)] =
@@ -239,17 +239,15 @@ trait JwtCore[H, C] {
       options: JwtOptions
   ): Try[(String, String, String)] = for {
     (header64, header, claim64, claim, signature) <- splitToken(token)
-    _ <- Try(
-      validate(
-        header64,
-        parseHeader(header),
-        claim64,
-        parseClaim(claim),
-        signature,
-        key,
-        algorithms,
-        options
-      )
+    _ <- validate(
+      header64,
+      parseHeader(header),
+      claim64,
+      parseClaim(claim),
+      signature,
+      key,
+      algorithms,
+      options
     )
   } yield (header, claim, signature)
 
@@ -274,17 +272,15 @@ trait JwtCore[H, C] {
       options: JwtOptions
   ): Try[(String, String, String)] = for {
     (header64, header, claim64, claim, signature) <- splitToken(token)
-    _ <- Try(
-      validate(
-        header64,
-        parseHeader(header),
-        claim64,
-        parseClaim(claim),
-        signature,
-        key,
-        algorithms,
-        options
-      )
+    _ <- validate(
+      header64,
+      parseHeader(header),
+      claim64,
+      parseClaim(claim),
+      signature,
+      key,
+      algorithms,
+      options
     )
   } yield (header, claim, signature)
 
@@ -309,17 +305,15 @@ trait JwtCore[H, C] {
       options: JwtOptions
   ): Try[(String, String, String)] = for {
     (header64, header, claim64, claim, signature) <- splitToken(token)
-    _ <- Try(
-      validate(
-        header64,
-        parseHeader(header),
-        claim64,
-        parseClaim(claim),
-        signature,
-        key,
-        algorithms,
-        options
-      )
+    _ <- validate(
+      header64,
+      parseHeader(header),
+      claim64,
+      parseClaim(claim),
+      signature,
+      key,
+      algorithms,
+      options
     )
   } yield (header, claim, signature)
 
@@ -354,17 +348,15 @@ trait JwtCore[H, C] {
       options: JwtOptions
   ): Try[(String, String, String)] = for {
     (header64, header, claim64, claim, signature) <- splitToken(token)
-    _ <- Try(
-      validate(
-        header64,
-        parseHeader(header),
-        claim64,
-        parseClaim(claim),
-        signature,
-        key,
-        algorithms,
-        options
-      )
+    _ <- validate(
+      header64,
+      parseHeader(header),
+      claim64,
+      parseClaim(claim),
+      signature,
+      key,
+      algorithms,
+      options
     )
   } yield (header, claim, signature)
 
@@ -508,7 +500,7 @@ trait JwtCore[H, C] {
     (_, header, _, claim, signature) <- splitToken(token)
     h <- Try(parseHeader(header))
     c <- Try(parseClaim(claim))
-    _ <- Try(validate(h, c, signature, options))
+    _ <- validate(h, c, signature, options)
   } yield (h, c, signature)
 
   def decodeAll(token: String): Try[(H, C, String)] = decodeAll(token, JwtOptions.DEFAULT)
@@ -529,7 +521,7 @@ trait JwtCore[H, C] {
     (header64, header, claim64, claim, signature) <- splitToken(token)
     h <- Try(parseHeader(header))
     c <- Try(parseClaim(claim))
-    _ <- Try(validate(header64, h, claim64, c, signature, key, algorithms, options))
+    _ <- validate(header64, h, claim64, c, signature, key, algorithms, options)
   } yield (h, c, signature)
 
   def decodeAll(
@@ -555,7 +547,7 @@ trait JwtCore[H, C] {
     (header64, header, claim64, claim, signature) <- splitToken(token)
     h <- Try(parseHeader(header))
     c <- Try(parseClaim(claim))
-    _ <- Try(validate(header64, h, claim64, c, signature, key, algorithms, options))
+    _ <- validate(header64, h, claim64, c, signature, key, algorithms, options)
   } yield (h, c, signature)
 
   def decodeAll(
@@ -581,7 +573,7 @@ trait JwtCore[H, C] {
     (header64, header, claim64, claim, signature) <- splitToken(token)
     h <- Try(parseHeader(header))
     c <- Try(parseClaim(claim))
-    _ <- Try(validate(header64, h, claim64, c, signature, key, algorithms, options))
+    _ <- validate(header64, h, claim64, c, signature, key, algorithms, options)
   } yield (h, c, signature)
 
   def decodeAll(
@@ -619,7 +611,7 @@ trait JwtCore[H, C] {
     (header64, header, claim64, claim, signature) <- splitToken(token)
     h <- Try(parseHeader(header))
     c <- Try(parseClaim(claim))
-    _ <- Try(validate(header64, h, claim64, c, signature, key, algorithms, options))
+    _ <- validate(header64, h, claim64, c, signature, key, algorithms, options)
   } yield (h, c, signature)
 
   def decodeAll(
@@ -775,20 +767,22 @@ trait JwtCore[H, C] {
   }
 
   // Validation when no key and no algorithm (or unknown)
-  protected def validate(header: H, claim: C, signature: String, options: JwtOptions): Unit = {
-    if (options.signature) {
-      if (!signature.isEmpty) {
-        throw new JwtNonEmptySignatureException()
-      }
-
-      extractAlgorithm(header).foreach {
-        case JwtUnknownAlgorithm(name) => throw new JwtNonSupportedAlgorithm(name)
-        case _                         => throw new JwtNonEmptyAlgorithmException()
-      }
-    }
-
-    validateTiming(claim, options).get
-  }
+  protected def validate(header: H, claim: C, signature: String, options: JwtOptions): Try[Unit] =
+    for {
+      _ <-
+        if (options.signature) {
+          if (!signature.isEmpty) {
+            Failure(new JwtNonEmptySignatureException())
+          } else {
+            extractAlgorithm(header) match {
+              case Some(JwtUnknownAlgorithm(name)) => Failure(new JwtNonSupportedAlgorithm(name))
+              case Some(_)                         => Failure(new JwtNonEmptyAlgorithmException())
+              case None                            => Success(())
+            }
+          }
+        } else Success(())
+      _ <- validateTiming(claim, options)
+    } yield ()
 
   // Validation when both key and algorithm
   protected def validate(
@@ -799,27 +793,29 @@ trait JwtCore[H, C] {
       signature: String,
       options: JwtOptions,
       verify: (Array[Byte], Array[Byte], JwtAlgorithm) => Boolean
-  ): Unit = {
-
-    if (options.signature) {
-      val maybeAlgo = extractAlgorithm(header)
-
-      if (options.signature && signature.isEmpty) {
-        throw new JwtEmptySignatureException()
-      } else if (maybeAlgo.isEmpty) {
-        throw new JwtEmptyAlgorithmException()
-      } else if (
-        !verify(
-          JwtUtils.bytify(header64 + "." + claim64),
-          JwtBase64.decode(signature),
-          maybeAlgo.get
-        )
-      ) {
-        throw new JwtValidationException("Invalid signature for this token or wrong algorithm.")
-      }
-    }
-    validateTiming(claim, options).get
-  }
+  ): Try[Unit] = for {
+    _ <-
+      if (options.signature) {
+        if (signature.isEmpty) {
+          Failure(new JwtNonEmptySignatureException())
+        } else {
+          extractAlgorithm(header) match {
+            case None => Failure(new JwtEmptyAlgorithmException())
+            case Some(algo)
+                if !verify(
+                  JwtUtils.bytify(header64 + "." + claim64),
+                  JwtBase64.decode(signature),
+                  algo
+                ) =>
+              Failure(
+                new JwtValidationException("Invalid signature for this token or wrong algorithm.")
+              )
+            case _ => Success(())
+          }
+        }
+      } else Success(())
+    _ <- validateTiming(claim, options)
+  } yield ()
 
   // Generic validation on String Key for HMAC algorithms
   protected def validate(
@@ -831,7 +827,7 @@ trait JwtCore[H, C] {
       key: String,
       algorithms: Seq[JwtHmacAlgorithm],
       options: JwtOptions
-  ): Unit = {
+  ): Try[Unit] = {
     validate(
       header64,
       header,
@@ -858,7 +854,7 @@ trait JwtCore[H, C] {
       key: String,
       algorithms: => Seq[JwtAsymmetricAlgorithm],
       options: JwtOptions
-  ): Unit = {
+  ): Try[Unit] = {
     validate(
       header64,
       header,
@@ -890,7 +886,7 @@ trait JwtCore[H, C] {
       key: SecretKey,
       algorithms: Seq[JwtHmacAlgorithm],
       options: JwtOptions
-  ): Unit = {
+  ): Try[Unit] = {
     validate(
       header64,
       header,
@@ -917,7 +913,7 @@ trait JwtCore[H, C] {
       key: PublicKey,
       algorithms: Seq[JwtAsymmetricAlgorithm],
       options: JwtOptions
-  ): Unit = {
+  ): Try[Unit] = {
     validate(
       header64,
       header,
@@ -948,12 +944,12 @@ trait JwtCore[H, C] {
     * @throws JwtExpirationException the token isn't valid anymore because its `expiration` attribute is in the past
     * @throws IllegalArgumentException couldn't decode the token since it's not a valid base64 string
     */
-  def validate(token: String, options: JwtOptions): Unit = {
-    val (_, header, _, claim, signature) = splitToken(token).get
-    validate(parseHeader(header), parseClaim(claim), signature, options)
-  }
+  def validate(token: String, options: JwtOptions): Try[Unit] = for {
+    (_, header, _, claim, signature) <- splitToken(token)
+    _ <- validate(parseHeader(header), parseClaim(claim), signature, options)
+  } yield ()
 
-  def validate(token: String): Unit = validate(token, JwtOptions.DEFAULT)
+  def validate(token: String): Try[Unit] = validate(token, JwtOptions.DEFAULT)
 
   /** An alias of `validate` in case you want to directly pass a string key for HMAC algorithms.
     *
@@ -971,9 +967,9 @@ trait JwtCore[H, C] {
       key: String,
       algorithms: Seq[JwtHmacAlgorithm],
       options: JwtOptions
-  ): Unit = {
-    val (header64, header, claim64, claim, signature) = splitToken(token).get
-    validate(
+  ): Try[Unit] = for {
+    (header64, header, claim64, claim, signature) <- splitToken(token)
+    _ <- validate(
       header64,
       parseHeader(header),
       claim64,
@@ -983,9 +979,9 @@ trait JwtCore[H, C] {
       algorithms,
       options
     )
-  }
+  } yield ()
 
-  def validate(token: String, key: String, algorithms: Seq[JwtHmacAlgorithm]): Unit =
+  def validate(token: String, key: String, algorithms: Seq[JwtHmacAlgorithm]): Try[Unit] =
     validate(token, key, algorithms, JwtOptions.DEFAULT)
 
   /** An alias of `validate` in case you want to directly pass a string key for asymmetric algorithms.
@@ -1004,9 +1000,9 @@ trait JwtCore[H, C] {
       key: String,
       algorithms: => Seq[JwtAsymmetricAlgorithm],
       options: JwtOptions
-  ): Unit = {
-    val (header64, header, claim64, claim, signature) = splitToken(token).get
-    validate(
+  ): Try[Unit] = for {
+    (header64, header, claim64, claim, signature) <- splitToken(token)
+    _ <- validate(
       header64,
       parseHeader(header),
       claim64,
@@ -1016,9 +1012,9 @@ trait JwtCore[H, C] {
       algorithms,
       options
     )
-  }
+  } yield ()
 
-  def validate(token: String, key: String, algorithms: => Seq[JwtAsymmetricAlgorithm]): Unit =
+  def validate(token: String, key: String, algorithms: => Seq[JwtAsymmetricAlgorithm]): Try[Unit] =
     validate(token, key, algorithms, JwtOptions.DEFAULT)
 
   /** An alias of `validate` in case you want to directly pass a string key.
@@ -1037,9 +1033,9 @@ trait JwtCore[H, C] {
       key: SecretKey,
       algorithms: Seq[JwtHmacAlgorithm],
       options: JwtOptions
-  ): Unit = {
-    val (header64, header, claim64, claim, signature) = splitToken(token).get
-    validate(
+  ): Try[Unit] = for {
+    (header64, header, claim64, claim, signature) <- splitToken(token)
+    _ <- validate(
       header64,
       parseHeader(header),
       claim64,
@@ -1049,15 +1045,15 @@ trait JwtCore[H, C] {
       algorithms,
       options
     )
-  }
+  } yield ()
 
-  def validate(token: String, key: SecretKey, algorithms: Seq[JwtHmacAlgorithm]): Unit =
+  def validate(token: String, key: SecretKey, algorithms: Seq[JwtHmacAlgorithm]): Try[Unit] =
     validate(token, key, algorithms, JwtOptions.DEFAULT)
 
-  def validate(token: String, key: SecretKey, options: JwtOptions): Unit =
+  def validate(token: String, key: SecretKey, options: JwtOptions): Try[Unit] =
     validate(token, key, JwtAlgorithm.allHmac(), options)
 
-  def validate(token: String, key: SecretKey): Unit = validate(token, key, JwtOptions.DEFAULT)
+  def validate(token: String, key: SecretKey): Try[Unit] = validate(token, key, JwtOptions.DEFAULT)
 
   /** An alias of `validate` in case you want to directly pass a string key.
     *
@@ -1075,9 +1071,9 @@ trait JwtCore[H, C] {
       key: PublicKey,
       algorithms: Seq[JwtAsymmetricAlgorithm],
       options: JwtOptions
-  ): Unit = {
-    val (header64, header, claim64, claim, signature) = splitToken(token).get
-    validate(
+  ): Try[Unit] = for {
+    (header64, header, claim64, claim, signature) <- splitToken(token)
+    _ <- validate(
       header64,
       parseHeader(header),
       claim64,
@@ -1087,22 +1083,22 @@ trait JwtCore[H, C] {
       algorithms,
       options
     )
-  }
+  } yield ()
 
-  def validate(token: String, key: PublicKey, algorithms: Seq[JwtAsymmetricAlgorithm]): Unit =
+  def validate(token: String, key: PublicKey, algorithms: Seq[JwtAsymmetricAlgorithm]): Try[Unit] =
     validate(token, key, algorithms, JwtOptions.DEFAULT)
 
-  def validate(token: String, key: PublicKey, options: JwtOptions): Unit =
+  def validate(token: String, key: PublicKey, options: JwtOptions): Try[Unit] =
     validate(token, key, JwtAlgorithm.allAsymmetric(), options)
 
-  def validate(token: String, key: PublicKey): Unit = validate(token, key, JwtOptions.DEFAULT)
+  def validate(token: String, key: PublicKey): Try[Unit] = validate(token, key, JwtOptions.DEFAULT)
 
   /** Test if a token is valid. Doesn't throw any exception.
     *
     * @return a boolean value indicating if the token is valid or not
     * @param token $token
     */
-  def isValid(token: String, options: JwtOptions): Boolean = Try(validate(token, options)).isSuccess
+  def isValid(token: String, options: JwtOptions): Boolean = validate(token, options).isSuccess
 
   def isValid(token: String): Boolean = isValid(token, JwtOptions.DEFAULT)
 
@@ -1118,7 +1114,7 @@ trait JwtCore[H, C] {
       key: String,
       algorithms: Seq[JwtHmacAlgorithm],
       options: JwtOptions
-  ): Boolean = Try(validate(token, key, algorithms, options)).isSuccess
+  ): Boolean = validate(token, key, algorithms, options).isSuccess
 
   def isValid(token: String, key: String, algorithms: Seq[JwtHmacAlgorithm]): Boolean =
     isValid(token, key, algorithms, JwtOptions.DEFAULT)
@@ -1135,7 +1131,7 @@ trait JwtCore[H, C] {
       key: String,
       algorithms: => Seq[JwtAsymmetricAlgorithm],
       options: JwtOptions
-  ): Boolean = Try(validate(token, key, algorithms, options)).isSuccess
+  ): Boolean = validate(token, key, algorithms, options).isSuccess
 
   def isValid(token: String, key: String, algorithms: => Seq[JwtAsymmetricAlgorithm]): Boolean =
     isValid(token, key, algorithms, JwtOptions.DEFAULT)
@@ -1152,7 +1148,7 @@ trait JwtCore[H, C] {
       key: SecretKey,
       algorithms: Seq[JwtHmacAlgorithm],
       options: JwtOptions
-  ): Boolean = Try(validate(token, key, algorithms, options)).isSuccess
+  ): Boolean = validate(token, key, algorithms, options).isSuccess
 
   def isValid(token: String, key: SecretKey, algorithms: Seq[JwtHmacAlgorithm]): Boolean =
     isValid(token, key, algorithms, JwtOptions.DEFAULT)
@@ -1174,7 +1170,7 @@ trait JwtCore[H, C] {
       key: PublicKey,
       algorithms: Seq[JwtAsymmetricAlgorithm],
       options: JwtOptions
-  ): Boolean = Try(validate(token, key, algorithms, options)).isSuccess
+  ): Boolean = validate(token, key, algorithms, options).isSuccess
 
   def isValid(token: String, key: PublicKey, algorithms: Seq[JwtAsymmetricAlgorithm]): Boolean =
     isValid(token, key, algorithms, JwtOptions.DEFAULT)
