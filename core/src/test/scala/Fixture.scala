@@ -60,7 +60,7 @@ trait ClockFixture {
 trait Fixture extends ClockFixture {
 
   // Bouncycastle is not included by default. Add it for each test.
-  if (Security.getProvider("BC") == null) {
+  if (Option(Security.getProvider("BC")).isEmpty) {
     Security.addProvider(new BouncyCastleProvider())
   }
 

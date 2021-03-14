@@ -13,8 +13,7 @@ class JwtSessionSpec extends munit.FunSuite with PlayFixture {
     new GuiceApplicationBuilder()
       .configure(
         Map(
-          "play.http.secret.key" -> secretKey,
-          "play.http.session.maxAge" -> null
+          "play.http.secret.key" -> secretKey
         )
       )
       .build()
