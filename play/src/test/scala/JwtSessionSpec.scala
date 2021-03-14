@@ -24,8 +24,7 @@ class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture 
     new GuiceApplicationBuilder()
       .configure(
         Map(
-          "play.http.secret.key" -> secretKey,
-          "play.http.session.maxAge" -> null
+          "play.http.secret.key" -> secretKey
         )
       )
       .build()
