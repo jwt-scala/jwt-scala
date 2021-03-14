@@ -57,30 +57,24 @@ object JwtUtils {
 
   /** Convert a sequence of tuples to a JSON object
     */
-  def hashToJson(hash: Seq[(String, Any)]): String = if (hash.isEmpty) {
-    "{}"
-  } else {
-    hash
-      .map {
-        case (key, value: String) => "\"" + escape(key) + "\":\"" + escape(value) + "\""
-        case (key, value: Boolean) =>
-          "\"" + escape(key) + "\":" + (if (value) { "true" }
-                                        else { "false" })
-        case (key, value: Double)     => "\"" + escape(key) + "\":" + value.toString
-        case (key, value: Short)      => "\"" + escape(key) + "\":" + value.toString
-        case (key, value: Float)      => "\"" + escape(key) + "\":" + value.toString
-        case (key, value: Long)       => "\"" + escape(key) + "\":" + value.toString
-        case (key, value: Int)        => "\"" + escape(key) + "\":" + value.toString
-        case (key, value: BigDecimal) => "\"" + escape(key) + "\":" + value.toString
-        case (key, value: BigInt)     => "\"" + escape(key) + "\":" + value.toString
-        case (key, (vKey: String, vValue)) =>
-          "\"" + escape(key) + "\":" + hashToJson(Seq(vKey -> vValue))
-        case (key, value: Seq[Any]) => "\"" + escape(key) + "\":" + seqToJson(value)
-        case (key, value: Set[_])   => "\"" + escape(key) + "\":" + seqToJson(value.toSeq)
-        case (key, value: Any)      => "\"" + escape(key) + "\":\"" + escape(value.toString) + "\""
-      }
-      .mkString("{", ",", "}")
-  }
+  def hashToJson(hash: Seq[(String, Any)]): String = hash
+    .map {
+      case (key, value: String)     => "\"" + escape(key) + "\":\"" + escape(value) + "\""
+      case (key, value: Boolean)    => "\"" + escape(key) + "\":" + (if (value) "true" else "false")
+      case (key, value: Double)     => "\"" + escape(key) + "\":" + value.toString
+      case (key, value: Short)      => "\"" + escape(key) + "\":" + value.toString
+      case (key, value: Float)      => "\"" + escape(key) + "\":" + value.toString
+      case (key, value: Long)       => "\"" + escape(key) + "\":" + value.toString
+      case (key, value: Int)        => "\"" + escape(key) + "\":" + value.toString
+      case (key, value: BigDecimal) => "\"" + escape(key) + "\":" + value.toString
+      case (key, value: BigInt)     => "\"" + escape(key) + "\":" + value.toString
+      case (key, (vKey: String, vValue)) =>
+        "\"" + escape(key) + "\":" + hashToJson(Seq(vKey -> vValue))
+      case (key, value: Seq[Any]) => "\"" + escape(key) + "\":" + seqToJson(value)
+      case (key, value: Set[_])   => "\"" + escape(key) + "\":" + seqToJson(value.toSeq)
+      case (key, value: Any)      => "\"" + escape(key) + "\":\"" + escape(value.toString) + "\""
+    }
+    .mkString("{", ",", "}")
 
   /** Merge multiple JSON strings to a unique one
     */
@@ -215,9 +209,7 @@ object JwtUtils {
     *
     * @param algorithm The ECDSA algorithm. Must be supported and not { @code null}.
     * @return The expected byte array length for the signature.
-    * @throws JwtNonSupportedAlgorithm If the algorithm is not supported.
     */
-  @throws[JwtNonSupportedAlgorithm]
   def getSignatureByteArrayLength(algorithm: JwtECDSAAlgorithm): Int = algorithm match {
     case ES256 => 64
     case ES384 => 96

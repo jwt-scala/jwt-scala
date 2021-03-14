@@ -113,7 +113,7 @@ Jwt.isValid("a.b.c")
 All validating and decoding methods support a final optional argument as a `JwtOptions` which allow you to disable validation checks. This is useful if you need to access data from an expired token for example. You can disable `expiration`, `notBefore` and `signature` checks. Be warned that if you disable the last one, you have no guarantee that the user didn't change the content of the token.
 
 ```scala mdoc
-val expiredToken = Jwt.encode(JwtClaim().by("me").expiresIn(-1));
+val expiredToken = Jwt.encode(JwtClaim().by("me").expiresIn(-1))
 
 // Fail since the token is expired
 Jwt.isValid(expiredToken)
