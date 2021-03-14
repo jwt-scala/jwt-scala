@@ -1097,13 +1097,7 @@ trait JwtCore[H, C] {
     * @return a boolean value indicating if the token is valid or not
     * @param token $token
     */
-  def isValid(token: String, options: JwtOptions): Boolean =
-    try {
-      validate(token, options)
-      true
-    } catch {
-      case _: Throwable => false
-    }
+  def isValid(token: String, options: JwtOptions): Boolean = Try(validate(token, options)).isSuccess
 
   def isValid(token: String): Boolean = isValid(token, JwtOptions.DEFAULT)
 
@@ -1119,13 +1113,7 @@ trait JwtCore[H, C] {
       key: String,
       algorithms: Seq[JwtHmacAlgorithm],
       options: JwtOptions
-  ): Boolean =
-    try {
-      validate(token, key, algorithms, options)
-      true
-    } catch {
-      case _: Throwable => false
-    }
+  ): Boolean = Try(validate(token, key, algorithms, options)).isSuccess
 
   def isValid(token: String, key: String, algorithms: Seq[JwtHmacAlgorithm]): Boolean =
     isValid(token, key, algorithms, JwtOptions.DEFAULT)
@@ -1142,13 +1130,7 @@ trait JwtCore[H, C] {
       key: String,
       algorithms: => Seq[JwtAsymmetricAlgorithm],
       options: JwtOptions
-  ): Boolean =
-    try {
-      validate(token, key, algorithms, options)
-      true
-    } catch {
-      case _: Throwable => false
-    }
+  ): Boolean = Try(validate(token, key, algorithms, options)).isSuccess
 
   def isValid(token: String, key: String, algorithms: => Seq[JwtAsymmetricAlgorithm]): Boolean =
     isValid(token, key, algorithms, JwtOptions.DEFAULT)
@@ -1165,13 +1147,7 @@ trait JwtCore[H, C] {
       key: SecretKey,
       algorithms: Seq[JwtHmacAlgorithm],
       options: JwtOptions
-  ): Boolean =
-    try {
-      validate(token, key, algorithms, options)
-      true
-    } catch {
-      case _: Throwable => false
-    }
+  ): Boolean = Try(validate(token, key, algorithms, options)).isSuccess
 
   def isValid(token: String, key: SecretKey, algorithms: Seq[JwtHmacAlgorithm]): Boolean =
     isValid(token, key, algorithms, JwtOptions.DEFAULT)
@@ -1193,13 +1169,7 @@ trait JwtCore[H, C] {
       key: PublicKey,
       algorithms: Seq[JwtAsymmetricAlgorithm],
       options: JwtOptions
-  ): Boolean =
-    try {
-      validate(token, key, algorithms, options)
-      true
-    } catch {
-      case _: Throwable => false
-    }
+  ): Boolean = Try(validate(token, key, algorithms, options)).isSuccess
 
   def isValid(token: String, key: PublicKey, algorithms: Seq[JwtAsymmetricAlgorithm]): Boolean =
     isValid(token, key, algorithms, JwtOptions.DEFAULT)

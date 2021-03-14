@@ -1,6 +1,7 @@
 package pdi.jwt
 
 import java.time.{Clock, Instant}
+import scala.util.Try
 import pdi.jwt.exceptions.{JwtNotBeforeException, JwtExpirationException}
 
 /** Util object to handle time operations */
@@ -26,15 +27,8 @@ object JwtTime {
     * @param start if set, the instant that must be before now (in millis)
     * @param end if set, the instant that must be after now (in millis)
     */
-  def nowIsBetween(start: Option[Long], end: Option[Long])(implicit clock: Clock): Boolean = {
-    try {
-      validateNowIsBetween(start, end)
-      true
-    } catch {
-      case _: JwtNotBeforeException  => false
-      case _: JwtExpirationException => false
-    }
-  }
+  def nowIsBetween(start: Option[Long], end: Option[Long])(implicit clock: Clock): Boolean =
+    Try(validateNowIsBetween(start, end)).isSuccess
 
   /** Same as `nowIsBetween` but using seconds rather than millis.
     *
