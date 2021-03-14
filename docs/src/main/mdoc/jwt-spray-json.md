@@ -34,7 +34,7 @@ JwtSprayJson.decode(token, key, Seq(JwtAlgorithm.HS256))
 ```scala mdoc:reset
 import java.time.Instant
 import spray.json._
-import pdi.jwt.{JwtSprayJson, JwtAlgorithm, JwtClaim}
+import pdi.jwt.{JwtSprayJson, JwtAlgorithm}
 
 val key = "secretKey"
 val algo = JwtAlgorithm.HS256

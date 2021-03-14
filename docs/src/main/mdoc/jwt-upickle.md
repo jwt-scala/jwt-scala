@@ -14,7 +14,6 @@ position: 80
 
 ```scala mdoc:reset
 import java.time.Instant
-import upickle.default._
 import pdi.jwt.{JwtUpickle, JwtAlgorithm, JwtClaim}
 
 val claim = JwtClaim(
@@ -35,7 +34,7 @@ JwtUpickle.decode(token, key, Seq(JwtAlgorithm.HS256))
 ```scala mdoc:reset
 import java.time.Instant
 import upickle.default._
-import pdi.jwt.{JwtUpickle, JwtAlgorithm, JwtClaim}
+import pdi.jwt.{JwtUpickle, JwtAlgorithm}
 
 val key = "secretKey"
 val algo = JwtAlgorithm.HS256
@@ -52,7 +51,6 @@ JwtUpickle.encode(header, claimJson, key)
 
 ```scala mdoc:reset
 import java.time.Instant
-import upickle.default._
 import pdi.jwt.{JwtUpickle, JwtAlgorithm, JwtClaim}
 
 val claim = JwtClaim(

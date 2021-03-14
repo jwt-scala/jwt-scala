@@ -38,7 +38,6 @@ val decodedClaim: Try[JwtClaim] = JwtArgonaut.decode(token, key, Seq(alg))
 
 ```scala mdoc:reset
 import java.time.Instant
-import scala.util.Try
 import argonaut.Parse
 import pdi.jwt.{JwtAlgorithm, JwtArgonaut}
 

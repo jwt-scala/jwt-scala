@@ -44,7 +44,7 @@ session.get("user")
 
 // Test if the session is empty or not
 // (it is not here since we have several keys in the claimData)
-session.isEmpty
+session.isEmpty()
 
 // Serializing the session is the same as encoding it as a JSON Web Token
 val token = session.serialize
@@ -55,7 +55,7 @@ JwtSession.deserialize(token)
 // You could refresh the session to set its expiration in a few seconds from now
 // but you need to set "session.maxAge" in your "application.conf" and since this
 // is not a real Play application, we cannot do that, so here, the refresh will do nothing.
-session = session.refresh
+session = session.refresh()
 ```
 
 ### Using implicits
@@ -65,7 +65,6 @@ If you have implicit `Reads` and/or `Writes`, you can access and/or add data dir
 ```scala mdoc
 // First, creating the implicits
 import play.api.libs.json.Json
-import play.api.libs.functional.syntax._
 import pdi.jwt.JwtSession
 
 case class User(id: Long, name: String)
@@ -83,9 +82,8 @@ session2.getAs[User]("user")
 You can extract a `JwtSession` from a `RequestHeader`.
 
 ```scala mdoc
-import pdi.jwt._
 import pdi.jwt.JwtSession._
-import play.api.test.{FakeRequest, FakeHeaders}
+import play.api.test.FakeRequest
 
 import play.api.Configuration
 

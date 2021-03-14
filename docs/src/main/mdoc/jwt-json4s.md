@@ -13,7 +13,8 @@ position: 40
 ### Basic usage
 
 ```scala mdoc
-import pdi.jwt.{JwtJson4s, JwtAlgorithm}, org.json4s._, org.json4s.JsonDSL.WithBigDecimal._, org.json4s.native.JsonMethods._
+import pdi.jwt.{JwtJson4s, JwtAlgorithm}, org.json4s._, org.json4s.JsonDSL.WithBigDecimal._
+
 val claim = JObject(("user", 1), ("nbf", 1431520421))
 val key = "secretKey"
 val algo = JwtAlgorithm.HS256

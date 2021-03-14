@@ -33,9 +33,8 @@ JwtCirce.decode(token, key, Seq(JwtAlgorithm.HS256))
 
 ```scala mdoc:reset
 import java.time.Instant
-import cats.syntax.either._
-import io.circe._, syntax._, jawn.{parse => jawnParse}
-import pdi.jwt.{JwtCirce, JwtAlgorithm, JwtClaim}
+import io.circe._, jawn.{parse => jawnParse}
+import pdi.jwt.{JwtCirce, JwtAlgorithm}
 
 val key = "secretKey"
 val algo = JwtAlgorithm.HS256

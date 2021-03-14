@@ -69,6 +69,6 @@ Json.fromJson[JwtClaim](claim)
 Json.toJson(JwtHeader(JwtAlgorithm.HS256))
 Json.toJson(JwtClaim("""{"user":1}""").issuedNow.expiresIn(10))
 // Or
-JwtHeader(JwtAlgorithm.HS256).toJsValue
-JwtClaim("""{"user":1}""").issuedNow.expiresIn(10).toJsValue
+JwtHeader(JwtAlgorithm.HS256).toJsValue()
+JwtClaim("""{"user":1}""").issuedNow.expiresIn(10).toJsValue()
 ```

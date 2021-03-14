@@ -51,7 +51,7 @@ Take note that nearly all decoding methods (including those from helper libs) su
 
 ```scala mdoc
 // Decode all parts of the token as string
-Jwt.decodeRawAll(token, "secretKey", JwtAlgorithm.allHmac)
+Jwt.decodeRawAll(token, "secretKey", JwtAlgorithm.allHmac())
 
 // Decode only the claim as a string
 Jwt.decodeRaw(token, "secretKey", Seq(JwtAlgorithm.HS256))
