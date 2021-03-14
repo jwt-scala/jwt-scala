@@ -33,27 +33,21 @@ object JwtUtils {
 
   /** Convert a sequence to a JSON array
     */
-  def seqToJson(seq: Seq[Any]): String = if (seq.isEmpty) {
-    "[]"
-  } else {
-    seq
-      .map {
-        case value: String => "\"" + escape(value) + "\""
-        case value: Boolean =>
-          if (value) { "true" }
-          else { "false" }
-        case value: Double        => value.toString
-        case value: Short         => value.toString
-        case value: Float         => value.toString
-        case value: Long          => value.toString
-        case value: Int           => value.toString
-        case value: BigDecimal    => value.toString
-        case value: BigInt        => value.toString
-        case (key: String, value) => hashToJson(Seq(key -> value))
-        case value: Any           => "\"" + escape(value.toString) + "\""
-      }
-      .mkString("[", ",", "]")
-  }
+  def seqToJson(seq: Seq[Any]): String = seq
+    .map {
+      case value: String        => "\"" + escape(value) + "\""
+      case value: Boolean       => if (value) "true" else "false"
+      case value: Double        => value.toString
+      case value: Short         => value.toString
+      case value: Float         => value.toString
+      case value: Long          => value.toString
+      case value: Int           => value.toString
+      case value: BigDecimal    => value.toString
+      case value: BigInt        => value.toString
+      case (key: String, value) => hashToJson(Seq(key -> value))
+      case value: Any           => "\"" + escape(value.toString) + "\""
+    }
+    .mkString("[", ",", "]")
 
   /** Convert a sequence of tuples to a JSON object
     */
@@ -229,10 +223,11 @@ object JwtUtils {
     if (derSignature.length < 8 || derSignature(0) != 48)
       throw new JwtSignatureFormatException("Invalid ECDSA signature format")
 
-    var offset: Int = 0
-    if (derSignature(1) > 0) offset = 2
-    else if (derSignature(1) == 0x81.toByte) offset = 3
-    else throw new JwtSignatureFormatException("Invalid ECDSA signature format")
+    val offset: Int = derSignature(1) match {
+      case s if s > 0            => 2
+      case s if s == 0x81.toByte => 3
+      case _                     => throw new JwtSignatureFormatException("Invalid ECDSA signature format")
+    }
 
     val rLength: Byte = derSignature(offset + 1)
     var i = rLength.toInt
@@ -246,8 +241,7 @@ object JwtUtils {
       j -= 1
     }
 
-    var rawLen: Int = Math.max(i, j)
-    rawLen = Math.max(rawLen, outputLength / 2)
+    val rawLen: Int = Math.max(Math.max(i, j), outputLength / 2)
 
     if (
       (derSignature(offset - 1) & 0xff) != derSignature.length - offset
