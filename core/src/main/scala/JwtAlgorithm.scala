@@ -8,12 +8,12 @@ sealed trait JwtAlgorithm {
 }
 
 package algorithms {
-  sealed trait JwtAsymmetricAlgorithm extends JwtAlgorithm {}
+  sealed trait JwtAsymmetricAlgorithm extends JwtAlgorithm
 
-  sealed trait JwtHmacAlgorithm extends JwtAlgorithm {}
-  sealed trait JwtRSAAlgorithm extends JwtAsymmetricAlgorithm {}
-  sealed trait JwtECDSAAlgorithm extends JwtAsymmetricAlgorithm {}
-  sealed trait JwtEdDSAAlgorithm extends JwtAsymmetricAlgorithm {}
+  sealed trait JwtHmacAlgorithm extends JwtAlgorithm
+  sealed trait JwtRSAAlgorithm extends JwtAsymmetricAlgorithm
+  sealed trait JwtECDSAAlgorithm extends JwtAsymmetricAlgorithm
+  sealed trait JwtEdDSAAlgorithm extends JwtAsymmetricAlgorithm
   final case class JwtUnknownAlgorithm(name: String) extends JwtAlgorithm {
     def fullName: String = name
   }
@@ -50,13 +50,9 @@ object JwtAlgorithm {
     *
     * @return the actual instance of the algorithm
     * @param algo the name of the algorithm (e.g. none, HS256 or HmacSHA256)
-    * @throws JwtNonSupportedAlgorithm in case the string doesn't match any known algorithm nor "none"
     */
-  def optionFromString(algo: String): Option[JwtAlgorithm] = if (algo == "none") {
-    None
-  } else {
-    Some(fromString(algo))
-  }
+  def optionFromString(algo: String): Option[JwtAlgorithm] =
+    Option(algo).filterNot(_ == "none").map(fromString)
 
   def allHmac(): Seq[algorithms.JwtHmacAlgorithm] = Seq(HMD5, HS224, HS256, HS384, HS512)
 
