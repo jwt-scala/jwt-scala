@@ -80,7 +80,7 @@ val crossVersion2Only = Seq(scala212, scala213)
 val baseSettings = Seq(
   organization := "com.github.jwt-scala",
   version := buildVersion,
-  scalaVersion in ThisBuild := scala213,
+  ThisBuild / scalaVersion := scala213,
   crossScalaVersions := crossVersionAll,
   crossVersion := CrossVersion.binary,
   autoAPIMappings := true,
@@ -88,8 +88,8 @@ val baseSettings = Seq(
   Test / aggregate := false,
   Test / fork := true,
   Test / parallelExecution := false,
-  scalacOptions in (Compile, doc) ~= (_ filterNot (_ == "-Xfatal-warnings")),
-  scalacOptions in (Compile, doc) ++= Seq(
+  Compile / doc / scalacOptions ~= (_ filterNot (_ == "-Xfatal-warnings")),
+  Compile / doc / scalacOptions ++= Seq(
     "-no-link-warnings" // Suppresses problems with Scaladoc @throws links
   ),
   javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
@@ -99,7 +99,7 @@ val publishSettings = Seq(
   homepage := Some(url("https://jwt-scala.github.io/jwt-scala/")),
   apiURL := Some(url("https://jwt-scala.github.io/jwt-scala/api/")),
   publishMavenStyle := true,
-  publishArtifact in Test := false,
+  Test / publishArtifact := false,
   licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0")),
   sonatypeCredentialHost := "s01.oss.sonatype.org",
   publishTo := {
@@ -173,7 +173,7 @@ val docSettings = Seq(
   ),
   micrositeGithubRepo := "jwt-scala",
   micrositeSearchEnabled := false,
-  unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(
+  ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(
     coreProject,
     playJsonProject,
     playProject,
@@ -183,26 +183,26 @@ val docSettings = Seq(
     upickleProject,
     argonautProject
   ),
-  docsMappingsAPIDir in ScalaUnidoc := "api",
+  ScalaUnidoc / docsMappingsAPIDir := "api",
   addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir in ScalaUnidoc),
   autoAPIMappings := true,
   ghpagesNoJekyll := false,
-  scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
+  ScalaUnidoc / unidoc / scalacOptions ++= Seq(
     "-Xfatal-warnings",
     "-groups",
     "-doc-source-url",
     scmInfo.value.get.browseUrl + "/tree/master€{FILE_PATH}.scala",
     "-sourcepath",
-    baseDirectory.in(LocalRootProject).value.getAbsolutePath,
+    (LocalRootProject / baseDirectory).value.getAbsolutePath,
     "-diagrams"
   ),
   scalacOptions ~= (_.filterNot(
     Set("-Ywarn-unused-import", "-Ywarn-unused:imports", "-Ywarn-dead-code", "-Xfatal-warnings")
   )),
   git.remoteRepo := "git@github.com:jwt-scala/jwt-scala.git",
-  includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.yml" | "*.md" | "*.svg",
-  includeFilter in Jekyll := (includeFilter in makeSite).value,
-  mdocIn := baseDirectory.in(LocalRootProject).value / "docs" / "src" / "main" / "mdoc",
+  makeSite / includeFilter := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.yml" | "*.md" | "*.svg",
+  Jekyll / includeFilter := (makeSite / includeFilter).value,
+  mdocIn := (LocalRootProject / baseDirectory).value / "docs" / "src" / "main" / "mdoc",
   mdocExtraArguments := Seq("--no-link-hygiene")
 )
 
@@ -380,9 +380,9 @@ lazy val playProject = project
     name := "jwt-play",
     crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus, Libs.guice),
-    testGrouping in Test := groupPlayTest(
-      (definedTests in Test).value,
-      (dependencyClasspath in Test).value.files
+    Test / testGrouping := groupPlayTest(
+      (Test / definedTests).value,
+      (Test / dependencyClasspath).value.files
     )
   )
   .aggregate(playJsonProject)
