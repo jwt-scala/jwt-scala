@@ -11,6 +11,8 @@ import scala.sys.process._
 val previousVersion = "7.1.0"
 val buildVersion = "7.1.1"
 
+ThisBuild / versionScheme := Some("early-semver")
+
 val projects = Seq(
   "coreProject",
   "playJsonProject",
