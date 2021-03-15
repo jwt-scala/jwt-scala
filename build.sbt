@@ -186,7 +186,7 @@ val docSettings = Seq(
     argonautProject
   ),
   ScalaUnidoc / docsMappingsAPIDir := "api",
-  addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir in ScalaUnidoc),
+  addMappingsToSiteDir(ScalaUnidoc / packageDoc / mappings, ScalaUnidoc / docsMappingsAPIDir),
   autoAPIMappings := true,
   ghpagesNoJekyll := false,
   ScalaUnidoc / unidoc / scalacOptions ++= Seq(
