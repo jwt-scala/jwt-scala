@@ -65,7 +65,7 @@ jobs:
         scala:
           - 2.12.13
           - 2.13.5
-          - 3.0.0-RC1
+          - 3.0.0-RC2
         project:
           - coreProject
           - playJsonProject
@@ -77,19 +77,19 @@ jobs:
           - sprayJsonProject
           - argonautProject
         exclude:
-          - scala: 3.0.0-RC1
+          - scala: 3.0.0-RC2
             project: playJsonProject
-          - scala: 3.0.0-RC1
+          - scala: 3.0.0-RC2
             project: circeProject
-          - scala: 3.0.0-RC1
+          - scala: 3.0.0-RC2
             project: json4sCommonProject
-          - scala: 3.0.0-RC1
+          - scala: 3.0.0-RC2
             project: json4sJacksonProject
-          - scala: 3.0.0-RC1
+          - scala: 3.0.0-RC2
             project: json4sNativeProject
-          - scala: 3.0.0-RC1
+          - scala: 3.0.0-RC2
             project: sprayJsonProject
-          - scala: 3.0.0-RC1
+          - scala: 3.0.0-RC2
             project: playProject
     steps:
       - uses: actions/checkout@v2
