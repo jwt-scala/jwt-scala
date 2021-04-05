@@ -3,8 +3,8 @@ import sbt._
 object Dependencies {
   object V {
     val scalatest = "3.2.6"
-    val scalacheck = "3.2.6.0"
-    val scalatestPlus = "5.1.0"
+    val plusScalacheck = "3.2.6.0"
+    val plusPlay = "5.1.0"
     val bouncyCastle = "1.68"
     val guice = "4.2.3"
 
@@ -42,7 +42,7 @@ object Dependencies {
     val bouncyCastleTut = "org.bouncycastle" % "bcpkix-jdk15on" % V.bouncyCastle
 
     val scalatest = "org.scalatest" %% "scalatest" % V.scalatest % "test"
-    val scalacheck = "org.scalatestplus" %% "scalacheck-1-15" % V.scalacheck % "test"
-    val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % V.scalatestPlus % "test"
+    val scalacheck = "org.scalatestplus" %% "scalacheck-1-15" % V.plusScalacheck % "test"
+    val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % V.plusPlay % "test"
   }
 }
