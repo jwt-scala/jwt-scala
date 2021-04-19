@@ -1,28 +1,14 @@
 package pdi.jwt
 import java.time.{Clock, Duration}
-import scala.annotation.nowarn
 
 import akka.stream.Materializer
-import org.scalatest._
-import org.scalatestplus.play._
-import org.scalatestplus.play.guice._
 import play.api.Configuration
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json._
 import play.api.mvc._
 import play.api.test.Helpers._
 
-@nowarn
-class JwtSessionAsymetricSpec
-    extends PlaySpec
-    with GuiceOneAppPerSuite
-    with BeforeAndAfter
-    with PlayFixture {
-
-  implicit lazy val conf: Configuration = app.configuration
-  implicit lazy val materializer: Materializer = app.materializer
-  implicit lazy val Action: DefaultActionBuilder =
-    app.injector.instanceOf(classOf[DefaultActionBuilder])
+class JwtSessionAsymetricSpec extends munit.FunSuite with PlayFixture {
 
   // Just for test, users shouldn't change the header name normally
   def HEADER_NAME = "Auth"
@@ -38,7 +24,7 @@ class JwtSessionAsymetricSpec
   val signature =
     "WrNldzMwkaki0eK_-S5VyZqJpCmkDtYoehh-R_Dvr6vNvUdZsJtugZReQ74zhm1ntWGIw5EP8G1vrzJ9sirLIQ"
 
-  override def fakeApplication() =
+  val app =
     new GuiceApplicationBuilder()
       .configure(
         Map(
@@ -52,6 +38,11 @@ class JwtSessionAsymetricSpec
       )
       .build()
 
+  implicit lazy val conf: Configuration = app.configuration
+  implicit lazy val materializer: Materializer = app.materializer
+  implicit lazy val Action: DefaultActionBuilder =
+    app.injector.instanceOf(classOf[DefaultActionBuilder])
+
   def session = JwtSession()
   def sessionCustom = JwtSession(JwtHeader(JwtAlgorithm.RS256), claimClass, signature)
   def tokenCustom = header + "." + playClaim64 + "." + signature
@@ -59,45 +50,52 @@ class JwtSessionAsymetricSpec
   def tokenCustom2 =
     "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZSwiaXNzIjoiam9lIiwiZXhwIjoxMzAwODE5MzgwfQ.XCvpOGm7aPRy5hozuniyxFJJOMSdo5VYykpZmiGJ3d37WZAIHCrUI1TtkEIU3IbOny2fevilILBliPNgrXl3tA"
 
-  "Init FakeApplication" must {
-    "have the correct config" in {
-      app.configuration.getOptional[String]("play.http.session.privateKey") mustEqual Option(
-        privateKey
-      )
-      app.configuration.getOptional[String]("play.http.session.publicKey") mustEqual Option(
+  test("Init FakeApplication with the correct config") {
+    assertEquals(
+      app.configuration.getOptional[String]("play.http.session.privateKey"),
+      Option(privateKey)
+    )
+    assertEquals(
+      app.configuration.getOptional[String]("play.http.session.publicKey"),
+      Option(
         publicKey
       )
-      app.configuration.getOptional[String]("play.http.session.jwtName") mustEqual Option(
+    )
+    assertEquals(
+      app.configuration.getOptional[String]("play.http.session.jwtName"),
+      Option(
         HEADER_NAME
       )
-      app.configuration.getOptional[String]("play.http.session.algorithm") mustEqual Option("RS256")
-      app.configuration.getOptional[String]("play.http.session.tokenPrefix") mustEqual Option("")
-      app.configuration.getOptional[Int]("play.http.session.maxAge") mustEqual Option(
-        sessionTimeout * 1000
-      )
-    }
+    )
+    assertEquals(
+      app.configuration.getOptional[String]("play.http.session.algorithm"),
+      Option("RS256")
+    )
+    assertEquals(app.configuration.getOptional[String]("play.http.session.tokenPrefix"), Option(""))
+    assertEquals(
+      app.configuration.getOptional[Long]("play.http.session.maxAge"),
+      Option(sessionTimeout * 1000)
+    )
   }
 
-  "JwtSession" must {
-    "read default configuration" in {
-      assert(JwtSession.defaultHeader == JwtHeader(JwtAlgorithm.RS256))
-      assert(JwtSession.ALGORITHM == JwtAlgorithm.RS256)
-    }
+  test("JwtSession must read default configuration") {
+    assertEquals(JwtSession.defaultHeader, JwtHeader(JwtAlgorithm.RS256))
+    assertEquals(JwtSession.ALGORITHM, JwtAlgorithm.RS256)
+  }
 
-    "init" in {
-      assert(session.headerData == Json.obj("typ" -> "JWT", "alg" -> "RS256"))
-      assert(session.claimData == Json.obj("exp" -> (validTime + sessionTimeout)))
-      assert(session.signature == "")
-      assert(!session.isEmpty()) // There is the expiration date in the claim
-    }
+  test("JwtSession must init") {
+    assertEquals(session.headerData, Json.obj("typ" -> "JWT", "alg" -> "RS256"))
+    assertEquals(session.claimData, Json.obj("exp" -> (validTime + sessionTimeout)))
+    assertEquals(session.signature, "")
+    assert(!session.isEmpty()) // There is the expiration date in the claim
+  }
 
-    "serialize" in {
-      assert(Set(tokenCustom, tokenCustom2).contains(sessionCustom.serialize))
-    }
+  test("JwtSession must serialize") {
+    assert(Set(tokenCustom, tokenCustom2).contains(sessionCustom.serialize))
+  }
 
-    "deserialize" in {
-      assert(JwtSession.deserialize(tokenCustom) == sessionCustom)
-    }
+  test("JwtSession must deserialize") {
+    assertEquals(JwtSession.deserialize(tokenCustom), sessionCustom)
   }
 
   val sessionHeaderUser = Some(
@@ -107,67 +105,64 @@ class JwtSessionAsymetricSpec
     header + ".eyJleHAiOjEzMDA4MTk0MTF9.Vyr9qnNVAGNAqU1N_JkaiYUhVq3dgBrsjlW4gr4pdO9nIh1QeWABFi3ADKSC5Z7zubvH_WAx3X5A9SaKxp4_bg"
   )
 
-  "RichResult" must {
-    "access app with no user" in {
-      val result = get(classicAction)
-      val result2 = get(securedAction)
+  test("RichResult must access app with no user") {
+    val result = get(classicAction)
+    val result2 = get(securedAction)
 
-      status(result) mustEqual OK
-      status(result2) mustEqual UNAUTHORIZED
-      jwtHeader(result) mustEqual None
-      jwtHeader(result2) mustEqual None
-    }
+    assertEquals(status(result), OK)
+    assertEquals(status(result2), UNAUTHORIZED)
+    assertEquals(jwtHeader(result), None)
+  }
 
-    "fail to login" in {
-      val result = post(loginAction, Json.obj("username" -> "whatever", "password" -> "wrong"))
-      status(result) mustEqual BAD_REQUEST
-      jwtHeader(result) mustEqual None
-    }
+  test("RichResult must fail to login") {
+    val result = post(loginAction, Json.obj("username" -> "whatever", "password" -> "wrong"))
+    assertEquals(status(result), BAD_REQUEST)
+    assertEquals(jwtHeader(result), None)
+  }
 
-    "login" in {
-      val result = post(loginAction, Json.obj("username" -> "whatever", "password" -> "p4ssw0rd"))
-      status(result) mustEqual OK
-      jwtHeader(result) mustEqual sessionHeaderUser
-    }
+  test("RichResult must login") {
+    val result = post(loginAction, Json.obj("username" -> "whatever", "password" -> "p4ssw0rd"))
+    assertEquals(status(result), OK)
+    assertEquals(jwtHeader(result), sessionHeaderUser)
+  }
 
-    "access app with user" in {
-      val result = get(classicAction, sessionHeaderUser)
-      val result2 = get(securedAction, sessionHeaderUser)
+  test("RichResult must access app with user") {
+    val result = get(classicAction, sessionHeaderUser)
+    val result2 = get(securedAction, sessionHeaderUser)
 
-      status(result) mustEqual OK
-      status(result2) mustEqual OK
-      jwtHeader(result) mustEqual sessionHeaderUser
-      jwtHeader(result2) mustEqual sessionHeaderUser
-    }
+    assertEquals(status(result), OK)
+    assertEquals(status(result2), OK)
+    assertEquals(jwtHeader(result), sessionHeaderUser)
+    assertEquals(jwtHeader(result2), sessionHeaderUser)
+  }
 
-    "move to the future!" in {
-      this.clock = Clock.offset(this.clock, Duration.ofSeconds(sessionTimeout + 1))
-    }
+  test("RichResult must move to the future!") {
+    this.clock = Clock.offset(this.clock, Duration.ofSeconds(sessionTimeout + 1))
+  }
 
-    "timeout session" in {
-      val result = get(classicAction, sessionHeaderUser)
-      val result2 = get(securedAction, sessionHeaderUser)
+  test("RichResult must timeout session") {
+    val result = get(classicAction, sessionHeaderUser)
+    val result2 = get(securedAction, sessionHeaderUser)
 
-      status(result) mustEqual OK
-      status(result2) mustEqual UNAUTHORIZED
-      jwtHeader(result) mustEqual sessionHeaderExp
-      jwtHeader(result2) mustEqual None
-    }
+    assertEquals(status(result), OK)
+    assertEquals(status(result2), UNAUTHORIZED)
+    assertEquals(jwtHeader(result), sessionHeaderExp)
+    assertEquals(jwtHeader(result2), None)
+  }
 
-    "logout" in {
-      val result = get(logoutAction)
-      status(result) mustEqual OK
-      jwtHeader(result) mustEqual None
-    }
+  test("RichResult must logout") {
+    val result = get(logoutAction)
+    assertEquals(status(result), OK)
+    assertEquals(jwtHeader(result), None)
+  }
 
-    "access app with no user again" in {
-      val result = get(classicAction)
-      val result2 = get(securedAction)
+  test("RichResult must access app with no user again") {
+    val result = get(classicAction)
+    val result2 = get(securedAction)
 
-      status(result) mustEqual OK
-      status(result2) mustEqual UNAUTHORIZED
-      jwtHeader(result) mustEqual None
-      jwtHeader(result2) mustEqual None
-    }
+    assertEquals(status(result), OK)
+    assertEquals(status(result2), UNAUTHORIZED)
+    assertEquals(jwtHeader(result), None)
+    assertEquals(jwtHeader(result2), None)
   }
 }

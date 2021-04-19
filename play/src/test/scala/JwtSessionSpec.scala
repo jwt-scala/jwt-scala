@@ -1,26 +1,15 @@
 package pdi.jwt
 
 import akka.stream.Materializer
-import org.scalatestplus.play._
-import org.scalatestplus.play.guice._
 import play.api.Configuration
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json._
 import play.api.mvc._
 import play.api.test.Helpers._
 import scala.concurrent.duration.Duration
-import scala.annotation.nowarn
 
-@nowarn
-class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture {
-  implicit lazy val conf: Configuration = app.configuration
-  implicit lazy val materializer: Materializer = app.materializer
-  implicit lazy val Action: DefaultActionBuilder =
-    app.injector.instanceOf(classOf[DefaultActionBuilder])
-
-  def HEADER_NAME = "Authorization"
-
-  override def fakeApplication() =
+class JwtSessionSpec extends munit.FunSuite with PlayFixture {
+  val app =
     new GuiceApplicationBuilder()
       .configure(
         Map(
@@ -30,6 +19,12 @@ class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture 
       )
       .build()
 
+  implicit lazy val conf: Configuration = app.configuration
+  implicit lazy val materializer: Materializer = app.materializer
+  implicit lazy val Action: DefaultActionBuilder =
+    app.injector.instanceOf(classOf[DefaultActionBuilder])
+
+  def HEADER_NAME = "Authorization"
   val session = JwtSession().withHeader(JwtHeader(JwtAlgorithm.HS256))
   val session2 = session ++ (("a", 1), ("b", "c"), ("e", true), ("f", Seq(1, 2, 3)), ("user", user))
   val session3 = JwtSession(
@@ -44,143 +39,137 @@ class JwtSessionSpec extends PlaySpec with GuiceOneAppPerSuite with PlayFixture 
   val token2 =
     "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZSwiaXNzIjoiam9lIiwiZXhwIjoxMzAwODE5MzgwfQ.XCvpOGm7aPRy5hozuniyxFJJOMSdo5VYykpZmiGJ3d37WZAIHCrUI1TtkEIU3IbOny2fevilILBliPNgrXl3tA"
 
-  "Init FakeApplication" must {
-    "have the correct config" in {
-      app.configuration.getOptional[String]("play.http.secret.key") mustEqual Option(secretKey)
-    }
-    "handle null value for maxAge" in {
-      app.configuration.getOptional[Duration]("play.http.session.maxAge") mustEqual None
-    }
+  test("Init FakeApplication with the correct config") {
+    assertEquals(app.configuration.getOptional[String]("play.http.secret.key"), Option(secretKey))
+    assertEquals(app.configuration.getOptional[Duration]("play.http.session.maxAge"), None)
   }
 
-  "JwtSession" must {
-    "read default configuration" in {
-      assert(JwtSession.defaultHeader == JwtHeader(JwtAlgorithm.HS256))
-      assert(JwtSession.MAX_AGE.isEmpty)
-    }
+  test("JwtSession must read default configuration") {
+    assertEquals(JwtSession.defaultHeader, JwtHeader(JwtAlgorithm.HS256))
+    assert(JwtSession.MAX_AGE.isEmpty)
+  }
 
-    "init" in {
-      assert(session.headerData == Json.obj("typ" -> "JWT", "alg" -> "HS256"))
-      assert(session.claimData == Json.obj())
-      assert(session.signature == "")
-      assert(session.isEmpty())
-    }
+  test("JwtSession must init") {
+    assertEquals(session.headerData, Json.obj("typ" -> "JWT", "alg" -> "HS256"))
+    assertEquals(session.claimData, Json.obj())
+    assertEquals(session.signature, "")
+    assert(session.isEmpty())
+  }
 
-    "add stuff" in {
-      assert((session + Json.obj("a" -> 1)).claimData == Json.obj("a" -> 1))
-      assert((session + ("a", 1) + ("b", "c")).claimData == Json.obj("a" -> 1, "b" -> "c"))
-      assert((session + ("user", user)).claimData == Json.obj("user" -> userJson))
-      assert((session ++ (("a", 1), ("b", "c"))).claimData == Json.obj("a" -> 1, "b" -> "c"))
+  test("JwtSession must add stuff") {
+    assertEquals((session + Json.obj("a" -> 1)).claimData, Json.obj("a" -> 1))
+    assertEquals((session + ("a", 1) + ("b", "c")).claimData, Json.obj("a" -> 1, "b" -> "c"))
+    assertEquals((session + ("user", user)).claimData, Json.obj("user" -> userJson))
+    assertEquals((session ++ (("a", 1), ("b", "c"))).claimData, Json.obj("a" -> 1, "b" -> "c"))
 
-      assert(
-        (session + ("a", 1) + ("b", "c") + ("user", user)).claimData == Json.obj(
-          "a" -> 1,
-          "b" -> "c",
-          "user" -> userJson
-        )
+    assertEquals(
+      (session + ("a", 1) + ("b", "c") + ("user", user)).claimData,
+      Json.obj(
+        "a" -> 1,
+        "b" -> "c",
+        "user" -> userJson
       )
+    )
 
-      val sessionBis = session + ("a", 1) + ("b", "c")
-      val sessionTer = sessionBis ++ (("d", true), ("e", 42))
-      val sessionQuad = sessionTer + ("user", user)
-      assert(
-        sessionQuad.claimData == Json.obj(
-          "a" -> 1,
-          "b" -> "c",
-          "d" -> true,
-          "e" -> 42,
-          "user" -> userJson
-        )
+    val sessionBis = session + ("a", 1) + ("b", "c")
+    val sessionTer = sessionBis ++ (("d", true), ("e", 42))
+    val sessionQuad = sessionTer + ("user", user)
+    assertEquals(
+      sessionQuad.claimData,
+      Json.obj(
+        "a" -> 1,
+        "b" -> "c",
+        "d" -> true,
+        "e" -> 42,
+        "user" -> userJson
       )
-    }
+    )
+  }
 
-    "remove stuff" in {
-      assert((session2 - "e" - "f" - "user").claimData == Json.obj("a" -> 1, "b" -> "c"))
-      assert((session2 -- ("e", "f", "user")).claimData == Json.obj("a" -> 1, "b" -> "c"))
-    }
+  test("JwtSession must remove stuff") {
+    assertEquals((session2 - "e" - "f" - "user").claimData, Json.obj("a" -> 1, "b" -> "c"))
+    assertEquals((session2 -- ("e", "f", "user")).claimData, Json.obj("a" -> 1, "b" -> "c"))
+  }
 
-    "get stuff" in {
-      assert(session2("a") == Option(JsNumber(1)))
-      assert(session2("b") == Option(JsString("c")))
-      assert(session2("e") == Option(JsBoolean(true)))
-      assert(session2("f") == Option(Json.arr(1, 2, 3)))
-      assert(session2("nope") match { case None => true; case _ => false })
-      assert(session2.get("a") == Option(JsNumber(1)))
-      assert(session2.get("b") == Option(JsString("c")))
-      assert(session2.get("e") == Option(JsBoolean(true)))
-      assert(session2.get("f") == Option(Json.arr(1, 2, 3)))
-      assert(session2.get("nope") match { case None => true; case _ => false })
-      assert(session2.getAs[User]("user") == Option(user))
-      assert(session2.getAs[User]("nope") == None)
-    }
+  test("JwtSession must get stuff") {
+    assertEquals(session2("a"), Option(JsNumber(1)))
+    assertEquals(session2("b"), Option(JsString("c")))
+    assertEquals(session2("e"), Option(JsBoolean(true)))
+    assertEquals(session2("f"), Option(Json.arr(1, 2, 3)))
+    assert(session2("nope") match { case None => true; case _ => false })
+    assertEquals(session2.get("a"), Option(JsNumber(1)))
+    assertEquals(session2.get("b"), Option(JsString("c")))
+    assertEquals(session2.get("e"), Option(JsBoolean(true)))
+    assertEquals(session2.get("f"), Option(Json.arr(1, 2, 3)))
+    assert(session2.get("nope") match { case None => true; case _ => false })
+    assertEquals(session2.getAs[User]("user"), Option(user))
+    assertEquals(session2.getAs[User]("nope"), None)
+  }
 
-    "test emptiness" in {
-      assert(session.isEmpty())
-      assert(!session2.isEmpty())
-    }
+  test("JwtSession must test emptiness") {
+    assert(session.isEmpty())
+    assert(!session2.isEmpty())
+  }
 
-    "serialize" in {
-      assert(Set(token, token2).contains(session3.serialize))
-    }
+  test("JwtSession must serialize") {
+    assert(Set(token, token2).contains(session3.serialize))
+  }
 
-    "deserialize" in {
-      assert(JwtSession.deserialize(token)(conf, validTimeClock) == session3)
-    }
+  test("JwtSession must deserialize") {
+    assertEquals(JwtSession.deserialize(token)(conf, validTimeClock), session3)
   }
 
   val sessionHeader = Some(
     "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjp7ImlkIjoxLCJuYW1lIjoiUGF1bCJ9fQ.KBHKQarAQMse-4Conoi22XShk1ky--XXKAx4kMp6v-M"
   )
 
-  "RichResult" must {
-    "access app with no user" in {
-      val result = get(classicAction)
-      val result2 = get(securedAction)
+  test("RichResult must access app with no user") {
+    val result = get(classicAction)
+    val result2 = get(securedAction)
 
-      status(result) mustEqual OK
-      status(result2) mustEqual UNAUTHORIZED
-      jwtHeader(result) mustEqual None
-      jwtHeader(result2) mustEqual None
-    }
+    assertEquals(status(result), OK)
+    assertEquals(status(result2), UNAUTHORIZED)
+    assertEquals(jwtHeader(result), None)
+    assertEquals(jwtHeader(result2), None)
+  }
 
-    "fail to login" in {
-      val result = post(loginAction, Json.obj("username" -> "whatever", "password" -> "wrong"))
-      status(result) mustEqual BAD_REQUEST
-      jwtHeader(result) mustEqual None
-    }
+  test("RichResult must fail to login") {
+    val result = post(loginAction, Json.obj("username" -> "whatever", "password" -> "wrong"))
+    assertEquals(status(result), BAD_REQUEST)
+    assertEquals(jwtHeader(result), None)
+  }
 
-    "login" in {
-      val result = post(loginAction, Json.obj("username" -> "whatever", "password" -> "p4ssw0rd"))
-      status(result) mustEqual OK
-      jwtHeader(result) mustEqual sessionHeader
-    }
+  test("RichResult must login") {
+    val result = post(loginAction, Json.obj("username" -> "whatever", "password" -> "p4ssw0rd"))
+    assertEquals(status(result), OK)
+    assertEquals(jwtHeader(result), sessionHeader)
+  }
 
-    "access app with user" in {
-      val result = get(classicAction, sessionHeader)
-      val result2 = get(securedAction, sessionHeader)
+  test("RichResult must access app with user") {
+    val result = get(classicAction, sessionHeader)
+    val result2 = get(securedAction, sessionHeader)
 
-      status(result) mustEqual OK
-      status(result2) mustEqual OK
-      // Wuuut? Why None? Because since there is no "session.maxAge", we don't need to refresh the token
-      // it's up to the client-side code to save it as long as it needs it
-      jwtHeader(result) mustEqual None
-      jwtHeader(result2) mustEqual None
-    }
+    assertEquals(status(result), OK)
+    assertEquals(status(result2), OK)
+    // Wuuut? Why None? Because since there is no "session.maxAge", we don't need to refresh the token
+    // it's up to the client-side code to save it as long as it needs it
+    assertEquals(jwtHeader(result), None)
+    assertEquals(jwtHeader(result2), None)
+  }
 
-    "logout" in {
-      val result = get(logoutAction)
-      status(result) mustEqual OK
-      jwtHeader(result) mustEqual None
-    }
+  test("RichResult must logout") {
+    val result = get(logoutAction)
+    assertEquals(status(result), OK)
+    assertEquals(jwtHeader(result), None)
+  }
 
-    "access app with no user again" in {
-      val result = get(classicAction)
-      val result2 = get(securedAction)
+  test("RichResult must access app with no user again") {
+    val result = get(classicAction)
+    val result2 = get(securedAction)
 
-      status(result) mustEqual OK
-      status(result2) mustEqual UNAUTHORIZED
-      jwtHeader(result) mustEqual None
-      jwtHeader(result2) mustEqual None
-    }
+    assertEquals(status(result), OK)
+    assertEquals(status(result2), UNAUTHORIZED)
+    assertEquals(jwtHeader(result), None)
+    assertEquals(jwtHeader(result2), None)
   }
 }

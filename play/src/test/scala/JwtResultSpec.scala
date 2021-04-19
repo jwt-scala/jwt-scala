@@ -1,16 +1,18 @@
 package pdi.jwt
 
 import play.api.test._
-import org.scalatestplus.play._
-import org.scalatestplus.play.guice._
 import play.api.inject.guice.GuiceApplicationBuilder
 import akka.stream.Materializer
 import play.api.Configuration
 import play.api.mvc._
 import play.api.libs.json._
 
-class JwtResultSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting with PlayFixture {
+class JwtResultSpec extends munit.FunSuite with PlayFixture {
   import pdi.jwt.JwtSession._
+
+  val app = new GuiceApplicationBuilder()
+    .configure(Map("play.http.secret.key" -> secretKey))
+    .build()
 
   implicit lazy val conf: Configuration = app.configuration
   implicit lazy val materializer: Materializer = app.materializer
@@ -19,83 +21,80 @@ class JwtResultSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting wit
 
   val HEADER_NAME = "Authorization"
 
-  override def fakeApplication() =
-    new GuiceApplicationBuilder()
-      .configure(Map("play.http.secret.key" -> secretKey))
-      .build()
-
   val session = JwtSession().withHeader(JwtHeader(JwtAlgorithm.HS256))
 
-  "JwtResult" must {
-    "support basic scenario" in {
-      implicit val request =
-        FakeRequest().withHeaders(("Authorization", "Bearer " + session.serialize))
-      var result: Result = Results.Ok
+  test("JwtResult must support basic scenario") {
+    implicit val request =
+      FakeRequest().withHeaders(("Authorization", "Bearer " + session.serialize))
+    var result: Result = Results.Ok
 
-      // We can already get a JwtSession from our implicit RequestHeader
-      assert(result.jwtSession.claimData == Json.obj())
+    // We can already get a JwtSession from our implicit RequestHeader
+    assertEquals(result.jwtSession.claimData, Json.obj())
 
-      // Setting a new empty JwtSession
-      result = result.withNewJwtSession
-      assert(result.jwtSession.claimData == Json.obj())
+    // Setting a new empty JwtSession
+    result = result.withNewJwtSession
+    assertEquals(result.jwtSession.claimData, Json.obj())
 
-      // Or from an existing JwtSession
-      result = result.withJwtSession(session)
-      assert(result.jwtSession.claimData == Json.obj())
+    // Or from an existing JwtSession
+    result = result.withJwtSession(session)
+    assertEquals(result.jwtSession.claimData, Json.obj())
 
-      // Or from a JsObject
-      result = result.withJwtSession(Json.obj(("id", 1), ("key", "value")))
-      assert(result.jwtSession.claimData == Json.obj("id" -> 1, "key" -> "value"))
+    // Or from a JsObject
+    result = result.withJwtSession(Json.obj(("id", 1), ("key", "value")))
+    assertEquals(result.jwtSession.claimData, Json.obj("id" -> 1, "key" -> "value"))
 
-      // Or from (key, value)
-      result = result.withJwtSession(("id", 1), ("key", "value"))
-      assert(result.jwtSession.claimData == Json.obj("id" -> 1, "key" -> "value"))
+    // Or from (key, value)
+    result = result.withJwtSession(("id", 1), ("key", "value"))
+    assertEquals(result.jwtSession.claimData, Json.obj("id" -> 1, "key" -> "value"))
 
-      // We can add stuff to the current session (only (String, String))
-      result = result.addingToJwtSession(("key2", "value2"), ("key3", "value3"))
-      assert(
-        result.jwtSession.claimData == Json.obj(
-          "id" -> 1,
-          "key" -> "value",
-          "key2" -> "value2",
-          "key3" -> "value3"
-        )
+    // We can add stuff to the current session (only (String, String))
+    result = result.addingToJwtSession(("key2", "value2"), ("key3", "value3"))
+    assertEquals(
+      result.jwtSession.claimData,
+      Json.obj(
+        "id" -> 1,
+        "key" -> "value",
+        "key2" -> "value2",
+        "key3" -> "value3"
       )
+    )
 
-      // Or directly classes or objects if you have the correct implicit Writes
-      result = result.addingToJwtSession("user", User(1, "Paul"))
-      assert(
-        result.jwtSession.claimData == Json.obj(
-          "id" -> 1,
-          "key" -> "value",
-          "key2" -> "value2",
-          "key3" -> "value3",
-          "user" -> Json.obj("id" -> 1, "name" -> "Paul")
-        )
+    // Or directly classes or objects if you have the correct implicit Writes
+    result = result.addingToJwtSession("user", User(1, "Paul"))
+    assertEquals(
+      result.jwtSession.claimData,
+      Json.obj(
+        "id" -> 1,
+        "key" -> "value",
+        "key2" -> "value2",
+        "key3" -> "value3",
+        "user" -> Json.obj("id" -> 1, "name" -> "Paul")
       )
+    )
 
-      // Removing from session
-      result = result.removingFromJwtSession("key2", "key3")
-      assert(
-        result.jwtSession.claimData == Json.obj(
-          "id" -> 1,
-          "key" -> "value",
-          "user" -> Json.obj("id" -> 1, "name" -> "Paul")
-        )
+    // Removing from session
+    result = result.removingFromJwtSession("key2", "key3")
+    assertEquals(
+      result.jwtSession.claimData,
+      Json.obj(
+        "id" -> 1,
+        "key" -> "value",
+        "user" -> Json.obj("id" -> 1, "name" -> "Paul")
       )
+    )
 
-      // Refresh the current session
-      result = result.refreshJwtSession
-      assert(
-        result.jwtSession.claimData == Json.obj(
-          "id" -> 1,
-          "key" -> "value",
-          "user" -> Json.obj("id" -> 1, "name" -> "Paul")
-        )
+    // Refresh the current session
+    result = result.refreshJwtSession
+    assertEquals(
+      result.jwtSession.claimData,
+      Json.obj(
+        "id" -> 1,
+        "key" -> "value",
+        "user" -> Json.obj("id" -> 1, "name" -> "Paul")
       )
+    )
 
-      // So, at the end, you can do
-      assert(result.jwtSession.getAs[User]("user") == Some(User(1, "Paul")))
-    }
+    // So, at the end, you can do
+    assertEquals(result.jwtSession.getAs[User]("user"), Some(User(1, "Paul")))
   }
 }

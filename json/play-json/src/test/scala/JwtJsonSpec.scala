@@ -12,131 +12,116 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
 
   override def jwtJsonCommon(clock: Clock) = JwtJson(clock)
 
-  describe("JwtJson") {
-    it("should implicitly convert to JsValue") {
-      assertResult(
-        Json.obj(
-          ("iss" -> "me"),
-          ("aud" -> Some("you")),
-          ("sub" -> "something"),
-          ("exp" -> 15),
-          ("nbf" -> 10),
-          ("iat" -> 10)
-        ),
-        "Claim"
-      ) {
-        JwtClaim()
-          .by("me")
-          .to("you")
-          .about("something")
-          .issuedAt(10)
-          .startsAt(10)
-          .expiresAt(15)
-          .toJsValue()
-      }
+  test("JwtJson should implicitly convert to JsValue") {
+    assertEquals(
+      JwtClaim()
+        .by("me")
+        .to("you")
+        .about("something")
+        .issuedAt(10)
+        .startsAt(10)
+        .expiresAt(15)
+        .toJsValue(),
+      Json.obj(
+        ("iss" -> "me"),
+        ("aud" -> Some("you")),
+        ("sub" -> "something"),
+        ("exp" -> 15),
+        ("nbf" -> 10),
+        ("iat" -> 10)
+      ),
+      "Claim"
+    )
 
-      assertResult(
-        Json.obj(
-          ("typ" -> "JWT"),
-          ("alg" -> "HS256")
-        ),
-        "Claim"
-      ) {
-        JwtHeader(JwtAlgorithm.HS256).toJsValue()
-      }
+    assertEquals(
+      JwtHeader(JwtAlgorithm.HS256).toJsValue(),
+      Json.obj(
+        ("typ" -> "JWT"),
+        ("alg" -> "HS256")
+      ),
+      "Claim"
+    )
+  }
+
+  test("JwtJson should implicitly convert to JsValue when audience is many") {
+    assertEquals(
+      JwtClaim(audience = Some(Set("you", "another")))
+        .by("me")
+        .about("something")
+        .issuedAt(10)
+        .startsAt(10)
+        .expiresAt(15)
+        .toJsValue(),
+      Json.obj(
+        ("iss" -> "me"),
+        ("aud" -> Set("you", "another")),
+        ("sub" -> "something"),
+        ("exp" -> 15),
+        ("nbf" -> 10),
+        ("iat" -> 10)
+      ),
+      "Claim"
+    )
+  }
+
+  test("JwtJson should decode token with spaces") {
+    val (_, claim, _) = defaultJwt.decodeJsonAll(tokenWithSpaces).get
+    val expiration = BigDecimal("32086368000")
+    assertEquals((claim \ "nbf").get, JsNumber(0))
+    assertEquals((claim \ "exp").get, JsNumber(expiration))
+    assertEquals((claim \ "foo").get, JsString("bar"))
+  }
+
+  test("JwtJson should fail on an invalid issuer") {
+    val header = """{"alg": "none"}"""
+    val claim = """{"iss": 42}"""
+    val token = s"${JwtBase64.encodeString(header)}.${JwtBase64.encodeString(claim)}."
+    defaultJwt.decodeJsonAll(token) match {
+      case Failure(_: NoSuchElementException) => ()
+      case Failure(e)                         => fail(s"Expected JwtNonStringException, got $e")
+      case Success(_)                         => fail(s"Expected JwtNonStringException, got success")
     }
+  }
 
-    it("should implicitly convert to JsValue when audience is many") {
-      assertResult(
-        Json.obj(
-          ("iss" -> "me"),
-          ("aud" -> Set("you", "another")),
-          ("sub" -> "something"),
-          ("exp" -> 15),
-          ("nbf" -> 10),
-          ("iat" -> 10)
-        ),
-        "Claim"
-      ) {
-        JwtClaim(audience = Some(Set("you", "another")))
-          .by("me")
-          .about("something")
-          .issuedAt(10)
-          .startsAt(10)
-          .expiresAt(15)
-          .toJsValue()
-      }
-    }
-
-    it("should decode token with spaces") {
-      val (_, claim, _) = defaultJwt.decodeJsonAll(tokenWithSpaces).get
-      val expiration = BigDecimal("32086368000")
-      assertResult(JsNumber(0)) {
-        (claim \ "nbf").get
-      }
-      assertResult(JsNumber(expiration)) {
-        (claim \ "exp").get
-      }
-      assertResult(JsString("bar")) {
-        (claim \ "foo").get
-      }
-    }
-
-    it("should fail on an invalid issuer") {
-      val header = """{"alg": "none"}"""
-      val claim = """{"iss": 42}"""
-      val token = s"${JwtBase64.encodeString(header)}.${JwtBase64.encodeString(claim)}."
-      defaultJwt.decodeJsonAll(token) match {
-        case Failure(_: NoSuchElementException) => succeed
-        case Failure(e)                         => fail(s"Expected JwtNonStringException, got $e")
-        case Success(_)                         => fail(s"Expected JwtNonStringException, got success")
-      }
-    }
-
-    it("should fail on an invalid expiration") {
-      val header = """{"alg": "none"}"""
-      val claim = """{"iss": "me", "exp": "wrong"}"""
-      val token = s"${JwtBase64.encodeString(header)}.${JwtBase64.encodeString(claim)}."
-      defaultJwt.decodeJsonAll(token) match {
-        case Failure(_: NoSuchElementException) => succeed
-        case Failure(e)                         => fail(s"Expected JwtNonStringException, got $e")
-        case Success(_)                         => fail(s"Expected JwtNonStringException, got success")
-      }
+  test("JwtJson should fail on an invalid expiration") {
+    val header = """{"alg": "none"}"""
+    val claim = """{"iss": "me", "exp": "wrong"}"""
+    val token = s"${JwtBase64.encodeString(header)}.${JwtBase64.encodeString(claim)}."
+    defaultJwt.decodeJsonAll(token) match {
+      case Failure(_: NoSuchElementException) => ()
+      case Failure(e)                         => fail(s"Expected JwtNonStringException, got $e")
+      case Success(_)                         => fail(s"Expected JwtNonStringException, got success")
     }
   }
 
   case class ContentClass(userId: String)
   implicit val contentClassWrites: Writes[ContentClass] = Json.writes
 
-  describe("JwtClaim") {
-    it("should add content with Writes") {
+  test("JwtClaim should add content with Writes") {
 
-      val content = ContentClass(userId = "testId")
-      val claim = JwtClaim().expiresAt(10) + content
+    val content = ContentClass(userId = "testId")
+    val claim = JwtClaim().expiresAt(10) + content
 
-      assertResult(
-        Json.obj(
-          "exp" -> 10,
-          "userId" -> "testId"
-        )
-      ) {
-        claim.toJsValue()
-      }
-    }
+    assertEquals(
+      claim.toJsValue(),
+      Json.obj(
+        "exp" -> 10,
+        "userId" -> "testId"
+      )
+    )
+  }
 
-    it("should set content with Writes") {
+  test("JwtClaim should set content with Writes") {
 
-      val content = ContentClass(userId = "testId")
-      val claim = JwtClaim().expiresAt(10).withContent(content)
+    val content = ContentClass(userId = "testId")
+    val claim = JwtClaim().expiresAt(10).withContent(content)
 
-      assertResult(
-        Json.obj(
-          "exp" -> 10,
-          "userId" -> "testId"
-        )
-      ) {
-        claim.toJsValue()
-      }
-    }
+    assertEquals(
+      claim.toJsValue(),
+      Json.obj(
+        "exp" -> 10,
+        "userId" -> "testId"
+      )
+    )
   }
 }
