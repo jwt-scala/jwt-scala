@@ -2,9 +2,7 @@ import sbt._
 
 object Dependencies {
   object V {
-    val scalatest = "3.2.7"
-    val plusScalacheck = "3.2.7.0"
-    val plusPlay = "5.1.0"
+    val munit = "0.7.25"
     val bouncyCastle = "1.68"
     val guice = "4.2.3"
 
@@ -20,7 +18,7 @@ object Dependencies {
   object Libs {
     val play = "com.typesafe.play" %% "play" % V.play
     val playJson = "com.typesafe.play" %% "play-json" % V.playJson
-    val playTest = "com.typesafe.play" %% "play-test" % V.play % "test"
+    val playTest = "com.typesafe.play" %% "play-test" % V.play % Test
     val playTestProvided = "com.typesafe.play" %% "play-test" % V.play
     val guice = "com.google.inject" % "guice" % V.guice % "test"
 
@@ -38,11 +36,10 @@ object Dependencies {
 
     val argonaut = "io.argonaut" %% "argonaut" % V.argonaut
 
-    val bouncyCastle = "org.bouncycastle" % "bcpkix-jdk15on" % V.bouncyCastle % "test"
+    val bouncyCastle = "org.bouncycastle" % "bcpkix-jdk15on" % V.bouncyCastle % Test
     val bouncyCastleTut = "org.bouncycastle" % "bcpkix-jdk15on" % V.bouncyCastle
 
-    val scalatest = "org.scalatest" %% "scalatest" % V.scalatest % "test"
-    val scalacheck = "org.scalatestplus" %% "scalacheck-1-15" % V.plusScalacheck % "test"
-    val scalatestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % V.plusPlay % "test"
+    val munit = "org.scalameta" %% "munit" % V.munit % Test
+    val munitScalacheck = "org.scalameta" %% "munit-scalacheck" % V.munit % Test
   }
 }

@@ -1,6 +1,6 @@
 package pdi.jwt
 
-class JwtBase64Spec extends UnitSpec {
+class JwtBase64Spec extends munit.FunSuite {
   val eol = System.getProperty("line.separator")
 
   val values: Seq[(String, String)] = Seq(
@@ -21,34 +21,32 @@ class JwtBase64Spec extends UnitSpec {
     )
   )
 
-  describe("JwtBase64") {
-    it("should encode string") {
-      values.foreach { value =>
-        assertResult(value._2) { JwtBase64.encodeString(value._1) }
-      }
+  test("should encode string") {
+    values.foreach { value =>
+      assertEquals(value._2, JwtBase64.encodeString(value._1))
+    }
+  }
+
+  test("should decode strings") {
+    values.foreach { value =>
+      assertEquals(value._1, JwtBase64.decodeString(value._2))
+    }
+  }
+
+  test("should be symmetrical") {
+    values.foreach { value =>
+      assertEquals(value._1, JwtBase64.decodeString(JwtBase64.encodeString(value._1)))
     }
 
-    it("should decode strings") {
-      values.foreach { value =>
-        assertResult(value._1) { JwtBase64.decodeString(value._2) }
-      }
+    values.foreach { value =>
+      assertEquals(value._2, JwtBase64.encodeString(JwtBase64.decodeString(value._2)))
     }
+  }
 
-    it("should be symmetrical") {
-      values.foreach { value =>
-        assertResult(value._1) { JwtBase64.decodeString(JwtBase64.encodeString(value._1)) }
-      }
-
-      values.foreach { value =>
-        assertResult(value._2) { JwtBase64.encodeString(JwtBase64.decodeString(value._2)) }
-      }
-    }
-
-    it("should throw when invalid string") {
-      val vals = Seq("a", "abcde", "*", "aze$")
-      vals.foreach { v =>
-        intercept[IllegalArgumentException] { JwtBase64.decode(v) }
-      }
+  test("should throw when invalid string") {
+    val vals = Seq("a", "abcde", "*", "aze$")
+    vals.foreach { v =>
+      intercept[IllegalArgumentException] { JwtBase64.decode(v) }
     }
   }
 }

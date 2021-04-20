@@ -86,7 +86,8 @@ val baseSettings = Seq(
   crossScalaVersions := crossVersionAll,
   crossVersion := CrossVersion.binary,
   autoAPIMappings := true,
-  libraryDependencies ++= Seq(Libs.scalatest, Libs.scalacheck),
+  libraryDependencies ++= Seq(Libs.munit, Libs.munitScalacheck),
+  testFrameworks += new TestFramework("munit.Framework"),
   Test / aggregate := false,
   Test / fork := true,
   Test / parallelExecution := false,
@@ -381,7 +382,7 @@ lazy val playProject = project
   .settings(
     name := "jwt-play",
     crossScalaVersions := crossVersion2Only,
-    libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.scalatestPlus, Libs.guice),
+    libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.guice),
     Test / testGrouping := groupPlayTest(
       (Test / definedTests).value,
       (Test / dependencyClasspath).value.files
