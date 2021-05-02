@@ -152,10 +152,11 @@ class JwtUtilsSpec extends munit.ScalaCheckSuite with Fixture {
   }
 
   test("splitString should do nothing") {
-    forAll(Gen.asciiStr) { value: String =>
-      (value.nonEmpty && !value.contains('a')) ==> {
-        assertArrayEquals(JwtUtils.splitString(value, 'a'), Array(value))
-      }
+    forAll(Gen.asciiStr.suchThat(s => s.nonEmpty && !s.contains('a'))) { (value: String) =>
+      assertArrayEquals(
+        JwtUtils.splitString(value, 'a'),
+        Array(value)
+      )
     }
   }
 
