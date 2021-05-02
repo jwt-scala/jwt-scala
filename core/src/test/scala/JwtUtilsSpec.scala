@@ -3,13 +3,16 @@ package pdi.jwt
 import java.security.spec.ECGenParameterSpec
 import java.security.{KeyPairGenerator, SecureRandom}
 
+import org.scalacheck.Gen
+import org.scalacheck.Prop._
+
 import pdi.jwt.exceptions.JwtSignatureFormatException
 
 case class TestObject(value: String) {
   override def toString(): String = this.value
 }
 
-class JwtUtilsSpec extends munit.FunSuite with Fixture {
+class JwtUtilsSpec extends munit.ScalaCheckSuite with Fixture {
   val ENCODING = JwtUtils.ENCODING
 
   test("hashToJson should transform a seq of tuples to a valid JSON") {
@@ -149,7 +152,11 @@ class JwtUtilsSpec extends munit.FunSuite with Fixture {
   }
 
   test("splitString should do nothing") {
-    assertArrayEquals(JwtUtils.splitString("qwerty", 'a'), Array("qwerty"))
+    forAll(Gen.asciiStr) { value: String =>
+      (value.nonEmpty && !value.contains('a')) ==> {
+        assertArrayEquals(JwtUtils.splitString(value, 'a'), Array(value))
+      }
+    }
   }
 
   test("splitString should split once") {
