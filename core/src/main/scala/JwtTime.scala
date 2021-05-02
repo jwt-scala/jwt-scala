@@ -48,12 +48,16 @@ object JwtTime {
   def validateNowIsBetween(start: Option[Long], end: Option[Long])(implicit clock: Clock): Unit = {
     val timeNow = now
 
-    if (!start.isEmpty && start.get > timeNow) {
-      throw new JwtNotBeforeException(start.get)
+    start.foreach { s =>
+      if (s > timeNow) {
+        throw new JwtNotBeforeException(s)
+      }
     }
 
-    if (!end.isEmpty && timeNow >= end.get) {
-      throw new JwtExpirationException(end.get)
+    end.foreach { e =>
+      if (timeNow >= e) {
+        throw new JwtExpirationException(e)
+      }
     }
   }
 

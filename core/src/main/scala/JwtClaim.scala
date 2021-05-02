@@ -119,7 +119,7 @@ class JwtClaim(
     JwtClaim(content, issuer, subject, audience, expiration, notBefore, issuedAt, Option(id))
   }
 
-  def expiresIn(seconds: Long)(implicit clock: Clock): JwtClaim = {
+  def expiresIn(seconds: Long)(implicit clock: Clock): JwtClaim =
     JwtClaim(
       content,
       issuer,
@@ -130,84 +130,29 @@ class JwtClaim(
       issuedAt,
       jwtId
     )
-  }
 
-  def expiresAt(seconds: Long): JwtClaim = {
+  def expiresAt(seconds: Long): JwtClaim =
     JwtClaim(content, issuer, subject, audience, Option(seconds), notBefore, issuedAt, jwtId)
-  }
 
-  def expiresNow(implicit clock: Clock): JwtClaim = {
-    JwtClaim(
-      content,
-      issuer,
-      subject,
-      audience,
-      Option(JwtTime.nowSeconds),
-      notBefore,
-      issuedAt,
-      jwtId
-    )
-  }
+  def expiresNow(implicit clock: Clock): JwtClaim = expiresAt(JwtTime.nowSeconds)
 
-  def startsIn(seconds: Long)(implicit clock: Clock): JwtClaim = {
-    JwtClaim(
-      content,
-      issuer,
-      subject,
-      audience,
-      expiration,
-      Option(JwtTime.nowSeconds + seconds),
-      issuedAt,
-      jwtId
-    )
-  }
-
-  def startsAt(seconds: Long): JwtClaim = {
+  def startsAt(seconds: Long): JwtClaim =
     JwtClaim(content, issuer, subject, audience, expiration, Option(seconds), issuedAt, jwtId)
-  }
 
-  def startsNow(implicit clock: Clock): JwtClaim = {
-    JwtClaim(
-      content,
-      issuer,
-      subject,
-      audience,
-      expiration,
-      Option(JwtTime.nowSeconds),
-      issuedAt,
-      jwtId
-    )
-  }
+  def startsIn(seconds: Long)(implicit clock: Clock): JwtClaim = startsAt(
+    JwtTime.nowSeconds + seconds
+  )
 
-  def issuedIn(seconds: Long)(implicit clock: Clock): JwtClaim = {
-    JwtClaim(
-      content,
-      issuer,
-      subject,
-      audience,
-      expiration,
-      notBefore,
-      Option(JwtTime.nowSeconds + seconds),
-      jwtId
-    )
-  }
+  def startsNow(implicit clock: Clock): JwtClaim = startsAt(JwtTime.nowSeconds)
 
-  def issuedAt(seconds: Long): JwtClaim = {
+  def issuedAt(seconds: Long): JwtClaim =
     JwtClaim(content, issuer, subject, audience, expiration, notBefore, Option(seconds), jwtId)
-  }
 
-  def issuedNow(implicit clock: Clock): JwtClaim = {
-    JwtClaim(
-      content,
-      issuer,
-      subject,
-      audience,
-      expiration,
-      notBefore,
-      Option(JwtTime.nowSeconds),
-      jwtId
-    )
-  }
+  def issuedIn(seconds: Long)(implicit clock: Clock): JwtClaim = issuedAt(
+    JwtTime.nowSeconds + seconds
+  )
+
+  def issuedNow(implicit clock: Clock): JwtClaim = issuedAt(JwtTime.nowSeconds)
 
   def isValid(issuer: String, audience: String)(implicit clock: Clock): Boolean =
     this.audience.exists(_ contains audience) && this.isValid(issuer)
