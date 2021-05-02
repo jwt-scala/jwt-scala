@@ -26,19 +26,19 @@ class JwtSpec extends munit.FunSuite with Fixture {
   }
 
   test("should encode Hmac") {
-    data foreach { d => battleTestEncode(d, secretKey, validTimeJwt) }
+    data.foreach { d => battleTestEncode(d, secretKey, validTimeJwt) }
   }
 
   test("should encode RSA") {
-    dataRSA foreach { d => battleTestEncode(d, privateKeyRSA, validTimeJwt) }
+    dataRSA.foreach { d => battleTestEncode(d, privateKeyRSA, validTimeJwt) }
   }
 
   test("should encode Ed25519") {
-    dataEdDSA foreach { d => battleTestEncode(d, privateKeyEd25519, validTimeJwt) }
+    dataEdDSA.foreach { d => battleTestEncode(d, privateKeyEd25519, validTimeJwt) }
   }
 
   test("should be symmetric") {
-    data foreach { d =>
+    data.foreach { d =>
       testTryAll(
         validTimeJwt.decodeAll(
           validTimeJwt.encode(d.header, claim, secretKey, d.algo),
@@ -52,7 +52,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
   }
 
   test("should be symmetric (RSA)") {
-    dataRSA foreach { d =>
+    dataRSA.foreach { d =>
       testTryAllWithoutSignature(
         validTimeJwt.decodeAll(
           validTimeJwt.encode(d.header, claim, randomRSAKey.getPrivate, d.algo),
@@ -75,7 +75,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
   }
 
   test("should be symmetric (ECDSA)") {
-    dataECDSA foreach { d =>
+    dataECDSA.foreach { d =>
       testTryAllWithoutSignature(
         validTimeJwt.decodeAll(
           validTimeJwt.encode(d.header, claim, randomECKey.getPrivate, d.algo),
@@ -90,7 +90,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
   }
 
   test("should be symmetric (EdDSA)") {
-    dataEdDSA foreach { d =>
+    dataEdDSA.foreach { d =>
       testTryAllWithoutSignature(
         validTimeJwt.decodeAll(
           validTimeJwt.encode(d.header, claim, randomEd25519Key.getPrivate, d.algo),
@@ -113,7 +113,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
   }
 
   test("should decodeRawAll") {
-    data foreach { d =>
+    data.foreach { d =>
       assertEquals(
         validTimeJwt.decodeRawAll(d.token, secretKey, JwtAlgorithm.allHmac()),
         Success((d.header, claim, d.signature)),
@@ -128,7 +128,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
   }
 
   test("should decodeRaw") {
-    data foreach { d =>
+    data.foreach { d =>
       assertEquals(
         validTimeJwt.decodeRaw(d.token, secretKey, JwtAlgorithm.allHmac()),
         Success((claim)),
@@ -143,7 +143,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
   }
 
   test("should decodeAll") {
-    data foreach { d =>
+    data.foreach { d =>
       testTryAll(
         validTimeJwt.decodeAll(d.token, secretKey, JwtAlgorithm.allHmac()),
         (d.headerClass, claimClass, d.signature),
@@ -159,7 +159,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
   }
 
   test("should decode") {
-    data foreach { d =>
+    data.foreach { d =>
       assertEquals(
         validTimeJwt.decode(d.token, secretKey, JwtAlgorithm.allHmac()).get,
         claimClass,
@@ -176,7 +176,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
 
   test("should validate correct tokens") {
 
-    data foreach { d =>
+    data.foreach { d =>
       assertEquals(
         (),
         validTimeJwt.validate(d.token, secretKey, JwtAlgorithm.allHmac()),
@@ -187,7 +187,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
       assert(validTimeJwt.isValid(d.token, secretKeyOf(d.algo)), d.algo.fullName)
     }
 
-    dataRSA foreach { d =>
+    dataRSA.foreach { d =>
       assertEquals(
         (),
         validTimeJwt.validate(d.token, publicKeyRSA, JwtAlgorithm.allRSA()),
@@ -196,7 +196,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
       assert(validTimeJwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allRSA()), d.algo.fullName)
     }
 
-    dataEdDSA foreach { d =>
+    dataEdDSA.foreach { d =>
       assertEquals(
         (),
         validTimeJwt.validate(d.token, publicKeyEd25519, JwtAlgorithm.allEdDSA()),
@@ -246,7 +246,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
   }
 
   test("should invalidate expired tokens") {
-    data foreach { d =>
+    data.foreach { d =>
       intercept[JwtExpirationException] {
         afterExpirationJwt.validate(d.token, secretKey, JwtAlgorithm.allHmac())
       }
@@ -260,7 +260,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
       assert(!afterExpirationJwt.isValid(d.token, secretKeyOf(d.algo)), d.algo.fullName)
     }
 
-    dataRSA foreach { d =>
+    dataRSA.foreach { d =>
       intercept[JwtExpirationException] {
         afterExpirationJwt.validate(d.token, publicKeyRSA, JwtAlgorithm.allRSA())
       }
@@ -270,7 +270,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
       )
     }
 
-    dataEdDSA foreach { d =>
+    dataEdDSA.foreach { d =>
       intercept[JwtExpirationException] {
         afterExpirationJwt.validate(d.token, publicKeyEd25519, JwtAlgorithm.allEdDSA())
       }
@@ -284,7 +284,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
   test("should validate expired tokens with leeway") {
     val options = JwtOptions(leeway = 60)
 
-    data foreach { d =>
+    data.foreach { d =>
       afterExpirationJwt.validate(d.token, secretKey, JwtAlgorithm.allHmac(), options)
       assert(
         afterExpirationJwt.isValid(d.token, secretKey, JwtAlgorithm.allHmac(), options),
@@ -294,7 +294,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
       assert(afterExpirationJwt.isValid(d.token, secretKeyOf(d.algo), options), d.algo.fullName)
     }
 
-    dataRSA foreach { d =>
+    dataRSA.foreach { d =>
       afterExpirationJwt.validate(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options)
       assert(
         afterExpirationJwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options),
@@ -302,7 +302,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
       )
     }
 
-    dataEdDSA foreach { d =>
+    dataEdDSA.foreach { d =>
       afterExpirationJwt.validate(d.token, publicKeyEd25519, JwtAlgorithm.allEdDSA(), options)
       assert(
         afterExpirationJwt.isValid(d.token, publicKeyEd25519, JwtAlgorithm.allEdDSA(), options),
@@ -312,7 +312,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
   }
 
   test("should invalidate early tokens") {
-    data foreach { d =>
+    data.foreach { d =>
       val claimNotBefore = claimClass.startsAt(notBefore)
       val token = beforeNotBeforeJwt.encode(claimNotBefore, secretKey, d.algo)
 
@@ -324,7 +324,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
       assert(!beforeNotBeforeJwt.isValid(token, secretKeyOf(d.algo)), d.algo.fullName)
     }
 
-    dataRSA foreach { d =>
+    dataRSA.foreach { d =>
       val claimNotBefore = claimClass.startsAt(notBefore)
       val token = beforeNotBeforeJwt.encode(claimNotBefore, privateKeyRSA, d.algo)
 
@@ -337,7 +337,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
       )
     }
 
-    dataEdDSA foreach { d =>
+    dataEdDSA.foreach { d =>
       val claimNotBefore = claimClass.startsAt(notBefore)
       val token = beforeNotBeforeJwt.encode(claimNotBefore, privateKeyEd25519, d.algo)
 
@@ -354,7 +354,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
   test("should validate early tokens with leeway") {
     val options = JwtOptions(leeway = 60)
 
-    data foreach { d =>
+    data.foreach { d =>
       val claimNotBefore = claimClass.startsAt(notBefore)
       val token = beforeNotBeforeJwt.encode(claimNotBefore, secretKey, d.algo)
 
@@ -367,7 +367,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
       assert(beforeNotBeforeJwt.isValid(token, secretKeyOf(d.algo), options), d.algo.fullName)
     }
 
-    dataRSA foreach { d =>
+    dataRSA.foreach { d =>
       val claimNotBefore = claimClass.startsAt(notBefore)
       val token = beforeNotBeforeJwt.encode(claimNotBefore, privateKeyRSA, d.algo)
 
@@ -380,7 +380,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
       )
     }
 
-    dataEdDSA foreach { d =>
+    dataEdDSA.foreach { d =>
       val claimNotBefore = claimClass.startsAt(notBefore)
       val token = beforeNotBeforeJwt.encode(claimNotBefore, privateKeyEd25519, d.algo)
 
@@ -395,24 +395,24 @@ class JwtSpec extends munit.FunSuite with Fixture {
   }
 
   test("should invalidate wrong keys") {
-    data foreach { d =>
+    data.foreach { d =>
       intercept[JwtValidationException] {
         validTimeJwt.validate(d.token, "wrong key", JwtAlgorithm.allHmac())
       }
       assert(!validTimeJwt.isValid(d.token, "wrong key", JwtAlgorithm.allHmac()), d.algo.fullName)
     }
 
-    dataRSA foreach { d =>
+    dataRSA.foreach { d =>
       assert(!validTimeJwt.isValid(d.token, "wrong key", JwtAlgorithm.allRSA()), d.algo.fullName)
     }
 
-    dataEdDSA foreach { d =>
+    dataEdDSA.foreach { d =>
       assert(!validTimeJwt.isValid(d.token, "wrong key", JwtAlgorithm.allEdDSA()), d.algo.fullName)
     }
   }
 
   test("should fail on non-exposed algorithms") {
-    data foreach { d =>
+    data.foreach { d =>
       intercept[JwtValidationException] {
         validTimeJwt.validate(d.token, secretKey, Seq.empty[JwtHmacAlgorithm])
       }
@@ -422,14 +422,14 @@ class JwtSpec extends munit.FunSuite with Fixture {
       )
     }
 
-    data foreach { d =>
+    data.foreach { d =>
       intercept[JwtValidationException] {
         validTimeJwt.validate(d.token, secretKey, JwtAlgorithm.allRSA())
       }
       assert(!validTimeJwt.isValid(d.token, secretKey, JwtAlgorithm.allRSA()), d.algo.fullName)
     }
 
-    dataRSA foreach { d =>
+    dataRSA.foreach { d =>
       intercept[JwtValidationException] {
         validTimeJwt.validate(d.token, publicKeyRSA, JwtAlgorithm.allHmac())
       }
@@ -452,7 +452,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
   test("should skip expiration validation depending on options") {
     val options = JwtOptions(expiration = false)
 
-    data foreach { d =>
+    data.foreach { d =>
       afterExpirationJwt.validate(d.token, secretKey, JwtAlgorithm.allHmac(), options)
       assert(
         afterExpirationJwt.isValid(d.token, secretKey, JwtAlgorithm.allHmac(), options),
@@ -462,7 +462,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
       assert(afterExpirationJwt.isValid(d.token, secretKeyOf(d.algo), options), d.algo.fullName)
     }
 
-    dataRSA foreach { d =>
+    dataRSA.foreach { d =>
       afterExpirationJwt.validate(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options)
       assert(
         afterExpirationJwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options),
@@ -470,7 +470,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
       )
     }
 
-    dataEdDSA foreach { d =>
+    dataEdDSA.foreach { d =>
       afterExpirationJwt.validate(d.token, publicKeyEd25519, JwtAlgorithm.allEdDSA(), options)
       assert(
         afterExpirationJwt.isValid(d.token, publicKeyEd25519, JwtAlgorithm.allEdDSA(), options),
@@ -482,7 +482,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
   test("should skip notBefore validation depending on options") {
     val options = JwtOptions(notBefore = false)
 
-    data foreach { d =>
+    data.foreach { d =>
       val claimNotBefore = claimClass.startsAt(notBefore)
       val token = beforeNotBeforeJwt.encode(claimNotBefore, secretKey, d.algo)
 
@@ -495,7 +495,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
       assert(beforeNotBeforeJwt.isValid(token, secretKeyOf(d.algo), options), d.algo.fullName)
     }
 
-    dataRSA foreach { d =>
+    dataRSA.foreach { d =>
       val claimNotBefore = claimClass.startsAt(notBefore)
       val token = beforeNotBeforeJwt.encode(claimNotBefore, privateKeyRSA, d.algo)
 
@@ -506,7 +506,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
       )
     }
 
-    dataEdDSA foreach { d =>
+    dataEdDSA.foreach { d =>
       val claimNotBefore = claimClass.startsAt(notBefore)
       val token = beforeNotBeforeJwt.encode(claimNotBefore, privateKeyEd25519, d.algo)
 
@@ -521,7 +521,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
   test("should skip signature validation depending on options") {
     val options = JwtOptions(signature = false)
 
-    data foreach { d =>
+    data.foreach { d =>
       validTimeJwt.validate(d.token, "wrong key", JwtAlgorithm.allHmac(), options)
       assert(
         validTimeJwt.isValid(d.token, "wrong key", JwtAlgorithm.allHmac(), options),
@@ -529,14 +529,14 @@ class JwtSpec extends munit.FunSuite with Fixture {
       )
     }
 
-    dataRSA foreach { d =>
+    dataRSA.foreach { d =>
       assert(
         validTimeJwt.isValid(d.token, "wrong key", JwtAlgorithm.allRSA(), options),
         d.algo.fullName
       )
     }
 
-    dataEdDSA foreach { d =>
+    dataEdDSA.foreach { d =>
       assert(
         validTimeJwt.isValid(d.token, "wrong key", JwtAlgorithm.allEdDSA(), options),
         d.algo.fullName
