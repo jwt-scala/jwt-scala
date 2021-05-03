@@ -63,15 +63,15 @@ jobs:
     strategy:
       matrix:
         project:
-          - coreProject
-          - playJsonProject
-          - playProject
-          - circeProject
-          - upickleProject
-          - json4sNativeProject
-          - json4sJacksonProject
-          - sprayJsonProject
-          - argonautProject
+          - core
+          - playJson
+          - playFramework
+          - circe
+          - upickle
+          - json4sNative
+          - json4sJackson
+          - sprayJson
+          - argonaut
     steps:
       - uses: actions/checkout@v2
 
@@ -104,30 +104,30 @@ jobs:
           - 2.13.5
           - 3.0.0-RC3
         project:
-          - coreProject
-          - playJsonProject
-          - playProject
-          - circeProject
-          - upickleProject
-          - json4sNativeProject
-          - json4sJacksonProject
-          - sprayJsonProject
-          - argonautProject
+          - core
+          - playJson
+          - playFramework
+          - circe
+          - upickle
+          - json4sNative
+          - json4sJackson
+          - sprayJson
+          - argonaut
         exclude:
           - scala: 3.0.0-RC3
-            project: playJsonProject
+            project: playJson
           - scala: 3.0.0-RC3
-            project: circeProject
+            project: circe
           - scala: 3.0.0-RC3
-            project: json4sCommonProject
+            project: json4sCommon
           - scala: 3.0.0-RC3
-            project: json4sJacksonProject
+            project: json4sJackson
           - scala: 3.0.0-RC3
-            project: json4sNativeProject
+            project: json4sNative
           - scala: 3.0.0-RC3
-            project: sprayJsonProject
+            project: sprayJson
           - scala: 3.0.0-RC3
-            project: playProject
+            project: playFramework
     steps:
       - uses: actions/checkout@v2
 
