@@ -124,6 +124,11 @@ class JwtSpec extends munit.FunSuite with Fixture {
         Success((d.header, claim, d.signature)),
         d.algo.fullName
       )
+      assertEquals(
+        validTimeJwt.decodeRawAll(d.token, secretKeyOf(d.algo), JwtAlgorithm.allHmac()),
+        Success((d.header, claim, d.signature)),
+        d.algo.fullName
+      )
     }
   }
 
@@ -136,6 +141,11 @@ class JwtSpec extends munit.FunSuite with Fixture {
       )
       assertEquals(
         validTimeJwt.decodeRaw(d.token, secretKeyOf(d.algo)),
+        Success((claim)),
+        d.algo.fullName
+      )
+      assertEquals(
+        validTimeJwt.decodeRaw(d.token, secretKeyOf(d.algo), JwtAlgorithm.allHmac()),
         Success((claim)),
         d.algo.fullName
       )
