@@ -4,6 +4,10 @@ title:  "Native"
 position: 10
 ---
 
+This module doesn't use any dependency, it is useful if you don't have any Json library in your project.
+
+It is based a naive parsing of Json strings, and doesn't support any custom parameter in the Claim so if you need any custom parameter, or if you're already using one of the supported Json libraries, consider using that instead.
+
 ## Jwt object
 
 - [API Documentation](https://jwt-scala.github.io/jwt-scala/api/pdi/jwt/Jwt$.html)
@@ -47,7 +51,7 @@ Jwt.encode(JwtHeader(JwtAlgorithm.HS256), JwtClaim("""{"user":1}"""), "key")
 
 In JWT Scala, espcially when using raw strings which are not typesafe at all, there are a lot of possible errors. This is why nearly all `decode` functions will return a `Try` rather than directly the expected result. In case of failure, the wrapped exception should tell you what went wrong.
 
-Take note that nearly all decoding methods (including those from helper libs) support either a String key, or a PrivateKey with a Hmac algorithm or a PublicKey with a RSA or ECDSA algorithm.
+Take note that nearly all decoding methods (including those from helper libs) support either a `String` key, or a `PrivateKey` with a Hmac algorithm or a `PublicKey` with a RSA or ECDSA algorithm.
 
 ```scala mdoc
 // Decode all parts of the token as string
