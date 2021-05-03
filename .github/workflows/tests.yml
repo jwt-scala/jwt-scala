@@ -28,7 +28,7 @@ jobs:
             ~/.cache/coursier/v1
             ~/AppData/Local/Coursier/Cache/v1
             ~/Library/Caches/Coursier/v1
-          key: ${{ runner.os }}-${{ matrix.scala }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
+          key: ${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
 
       - name: Checking code formatting
         run: sbt formatCheck
@@ -53,10 +53,47 @@ jobs:
             ~/.cache/coursier/v1
             ~/AppData/Local/Coursier/Cache/v1
             ~/Library/Caches/Coursier/v1
-          key: ${{ runner.os }}-${{ matrix.scala }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
+          key: ${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
 
       - name: Check the mdoc documentation
         run: sbt docs/mdoc
+
+  mima:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project:
+          - coreProject
+          - playJsonProject
+          - playProject
+          - circeProject
+          - upickleProject
+          - json4sNativeProject
+          - json4sJacksonProject
+          - sprayJsonProject
+          - argonautProject
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Java and Scala
+        uses: olafurpg/setup-scala@v10
+        with:
+          java-version: adopt@1.8
+
+      - name: Cache sbt
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.sbt
+            ~/.ivy2/cache
+            ~/.coursier/cache/v1
+            ~/.cache/coursier/v1
+            ~/AppData/Local/Coursier/Cache/v1
+            ~/Library/Caches/Coursier/v1
+          key: ${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
+
+      - name: Report binary issues
+        run: sbt ${{ matrix.project }}/mimaReportBinaryIssues
 
   tests:
     runs-on: ubuntu-latest

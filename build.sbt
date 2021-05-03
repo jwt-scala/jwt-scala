@@ -88,6 +88,7 @@ val baseSettings = Seq(
   autoAPIMappings := true,
   libraryDependencies ++= Seq(Libs.munit, Libs.munitScalacheck),
   testFrameworks += new TestFramework("munit.Framework"),
+  mimaPreviousArtifacts := Set(organization.value %% moduleName.value % buildVersion),
   Test / aggregate := false,
   Test / fork := true,
   Test / parallelExecution := false,
