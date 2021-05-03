@@ -119,20 +119,12 @@ class JwtClaim(
     JwtClaim(content, issuer, subject, audience, expiration, notBefore, issuedAt, Option(id))
   }
 
-  def expiresIn(seconds: Long)(implicit clock: Clock): JwtClaim =
-    JwtClaim(
-      content,
-      issuer,
-      subject,
-      audience,
-      Option(JwtTime.nowSeconds + seconds),
-      notBefore,
-      issuedAt,
-      jwtId
-    )
-
   def expiresAt(seconds: Long): JwtClaim =
     JwtClaim(content, issuer, subject, audience, Option(seconds), notBefore, issuedAt, jwtId)
+
+  def expiresIn(seconds: Long)(implicit clock: Clock): JwtClaim = expiresAt(
+    JwtTime.nowSeconds + seconds
+  )
 
   def expiresNow(implicit clock: Clock): JwtClaim = expiresAt(JwtTime.nowSeconds)
 
