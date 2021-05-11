@@ -26,11 +26,11 @@ let noScala3 =
       , "playFramework"
       ]
 
-let scala212 = "2.12.13"
+let scala212 = ../versions/scala212 as Text
 
-let scala213 = "2.13.5"
+let scala213 = ../versions/scala213 as Text
 
-let scala3 = "3.0.0-RC3"
+let scala3 = ../versions/scala3 as Text
 
 let scalaVersions = [ scala212, scala213, scala3 ]
 
@@ -46,28 +46,26 @@ let setup =
       , GithubActions.Step::{
         , name = Some "Setup Java and Scala"
         , uses = Some "olafurpg/setup-scala@v10"
-        , `with` = Some [ { mapKey = "java-version", mapValue = "adopt@1.8" } ]
+        , `with` = Some (toMap { java-version = "adopt@1.8" })
         }
       , GithubActions.Step::{
         , name = Some "Cache sbt"
         , uses = Some "actions/cache@v2"
         , `with` = Some
-          [ { mapKey = "path"
-            , mapValue =
-                ''
-                ~/.sbt
-                ~/.ivy2/cache
-                ~/.coursier/cache/v1
-                ~/.cache/coursier/v1
-                ~/AppData/Local/Coursier/Cache/v1
-                ~/Library/Caches/Coursier/v1
-                ''
-            }
-          , { mapKey = "key"
-            , mapValue =
-                "\${{ runner.os }}-sbt-cache-v2-\${{ hashFiles('**/*.sbt') }}-\${{ hashFiles('project/build.properties') }}"
-            }
-          ]
+            ( toMap
+                { path =
+                    ''
+                    ~/.sbt
+                    ~/.ivy2/cache
+                    ~/.coursier/cache/v1
+                    ~/.cache/coursier/v1
+                    ~/AppData/Local/Coursier/Cache/v1
+                    ~/Library/Caches/Coursier/v1
+                    ''
+                , key =
+                    "\${{ runner.os }}-sbt-cache-v2-\${{ hashFiles('**/*.sbt') }}-\${{ hashFiles('project/build.properties') }}"
+                }
+            )
         }
       ]
 
