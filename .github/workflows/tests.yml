@@ -1,26 +1,16 @@
-name: CI
-on:
-  push:
-    branches:
-        - master
-  pull_request:
-    branches:
-        - master
-
 jobs:
   linting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
+      - uses: "actions/checkout@v2"
       - name: Setup Java and Scala
-        uses: olafurpg/setup-scala@v10
+        uses: "olafurpg/setup-scala@v10"
         with:
-          java-version: adopt@1.8
-
+          java-version: "adopt@1.8"
       - name: Cache sbt
-        uses: actions/cache@v2
+        uses: "actions/cache@v2"
         with:
+          key: "${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}"
           path: |
             ~/.sbt
             ~/.ivy2/cache
@@ -28,24 +18,20 @@ jobs:
             ~/.cache/coursier/v1
             ~/AppData/Local/Coursier/Cache/v1
             ~/Library/Caches/Coursier/v1
-          key: ${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
-
       - name: Checking code formatting
         run: sbt formatCheck
-
   mdoc:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
+      - uses: "actions/checkout@v2"
       - name: Setup Java and Scala
-        uses: olafurpg/setup-scala@v10
+        uses: "olafurpg/setup-scala@v10"
         with:
-          java-version: adopt@1.8
-
+          java-version: "adopt@1.8"
       - name: Cache sbt
-        uses: actions/cache@v2
+        uses: "actions/cache@v2"
         with:
+          key: "${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}"
           path: |
             ~/.sbt
             ~/.ivy2/cache
@@ -53,13 +39,29 @@ jobs:
             ~/.cache/coursier/v1
             ~/AppData/Local/Coursier/Cache/v1
             ~/Library/Caches/Coursier/v1
-          key: ${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
-
       - name: Check the mdoc documentation
         run: sbt docs/mdoc
-
   mima:
     runs-on: ubuntu-latest
+    steps:
+      - uses: "actions/checkout@v2"
+      - name: Setup Java and Scala
+        uses: "olafurpg/setup-scala@v10"
+        with:
+          java-version: "adopt@1.8"
+      - name: Cache sbt
+        uses: "actions/cache@v2"
+        with:
+          key: "${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}"
+          path: |
+            ~/.sbt
+            ~/.ivy2/cache
+            ~/.coursier/cache/v1
+            ~/.cache/coursier/v1
+            ~/AppData/Local/Coursier/Cache/v1
+            ~/Library/Caches/Coursier/v1
+      - name: Report binary issues
+        run: "sbt ${{ matrix.project }}/mimaReportBinaryIssues"
     strategy:
       matrix:
         project:
@@ -72,37 +74,51 @@ jobs:
           - json4sJackson
           - sprayJson
           - argonaut
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Java and Scala
-        uses: olafurpg/setup-scala@v10
-        with:
-          java-version: adopt@1.8
-
-      - name: Cache sbt
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.sbt
-            ~/.ivy2/cache
-            ~/.coursier/cache/v1
-            ~/.cache/coursier/v1
-            ~/AppData/Local/Coursier/Cache/v1
-            ~/Library/Caches/Coursier/v1
-          key: ${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
-
-      - name: Report binary issues
-        run: sbt ${{ matrix.project }}/mimaReportBinaryIssues
-
   tests:
     runs-on: ubuntu-latest
+    steps:
+      - uses: "actions/checkout@v2"
+      - name: Setup Java and Scala
+        uses: "olafurpg/setup-scala@v10"
+        with:
+          java-version: "adopt@1.8"
+      - name: Cache sbt
+        uses: "actions/cache@v2"
+        with:
+          key: "${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}"
+          path: |
+            ~/.sbt
+            ~/.ivy2/cache
+            ~/.coursier/cache/v1
+            ~/.cache/coursier/v1
+            ~/AppData/Local/Coursier/Cache/v1
+            ~/Library/Caches/Coursier/v1
+      - if: "!startsWith(matrix.scala, '2.13')"
+        name: Test
+        run: "sbt ++${{ matrix.scala }} ${{ matrix.project }}/test"
+      - if: "startsWith(matrix.scala, '2.13')"
+        name: Test with coverage
+        run: "sbt ++${{ matrix.scala }} coverage ${{ matrix.project }}/test coverageReport"
+      - if: "startsWith(matrix.scala, '2.13')"
+        name: Publish coverage
+        uses: "codecov/codecov-action@v1"
     strategy:
       matrix:
-        scala:
-          - 2.12.13
-          - 2.13.5
-          - 3.0.0-RC3
+        exclude:
+          - project: playJson
+            scala: "3.0.0-RC3"
+          - project: circe
+            scala: "3.0.0-RC3"
+          - project: json4sCommon
+            scala: "3.0.0-RC3"
+          - project: json4sJackson
+            scala: "3.0.0-RC3"
+          - project: json4sNative
+            scala: "3.0.0-RC3"
+          - project: sprayJson
+            scala: "3.0.0-RC3"
+          - project: playFramework
+            scala: "3.0.0-RC3"
         project:
           - core
           - playJson
@@ -113,49 +129,15 @@ jobs:
           - json4sJackson
           - sprayJson
           - argonaut
-        exclude:
-          - scala: 3.0.0-RC3
-            project: playJson
-          - scala: 3.0.0-RC3
-            project: circe
-          - scala: 3.0.0-RC3
-            project: json4sCommon
-          - scala: 3.0.0-RC3
-            project: json4sJackson
-          - scala: 3.0.0-RC3
-            project: json4sNative
-          - scala: 3.0.0-RC3
-            project: sprayJson
-          - scala: 3.0.0-RC3
-            project: playFramework
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Java and Scala
-        uses: olafurpg/setup-scala@v10
-        with:
-          java-version: adopt@1.8
-
-      - name: Cache sbt
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.sbt
-            ~/.ivy2/cache
-            ~/.coursier/cache/v1
-            ~/.cache/coursier/v1
-            ~/AppData/Local/Coursier/Cache/v1
-            ~/Library/Caches/Coursier/v1
-          key: ${{ runner.os }}-${{ matrix.scala }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
-
-      - name: Test
-        if: "!startsWith(matrix.scala, '2.13')"
-        run: sbt ++${{ matrix.scala }} ${{ matrix.project }}/test
-
-      - name: Test with coverage
-        if: "startsWith(matrix.scala, '2.13')"
-        run: sbt ++${{ matrix.scala }} coverage ${{ matrix.project }}/test coverageReport
-
-      - name: Publish coverage
-        if: "startsWith(matrix.scala, '2.13')"
-        uses: codecov/codecov-action@v1
+        scala:
+          - '2.12.13'
+          - '2.13.5'
+          - "3.0.0-RC3"
+name: CI
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master

@@ -14,6 +14,10 @@ To run the tests locally:
 - Run all tests with `sbt testAll` (if `java.lang.LinkageError`, just re-run the command)
 - Run a single project test, for example `sbt circeProject/test`
 
+If you need to change the Github Action workflow, don't edit the file directly as it's generated from
+a `dhall` file. Edit `dhall/tests.dhall` instead, install [Dhall](https://dhall-lang.org/) on your computer
+and run `scripts/dhall.sh` to update the workflow file.
+
 ## Formatting
 
 The project using [Scalafmt](https://scalameta.org/scalafmt/) for formatting.
