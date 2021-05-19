@@ -41,39 +41,6 @@ jobs:
             ~/Library/Caches/Coursier/v1
       - name: Check the mdoc documentation
         run: sbt docs/mdoc
-  mima:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: "actions/checkout@v2"
-      - name: Setup Java and Scala
-        uses: "olafurpg/setup-scala@v10"
-        with:
-          java-version: "adopt@1.8"
-      - name: Cache sbt
-        uses: "actions/cache@v2"
-        with:
-          key: "${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}"
-          path: |
-            ~/.sbt
-            ~/.ivy2/cache
-            ~/.coursier/cache/v1
-            ~/.cache/coursier/v1
-            ~/AppData/Local/Coursier/Cache/v1
-            ~/Library/Caches/Coursier/v1
-      - name: Report binary issues
-        run: "sbt ${{ matrix.project }}/mimaReportBinaryIssues"
-    strategy:
-      matrix:
-        project:
-          - core
-          - playJson
-          - playFramework
-          - circe
-          - upickle
-          - json4sNative
-          - json4sJackson
-          - sprayJson
-          - argonaut
   tests:
     runs-on: ubuntu-latest
     steps:
@@ -106,8 +73,6 @@ jobs:
       matrix:
         exclude:
           - project: playJson
-            scala: '3.0.0'
-          - project: circe
             scala: '3.0.0'
           - project: sprayJson
             scala: '3.0.0'

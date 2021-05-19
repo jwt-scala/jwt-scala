@@ -134,6 +134,5 @@ in  { name = "CI"
         , branches = Some [ "master" ]
         }
       }
-    , jobs =
-      { linting = lintingJob, mdoc = mdocJob, mima = mimaJob, tests = testsJob }
+    , jobs = { linting = lintingJob, mdoc = mdocJob, tests = testsJob }
     }
