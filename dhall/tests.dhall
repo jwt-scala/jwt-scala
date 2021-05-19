@@ -16,7 +16,7 @@ let allProjects =
       , "argonaut"
       ]
 
-let noScala3 = [ "playJson", "circe", "sprayJson", "playFramework" ]
+let noScala3 = [ "playJson", "sprayJson", "playFramework" ]
 
 let scala212 = ../versions/scala212 as Text
 

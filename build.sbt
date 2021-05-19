@@ -279,7 +279,6 @@ lazy val circe = project
   .settings(releaseSettings)
   .settings(
     name := "jwt-circe",
-    crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.circeCore, Libs.circeParse, Libs.circeGeneric % "test")
   )
   .aggregate(jsonCommon)
