@@ -63,7 +63,7 @@ trait JwtJson4sCommon[H, C] extends JwtJsonCommon[JObject, H, C] {
         try {
           Some((json \ fieldName).extract[Set[String]])
         } catch {
-          case MappingException(_, _) => throw new JwtNonStringSetOrStringException(fieldName)
+          case _: MappingException => throw new JwtNonStringSetOrStringException(fieldName)
         }
       case JNull    => None
       case JNothing => None

@@ -142,5 +142,5 @@ in  { name = "CI"
         }
       }
     , jobs =
-      { linting = lintingJob, mdoc = mdocJob, mima = mimaJob, tests = testsJob }
+      { linting = lintingJob, mdoc = mdocJob, tests = testsJob }
     }
