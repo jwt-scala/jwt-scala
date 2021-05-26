@@ -18,7 +18,6 @@ let allProjects =
 
 let noScala3 =
       [ "playJson"
-      , "circe"
       , "json4sCommon"
       , "json4sJackson"
       , "json4sNative"
