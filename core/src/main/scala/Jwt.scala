@@ -29,7 +29,7 @@ object Jwt extends JwtCore[JwtHeader, JwtClaim] {
   protected def extractIssuer(claim: String): Option[String] =
     (extractIssuerRegex findFirstMatchIn claim).map(_.group(1))
 
-  private val extractSubjectRegex = "\"sub\" *: *\"([a-zA-Z0-9]*)\"".r
+  private val extractSubjectRegex = "\"sub\" *: *\"([\\-a-zA-Z0-9]*)\"".r
   protected def extractSubject(claim: String): Option[String] =
     (extractSubjectRegex findFirstMatchIn claim).map(_.group(1))
 
