@@ -4,16 +4,18 @@ import scala.util.matching.Regex
 import java.time.Clock
 
 /** Test implementation of [[JwtCore]] using only Strings. Most of the time, you should use a lib
-  * implementing JSON and shouldn't be using this object. But just in case you need pure Scala support,
-  * here it is.
+  * implementing JSON and shouldn't be using this object. But just in case you need pure Scala
+  * support, here it is.
   *
-  * To see a full list of samples, check the [[https://jwt-scala.github.io/jwt-scala/jwt-core-jwt.html online documentation]].
+  * To see a full list of samples, check the
+  * [[https://jwt-scala.github.io/jwt-scala/jwt-core-jwt.html online documentation]].
   *
-  * '''Warning''': since there is no JSON support in Scala, this object doesn't have any way to parse
-  * a JSON string as an AST, so it only uses regex with all the limitations it implies. Try not to use
-  * keys like `exp` and `nbf` in sub-objects of the claim. For example, if you try to use the following
-  * claim: `{"user":{"exp":1},"exp":1300819380}`, it should be correct but it will fail because the regex
-  * extracting the expiration will return `1` instead of `1300819380`. Sorry about that.
+  * '''Warning''': since there is no JSON support in Scala, this object doesn't have any way to
+  * parse a JSON string as an AST, so it only uses regex with all the limitations it implies. Try
+  * not to use keys like `exp` and `nbf` in sub-objects of the claim. For example, if you try to use
+  * the following claim: `{"user":{"exp":1},"exp":1300819380}`, it should be correct but it will
+  * fail because the regex extracting the expiration will return `1` instead of `1300819380`. Sorry
+  * about that.
   */
 object Jwt extends JwtCore[JwtHeader, JwtClaim] {
   def apply(clock: Clock): Jwt = new Jwt(clock)

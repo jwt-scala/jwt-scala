@@ -21,12 +21,15 @@ package algorithms {
 
 object JwtAlgorithm {
 
-  /** Deserialize an algorithm from its string equivalent. Only real algorithms supported,
-    * if you need to support "none", use "optionFromString".
+  /** Deserialize an algorithm from its string equivalent. Only real algorithms supported, if you
+    * need to support "none", use "optionFromString".
     *
-    * @return the actual instance of the algorithm
-    * @param algo the name of the algorithm (e.g. HS256 or HmacSHA256)
-    * @throws JwtNonSupportedAlgorithm in case the string doesn't match any known algorithm
+    * @return
+    *   the actual instance of the algorithm
+    * @param algo
+    *   the name of the algorithm (e.g. HS256 or HmacSHA256)
+    * @throws JwtNonSupportedAlgorithm
+    *   in case the string doesn't match any known algorithm
     */
   def fromString(algo: String): JwtAlgorithm = algo match {
     case "HMD5"    => HMD5
@@ -48,8 +51,10 @@ object JwtAlgorithm {
   /** Deserialize an algorithm from its string equivalent. If it's the special "none" algorithm,
     * return None, else, return Some with the corresponding algorithm inside.
     *
-    * @return the actual instance of the algorithm
-    * @param algo the name of the algorithm (e.g. none, HS256 or HmacSHA256)
+    * @return
+    *   the actual instance of the algorithm
+    * @param algo
+    *   the name of the algorithm (e.g. none, HS256 or HmacSHA256)
     */
   def optionFromString(algo: String): Option[JwtAlgorithm] =
     Option(algo).filterNot(_ == "none").map(fromString)
