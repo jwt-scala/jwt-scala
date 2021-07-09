@@ -6,7 +6,8 @@ import pdi.jwt.exceptions.JwtNonStringException
 
 /** Implementation of `JwtCore` using `JsObject` from Play JSON.
   *
-  * To see a full list of samples, check the [[https://jwt-scala.github.io/jwt-scala/jwt-play-json.html online documentation]].
+  * To see a full list of samples, check the
+  * [[https://jwt-scala.github.io/jwt-scala/jwt-play-json.html online documentation]].
   */
 trait JwtJsonParser[H, C] extends JwtJsonCommon[JsObject, H, C] with JwtJsonImplicits {
   protected def parse(value: String): JsObject = Json.parse(value).as[JsObject]

@@ -5,7 +5,8 @@ import upickle.default._
 
 /** Implementation of `JwtCore` using `Js.Value` from uPickle.
   *
-  * To see a full list of samples, check the [[https://jwt-scala.github.io/jwt-scala/jwt-upickle.html online documentation]].
+  * To see a full list of samples, check the
+  * [[https://jwt-scala.github.io/jwt-scala/jwt-upickle.html online documentation]].
   */
 trait JwtUpickleParser[H, C] extends JwtJsonCommon[ujson.Value, H, C] with JwtUpickleImplicits {
   protected def parse(value: String): ujson.Value = ujson.read(value)

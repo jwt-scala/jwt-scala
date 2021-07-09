@@ -8,7 +8,8 @@ import org.json4s.jackson.Serialization
 
 /** Implementation of `JwtCore` using `JObject` from Json4s Jackson.
   *
-  * To see a full list of samples, check the [[https://jwt-scala.github.io/jwt-scala/jwt-json4s.html online documentation]].
+  * To see a full list of samples, check the
+  * [[https://jwt-scala.github.io/jwt-scala/jwt-json4s.html online documentation]].
   */
 trait JwtJson4sParser[H, C] extends JwtJson4sCommon[H, C] with JwtJson4sImplicits {
   protected def parse(value: String): JObject = jparse(value) match {

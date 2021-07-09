@@ -27,8 +27,8 @@ trait JwtPlayImplicits {
   private def requestHasJwtHeader(request: RequestHeader)(implicit conf: Configuration): Boolean =
     request.headers.get(JwtSession.REQUEST_HEADER_NAME).isDefined
 
-  /** By adding `import pdi.jwt._`, you will implicitely add all those methods to `Result` allowing you to easily manipulate
-    * the [[JwtSession]] inside your Play application.
+  /** By adding `import pdi.jwt._`, you will implicitely add all those methods to `Result` allowing
+    * you to easily manipulate the [[JwtSession]] inside your Play application.
     *
     * {{{
     * package controllers
@@ -53,8 +53,10 @@ trait JwtPlayImplicits {
     */
   implicit class RichResult @Inject() (result: Result)(implicit conf: Configuration, clock: Clock) {
 
-    /** Check if the header for a [[JwtSession]] is present (first from the Result then from the RequestHeader)
-      * @return a Boolean indicating the presence of a JWT header
+    /** Check if the header for a [[JwtSession]] is present (first from the Result then from the
+      * RequestHeader)
+      * @return
+      *   a Boolean indicating the presence of a JWT header
       */
     def hasJwtHeader(implicit request: RequestHeader): Boolean = {
       result.header.headers
@@ -63,8 +65,10 @@ trait JwtPlayImplicits {
         .getOrElse(requestHasJwtHeader(request))
     }
 
-    /** Retrieve the current [[JwtSession]] from the headers (first from the Result then from the RequestHeader), if none, create a new one.
-      * @return the JwtSession inside the headers or a new one
+    /** Retrieve the current [[JwtSession]] from the headers (first from the Result then from the
+      * RequestHeader), if none, create a new one.
+      * @return
+      *   the JwtSession inside the headers or a new one
       */
     def jwtSession(implicit request: RequestHeader): JwtSession = {
       result.header.headers.get(JwtSession.RESPONSE_HEADER_NAME) match {
@@ -73,8 +77,10 @@ trait JwtPlayImplicits {
       }
     }
 
-    /** If the Play app has a session.maxAge config, it will extend the expiration of the [[JwtSession]] by that time, if not, it will do nothing.
-      * @return the same Result with, eventually, a prolonged [[JwtSession]]
+    /** If the Play app has a session.maxAge config, it will extend the expiration of the
+      * [[JwtSession]] by that time, if not, it will do nothing.
+      * @return
+      *   the same Result with, eventually, a prolonged [[JwtSession]]
       */
     def refreshJwtSession(implicit request: RequestHeader): Result = JwtSession.MAX_AGE match {
       case None => result
@@ -111,12 +117,16 @@ trait JwtPlayImplicits {
       result.header.copy(headers = result.header.headers - JwtSession.RESPONSE_HEADER_NAME)
     )
 
-    /** Keep the current [[JwtSession]] and add some values in it, if a key is already defined, it will be overriden. */
+    /** Keep the current [[JwtSession]] and add some values in it, if a key is already defined, it
+      * will be overriden.
+      */
     def addingToJwtSession(values: (String, String)*)(implicit request: RequestHeader): Result = {
       withJwtSession(jwtSession + new JsObject(values.map(kv => kv._1 -> JsString(kv._2)).toMap))
     }
 
-    /** Keep the current [[JwtSession]] and add some values in it, if a key is already defined, it will be overriden. */
+    /** Keep the current [[JwtSession]] and add some values in it, if a key is already defined, it
+      * will be overriden.
+      */
     def addingToJwtSession[A: Writes](key: String, value: A)(implicit
         request: RequestHeader
     ): Result = {
@@ -129,8 +139,8 @@ trait JwtPlayImplicits {
     }
   }
 
-  /** By adding `import pdi.jwt._`, you will implicitely add this method to `RequestHeader` allowing you to easily retrieve
-    * the [[JwtSession]] inside your Play application.
+  /** By adding `import pdi.jwt._`, you will implicitely add this method to `RequestHeader` allowing
+    * you to easily retrieve the [[JwtSession]] inside your Play application.
     *
     * {{{
     * package controllers

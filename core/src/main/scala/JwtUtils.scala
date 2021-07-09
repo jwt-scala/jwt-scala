@@ -17,15 +17,19 @@ object JwtUtils {
 
   /** Convert an array of bytes to its corresponding string using the default encoding.
     *
-    * @return the final string
-    * @param arr the array of bytes to transform
+    * @return
+    *   the final string
+    * @param arr
+    *   the array of bytes to transform
     */
   def stringify(arr: Array[Byte]): String = new String(arr, ENCODING)
 
   /** Convert a string to its corresponding array of bytes using the default encoding.
     *
-    * @return the final array of bytes
-    * @param str the string to convert
+    * @return
+    *   the final array of bytes
+    * @param str
+    *   the string to convert
     */
   def bytify(str: String): Array[Byte] = str.getBytes(ENCODING)
 
@@ -132,12 +136,13 @@ object JwtUtils {
   def sign(data: String, key: PrivateKey, algorithm: JwtAsymmetricAlgorithm): Array[Byte] =
     sign(bytify(data), key, algorithm)
 
-  /** Will try to sign some given data by parsing the provided key, if parsing fail, please consider retrieving the SecretKey or the PrivateKey on your side and then use another "sign" method.
+  /** Will try to sign some given data by parsing the provided key, if parsing fail, please consider
+    * retrieving the SecretKey or the PrivateKey on your side and then use another "sign" method.
     */
   def sign(data: Array[Byte], key: String, algorithm: JwtAlgorithm): Array[Byte] =
     algorithm match {
-      case algo: JwtHmacAlgorithm    => sign(data, new SecretKeySpec(bytify(key), algo.fullName), algo)
-      case algo: JwtRSAAlgorithm     => sign(data, parsePrivateKey(key, RSA), algo)
+      case algo: JwtHmacAlgorithm => sign(data, new SecretKeySpec(bytify(key), algo.fullName), algo)
+      case algo: JwtRSAAlgorithm  => sign(data, parsePrivateKey(key, RSA), algo)
       case algo: JwtECDSAAlgorithm   => sign(data, parsePrivateKey(key, ECDSA), algo)
       case algo: JwtEdDSAAlgorithm   => sign(data, parsePrivateKey(key, EdDSA), algo)
       case algo: JwtUnknownAlgorithm => throw new JwtNonSupportedAlgorithm(algo.fullName)
@@ -159,7 +164,8 @@ object JwtUtils {
     JwtArrayUtils.constantTimeAreEqual(sign(data, key, algorithm), signature)
   }
 
-  /** Check if a signature is valid for a given data using the key and the RSA or ECDSA algorithm provided.
+  /** Check if a signature is valid for a given data using the key and the RSA or ECDSA algorithm
+    * provided.
     */
   def verify(
       data: Array[Byte],
@@ -177,7 +183,9 @@ object JwtUtils {
     }
   }
 
-  /** Will try to check if a signature is valid for a given data by parsing the provided key, if parsing fail, please consider retrieving the SecretKey or the PublicKey on your side and then use another "verify" method.
+  /** Will try to check if a signature is valid for a given data by parsing the provided key, if
+    * parsing fail, please consider retrieving the SecretKey or the PublicKey on your side and then
+    * use another "verify" method.
     */
   def verify(
       data: Array[Byte],
@@ -198,11 +206,13 @@ object JwtUtils {
   def verify(data: String, signature: String, key: String, algorithm: JwtAlgorithm): Boolean =
     verify(bytify(data), bytify(signature), key, algorithm)
 
-  /** Returns the expected signature byte array length (R + S parts) for
-    * the specified ECDSA algorithm.
+  /** Returns the expected signature byte array length (R + S parts) for the specified ECDSA
+    * algorithm.
     *
-    * @param algorithm The ECDSA algorithm. Must be supported and not { @code null}.
-    * @return The expected byte array length for the signature.
+    * @param algorithm
+    *   The ECDSA algorithm. Must be supported and not { @code null}.
+    * @return
+    *   The expected byte array length for the signature.
     */
   def getSignatureByteArrayLength(algorithm: JwtECDSAAlgorithm): Int = algorithm match {
     case ES256 => 64
@@ -210,13 +220,17 @@ object JwtUtils {
     case ES512 => 132
   }
 
-  /** Transcodes the JCA ASN.1/DER-encoded signature into the concatenated
-    * R + S format expected by ECDSA JWS.
+  /** Transcodes the JCA ASN.1/DER-encoded signature into the concatenated R + S format expected by
+    * ECDSA JWS.
     *
-    * @param derSignature The ASN1./DER-encoded. Must not be { @code null}.
-    * @param outputLength The expected length of the ECDSA JWS signature.
-    * @return The ECDSA JWS encoded signature.
-    * @throws JwtSignatureFormatException If the ASN.1/DER signature format is invalid.
+    * @param derSignature
+    *   The ASN1./DER-encoded. Must not be { @code null}.
+    * @param outputLength
+    *   The expected length of the ECDSA JWS signature.
+    * @return
+    *   The ECDSA JWS encoded signature.
+    * @throws JwtSignatureFormatException
+    *   If the ASN.1/DER signature format is invalid.
     */
   @throws[JwtSignatureFormatException]
   def transcodeSignatureToConcat(derSignature: Array[Byte], outputLength: Int): Array[Byte] = {
@@ -226,7 +240,7 @@ object JwtUtils {
     val offset: Int = derSignature(1) match {
       case s if s > 0            => 2
       case s if s == 0x81.toByte => 3
-      case _                     => throw new JwtSignatureFormatException("Invalid ECDSA signature format")
+      case _ => throw new JwtSignatureFormatException("Invalid ECDSA signature format")
     }
 
     val rLength: Byte = derSignature(offset + 1)
@@ -262,14 +276,14 @@ object JwtUtils {
     concatSignature
   }
 
-  /** Transcodes the ECDSA JWS signature into ASN.1/DER format for use by
-    * the JCA verifier.
+  /** Transcodes the ECDSA JWS signature into ASN.1/DER format for use by the JCA verifier.
     *
-    * @param signature The JWS signature, consisting of the
-    *                     concatenated R and S values. Must not be
-    *                     { @code null}.
-    * @return The ASN.1/DER encoded signature.
-    * @throws JwtSignatureFormatException If the ECDSA JWS signature format is invalid.
+    * @param signature
+    *   The JWS signature, consisting of the concatenated R and S values. Must not be { @code null}.
+    * @return
+    *   The ASN.1/DER encoded signature.
+    * @throws JwtSignatureFormatException
+    *   If the ECDSA JWS signature format is invalid.
     */
   @throws[JwtSignatureFormatException]
   def transcodeSignatureToDER(signature: Array[Byte]): Array[Byte] = {

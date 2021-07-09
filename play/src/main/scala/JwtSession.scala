@@ -9,15 +9,18 @@ import play.api.libs.json.Json.JsValueWrapper
 import play.api.Configuration
 import pdi.jwt.algorithms.{JwtAsymmetricAlgorithm, JwtHmacAlgorithm}
 
-/** Similar to the default Play Session but using JsObject instead of Map[String, String]. The data is separated into two attributes:
-  * `headerData` and `claimData`. There is also a optional signature. Most of the time, you should only care about the `claimData` which
-  * stores the claim of the token containing the custom values you eventually put in it. That's why all methods of `JwtSession` (such as
-  * add and removing values) only modifiy the `claimData`.
+/** Similar to the default Play Session but using JsObject instead of Map[String, String]. The data
+  * is separated into two attributes: `headerData` and `claimData`. There is also a optional
+  * signature. Most of the time, you should only care about the `claimData` which stores the claim
+  * of the token containing the custom values you eventually put in it. That's why all methods of
+  * `JwtSession` (such as add and removing values) only modifiy the `claimData`.
   *
-  * To see a full list of samples, check the [[https://jwt-scala.github.io/jwt-scala/jwt-play-jwt-session.html online documentation]].
+  * To see a full list of samples, check the
+  * [[https://jwt-scala.github.io/jwt-scala/jwt-play-jwt-session.html online documentation]].
   *
-  * '''Warning''' Be aware that if you override the `claimData` (using `withClaim` for example), you might override some attributes that
-  * were automatically put inside the claim such as the expiration of the token.
+  * '''Warning''' Be aware that if you override the `claimData` (using `withClaim` for example), you
+  * might override some attributes that were automatically put inside the claim such as the
+  * expiration of the token.
   */
 case class JwtSession @Inject() (headerData: JsObject, claimData: JsObject, signature: String)(
     implicit
@@ -82,7 +85,8 @@ case class JwtSession @Inject() (headerData: JsObject, claimData: JsObject, sign
   /** Override the `signature` (seriously, you should never need this method) */
   def withSignature(signature: String): JwtSession = this.copy(signature = signature)
 
-  /** If your Play app config has a `session.maxAge`, it will extend the expiration by that amount */
+  /** If your Play app config has a `session.maxAge`, it will extend the expiration by that amount
+    */
   def refresh(): JwtSession =
     JwtSession.MAX_AGE.map(sec => this + ("exp", JwtTime.nowSeconds + sec)).getOrElse(this)
 }
