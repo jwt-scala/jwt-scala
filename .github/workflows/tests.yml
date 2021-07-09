@@ -106,17 +106,17 @@ jobs:
       matrix:
         exclude:
           - project: playJson
-            scala: '3.0.0'
+            scala: '3.0.1'
           - project: json4sCommon
-            scala: '3.0.0'
+            scala: '3.0.1'
           - project: json4sJackson
-            scala: '3.0.0'
+            scala: '3.0.1'
           - project: json4sNative
-            scala: '3.0.0'
+            scala: '3.0.1'
           - project: sprayJson
-            scala: '3.0.0'
+            scala: '3.0.1'
           - project: playFramework
-            scala: '3.0.0'
+            scala: '3.0.1'
         project:
           - core
           - playJson
