@@ -61,7 +61,10 @@ trait JwtJson4sCommon[H, C] extends JwtJsonCommon[JObject, H, C] {
       case JString(value) => Option(Set(value))
       case JArray(_) =>
         try {
-          Some((json \ fieldName).extract[Set[String]])
+          (json \ fieldName) match {
+            case JArray(values) => Some(values.map(_.asInstanceOf[JString].s).toSet)
+            case _              => None
+          }
         } catch {
           case _: MappingException => throw new JwtNonStringSetOrStringException(fieldName)
         }
