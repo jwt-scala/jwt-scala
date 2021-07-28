@@ -8,8 +8,6 @@ import pdi.jwt.exceptions.{
 }
 
 trait JwtJson4sCommon[H, C] extends JwtJsonCommon[JObject, H, C] {
-  protected implicit def formats: Formats
-
   protected def getAlgorithm(header: JObject): Option[JwtAlgorithm] = header \ "alg" match {
     case JString("none") => None
     case JString(algo)   => Option(JwtAlgorithm.fromString(algo))
@@ -61,7 +59,10 @@ trait JwtJson4sCommon[H, C] extends JwtJsonCommon[JObject, H, C] {
       case JString(value) => Option(Set(value))
       case JArray(_) =>
         try {
-          Some((json \ fieldName).extract[Set[String]])
+          (json \ fieldName) match {
+            case JArray(values) => Some(values.map(_.asInstanceOf[JString].s).toSet)
+            case _              => None
+          }
         } catch {
           case _: MappingException => throw new JwtNonStringSetOrStringException(fieldName)
         }

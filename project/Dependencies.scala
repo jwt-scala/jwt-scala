@@ -23,8 +23,8 @@ object Dependencies {
     val guice = "com.google.inject" % "guice" % V.guice % "test"
 
     val json4sCore = "org.json4s" %% "json4s-core" % V.json4s
-    val json4sNative = "org.json4s" %% "json4s-native" % V.json4s
-    val json4sJackson = "org.json4s" %% "json4s-jackson" % V.json4s
+    val json4sNative = "org.json4s" %% "json4s-native-core" % V.json4s
+    val json4sJackson = "org.json4s" %% "json4s-jackson-core" % V.json4s
 
     val circeCore = "io.circe" %% "circe-core" % V.circe
     val circeGeneric = "io.circe" %% "circe-generic" % V.circe

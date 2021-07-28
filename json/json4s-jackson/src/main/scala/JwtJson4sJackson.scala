@@ -4,7 +4,6 @@ import java.time.Clock
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.JsonMethods.{parse => jparse}
-import org.json4s.jackson.Serialization
 
 /** Implementation of `JwtCore` using `JObject` from Json4s Jackson.
   *
@@ -18,9 +17,6 @@ trait JwtJson4sParser[H, C] extends JwtJson4sCommon[H, C] with JwtJson4sImplicit
   }
 
   protected def stringify(value: JObject): String = compact(render(value))
-
-  protected implicit val formats = Serialization.formats(NoTypeHints)
-
 }
 
 object JwtJson4s extends JwtJson4sParser[JwtHeader, JwtClaim] {

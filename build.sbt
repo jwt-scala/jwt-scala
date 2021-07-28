@@ -299,7 +299,6 @@ lazy val json4sCommon = project
   .settings(releaseSettings)
   .settings(
     name := "jwt-json4s-common",
-    crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.json4sCore)
   )
   .aggregate(jsonCommon)
@@ -310,7 +309,6 @@ lazy val json4sNative = project
   .settings(releaseSettings)
   .settings(
     name := "jwt-json4s-native",
-    crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.json4sNative)
   )
   .aggregate(json4sCommon)
@@ -321,7 +319,6 @@ lazy val json4sJackson = project
   .settings(releaseSettings)
   .settings(
     name := "jwt-json4s-jackson",
-    crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.json4sJackson)
   )
   .aggregate(json4sCommon)
