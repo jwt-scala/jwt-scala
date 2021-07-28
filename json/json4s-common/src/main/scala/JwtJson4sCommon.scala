@@ -8,8 +8,6 @@ import pdi.jwt.exceptions.{
 }
 
 trait JwtJson4sCommon[H, C] extends JwtJsonCommon[JObject, H, C] {
-  protected implicit def formats: Formats
-
   protected def getAlgorithm(header: JObject): Option[JwtAlgorithm] = header \ "alg" match {
     case JString("none") => None
     case JString(algo)   => Option(JwtAlgorithm.fromString(algo))
