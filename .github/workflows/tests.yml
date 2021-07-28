@@ -70,8 +70,6 @@ jobs:
           - playFramework
           - circe
           - upickle
-          - json4sNative
-          - json4sJackson
           - sprayJson
           - argonaut
   tests:
