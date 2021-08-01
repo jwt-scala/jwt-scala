@@ -21,11 +21,13 @@ trait JwtSprayJsonParser[H, C] extends JwtJsonCommon[JsObject, H, C] {
 
 }
 
-object JwtSprayJson extends JwtSprayJsonParser[JwtHeader, JwtClaim] {
-  import DefaultJsonProtocol._
-
+object JwtSprayJson extends JwtSprayJson(Clock.systemUTC) {
   def apply(clock: Clock): JwtSprayJson = new JwtSprayJson(clock)
+}
 
+class JwtSprayJson(override val clock: Clock) extends JwtSprayJsonParser[JwtHeader, JwtClaim] {
+
+  import DefaultJsonProtocol._
   override def parseHeader(header: String): JwtHeader = {
     val jsObj = parse(header)
     JwtHeader(
@@ -59,10 +61,4 @@ object JwtSprayJson extends JwtSprayJsonParser[JwtHeader, JwtClaim] {
 
   private[this] def safeGetField[A: JsonReader](js: JsObject, name: String) =
     js.fields.get(name).flatMap(safeRead[A])
-}
-
-class JwtSprayJson private (override val clock: Clock)
-    extends JwtSprayJsonParser[JwtHeader, JwtClaim] {
-  override def parseHeader(header: String): JwtHeader = JwtSprayJson.parseHeader(header)
-  override def parseClaim(header: String): JwtClaim = JwtSprayJson.parseClaim(header)
 }

@@ -17,9 +17,11 @@ import java.time.Clock
   * fail because the regex extracting the expiration will return `1` instead of `1300819380`. Sorry
   * about that.
   */
-object Jwt extends JwtCore[JwtHeader, JwtClaim] {
-  def apply(clock: Clock): Jwt = new Jwt(clock)
+object Jwt extends Jwt(Clock.systemUTC) {
+  def apply(clock: Clock) = new Jwt(clock)
+}
 
+class Jwt(override val clock: Clock) extends JwtCore[JwtHeader, JwtClaim] {
   private val extractAlgorithmRegex = "\"alg\" *: *\"([a-zA-Z0-9]+)\"".r
   protected def extractAlgorithm(header: String): Option[JwtAlgorithm] =
     (extractAlgorithmRegex findFirstMatchIn header).map(_.group(1)).flatMap {
@@ -79,6 +81,13 @@ object Jwt extends JwtCore[JwtHeader, JwtClaim] {
     clearStart(clearEnd(clearMiddle(dirtyJson)))
   }
 
+  protected def headerToJson(header: JwtHeader): String = header.toJson
+  protected def claimToJson(claim: JwtClaim): String = claim.toJson
+
+  protected def extractAlgorithm(header: JwtHeader): Option[JwtAlgorithm] = header.algorithm
+  protected def extractExpiration(claim: JwtClaim): Option[Long] = claim.expiration
+  protected def extractNotBefore(claim: JwtClaim): Option[Long] = claim.notBefore
+
   protected def parseHeader(header: String): JwtHeader = JwtHeader(extractAlgorithm(header))
 
   protected def parseClaim(claim: String): JwtClaim =
@@ -91,23 +100,4 @@ object Jwt extends JwtCore[JwtHeader, JwtClaim] {
       issuedAt = extractIssuedAt(claim),
       jwtId = extractJwtId(claim)
     )
-
-  protected def headerToJson(header: JwtHeader): String = header.toJson
-  protected def claimToJson(claim: JwtClaim): String = claim.toJson
-
-  protected def extractAlgorithm(header: JwtHeader): Option[JwtAlgorithm] = header.algorithm
-  protected def extractExpiration(claim: JwtClaim): Option[Long] = claim.expiration
-  protected def extractNotBefore(claim: JwtClaim): Option[Long] = claim.notBefore
-}
-
-class Jwt private (override val clock: Clock) extends JwtCore[JwtHeader, JwtClaim] {
-  protected def parseHeader(header: String): JwtHeader = Jwt.parseHeader(header)
-  protected def parseClaim(claim: String): JwtClaim = Jwt.parseClaim(claim)
-
-  protected def extractAlgorithm(header: JwtHeader): Option[JwtAlgorithm] = header.algorithm
-  protected def extractExpiration(claim: JwtClaim): Option[Long] = claim.expiration
-  protected def extractNotBefore(claim: JwtClaim): Option[Long] = claim.notBefore
-
-  protected def headerToJson(header: JwtHeader): String = header.toJson
-  protected def claimToJson(claim: JwtClaim): String = claim.toJson
 }

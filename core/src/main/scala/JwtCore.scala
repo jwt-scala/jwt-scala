@@ -35,7 +35,8 @@ import pdi.jwt.exceptions._
   *   [[https://jwt-scala.github.io/jwt-scala/#security-concerns Security concerns]] for more infos.
   */
 trait JwtCore[H, C] {
-  implicit private[jwt] val clock: Clock = Clock.systemUTC
+  implicit private[jwt] def clock: Clock
+
   // Abstract methods
   protected def parseHeader(header: String): H
   protected def parseClaim(claim: String): C

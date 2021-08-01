@@ -21,10 +21,14 @@ trait JwtCirceParser[H, C] extends JwtJsonCommon[Json, H, C] {
     .map(JwtAlgorithm.fromString)
 }
 
-object JwtCirce extends JwtCirceParser[JwtHeader, JwtClaim] {
+object JwtCirce extends JwtCirce(Clock.systemUTC) {
   def apply(clock: Clock): JwtCirce = new JwtCirce(clock)
 
+}
+
+class JwtCirce(override val clock: Clock) extends JwtCirceParser[JwtHeader, JwtClaim] {
   def parseHeader(header: String): JwtHeader = parseHeaderHelp(header)
+
   def parseClaim(claim: String): JwtClaim = parseClaimHelp(claim)
 
   private def parseHeaderHelp(header: String): JwtHeader = {
@@ -61,12 +65,5 @@ object JwtCirce extends JwtCirceParser[JwtHeader, JwtClaim] {
       jwtId = cursor.get[String]("jti").toOption
     )
   }
-}
 
-class JwtCirce private (override val clock: Clock) extends JwtCirceParser[JwtHeader, JwtClaim] {
-  import JwtCirce.{parseHeaderHelp, parseClaimHelp}
-
-  def parseHeader(header: String): JwtHeader = parseHeaderHelp(header)
-
-  def parseClaim(claim: String): JwtClaim = parseClaimHelp(claim)
 }
