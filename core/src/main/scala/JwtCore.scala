@@ -904,7 +904,7 @@ trait JwtCore[H, C] {
   def decode(token: String, key: PublicKey): Try[C] = decode(token, key, JwtOptions.DEFAULT)
 
   // Validate
-  protected def validateTiming(claim: C, options: JwtOptions) = {
+  protected def validateTiming(claim: C, options: JwtOptions): Try[Unit] = {
     val maybeExpiration: Option[Long] =
       if (options.expiration) extractExpiration(claim) else None
 
@@ -946,7 +946,7 @@ trait JwtCore[H, C] {
       }
     }
 
-    validateTiming(claim, options)
+    validateTiming(claim, options).get
   }
 
   // Validation when both key and algorithm
@@ -977,7 +977,7 @@ trait JwtCore[H, C] {
         throw new JwtValidationException("Invalid signature for this token or wrong algorithm.")
       }
     }
-    validateTiming(claim, options)
+    validateTiming(claim, options).get
   }
 
   // Generic validation on String Key for HMAC algorithms
