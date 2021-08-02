@@ -1,5 +1,8 @@
 # Changelog
 
+Note: this file is no longer updated, check the [releases tab](https://github.com/jwt-scala/jwt-scala/releases)
+for details about each version.
+
 ## 6.0.0 (26/02/2021)
 
 Important: the groupId changed from `fr.pauldijou` to `com.github.jwt-scala`,
