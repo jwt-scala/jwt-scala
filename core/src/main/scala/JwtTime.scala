@@ -1,7 +1,7 @@
 package pdi.jwt
 
 import java.time.{Clock, Instant}
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 import pdi.jwt.exceptions.{JwtNotBeforeException, JwtExpirationException}
 
 /** Util object to handle time operations */
@@ -33,7 +33,7 @@ object JwtTime {
     *   if set, the instant that must be after now (in millis)
     */
   def nowIsBetween(start: Option[Long], end: Option[Long])(implicit clock: Clock): Boolean =
-    Try(validateNowIsBetween(start, end)).isSuccess
+    validateNowIsBetween(start, end).isSuccess
 
   /** Same as `nowIsBetween` but using seconds rather than millis.
     *
@@ -52,24 +52,20 @@ object JwtTime {
     *   if set, the instant that must be before now (in millis)
     * @param end
     *   if set, the instant that must be after now (in millis)
-    * @throws JwtNotBeforeException
-    *   if `start` > now
-    * @throws JwtExpirationException
-    *   if now >= `end`
+    * @return
+    *   Failure(JwtNotBeforeException) if `start` > now
+    * @return
+    *   Failure(JwtExpirationException) if now >= `end`
     */
-  def validateNowIsBetween(start: Option[Long], end: Option[Long])(implicit clock: Clock): Unit = {
+  def validateNowIsBetween(start: Option[Long], end: Option[Long])(implicit
+      clock: Clock
+  ): Try[Unit] = {
     val timeNow = now
 
-    start.foreach { s =>
-      if (s > timeNow) {
-        throw new JwtNotBeforeException(s)
-      }
-    }
-
-    end.foreach { e =>
-      if (timeNow >= e) {
-        throw new JwtExpirationException(e)
-      }
+    (start, end) match {
+      case (Some(s), _) if s > timeNow  => Failure(new JwtNotBeforeException(s))
+      case (_, Some(e)) if e <= timeNow => Failure(new JwtExpirationException(e))
+      case _                            => Success(())
     }
   }
 
@@ -86,6 +82,6 @@ object JwtTime {
     */
   def validateNowIsBetweenSeconds(start: Option[Long], end: Option[Long])(implicit
       clock: Clock
-  ): Unit =
+  ): Try[Unit] =
     validateNowIsBetween(start.map(_ * 1000), end.map(_ * 1000))
 }
