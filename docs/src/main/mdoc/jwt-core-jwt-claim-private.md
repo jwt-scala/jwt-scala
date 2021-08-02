@@ -8,6 +8,8 @@ Here is an example where reserved headers, along with a private "user" claim, is
 
 ```scala mdoc:reset
 import pdi.jwt.{Jwt, JwtHeader, JwtClaim, JwtUtils, JwtJson4sParser}
+import java.time.Clock
+
 // define your network-specific claims, and compose them with the usual reservedClaims
 case class JwtPrivateClaim(user: Option[String] = None, reservedClaims: JwtClaim = JwtClaim()) {
   // merge your json definition along with the reserved claims too
@@ -21,6 +23,8 @@ case class JwtPrivateClaim(user: Option[String] = None, reservedClaims: JwtClaim
 // create a parser with claim type set to the one you just defined
 // notice that the default `JwtHeader` class was used since we're only interested in overriding with a custom private claims type in this example
 object JwtJson4sPrivate extends JwtJson4sParser[JwtHeader, JwtPrivateClaim] {
+  override implicit val clock = Clock.systemUTC
+
   override protected def parseClaim(claim: String): JwtPrivateClaim = {
     val claimJson = super.parse(claim)
     val jwtReservedClaim: JwtClaim = super.readClaim(claimJson)

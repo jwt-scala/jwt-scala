@@ -16,8 +16,16 @@ trait JwtArgonautParser[H, C] extends JwtJsonCommon[Json, H, C] {
     .map(JwtAlgorithm.fromString)
 }
 
-object JwtArgonaut extends JwtArgonautParser[JwtHeader, JwtClaim] {
+object JwtArgonaut extends JwtArgonaut(Clock.systemUTC) {
   def apply(clock: Clock): JwtArgonaut = new JwtArgonaut(clock)
+
+}
+
+class JwtArgonaut(override val clock: Clock) extends JwtArgonautParser[JwtHeader, JwtClaim] {
+
+  override protected def parseClaim(claim: String): JwtClaim = parseClaimHelp(claim)
+
+  override protected def parseHeader(header: String): JwtHeader = parseHeaderHelp(header)
 
   implicit class ExtractJsonFieldToType(json: Json) {
 
@@ -33,10 +41,6 @@ object JwtArgonaut extends JwtArgonautParser[JwtHeader, JwtClaim] {
     def -|||(field: String): Option[Set[String]] =
       (json -|> field)(_.arrayOrEmpty.map(_.nospaces).toSet)
   }
-
-  override protected def parseClaim(claim: String): JwtClaim = parseClaimHelp(claim)
-
-  override protected def parseHeader(header: String): JwtHeader = parseHeaderHelp(header)
 
   private def parseClaimHelp(claim: String): JwtClaim =
     Parse.parseOption(claim) match {
@@ -78,13 +82,4 @@ object JwtArgonaut extends JwtArgonautParser[JwtHeader, JwtClaim] {
       }
     JwtClaim(content.nospaces, issuer, subject, audience, expiration, notBefore, issuedAt, jwtId)
   }
-}
-
-class JwtArgonaut private (override val clock: Clock)
-    extends JwtArgonautParser[JwtHeader, JwtClaim] {
-  import JwtArgonaut.{parseClaimHelp, parseHeaderHelp}
-
-  override protected def parseClaim(claim: String): JwtClaim = parseClaimHelp(claim)
-
-  override protected def parseHeader(header: String): JwtHeader = parseHeaderHelp(header)
 }

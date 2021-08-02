@@ -24,10 +24,8 @@ trait JwtJsonParser[H, C] extends JwtJsonCommon[JsObject, H, C] with JwtJsonImpl
 
 }
 
-object JwtJson extends JwtJsonParser[JwtHeader, JwtClaim] {
+object JwtJson extends JwtJson(Clock.systemUTC) {
   def apply(clock: Clock): JwtJson = new JwtJson(clock)
-  def parseHeader(header: String): JwtHeader = jwtPlayJsonHeaderReader.reads(Json.parse(header)).get
-  def parseClaim(claim: String): JwtClaim = jwtPlayJsonClaimReader.reads(Json.parse(claim)).get
 }
 
 class JwtJson private (override val clock: Clock) extends JwtJsonParser[JwtHeader, JwtClaim] {

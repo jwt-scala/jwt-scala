@@ -112,6 +112,25 @@ Jwt.validate("a.b.c")
 Jwt.isValid("a.b.c")
 ```
 
+### Using a custom clock
+
+For testing, it can sometimes be useful to use a fake clock that will always return a fixed time. It can be done by instanciating
+`Jwt` instead of using the object (based on the system clock):
+
+```scala mdoc
+import java.time.{Clock, Instant, ZoneId}
+
+val startTime = Clock.fixed(Instant.ofEpochSecond(0), ZoneId.of("UTC"))
+val endTime = Clock.fixed(Instant.ofEpochSecond(5), ZoneId.of("UTC"))
+
+val customJwt = Jwt(endTime)
+
+val claim = JwtClaim().issuedNow(startTime).expiresIn(10)(startTime)
+val encoded = customJwt.encode(claim, "key", JwtAlgorithm.HS256)
+
+customJwt.decode(encoded, "key", JwtAlgorithm.allHmac())
+```
+
 ### Options
 
 All validating and decoding methods support a final optional argument as a `JwtOptions` which allow you to disable validation checks. This is useful if you need to access data from an expired token for example. You can disable `expiration`, `notBefore` and `signature` checks. Be warned that if you disable the last one, you have no guarantee that the user didn't change the content of the token.
