@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   object V {
-    val munit = "0.7.27"
+    val munit = "0.7.28"
     val bouncyCastle = "1.69"
     val guice = "4.2.3"
 
