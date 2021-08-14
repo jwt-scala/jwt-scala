@@ -28,7 +28,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
   test("should decode subject with dashes") {
     Jwt.decode(validTimeJwt.encode(s"""{"sub":"das-hed"""")) match {
       case Success(jwt) => assertEquals(jwt.subject, Option("das-hed"))
-      case _ => fail("failed decoding token")
+      case _            => fail("failed decoding token")
     }
   }
 

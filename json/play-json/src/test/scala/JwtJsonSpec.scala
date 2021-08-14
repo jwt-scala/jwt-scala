@@ -79,7 +79,7 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
     defaultJwt.decodeJsonAll(token) match {
       case Failure(_: NoSuchElementException) => ()
       case Failure(e)                         => fail(s"Expected JwtNonStringException, got $e")
-      case Success(_)                         => fail(s"Expected JwtNonStringException, got success")
+      case Success(_) => fail(s"Expected JwtNonStringException, got success")
     }
   }
 
@@ -90,7 +90,7 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
     defaultJwt.decodeJsonAll(token) match {
       case Failure(_: NoSuchElementException) => ()
       case Failure(e)                         => fail(s"Expected JwtNonStringException, got $e")
-      case Success(_)                         => fail(s"Expected JwtNonStringException, got success")
+      case Success(_) => fail(s"Expected JwtNonStringException, got success")
     }
   }
 
