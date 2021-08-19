@@ -1,11 +1,11 @@
 package pdi.jwt
 
-import io.circe._
-import io.circe.syntax._
-import io.circe.jawn.{parse => jawnParse}
 import java.time.Clock
-
 import scala.annotation.nowarn
+
+import io.circe._
+import io.circe.jawn.{parse => jawnParse}
+import io.circe.syntax._
 
 /** Implementation of `JwtCore` using `Json` from Circe.
   */

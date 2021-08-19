@@ -1,13 +1,13 @@
 package pdi.jwt
 
-import scala.util.Try
-import javax.crypto.SecretKey
 import java.security.{Key, PrivateKey, PublicKey}
+import javax.crypto.SecretKey
+import scala.util.Try
 
 import pdi.jwt.algorithms._
 import pdi.jwt.exceptions.{
-  JwtNonEmptyAlgorithmException,
   JwtEmptyAlgorithmException,
+  JwtNonEmptyAlgorithmException,
   JwtValidationException
 }
 

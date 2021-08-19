@@ -1,6 +1,7 @@
 package pdi.jwt
 
 import java.time.Clock
+
 import pdi.jwt.exceptions.JwtNonStringException
 import spray.json._
 

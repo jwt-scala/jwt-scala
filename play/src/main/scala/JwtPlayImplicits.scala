@@ -1,11 +1,12 @@
 package pdi.jwt
 
-import javax.inject.Inject
 import java.time.Clock
+import javax.inject.Inject
+
 import play.api.Configuration
-import play.api.mvc.{RequestHeader, Result}
-import play.api.libs.json.{JsObject, JsString, Writes}
 import play.api.libs.json.Json.JsValueWrapper
+import play.api.libs.json.{JsObject, JsString, Writes}
+import play.api.mvc.{RequestHeader, Result}
 
 trait JwtPlayImplicits {
   private def sanitizeHeader(header: String)(implicit conf: Configuration): String =

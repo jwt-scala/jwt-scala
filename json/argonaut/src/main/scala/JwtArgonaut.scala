@@ -1,8 +1,9 @@
 package pdi.jwt
 
-import argonaut._
-import argonaut.Argonaut._
 import java.time.Clock
+
+import argonaut.Argonaut._
+import argonaut._
 
 trait JwtArgonautParser[H, C] extends JwtJsonCommon[Json, H, C] {
   override protected def parse(value: String): Json = Parse.parseOption(value).get

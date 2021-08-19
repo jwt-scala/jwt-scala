@@ -2,9 +2,9 @@ package pdi.jwt
 
 import java.security.spec.{PKCS8EncodedKeySpec, X509EncodedKeySpec}
 import java.security.{KeyFactory, PrivateKey, PublicKey, Signature}
-
 import javax.crypto.spec.SecretKeySpec
 import javax.crypto.{Mac, SecretKey}
+
 import pdi.jwt.JwtAlgorithm.{ES256, ES384, ES512}
 import pdi.jwt.algorithms._
 import pdi.jwt.exceptions.{JwtNonSupportedAlgorithm, JwtSignatureFormatException}

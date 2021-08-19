@@ -1,6 +1,7 @@
 package pdi.jwt
 
 import java.time.Clock
+
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.JsonMethods.{parse => jparse}
