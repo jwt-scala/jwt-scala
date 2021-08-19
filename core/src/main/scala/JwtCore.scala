@@ -1,9 +1,9 @@
 package pdi.jwt
 
-import scala.util.Try
-import javax.crypto.SecretKey
 import java.security.{Key, PrivateKey, PublicKey}
 import java.time.Clock
+import javax.crypto.SecretKey
+import scala.util.Try
 
 import pdi.jwt.algorithms._
 import pdi.jwt.exceptions._

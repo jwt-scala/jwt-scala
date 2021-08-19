@@ -1,8 +1,9 @@
 package pdi.jwt
 
 import java.time.Clock
-import play.api.libs.json._
+
 import pdi.jwt.exceptions.JwtNonStringException
+import play.api.libs.json._
 
 /** Implementation of `JwtCore` using `JsObject` from Play JSON.
   *

@@ -2,7 +2,8 @@ package pdi.jwt
 
 import java.time.{Clock, Instant}
 import scala.util.{Failure, Success, Try}
-import pdi.jwt.exceptions.{JwtNotBeforeException, JwtExpirationException}
+
+import pdi.jwt.exceptions.{JwtExpirationException, JwtNotBeforeException}
 
 /** Util object to handle time operations */
 object JwtTime {

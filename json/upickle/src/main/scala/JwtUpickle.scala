@@ -1,6 +1,7 @@
 package pdi.jwt
 
 import java.time.Clock
+
 import upickle.default._
 
 /** Implementation of `JwtCore` using `Js.Value` from uPickle.
