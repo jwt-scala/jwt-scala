@@ -921,17 +921,13 @@ trait JwtCore[H, C] {
   protected def validateHmacAlgorithm(
       algorithm: JwtHmacAlgorithm,
       algorithms: Seq[JwtHmacAlgorithm]
-  ): Boolean = {
-    algorithms.contains(algorithm)
-  }
+  ): Boolean = algorithms.contains(algorithm)
 
   // Validate if an algorithm is inside the authorized range
   protected def validateAsymmetricAlgorithm(
       algorithm: JwtAsymmetricAlgorithm,
       algorithms: Seq[JwtAsymmetricAlgorithm]
-  ): Boolean = {
-    algorithms.contains(algorithm)
-  }
+  ): Boolean = algorithms.contains(algorithm)
 
   // Validation when no key and no algorithm (or unknown)
   protected def validate(header: H, claim: C, signature: String, options: JwtOptions) = {

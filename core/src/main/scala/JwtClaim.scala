@@ -160,7 +160,7 @@ class JwtClaim(
 
   override def equals(other: Any): Boolean = other match {
     case that: JwtClaim =>
-      (that canEqual this) &&
+      (that.canEqual(this)) &&
         content == that.content &&
         issuer == that.issuer &&
         subject == that.subject &&
