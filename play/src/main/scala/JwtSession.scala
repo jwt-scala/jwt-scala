@@ -61,8 +61,13 @@ case class JwtSession @Inject() (headerData: JsObject, claimData: JsObject, sign
 
   def isEmpty(): Boolean = claimData.keys.isEmpty
 
-  def claim: JwtClaim = JwtSession.jwtPlayJsonClaimReader.reads(claimData).get
-  def header: JwtHeader = JwtSession.jwtPlayJsonHeaderReader.reads(headerData).get
+  def claim: JwtClaim = JwtSession.jwtPlayJsonClaimReader
+    .reads(claimData)
+    .recoverTotal(e => throw JwtJson.jsErrorToException(e))
+
+  def header: JwtHeader = JwtSession.jwtPlayJsonHeaderReader
+    .reads(headerData)
+    .recoverTotal(e => throw JwtJson.jsErrorToException(e))
 
   /** Encode the session as a JSON Web Token */
   def serialize: String = {
