@@ -53,10 +53,10 @@ trait JwtJsonImplicits {
             )
           )
         } catch {
-          case e: JwtNonStringException => JsError(keyToPath(e.getKey), "error.expected.string")
-          case e: JwtNonNumberException => JsError(keyToPath(e.getKey), "error.expected.number")
+          case e: JwtNonStringException => JsError(keyToPath(e.key), "error.expected.string")
+          case e: JwtNonNumberException => JsError(keyToPath(e.key), "error.expected.number")
           case e: JwtNonStringSetOrStringException =>
-            JsError(keyToPath(e.getKey), "error.expected.array")
+            JsError(keyToPath(e.key), "error.expected.array")
         }
       case _ => JsError("error.expected.jsobject")
     }
@@ -79,7 +79,7 @@ trait JwtJsonImplicits {
             )
           )
         } catch {
-          case e: JwtNonStringException    => JsError(keyToPath(e.getKey), "error.expected.string")
+          case e: JwtNonStringException    => JsError(keyToPath(e.key), "error.expected.string")
           case _: JwtNonSupportedAlgorithm => JsError(keyToPath("alg"), "error.expected.algorithm")
         }
       case _ => JsError("error.expected.jsobject")

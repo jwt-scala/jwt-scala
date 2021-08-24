@@ -921,17 +921,13 @@ trait JwtCore[H, C] {
   protected def validateHmacAlgorithm(
       algorithm: JwtHmacAlgorithm,
       algorithms: Seq[JwtHmacAlgorithm]
-  ): Boolean = {
-    algorithms.contains(algorithm)
-  }
+  ): Boolean = algorithms.contains(algorithm)
 
   // Validate if an algorithm is inside the authorized range
   protected def validateAsymmetricAlgorithm(
       algorithm: JwtAsymmetricAlgorithm,
       algorithms: Seq[JwtAsymmetricAlgorithm]
-  ): Boolean = {
-    algorithms.contains(algorithm)
-  }
+  ): Boolean = algorithms.contains(algorithm)
 
   // Validation when no key and no algorithm (or unknown)
   protected def validate(header: H, claim: C, signature: String, options: JwtOptions) = {
@@ -959,7 +955,6 @@ trait JwtCore[H, C] {
       options: JwtOptions,
       verify: (Array[Byte], Array[Byte], JwtAlgorithm) => Boolean
   ): Unit = {
-
     if (options.signature) {
       val maybeAlgo = extractAlgorithm(header)
 
@@ -990,22 +985,20 @@ trait JwtCore[H, C] {
       key: String,
       algorithms: Seq[JwtHmacAlgorithm],
       options: JwtOptions
-  ): Unit = {
-    validate(
-      header64,
-      header,
-      claim64,
-      claim,
-      signature,
-      options,
-      (data: Array[Byte], signature: Array[Byte], algorithm: JwtAlgorithm) =>
-        algorithm match {
-          case algo: JwtHmacAlgorithm =>
-            validateHmacAlgorithm(algo, algorithms) && JwtUtils.verify(data, signature, key, algo)
-          case _ => false
-        }
-    )
-  }
+  ): Unit = validate(
+    header64,
+    header,
+    claim64,
+    claim,
+    signature,
+    options,
+    (data: Array[Byte], signature: Array[Byte], algorithm: JwtAlgorithm) =>
+      algorithm match {
+        case algo: JwtHmacAlgorithm =>
+          validateHmacAlgorithm(algo, algorithms) && JwtUtils.verify(data, signature, key, algo)
+        case _ => false
+      }
+  )
 
   // Generic validation on String Key for asymmetric algorithms
   protected def validate(
@@ -1017,27 +1010,25 @@ trait JwtCore[H, C] {
       key: String,
       algorithms: => Seq[JwtAsymmetricAlgorithm],
       options: JwtOptions
-  ): Unit = {
-    validate(
-      header64,
-      header,
-      claim64,
-      claim,
-      signature,
-      options,
-      (data: Array[Byte], signature: Array[Byte], algorithm: JwtAlgorithm) =>
-        algorithm match {
-          case algo: JwtAsymmetricAlgorithm =>
-            validateAsymmetricAlgorithm(algo, algorithms) && JwtUtils.verify(
-              data,
-              signature,
-              key,
-              algo
-            )
-          case _ => false
-        }
-    )
-  }
+  ): Unit = validate(
+    header64,
+    header,
+    claim64,
+    claim,
+    signature,
+    options,
+    (data: Array[Byte], signature: Array[Byte], algorithm: JwtAlgorithm) =>
+      algorithm match {
+        case algo: JwtAsymmetricAlgorithm =>
+          validateAsymmetricAlgorithm(algo, algorithms) && JwtUtils.verify(
+            data,
+            signature,
+            key,
+            algo
+          )
+        case _ => false
+      }
+  )
 
   // Validation for HMAC algorithm using a SecretKey
   protected def validate(
@@ -1049,22 +1040,20 @@ trait JwtCore[H, C] {
       key: SecretKey,
       algorithms: Seq[JwtHmacAlgorithm],
       options: JwtOptions
-  ): Unit = {
-    validate(
-      header64,
-      header,
-      claim64,
-      claim,
-      signature,
-      options,
-      (data: Array[Byte], signature: Array[Byte], algorithm: JwtAlgorithm) =>
-        algorithm match {
-          case algo: JwtHmacAlgorithm =>
-            validateHmacAlgorithm(algo, algorithms) && JwtUtils.verify(data, signature, key, algo)
-          case _ => false
-        }
-    )
-  }
+  ): Unit = validate(
+    header64,
+    header,
+    claim64,
+    claim,
+    signature,
+    options,
+    (data: Array[Byte], signature: Array[Byte], algorithm: JwtAlgorithm) =>
+      algorithm match {
+        case algo: JwtHmacAlgorithm =>
+          validateHmacAlgorithm(algo, algorithms) && JwtUtils.verify(data, signature, key, algo)
+        case _ => false
+      }
+  )
 
   // Validation for RSA and ECDSA algorithms using PublicKey
   protected def validate(
@@ -1076,27 +1065,25 @@ trait JwtCore[H, C] {
       key: PublicKey,
       algorithms: Seq[JwtAsymmetricAlgorithm],
       options: JwtOptions
-  ): Unit = {
-    validate(
-      header64,
-      header,
-      claim64,
-      claim,
-      signature,
-      options,
-      (data: Array[Byte], signature: Array[Byte], algorithm: JwtAlgorithm) =>
-        algorithm match {
-          case algo: JwtAsymmetricAlgorithm =>
-            validateAsymmetricAlgorithm(algo, algorithms) && JwtUtils.verify(
-              data,
-              signature,
-              key,
-              algo
-            )
-          case _ => false
-        }
-    )
-  }
+  ): Unit = validate(
+    header64,
+    header,
+    claim64,
+    claim,
+    signature,
+    options,
+    (data: Array[Byte], signature: Array[Byte], algorithm: JwtAlgorithm) =>
+      algorithm match {
+        case algo: JwtAsymmetricAlgorithm =>
+          validateAsymmetricAlgorithm(algo, algorithms) && JwtUtils.verify(
+            data,
+            signature,
+            key,
+            algo
+          )
+        case _ => false
+      }
+  )
 
   /** Valid a token: doesn't return anything but will thrown exceptions if there are any errors.
     *

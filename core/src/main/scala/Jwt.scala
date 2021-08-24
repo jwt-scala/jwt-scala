@@ -24,34 +24,34 @@ object Jwt extends Jwt(Clock.systemUTC) {
 class Jwt(override val clock: Clock) extends JwtCore[JwtHeader, JwtClaim] {
   private val extractAlgorithmRegex = "\"alg\" *: *\"([a-zA-Z0-9]+)\"".r
   protected def extractAlgorithm(header: String): Option[JwtAlgorithm] =
-    (extractAlgorithmRegex findFirstMatchIn header).map(_.group(1)).flatMap {
+    (extractAlgorithmRegex.findFirstMatchIn(header)).map(_.group(1)).flatMap {
       case "none"       => None
       case name: String => Some(JwtAlgorithm.fromString(name))
     }
 
   private val extractIssuerRegex = "\"iss\" *: *\"([a-zA-Z0-9]*)\"".r
   protected def extractIssuer(claim: String): Option[String] =
-    (extractIssuerRegex findFirstMatchIn claim).map(_.group(1))
+    (extractIssuerRegex.findFirstMatchIn(claim)).map(_.group(1))
 
   private val extractSubjectRegex = "\"sub\" *: *\"([\\-a-zA-Z0-9]*)\"".r
   protected def extractSubject(claim: String): Option[String] =
-    (extractSubjectRegex findFirstMatchIn claim).map(_.group(1))
+    (extractSubjectRegex.findFirstMatchIn(claim)).map(_.group(1))
 
   private val extractExpirationRegex = "\"exp\" *: *([0-9]+)".r
   protected def extractExpiration(claim: String): Option[Long] =
-    (extractExpirationRegex findFirstMatchIn claim).map(_.group(1)).map(_.toLong)
+    (extractExpirationRegex.findFirstMatchIn(claim)).map(_.group(1)).map(_.toLong)
 
   private val extractNotBeforeRegex = "\"nbf\" *: *([0-9]+)".r
   protected def extractNotBefore(claim: String): Option[Long] =
-    (extractNotBeforeRegex findFirstMatchIn claim).map(_.group(1)).map(_.toLong)
+    (extractNotBeforeRegex.findFirstMatchIn(claim)).map(_.group(1)).map(_.toLong)
 
   private val extractIssuedAtRegex = "\"iat\" *: *([0-9]+)".r
   protected def extractIssuedAt(claim: String): Option[Long] =
-    (extractIssuedAtRegex findFirstMatchIn claim).map(_.group(1)).map(_.toLong)
+    (extractIssuedAtRegex.findFirstMatchIn(claim)).map(_.group(1)).map(_.toLong)
 
   private val extractJwtIdRegex = "\"jti\" *: *\"([a-zA-Z0-9]*)\"".r
   protected def extractJwtId(claim: String): Option[String] =
-    (extractJwtIdRegex findFirstMatchIn claim).map(_.group(1))
+    (extractJwtIdRegex.findFirstMatchIn(claim)).map(_.group(1))
 
   private val clearStartRegex = "\\{ *,".r
   protected def clearStart(json: String): String =

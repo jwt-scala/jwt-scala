@@ -79,7 +79,7 @@ trait JwtJson4sCommon[H, C] extends JwtJsonCommon[JObject, H, C] {
       case _           => throw new JwtNonNumberException(fieldName)
     }
 
-  protected def filterClaimFields(json: JObject): JObject = json removeField {
+  protected def filterClaimFields(json: JObject): JObject = json.removeField {
     case JField("iss", _) => true
     case JField("sub", _) => true
     case JField("aud", _) => true

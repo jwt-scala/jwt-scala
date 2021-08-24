@@ -31,7 +31,7 @@ class JwtArgonaut(override val clock: Clock) extends JwtArgonautParser[JwtHeader
   implicit class ExtractJsonFieldToType(json: Json) {
 
     def -|>[T](field: String)(f: Json => T): Option[T] =
-      json -| field map f
+      (json -| field).map(f)
 
     def -|>>(field: String): Option[String] =
       (json -|> field)(_.stringOrEmpty)
@@ -50,7 +50,7 @@ class JwtArgonaut(override val clock: Clock) extends JwtArgonautParser[JwtHeader
     }
 
   private def parseHeaderHelp(header: String): JwtHeader =
-    Parse.parseOption(header) map jsonToJwtHeader match {
+    Parse.parseOption(header).map(jsonToJwtHeader) match {
       case Some(value) => value
       case None        => JwtHeader(None)
     }
