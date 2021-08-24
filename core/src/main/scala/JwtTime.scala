@@ -11,14 +11,14 @@ object JwtTime {
   /** Returns the number of millis since the 01.01.1970
     *
     * @return
-    *   Returns the number of millis since the 01.01.1970
+    *   the number of millis since the 01.01.1970
     */
   def now(implicit clock: Clock): Long = clock.instant().toEpochMilli
 
   /** Returns the number of seconds since the 01.01.1970
     *
     * @return
-    *   Returns the number of seconds since the 01.01.1970
+    *   the number of seconds since the 01.01.1970
     */
   def nowSeconds(implicit clock: Clock): Long = this.now / 1000
 
@@ -75,10 +75,10 @@ object JwtTime {
     *   if set, the instant that must be before now (in seconds)
     * @param end
     *   if set, the instant that must be after now (in seconds)
-    * @throws JwtNotBeforeException
-    *   if `start` > now
-    * @throws JwtExpirationException
-    *   if now > `end`
+    * @return
+    *   Failure(JwtNotBeforeException) if `start` > now
+    * @return
+    *   Failure(JwtExpirationException) if now > `end`
     */
   def validateNowIsBetweenSeconds(start: Option[Long], end: Option[Long])(implicit
       clock: Clock
