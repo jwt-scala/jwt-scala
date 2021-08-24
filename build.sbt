@@ -10,7 +10,7 @@ import sbt._
 import scala.sys.process._
 
 val previousVersion = "9.0.0"
-val buildVersion = "9.0.0"
+val buildVersion = "9.0.1"
 
 ThisBuild / versionScheme := Some("early-semver")
 

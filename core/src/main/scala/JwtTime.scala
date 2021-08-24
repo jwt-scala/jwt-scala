@@ -76,9 +76,8 @@ object JwtTime {
     * @param end
     *   if set, the instant that must be after now (in seconds)
     * @return
-    *   Failure(JwtNotBeforeException) if `start` > now
-    * @return
-    *   Failure(JwtExpirationException) if now > `end`
+    *   Failure(JwtNotBeforeException) if `start` > now, Failure(JwtExpirationException) if now >
+    *   `end`
     */
   def validateNowIsBetweenSeconds(start: Option[Long], end: Option[Long])(implicit
       clock: Clock
