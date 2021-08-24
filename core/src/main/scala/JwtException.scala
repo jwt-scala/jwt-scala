@@ -47,6 +47,10 @@ class JwtNonStringException(key: String)
   def getKey = key
 }
 
+object JwtNonStringException {
+  def unapply(e: JwtNonStringException) = Some(e.getKey)
+}
+
 class JwtNonStringSetOrStringException(key: String)
     extends JwtException(s"During JSON parsing, expected a Set[String] or String for key [$key]") {
   def getKey = key
@@ -55,4 +59,8 @@ class JwtNonStringSetOrStringException(key: String)
 class JwtNonNumberException(key: String)
     extends JwtException(s"During JSON parsing, expected a Number for key [$key]") {
   def getKey = key
+}
+
+object JwtNonNumberException {
+  def unapply(e: JwtNonNumberException) = Some(e.getKey)
 }
