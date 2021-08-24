@@ -2,7 +2,7 @@ package pdi.jwt
 
 import java.time.Clock
 
-import pdi.jwt.exceptions.JwtNonStringException
+import pdi.jwt.exceptions.{JwtNonNumberException, JwtNonStringException, JwtValidationException}
 import play.api.libs.json._
 
 /** Implementation of `JwtCore` using `JsObject` from Play JSON.
@@ -30,6 +30,22 @@ object JwtJson extends JwtJson(Clock.systemUTC) {
 }
 
 class JwtJson private (override val clock: Clock) extends JwtJsonParser[JwtHeader, JwtClaim] {
-  def parseHeader(header: String): JwtHeader = jwtPlayJsonHeaderReader.reads(Json.parse(header)).get
-  def parseClaim(claim: String): JwtClaim = jwtPlayJsonClaimReader.reads(Json.parse(claim)).get
+  def parseHeader(header: String): JwtHeader = jwtPlayJsonHeaderReader
+    .reads(Json.parse(header))
+    .recoverTotal { e => throw jsErrorToException(e) }
+
+  def parseClaim(claim: String): JwtClaim = jwtPlayJsonClaimReader
+    .reads(Json.parse(claim))
+    .recoverTotal { e => throw jsErrorToException(e) }
+
+  // Play Json returns a useless exception on JsResult.get. We want to give more details about what's wrong in the exception.
+  private def jsErrorToException(error: JsError): Exception = error.errors.headOption
+    .map { case (jsPath, errors) =>
+      errors.headOption.map(_.message) match {
+        case Some("error.expected.string") => new JwtNonStringException(jsPath.toString)
+        case Some("error.expected.number") => new JwtNonNumberException(jsPath.toString)
+        case _                             => new JwtValidationException(s"Failed to parse: $error")
+      }
+    }
+    .getOrElse(new JwtValidationException(s"Failed to parse: $error"))
 }

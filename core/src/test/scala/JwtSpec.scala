@@ -1,10 +1,10 @@
 package pdi.jwt
 
-import pdi.jwt.algorithms._
-import pdi.jwt.exceptions._
-
 import scala.util.Success
 import scala.util.Try
+
+import pdi.jwt.algorithms._
+import pdi.jwt.exceptions._
 
 class JwtSpec extends munit.FunSuite with Fixture {
   val afterExpirationJwt: Jwt = Jwt(afterExpirationClock)
