@@ -42,25 +42,28 @@ class JwtNonSupportedAlgorithm(algo: String)
 class JwtNonSupportedCurve(curve: String)
     extends JwtException(s"The curve [$curve] is not currently supported.")
 
-class JwtNonStringException(key: String)
+class JwtNonStringException(val key: String)
     extends JwtException(s"During JSON parsing, expected a String for key [$key]") {
+  @deprecated("Use key instead", since = "9.0.1")
   def getKey = key
 }
 
 object JwtNonStringException {
-  def unapply(e: JwtNonStringException) = Some(e.getKey)
+  def unapply(e: JwtNonStringException) = Some(e.key)
 }
 
-class JwtNonStringSetOrStringException(key: String)
+class JwtNonStringSetOrStringException(val key: String)
     extends JwtException(s"During JSON parsing, expected a Set[String] or String for key [$key]") {
+  @deprecated("Use key instead", since = "9.0.1")
   def getKey = key
 }
 
-class JwtNonNumberException(key: String)
+class JwtNonNumberException(val key: String)
     extends JwtException(s"During JSON parsing, expected a Number for key [$key]") {
+  @deprecated("Use key instead", since = "9.0.1")
   def getKey = key
 }
 
 object JwtNonNumberException {
-  def unapply(e: JwtNonNumberException) = Some(e.getKey)
+  def unapply(e: JwtNonNumberException) = Some(e.key)
 }
