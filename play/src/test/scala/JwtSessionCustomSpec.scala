@@ -1,7 +1,8 @@
 package pdi.jwt
 
-import akka.stream.Materializer
 import java.time.{Clock, Duration}
+
+import akka.stream.Materializer
 import play.api.Configuration
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json._

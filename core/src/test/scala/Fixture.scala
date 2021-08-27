@@ -1,14 +1,14 @@
 package pdi.jwt
 
-import java.security.{KeyFactory, KeyPairGenerator, SecureRandom, Security}
 import java.security.spec._
+import java.security.{KeyFactory, KeyPairGenerator, SecureRandom, Security}
 import java.time.{Clock, Instant, ZoneOffset}
 import javax.crypto.spec.SecretKeySpec
+
 import org.bouncycastle.jce.ECNamedCurveTable
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.jce.spec.ECNamedCurveSpec
-
-import pdi.jwt.algorithms.{JwtHmacAlgorithm, JwtRSAAlgorithm, JwtECDSAAlgorithm}
+import pdi.jwt.algorithms.{JwtECDSAAlgorithm, JwtHmacAlgorithm, JwtRSAAlgorithm}
 
 trait DataEntryBase {
   def algo: JwtAlgorithm

@@ -1,13 +1,14 @@
 package pdi.jwt
 
+import java.time.{Clock, Duration}
+
 import akka.stream.Materializer
-import java.time.{Duration, Clock}
 import play.api.Configuration
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json._
 import play.api.mvc._
-import play.api.test._
 import play.api.test.Helpers._
+import play.api.test._
 
 class JwtSessionCustomDifferentNameSpec extends munit.FunSuite with Injecting with PlayFixture {
 

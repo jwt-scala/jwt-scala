@@ -5,7 +5,6 @@ import java.security.{KeyPairGenerator, SecureRandom}
 
 import org.scalacheck.Gen
 import org.scalacheck.Prop._
-
 import pdi.jwt.exceptions.JwtSignatureFormatException
 
 case class TestObject(value: String) {

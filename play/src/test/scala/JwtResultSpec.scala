@@ -1,11 +1,11 @@
 package pdi.jwt
 
-import play.api.test._
-import play.api.inject.guice.GuiceApplicationBuilder
 import akka.stream.Materializer
 import play.api.Configuration
-import play.api.mvc._
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json._
+import play.api.mvc._
+import play.api.test._
 
 class JwtResultSpec extends munit.FunSuite with PlayFixture {
   import pdi.jwt.JwtSession._
