@@ -1,15 +1,16 @@
 package pdi.jwt
 
+import java.time.Clock
+import scala.concurrent.Future
+
 import akka.stream.Materializer
 import akka.util.Timeout
-import java.time.Clock
 import play.api.Configuration
 import play.api.libs.json._
 import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.test.Helpers._
 import play.api.test._
-import scala.concurrent.Future
 
 case class User(id: Long, name: String)
 

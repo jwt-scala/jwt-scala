@@ -1,13 +1,13 @@
 import scala.io.Source
+import scala.sys.process._
+
 import Dependencies._
 import com.jsuereth.sbtpgp.PgpKeys._
-import play.sbt.Play.autoImport._
 import microsites._
+import play.sbt.Play.autoImport._
 import sbt.Keys._
 import sbt.Tests._
 import sbt._
-
-import scala.sys.process._
 
 val previousVersion = "9.0.0"
 val buildVersion = "9.0.1"
@@ -93,7 +93,7 @@ val baseSettings = Seq(
   Test / aggregate := false,
   Test / fork := true,
   Test / parallelExecution := false,
-  Compile / doc / scalacOptions ~= (_ filterNot (_ == "-Xfatal-warnings")),
+  Compile / doc / scalacOptions ~= (_.filterNot(_ == "-Xfatal-warnings")),
   Compile / doc / scalacOptions ++= Seq(
     "-no-link-warnings" // Suppresses problems with Scaladoc @throws links
   ),
@@ -110,9 +110,9 @@ val publishSettings = Seq(
   publishTo := {
     val nexus = "https://s01.oss.sonatype.org/"
     if (isSnapshot.value)
-      Some("snapshots" at nexus + "content/repositories/snapshots")
+      Some("snapshots".at(nexus + "content/repositories/snapshots"))
     else
-      Some("releases" at nexus + "service/local/staging/deploy/maven2")
+      Some("releases".at(nexus + "service/local/staging/deploy/maven2"))
   },
   pomIncludeRepository := { _ => false },
   scmInfo := Some(

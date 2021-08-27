@@ -1,12 +1,13 @@
 package pdi.jwt
 
+import scala.concurrent.duration.Duration
+
 import akka.stream.Materializer
 import play.api.Configuration
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json._
 import play.api.mvc._
 import play.api.test.Helpers._
-import scala.concurrent.duration.Duration
 
 class JwtSessionSpec extends munit.FunSuite with PlayFixture {
   val app =
