@@ -106,11 +106,11 @@ jobs:
       matrix:
         exclude:
           - project: playJson
-            scala: '3.0.1'
+            scala: "3.0.2"
           - project: sprayJson
-            scala: '3.0.1'
+            scala: "3.0.2"
           - project: playFramework
-            scala: '3.0.1'
+            scala: "3.0.2"
         project:
           - core
           - playJson
@@ -122,9 +122,9 @@ jobs:
           - sprayJson
           - argonaut
         scala:
-          - '2.12.13'
-          - '2.13.6'
-          - '3.0.1'
+          - "2.12.13"
+          - "2.13.6"
+          - "3.0.2"
 name: CI
 on:
   pull_request:
