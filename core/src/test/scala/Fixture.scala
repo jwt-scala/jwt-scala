@@ -1,6 +1,6 @@
 package pdi.jwt
 
-import java.security.spec._
+import java.security.spec.*
 import java.security.{KeyFactory, KeyPairGenerator, SecureRandom, Security}
 import java.time.{Clock, Instant, ZoneOffset}
 import javax.crypto.spec.SecretKeySpec

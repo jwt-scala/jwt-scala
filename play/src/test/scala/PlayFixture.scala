@@ -6,16 +6,16 @@ import scala.concurrent.Future
 import akka.stream.Materializer
 import akka.util.Timeout
 import play.api.Configuration
-import play.api.libs.json._
-import play.api.mvc.Results._
-import play.api.mvc._
-import play.api.test.Helpers._
-import play.api.test._
+import play.api.libs.json.*
+import play.api.mvc.*
+import play.api.mvc.Results.*
+import play.api.test.*
+import play.api.test.Helpers.*
 
 case class User(id: Long, name: String)
 
 trait PlayFixture extends Fixture {
-  import pdi.jwt.JwtSession._
+  import pdi.jwt.JwtSession.*
 
   implicit var clock: Clock = validTimeClock
 

@@ -1,6 +1,6 @@
 package pdi.jwt
 
-import argonaut._
+import argonaut.*
 
 case class JsonDataEntry(
     algo: JwtAlgorithm,

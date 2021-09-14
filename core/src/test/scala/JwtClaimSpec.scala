@@ -3,7 +3,7 @@ package pdi.jwt
 import java.time.{Clock, Instant, ZoneOffset}
 
 import munit.ScalaCheckSuite
-import org.scalacheck.Prop._
+import org.scalacheck.Prop.*
 
 class JwtClaimSpec extends ScalaCheckSuite {
 

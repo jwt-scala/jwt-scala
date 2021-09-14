@@ -5,10 +5,10 @@ import java.time.{Clock, Duration}
 import akka.stream.Materializer
 import play.api.Configuration
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json._
-import play.api.mvc._
-import play.api.test.Helpers._
-import play.api.test._
+import play.api.libs.json.*
+import play.api.mvc.*
+import play.api.test.*
+import play.api.test.Helpers.*
 
 class JwtSessionCustomDifferentNameSpec extends munit.FunSuite with Injecting with PlayFixture {
 

@@ -15,7 +15,7 @@ case class JsonDataEntry(
 ) extends JsonDataEntryTrait[JsObject]
 
 trait JsonFixture extends JsonCommonFixture[JsObject] {
-  import pdi.jwt.JwtJson._
+  import pdi.jwt.JwtJson.*
 
   val claimJson = jwtPlayJsonClaimWriter.writes(claimClass).as[JsObject]
   val headerEmptyJson = jwtPlayJsonHeaderWriter.writes(headerClassEmpty).as[JsObject]

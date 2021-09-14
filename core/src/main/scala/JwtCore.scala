@@ -5,8 +5,8 @@ import java.time.Clock
 import javax.crypto.SecretKey
 import scala.util.Try
 
-import pdi.jwt.algorithms._
-import pdi.jwt.exceptions._
+import pdi.jwt.algorithms.*
+import pdi.jwt.exceptions.*
 
 /** Provide the main logic around Base64 encoding / decoding and signature using the correct
   * algorithm. '''H''' and '''C''' types are respesctively the header type and the claim type. For

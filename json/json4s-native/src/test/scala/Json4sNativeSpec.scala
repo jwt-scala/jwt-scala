@@ -2,11 +2,11 @@ package pdi.jwt
 
 import java.time.Clock
 
-import org.json4s.JsonDSL._
-import org.json4s._
+import org.json4s.*
+import org.json4s.JsonDSL.*
 
 class JwtJson4sNativeSpec extends JwtJsonCommonSpec[JObject] with Json4sNativeFixture {
-  import pdi.jwt.JwtJson4s._
+  import pdi.jwt.JwtJson4s.*
 
   override def jwtJsonCommon(clock: Clock) = JwtJson4s(clock)
 

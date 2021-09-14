@@ -6,7 +6,7 @@ import pdi.jwt.exceptions.{
   JwtNonStringSetOrStringException,
   JwtNonSupportedAlgorithm
 }
-import play.api.libs.json._
+import play.api.libs.json.*
 
 trait JwtJsonImplicits {
   private def extractString(json: JsObject, fieldName: String): Option[String] =

@@ -4,7 +4,7 @@ import java.security.spec.ECGenParameterSpec
 import java.security.{KeyPairGenerator, SecureRandom}
 
 import org.scalacheck.Gen
-import org.scalacheck.Prop._
+import org.scalacheck.Prop.*
 import pdi.jwt.exceptions.JwtSignatureFormatException
 
 case class TestObject(value: String) {

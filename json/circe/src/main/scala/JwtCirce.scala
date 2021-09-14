@@ -3,9 +3,9 @@ package pdi.jwt
 import java.time.Clock
 import scala.annotation.nowarn
 
-import io.circe._
+import io.circe.*
 import io.circe.jawn.{parse => jawnParse}
-import io.circe.syntax._
+import io.circe.syntax.*
 
 /** Implementation of `JwtCore` using `Json` from Circe.
   */
@@ -43,7 +43,7 @@ class JwtCirce(override val clock: Clock) extends JwtCirceParser[JwtHeader, JwtC
 
   @nowarn // The cats import is necessary for 2.12 but not for 2.13, causing a warning
   private def parseClaimHelp(claim: String): JwtClaim = {
-    import cats.syntax.either._
+    import cats.syntax.either.*
 
     val cursor = parse(claim).hcursor
     val contentCursor = List("iss", "sub", "aud", "exp", "nbf", "iat", "jti").foldLeft(cursor) {

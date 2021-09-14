@@ -1,7 +1,7 @@
 package pdi.jwt
 
 import pdi.jwt.exceptions.JwtNonStringSetOrStringException
-import upickle.default._
+import upickle.default.*
 
 trait JwtUpickleImplicits {
   implicit val jwtUpickleHeaderReadWrite: ReadWriter[JwtHeader] =

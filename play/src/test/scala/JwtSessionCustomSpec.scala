@@ -5,9 +5,9 @@ import java.time.{Clock, Duration}
 import akka.stream.Materializer
 import play.api.Configuration
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json._
-import play.api.mvc._
-import play.api.test.Helpers._
+import play.api.libs.json.*
+import play.api.mvc.*
+import play.api.test.Helpers.*
 
 class JwtSessionCustomSpec extends munit.FunSuite with PlayFixture {
   // Just for test, users shouldn't change the header name normally

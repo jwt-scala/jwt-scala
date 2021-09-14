@@ -97,6 +97,10 @@ val baseSettings = Seq(
   Compile / doc / scalacOptions ++= Seq(
     "-no-link-warnings" // Suppresses problems with Scaladoc @throws links
   ),
+  scalacOptions ++= (CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((2, _)) => Seq("-Xsource:3")
+    case _            => Nil
+  }),
   javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 )
 
