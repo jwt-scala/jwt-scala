@@ -10,7 +10,7 @@ import play.api.libs.json.{JsNumber, JsObject, JsString, Json, Writes}
 
 class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
 
-  import pdi.jwt.JwtJson._
+  import pdi.jwt.JwtJson.*
 
   override def jwtJsonCommon(clock: Clock) = JwtJson(clock)
 

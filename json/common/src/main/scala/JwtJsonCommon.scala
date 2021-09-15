@@ -4,7 +4,7 @@ import java.security.{Key, PrivateKey, PublicKey}
 import javax.crypto.SecretKey
 import scala.util.Try
 
-import pdi.jwt.algorithms._
+import pdi.jwt.algorithms.*
 import pdi.jwt.exceptions.{
   JwtEmptyAlgorithmException,
   JwtNonEmptyAlgorithmException,

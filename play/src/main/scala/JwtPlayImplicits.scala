@@ -28,16 +28,16 @@ trait JwtPlayImplicits {
   private def requestHasJwtHeader(request: RequestHeader)(implicit conf: Configuration): Boolean =
     request.headers.get(JwtSession.REQUEST_HEADER_NAME).isDefined
 
-  /** By adding `import pdi.jwt._`, you will implicitely add all those methods to `Result` allowing
+  /** By adding `import pdi.jwt.*`, you will implicitely add all those methods to `Result` allowing
     * you to easily manipulate the [[JwtSession]] inside your Play application.
     *
     * {{{
     * package controllers
     *
     * import java.time.Clock
-    * import play.api._
-    * import play.api.mvc._
-    * import pdi.jwt._
+    * import play.api.*
+    * import play.api.mvc.*
+    * import pdi.jwt.*
     *
     * object Application extends Controller {
     *   implicit val clock: Clock = Clock.systemUTC
@@ -140,15 +140,15 @@ trait JwtPlayImplicits {
     }
   }
 
-  /** By adding `import pdi.jwt._`, you will implicitely add this method to `RequestHeader` allowing
+  /** By adding `import pdi.jwt.*`, you will implicitely add this method to `RequestHeader` allowing
     * you to easily retrieve the [[JwtSession]] inside your Play application.
     *
     * {{{
     * package controllers
     *
-    * import play.api._
-    * import play.api.mvc._
-    * import pdi.jwt._
+    * import play.api.*
+    * import play.api.mvc.*
+    * import pdi.jwt.*
     *
     * object Application extends Controller {
     *   def index = Action { request =>

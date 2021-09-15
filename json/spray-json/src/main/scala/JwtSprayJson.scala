@@ -3,7 +3,7 @@ package pdi.jwt
 import java.time.Clock
 
 import pdi.jwt.exceptions.JwtNonStringException
-import spray.json._
+import spray.json.*
 
 /** Implementation of `JwtCore` using `JsObject` from spray-json.
   */
@@ -28,7 +28,7 @@ object JwtSprayJson extends JwtSprayJson(Clock.systemUTC) {
 
 class JwtSprayJson(override val clock: Clock) extends JwtSprayJsonParser[JwtHeader, JwtClaim] {
 
-  import DefaultJsonProtocol._
+  import DefaultJsonProtocol.*
   override def parseHeader(header: String): JwtHeader = {
     val jsObj = parse(header)
     JwtHeader(

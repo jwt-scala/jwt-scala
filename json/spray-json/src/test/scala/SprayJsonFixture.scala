@@ -1,6 +1,6 @@
 package pdi.jwt
 
-import spray.json._
+import spray.json.*
 
 case class JsonDataEntry(
     algo: JwtAlgorithm,

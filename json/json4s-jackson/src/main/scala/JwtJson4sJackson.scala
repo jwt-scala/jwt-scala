@@ -2,8 +2,8 @@ package pdi.jwt
 
 import java.time.Clock
 
-import org.json4s._
-import org.json4s.jackson.JsonMethods._
+import org.json4s.*
+import org.json4s.jackson.JsonMethods.*
 import org.json4s.jackson.JsonMethods.{parse => jparse}
 
 /** Implementation of `JwtCore` using `JObject` from Json4s Jackson.

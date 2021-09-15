@@ -3,7 +3,7 @@ package pdi.jwt
 import java.time.Clock
 
 import pdi.jwt.exceptions.{JwtNonNumberException, JwtNonStringException, JwtValidationException}
-import play.api.libs.json._
+import play.api.libs.json.*
 
 /** Implementation of `JwtCore` using `JsObject` from Play JSON.
   *

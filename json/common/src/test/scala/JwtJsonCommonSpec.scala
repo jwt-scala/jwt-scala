@@ -3,7 +3,7 @@ package pdi.jwt
 import java.time.Clock
 import scala.util.Success
 
-import pdi.jwt.exceptions._
+import pdi.jwt.exceptions.*
 
 abstract class JwtJsonCommonSpec[J] extends munit.FunSuite with JsonCommonFixture[J] {
   import JwtJsonCommonSpec.JwtJsonUnderTest

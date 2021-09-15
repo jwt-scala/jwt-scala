@@ -6,8 +6,8 @@ import scala.concurrent.duration.Duration
 
 import pdi.jwt.algorithms.{JwtAsymmetricAlgorithm, JwtHmacAlgorithm}
 import play.api.Configuration
+import play.api.libs.json.*
 import play.api.libs.json.Json.JsValueWrapper
-import play.api.libs.json._
 
 /** Similar to the default Play Session but using JsObject instead of Map[String, String]. The data
   * is separated into two attributes: `headerData` and `claimData`. There is also a optional

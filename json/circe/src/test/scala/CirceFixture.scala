@@ -1,6 +1,6 @@
 package pdi.jwt
 
-import io.circe._
+import io.circe.*
 import io.circe.jawn.{parse => jawnParse}
 
 case class JsonDataEntry(

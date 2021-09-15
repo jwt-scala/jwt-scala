@@ -3,12 +3,12 @@ package pdi.jwt
 import akka.stream.Materializer
 import play.api.Configuration
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json._
-import play.api.mvc._
-import play.api.test._
+import play.api.libs.json.*
+import play.api.mvc.*
+import play.api.test.*
 
 class JwtResultSpec extends munit.FunSuite with PlayFixture {
-  import pdi.jwt.JwtSession._
+  import pdi.jwt.JwtSession.*
 
   val app = new GuiceApplicationBuilder()
     .configure(Map("play.http.secret.key" -> secretKey))
