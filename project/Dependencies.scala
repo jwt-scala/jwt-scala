@@ -12,7 +12,7 @@ object Dependencies {
     val circe = "0.14.1"
     val upickle = "1.4.1"
     val sprayJson = "1.3.6"
-    val argonaut = "6.3.6"
+    val argonaut = "6.3.7"
   }
 
   object Libs {
