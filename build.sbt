@@ -19,7 +19,6 @@ val projects = Seq(
   "playJson",
   "json4sNative",
   "json4sJackson",
-  "sprayJson",
   "circe",
   "upickle",
   "argonaut",
@@ -38,7 +37,6 @@ addCommandAlias("formatCheck", "scalafmtCheck; test:scalafmtCheck")
 // ";+playJsonProject/publishSigned"
 // ";+json4sNativeProject/publishSigned"
 // ";+json4sJacksonProject/publishSigned"
-// ";+sprayJsonProject/publishSigned"
 // ";+circeProject/publishSigned"
 // ";+upickleProject/publishSigned"
 // ";+argonautProject/publishSigned"
@@ -187,7 +185,6 @@ val docSettings = Seq(
     playJson,
     playFramework,
     json4sNative,
-    sprayJson,
     circe,
     upickle,
     argonaut
@@ -221,8 +218,8 @@ lazy val jwtScala = project
   .settings(
     name := "jwt-scala"
   )
-  .aggregate(json4sNative, json4sJackson, sprayJson, circe, upickle, playFramework, argonaut)
-  .dependsOn(json4sNative, json4sJackson, sprayJson, circe, upickle, playFramework, argonaut)
+  .aggregate(json4sNative, json4sJackson, circe, upickle, playFramework, argonaut)
+  .dependsOn(json4sNative, json4sJackson, circe, upickle, playFramework, argonaut)
   .settings(crossScalaVersions := List())
 
 lazy val docs = project
@@ -241,7 +238,6 @@ lazy val docs = project
       Libs.play,
       Libs.playTestProvided,
       Libs.json4sNative,
-      Libs.sprayJson,
       Libs.circeCore,
       Libs.circeGeneric,
       Libs.circeParse,
@@ -249,7 +245,7 @@ lazy val docs = project
       Libs.argonaut
     )
   )
-  .dependsOn(playFramework, json4sNative, sprayJson, circe, upickle, argonaut)
+  .dependsOn(playFramework, json4sNative, circe, upickle, argonaut)
 
 lazy val core = project
   .settings(releaseSettings)
@@ -327,17 +323,6 @@ lazy val json4sJackson = project
   )
   .aggregate(json4sCommon)
   .dependsOn(json4sCommon % "compile->compile;test->test")
-
-lazy val sprayJson = project
-  .in(file("json/spray-json"))
-  .settings(releaseSettings)
-  .settings(
-    name := "jwt-spray-json",
-    crossScalaVersions := crossVersion2Only,
-    libraryDependencies ++= Seq(Libs.sprayJson)
-  )
-  .aggregate(jsonCommon)
-  .dependsOn(jsonCommon % "compile->compile;test->test")
 
 lazy val argonaut = project
   .in(file("json/argonaut"))

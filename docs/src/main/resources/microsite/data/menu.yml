@@ -23,10 +23,6 @@ options:
     url: jwt-play-jwt-session.html
     menu_section: play
 
-  - title: Spray Json
-    url: jwt-spray-json.html
-    menu_section: spray-json
-
   - title: upickle
     url: jwt-upickle.html
     menu_section: upickle
