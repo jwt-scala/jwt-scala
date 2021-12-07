@@ -72,7 +72,6 @@ jobs:
           - upickle
           - json4sNative
           - json4sJackson
-          - sprayJson
           - argonaut
   tests:
     runs-on: ubuntu-latest
@@ -107,8 +106,6 @@ jobs:
         exclude:
           - project: playJson
             scala: 3.0.2
-          - project: sprayJson
-            scala: 3.0.2
           - project: playFramework
             scala: 3.0.2
         project:
@@ -119,7 +116,6 @@ jobs:
           - upickle
           - json4sNative
           - json4sJackson
-          - sprayJson
           - argonaut
         scala:
           - 2.12.15

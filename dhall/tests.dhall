@@ -12,11 +12,10 @@ let allProjects =
       , "upickle"
       , "json4sNative"
       , "json4sJackson"
-      , "sprayJson"
       , "argonaut"
       ]
 
-let noScala3 = [ "playJson", "sprayJson", "playFramework" ]
+let noScala3 = [ "playJson", "playFramework" ]
 
 let scala212 = ../versions/scala212 as Text
 
