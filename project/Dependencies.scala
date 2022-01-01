@@ -11,7 +11,6 @@ object Dependencies {
     val json4s = "4.0.3"
     val circe = "0.14.1"
     val upickle = "1.4.3"
-    val sprayJson = "1.3.6"
     val argonaut = "6.3.7"
   }
 
@@ -31,8 +30,6 @@ object Dependencies {
     val circeParse = "io.circe" %% "circe-parser" % V.circe
 
     val upickle = "com.lihaoyi" %% "upickle" % V.upickle
-
-    val sprayJson = "io.spray" %% "spray-json" % V.sprayJson
 
     val argonaut = "io.argonaut" %% "argonaut" % V.argonaut
 
