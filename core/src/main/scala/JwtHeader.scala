@@ -64,10 +64,10 @@ class JwtHeader(
   override def equals(other: Any): Boolean = other match {
     case that: JwtHeader =>
       (that.canEqual(this)) &&
-        algorithm == that.algorithm &&
-        typ == that.typ &&
-        contentType == that.contentType &&
-        keyId == that.keyId
+      algorithm == that.algorithm &&
+      typ == that.typ &&
+      contentType == that.contentType &&
+      keyId == that.keyId
     case _ => false
   }
 
