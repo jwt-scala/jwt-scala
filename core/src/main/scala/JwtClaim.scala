@@ -161,14 +161,14 @@ class JwtClaim(
   override def equals(other: Any): Boolean = other match {
     case that: JwtClaim =>
       (that.canEqual(this)) &&
-        content == that.content &&
-        issuer == that.issuer &&
-        subject == that.subject &&
-        audience == that.audience &&
-        expiration == that.expiration &&
-        notBefore == that.notBefore &&
-        issuedAt == that.issuedAt &&
-        jwtId == that.jwtId
+      content == that.content &&
+      issuer == that.issuer &&
+      subject == that.subject &&
+      audience == that.audience &&
+      expiration == that.expiration &&
+      notBefore == that.notBefore &&
+      issuedAt == that.issuedAt &&
+      jwtId == that.jwtId
     case _ => false
   }
 
