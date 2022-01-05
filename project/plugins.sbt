@@ -1,4 +1,4 @@
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.8.11")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.8.12")
 
 addSbtPlugin("com.47deg" % "sbt-microsites" % "1.3.4")
 addSbtPlugin("com.github.sbt" % "sbt-unidoc" % "0.5.0")
