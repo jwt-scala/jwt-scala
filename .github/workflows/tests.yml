@@ -105,9 +105,9 @@ jobs:
       matrix:
         exclude:
           - project: playJson
-            scala: 3.0.2
+            scala: 3.1.1
           - project: playFramework
-            scala: 3.0.2
+            scala: 3.1.1
         project:
           - core
           - playJson
