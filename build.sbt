@@ -9,8 +9,8 @@ import sbt.Keys._
 import sbt.Tests._
 import sbt._
 
-val previousVersion = "9.0.2"
-val buildVersion = "9.0.3"
+val previousVersion = "9.0.3"
+val buildVersion = "9.0.4"
 
 ThisBuild / versionScheme := Some("early-semver")
 
