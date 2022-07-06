@@ -3,7 +3,7 @@ import sbt._
 object Dependencies {
   object V {
     val munit = "0.7.29"
-    val bouncyCastle = "1.70"
+    val bouncyCastle = "1.71"
     val guice = "4.2.3"
 
     val play = "2.8.15"
@@ -33,8 +33,8 @@ object Dependencies {
 
     val argonaut = "io.argonaut" %% "argonaut" % V.argonaut
 
-    val bouncyCastle = "org.bouncycastle" % "bcpkix-jdk15on" % V.bouncyCastle % Test
-    val bouncyCastleTut = "org.bouncycastle" % "bcpkix-jdk15on" % V.bouncyCastle
+    val bouncyCastle = "org.bouncycastle" % "bcpkix-jdk18on" % V.bouncyCastle % Test
+    val bouncyCastleTut = "org.bouncycastle" % "bcpkix-jdk18on" % V.bouncyCastle
 
     val munit = "org.scalameta" %% "munit" % V.munit % Test
     val munitScalacheck = "org.scalameta" %% "munit-scalacheck" % V.munit % Test
