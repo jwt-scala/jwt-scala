@@ -1,6 +1,7 @@
 package pdi.jwt
 
-import zio.json.*
+import zio.json._
+import zio.json.ast.Json
 
 case class JsonDataEntry(
     algo: JwtAlgorithm,
@@ -15,7 +16,7 @@ case class JsonDataEntry(
 ) extends JsonDataEntryTrait[Json]
 
 trait ZIOJsonFixture extends JsonCommonFixture[Json] {
-  def parseString(value: String): Json = jawnParse(value).toOption.get
+  def parseString(value: String): Json = value.fromJson[Json].toOption.get
 
   val claimJson = parseString(claim)
   val headerEmptyJson = parseString(headerEmpty)
