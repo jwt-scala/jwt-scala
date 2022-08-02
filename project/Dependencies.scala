@@ -11,6 +11,7 @@ object Dependencies {
     val json4s = "4.0.5"
     val circe = "0.14.2"
     val upickle = "2.0.0"
+    val zioJson = "0.3.0-RC10"
     val argonaut = "6.3.8"
   }
 
@@ -30,6 +31,8 @@ object Dependencies {
     val circeParse = "io.circe" %% "circe-parser" % V.circe
 
     val upickle = "com.lihaoyi" %% "upickle" % V.upickle
+
+    val zioJson = "dev.zio" %% "zio-json" % V.zioJson
 
     val argonaut = "io.argonaut" %% "argonaut" % V.argonaut
 

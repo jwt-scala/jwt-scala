@@ -21,6 +21,7 @@ val projects = Seq(
   "json4sJackson",
   "circe",
   "upickle",
+  "zioJson",
   "argonaut",
   "playFramework"
 )
@@ -187,6 +188,7 @@ val docSettings = Seq(
     json4sNative,
     circe,
     upickle,
+    zioJson,
     argonaut
   ),
   ScalaUnidoc / docsMappingsAPIDir := "api",
@@ -218,8 +220,8 @@ lazy val jwtScala = project
   .settings(
     name := "jwt-scala"
   )
-  .aggregate(json4sNative, json4sJackson, circe, upickle, playFramework, argonaut)
-  .dependsOn(json4sNative, json4sJackson, circe, upickle, playFramework, argonaut)
+  .aggregate(json4sNative, json4sJackson, circe, upickle, zioJson, playFramework, argonaut)
+  .dependsOn(json4sNative, json4sJackson, circe, upickle, zioJson, playFramework, argonaut)
   .settings(crossScalaVersions := List())
 
 lazy val docs = project
@@ -242,10 +244,11 @@ lazy val docs = project
       Libs.circeGeneric,
       Libs.circeParse,
       Libs.upickle,
+      Libs.zioJson,
       Libs.argonaut
     )
   )
-  .dependsOn(playFramework, json4sNative, circe, upickle, argonaut)
+  .dependsOn(playFramework, json4sNative, circe, upickle, zioJson, argonaut)
 
 lazy val core = project
   .settings(releaseSettings)
@@ -290,6 +293,16 @@ lazy val upickle = project
   .settings(
     name := "jwt-upickle",
     libraryDependencies ++= Seq(Libs.upickle)
+  )
+  .aggregate(jsonCommon)
+  .dependsOn(jsonCommon % "compile->compile;test->test")
+
+lazy val zioJson = project
+  .in(file("json/zio-json"))
+  .settings(releaseSettings)
+  .settings(
+    name := "jwt-ziojson",
+    libraryDependencies ++= Seq(Libs.zioJson)
   )
   .aggregate(jsonCommon)
   .dependsOn(jsonCommon % "compile->compile;test->test")
