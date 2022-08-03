@@ -47,7 +47,7 @@ class JwtZIOJson(override val clock: Clock) extends JwtZIOJsonParser[JwtHeader, 
     val content =
       json
         .as[Json.Obj]
-        .map(obj => obj.fields.filterNot{ case (key,_) => keys.contains(key)})
+        .map(obj => obj.fields.filterNot { case (key, _) => keys.contains(key) })
         .map(tuples => Json.Obj(tuples))
         .getOrElse(Json.Obj())
 
