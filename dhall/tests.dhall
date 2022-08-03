@@ -13,6 +13,7 @@ let allProjects =
       , "json4sNative"
       , "json4sJackson"
       , "argonaut"
+      , "zioJson"
       ]
 
 let noScala3 = [ "playJson", "playFramework" ]
