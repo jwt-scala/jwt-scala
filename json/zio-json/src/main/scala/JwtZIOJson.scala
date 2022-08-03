@@ -55,8 +55,8 @@ class JwtZIOJson(override val clock: Clock) extends JwtZIOJsonParser[JwtHeader, 
       json
         .get(field("aud"))
         .flatMap(_.as[Set[String]])
-        .orElse(json.get(field("aud")).flatMap(_.as[String]).map(s => Set(s)))
         .toOption
+        .orElse(json.get(field("aud")).flatMap(_.as[String]).map(s => Set(s)).toOption)
 
     JwtClaim(
       content = content.toJson,
