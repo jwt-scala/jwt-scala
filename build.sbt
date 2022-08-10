@@ -301,7 +301,7 @@ lazy val zioJson = project
   .in(file("json/zio-json"))
   .settings(releaseSettings)
   .settings(
-    name := "jwt-ziojson",
+    name := "jwt-zio-json",
     libraryDependencies ++= Seq(Libs.zioJson)
   )
   .aggregate(jsonCommon)
