@@ -11,7 +11,7 @@ object Dependencies {
     val json4s = "4.0.5"
     val circe = "0.14.2"
     val upickle = "2.0.0"
-    val zioJson = "0.3.0-RC10"
+    val zioJson = "0.3.0-RC11"
     val argonaut = "6.3.8"
   }
 
