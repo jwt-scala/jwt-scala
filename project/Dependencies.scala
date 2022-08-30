@@ -7,7 +7,7 @@ object Dependencies {
     val guice = "4.2.3"
 
     val play = "2.8.16"
-    val playJson = "2.9.2"
+    val playJson = "2.8.2"
     val json4s = "4.0.5"
     val circe = "0.14.2"
     val upickle = "2.0.0"
