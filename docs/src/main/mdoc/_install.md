@@ -1,5 +1,5 @@
 ### Installation
 
 ```scala
-libraryDependencies += "com.github.jwt-scala" %% "{{ include.artifact }}" % "9.1.0"
+libraryDependencies += "com.github.jwt-scala" %% "{{ include.artifact }}" % "9.1.1"
 ```
