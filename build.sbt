@@ -15,20 +15,23 @@ val buildVersion = "9.1.1"
 ThisBuild / versionScheme := Some("early-semver")
 
 val projects = Seq(
-  "core",
   "playJson",
   "json4sNative",
   "json4sJackson",
-  "circe",
   "upickle",
   "zioJson",
   "argonaut",
   "playFramework"
 )
+val crossProjects = Seq(
+  "core",
+  "circe"
+)
+val allProjects = crossProjects.flatMap(p => Seq(s"${p}JVM", s"${p}JS")) ++ projects.map(p => p + "/test")
 
 addCommandAlias("publish-doc", "docs/makeMicrosite; docs/publishMicrosite")
 
-addCommandAlias("testAll", projects.map(p => p + "/test").mkString(";", ";", ""))
+addCommandAlias("testAll", allProjects.map(p => p + "/test").mkString(";", ";", ""))
 
 addCommandAlias("format", "scalafmt; test:scalafmt")
 
@@ -42,7 +45,10 @@ addCommandAlias("formatCheck", "scalafmtCheck; test:scalafmtCheck")
 // ";+upickleProject/publishSigned"
 // ";+argonautProject/publishSigned"
 // ";+playProject/publishSigned"
-addCommandAlias("publishAll", projects.map(p => "+" + p + "/publishSigned").mkString(";", ";", ""))
+addCommandAlias(
+  "publishAll",
+  allProjects.map(p => "+" + p + "/publishSigned").mkString(";", ";", "")
+)
 
 addCommandAlias(
   "releaseAll",
@@ -145,8 +151,8 @@ val publishSettings = Seq(
 )
 
 val noPublishSettings = Seq(
-  publish := (),
-  publishLocal := (),
+  publish := (()),
+  publishLocal := (()),
   publishArtifact := false
 )
 
@@ -182,11 +188,11 @@ val docSettings = Seq(
   micrositeGithubRepo := "jwt-scala",
   micrositeSearchEnabled := false,
   ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(
-    core,
+    core.jvm,
     playJson,
     playFramework,
     json4sNative,
-    circe,
+    circe.jvm,
     upickle,
     zioJson,
     argonaut
@@ -220,8 +226,8 @@ lazy val jwtScala = project
   .settings(
     name := "jwt-scala"
   )
-  .aggregate(json4sNative, json4sJackson, circe, upickle, zioJson, playFramework, argonaut)
-  .dependsOn(json4sNative, json4sJackson, circe, upickle, zioJson, playFramework, argonaut)
+  .aggregate(json4sNative, json4sJackson, circe.jvm, circe.js, upickle, zioJson, playFramework, argonaut)
+  .dependsOn(json4sNative, json4sJackson, circe.jvm, circe.js, upickle, zioJson, playFramework, argonaut)
   .settings(crossScalaVersions := List())
 
 lazy val docs = project
@@ -248,16 +254,17 @@ lazy val docs = project
       Libs.argonaut
     )
   )
-  .dependsOn(playFramework, json4sNative, circe, upickle, zioJson, argonaut)
+  .dependsOn(playFramework, json4sNative, circe.jvm, upickle, zioJson, argonaut)
 
-lazy val core = project
+lazy val core = crossProject(JSPlatform, JVMPlatform)
   .settings(releaseSettings)
   .settings(
     name := "jwt-core",
     libraryDependencies ++= Seq(Libs.bouncyCastle)
   )
+  .jsSettings(Test / fork := false)
 
-lazy val jsonCommon = project
+lazy val jsonCommon = crossProject(JSPlatform, JVMPlatform)
   .in(file("json/common"))
   .settings(releaseSettings)
   .settings(
@@ -274,16 +281,17 @@ lazy val playJson = project
     crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.playJson)
   )
-  .aggregate(jsonCommon)
-  .dependsOn(jsonCommon % "compile->compile;test->test")
+  .aggregate(jsonCommon.jvm)
+  .dependsOn(jsonCommon.jvm % "compile->compile;test->test")
 
-lazy val circe = project
+lazy val circe = crossProject(JSPlatform, JVMPlatform)
   .in(file("json/circe"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-circe",
-    libraryDependencies ++= Seq(Libs.circeCore, Libs.circeParse, Libs.circeGeneric % "test")
+    libraryDependencies ++= Seq(Libs.circeCore, Libs.circeParse, Libs.circeGeneric % "test"),
   )
+  .jsSettings(Test / fork := false)
   .aggregate(jsonCommon)
   .dependsOn(jsonCommon % "compile->compile;test->test")
 
@@ -294,8 +302,8 @@ lazy val upickle = project
     name := "jwt-upickle",
     libraryDependencies ++= Seq(Libs.upickle)
   )
-  .aggregate(jsonCommon)
-  .dependsOn(jsonCommon % "compile->compile;test->test")
+  .aggregate(jsonCommon.jvm)
+  .dependsOn(jsonCommon.jvm % "compile->compile;test->test")
 
 lazy val zioJson = project
   .in(file("json/zio-json"))
@@ -304,8 +312,8 @@ lazy val zioJson = project
     name := "jwt-zio-json",
     libraryDependencies ++= Seq(Libs.zioJson)
   )
-  .aggregate(jsonCommon)
-  .dependsOn(jsonCommon % "compile->compile;test->test")
+  .aggregate(jsonCommon.jvm)
+  .dependsOn(jsonCommon.jvm % "compile->compile;test->test")
 
 lazy val json4sCommon = project
   .in(file("json/json4s-common"))
@@ -314,8 +322,8 @@ lazy val json4sCommon = project
     name := "jwt-json4s-common",
     libraryDependencies ++= Seq(Libs.json4sCore)
   )
-  .aggregate(jsonCommon)
-  .dependsOn(jsonCommon % "compile->compile;test->test")
+  .aggregate(jsonCommon.jvm)
+  .dependsOn(jsonCommon.jvm % "compile->compile;test->test")
 
 lazy val json4sNative = project
   .in(file("json/json4s-native"))
@@ -344,8 +352,8 @@ lazy val argonaut = project
     name := "jwt-argonaut",
     libraryDependencies ++= Seq(Libs.argonaut)
   )
-  .aggregate(jsonCommon)
-  .dependsOn(jsonCommon % "compile->compile;test->test")
+  .aggregate(jsonCommon.jvm)
+  .dependsOn(jsonCommon.jvm % "compile->compile;test->test")
 
 def groupPlayTest(tests: Seq[TestDefinition], files: Seq[File]) = tests.map { t =>
   val options = ForkOptions()
