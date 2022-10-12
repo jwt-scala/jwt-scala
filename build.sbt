@@ -12,6 +12,7 @@ import sbt._
 val previousVersion = "9.1.0"
 val buildVersion = "9.1.1"
 
+Global / onChangedBuildSource := ReloadOnSourceChanges
 ThisBuild / versionScheme := Some("early-semver")
 
 val projects = Seq(
@@ -27,7 +28,7 @@ val crossProjects = Seq(
   "core",
   "circe"
 )
-val allProjects = crossProjects.flatMap(p => Seq(s"${p}JVM", s"${p}JS")) ++ projects.map(p => p + "/test")
+val allProjects = crossProjects.flatMap(p => Seq(s"${p}JVM", s"${p}JS")) ++ projects
 
 addCommandAlias("publish-doc", "docs/makeMicrosite; docs/publishMicrosite")
 
@@ -270,6 +271,7 @@ lazy val jsonCommon = crossProject(JSPlatform, JVMPlatform)
   .settings(
     name := "jwt-json-common"
   )
+  .jsSettings(Test / fork := false)
   .aggregate(core)
   .dependsOn(core % "compile->compile;test->test")
 
