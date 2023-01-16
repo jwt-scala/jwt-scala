@@ -6,7 +6,7 @@ object Dependencies {
     val bouncyCastle = "1.72"
     val guice = "4.2.3"
 
-    val play = "2.8.18"
+    val play = "2.8.19"
     val playJson = "2.9.3"
     val json4s = "4.0.6"
     val circe = "0.14.3"
