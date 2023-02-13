@@ -2,5 +2,9 @@
 target
 project/project
 project/target
+.bloop/
 .idea
 .bsp
+.metals/
+.vscode/
+metals.sbt

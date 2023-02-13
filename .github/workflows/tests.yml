@@ -65,10 +65,12 @@ jobs:
     strategy:
       matrix:
         project:
-          - core
+          - coreJVM
+          - coreJS
           - playJson
           - playFramework
-          - circe
+          - circeJVM
+          - circeJS
           - upickle
           - json4sNative
           - json4sJackson
@@ -110,10 +112,12 @@ jobs:
           - project: playFramework
             scala: 3.2.2
         project:
-          - core
+          - coreJVM
+          - coreJS
           - playJson
           - playFramework
-          - circe
+          - circeJVM
+          - circeJS
           - upickle
           - json4sNative
           - json4sJackson
