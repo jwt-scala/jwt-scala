@@ -285,6 +285,7 @@ lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .settings(name := "jwt-core", libraryDependencies ++= Seq(Libs.bouncyCastle))
   .jsSettings(commonJsSettings)
   .jsSettings(
+    Test / fork := false,
     libraryDependencies ++= Seq(
       Libs.scalaJavaTime.value,
       Libs.scalajsSecureRandom.value
@@ -305,6 +306,9 @@ lazy val jsonCommon = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     name := "jwt-json-common"
   )
   .jsSettings(commonJsSettings)
+  .jsSettings(
+    Test / fork := false,
+  )
   .nativeSettings(Test / fork := false)
   .aggregate(core)
   .dependsOn(core % "compile->compile;test->test")
@@ -335,6 +339,9 @@ lazy val circe = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   )
   .jsSettings(commonJsSettings)
   .nativeSettings(Test / fork := false)
+  .jsSettings(
+    Test / fork := false,
+  )
   .aggregate(jsonCommon)
   .dependsOn(jsonCommon % "compile->compile;test->test")
 
