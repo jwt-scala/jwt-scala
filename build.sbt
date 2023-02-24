@@ -227,8 +227,26 @@ lazy val jwtScala = project
   .settings(
     name := "jwt-scala"
   )
-  .aggregate(json4sNative, json4sJackson, circe.jvm, circe.js, upickle, zioJson, playFramework, argonaut)
-  .dependsOn(json4sNative, json4sJackson, circe.jvm, circe.js, upickle, zioJson, playFramework, argonaut)
+  .aggregate(
+    json4sNative,
+    json4sJackson,
+    circe.jvm,
+    circe.js,
+    upickle,
+    zioJson,
+    playFramework,
+    argonaut
+  )
+  .dependsOn(
+    json4sNative,
+    json4sJackson,
+    circe.jvm,
+    circe.js,
+    upickle,
+    zioJson,
+    playFramework,
+    argonaut
+  )
   .settings(crossScalaVersions := List())
 
 lazy val docs = project
@@ -291,7 +309,7 @@ lazy val circe = crossProject(JSPlatform, JVMPlatform)
   .settings(releaseSettings)
   .settings(
     name := "jwt-circe",
-    libraryDependencies ++= Seq(Libs.circeCore, Libs.circeParse, Libs.circeGeneric % "test"),
+    libraryDependencies ++= Seq(Libs.circeCore, Libs.circeParse, Libs.circeGeneric % "test")
   )
   .jsSettings(Test / fork := false)
   .aggregate(jsonCommon)
