@@ -4,7 +4,6 @@ import scala.sys.process._
 import Dependencies._
 import com.jsuereth.sbtpgp.PgpKeys._
 import microsites._
-import play.sbt.Play.autoImport._
 import sbt.Keys._
 import sbt.Tests._
 import sbt._
