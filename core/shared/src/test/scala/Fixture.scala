@@ -262,11 +262,11 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
 
   val dataEdDSA = Seq(
     DataEntry(
-      JwtAlgorithm.Ed25519,
-      """{"typ":"JWT","alg":"Ed25519"}""",
-      JwtHeader(JwtAlgorithm.Ed25519, "JWT"),
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZDI1NTE5In0",
-      "Y1L7qIIxk022Bi6RfybVXRI1YrTmchD8gc6ExiGFoHMyNTamrmsbRQi7EHF2ha4vSvuK8cFH2e89k4c8T0eGBA"
+      JwtAlgorithm.EdDSA,
+      """{"typ":"JWT","alg":"EdDSA"}""",
+      JwtHeader(JwtAlgorithm.EdDSA, "JWT"),
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSJ9",
+      "I4phqhsuywTyv0Fb12v0X-ILw8tFdDlDExRTsBUYMB2yjo340KXC8L_QfUyO7-8NoMzO5k4rHPkxq8cC2xu8CQ"
     )
   ).map(setToken)
 }
