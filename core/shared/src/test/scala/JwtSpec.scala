@@ -40,7 +40,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
     dataRSA.foreach { d => battleTestEncode(d, privateKeyRSA, validTimeJwt) }
   }
 
-  test("should encode Ed25519") {
+  test("should encode EdDSA") {
     dataEdDSA.foreach { d => battleTestEncode(d, privateKeyEd25519, validTimeJwt) }
   }
 

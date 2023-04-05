@@ -35,7 +35,7 @@ Check [ECDSA samples](https://jwt-scala.github.io/jwt-scala/jwt-core-jwt-ecdsa.h
 |ES256|ECDSA using SHA-256 algorithm|
 |ES384|ECDSA using SHA-384 algorithm|
 |ES512|ECDSA using SHA-512 algorithm|
-|Ed25519|EdDSA using SHA-512 and Curve25519|
+|EdDSA|EdDSA signature algorithms|
 
 ## Security concerns
 
