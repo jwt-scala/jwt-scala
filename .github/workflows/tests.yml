@@ -66,11 +66,9 @@ jobs:
       matrix:
         project:
           - coreJVM
-          - coreJS
           - playJson
           - playFramework
           - circeJVM
-          - circeJS
           - upickle
           - json4sNative
           - json4sJackson
@@ -113,11 +111,9 @@ jobs:
             scala: 3.2.2
         project:
           - coreJVM
-          - coreJS
           - playJson
           - playFramework
           - circeJVM
-          - circeJS
           - upickle
           - json4sNative
           - json4sJackson

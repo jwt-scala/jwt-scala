@@ -27,7 +27,7 @@ val crossProjects = Seq(
   "core",
   "circe"
 )
-val allProjects = crossProjects.flatMap(p => Seq(s"${p}JVM", s"${p}JS")) ++ projects
+val allProjects = crossProjects.flatMap(p => Seq(s"${p}JVM")) ++ projects
 
 addCommandAlias("publish-doc", "docs/makeMicrosite; docs/publishMicrosite")
 
@@ -234,7 +234,6 @@ lazy val jwtScala = project
     json4sNative,
     json4sJackson,
     circe.jvm,
-    circe.js,
     upickle,
     zioJson,
     playFramework,
@@ -244,7 +243,6 @@ lazy val jwtScala = project
     json4sNative,
     json4sJackson,
     circe.jvm,
-    circe.js,
     upickle,
     zioJson,
     playFramework,

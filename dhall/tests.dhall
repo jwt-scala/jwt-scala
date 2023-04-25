@@ -6,11 +6,9 @@ let List/map =
 
 let allProjects =
       [ "coreJVM"
-      , "coreJS"
       , "playJson"
       , "playFramework"
       , "circeJVM"
-      , "circeJS"
       , "upickle"
       , "json4sNative"
       , "json4sJackson"
