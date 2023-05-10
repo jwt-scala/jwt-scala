@@ -181,7 +181,17 @@ class JwtClaim(
   def expiresNow(implicit clock: Clock): JwtClaim = expiresAt(JwtTime.nowSeconds)
 
   def startsAt(seconds: Long): JwtClaim =
-    JwtClaim(content, issuer, subject, audience, expiration, Option(seconds), issuedAt, jwtId, scope)
+    JwtClaim(
+      content,
+      issuer,
+      subject,
+      audience,
+      expiration,
+      Option(seconds),
+      issuedAt,
+      jwtId,
+      scope
+    )
 
   def startsIn(seconds: Long)(implicit clock: Clock): JwtClaim = startsAt(
     JwtTime.nowSeconds + seconds
