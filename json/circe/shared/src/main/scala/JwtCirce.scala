@@ -46,7 +46,7 @@ class JwtCirce(override val clock: Clock) extends JwtCirceParser[JwtHeader, JwtC
     import cats.syntax.either.*
 
     val cursor = parse(claim).hcursor
-    val contentCursor = List("iss", "sub", "aud", "exp", "nbf", "iat", "jti").foldLeft(cursor) {
+    val contentCursor = List("iss", "sub", "aud", "exp", "nbf", "iat", "jti", "scope").foldLeft(cursor) {
       (cursor, field) =>
         cursor.downField(field).delete.success match {
           case Some(newCursor) => newCursor
@@ -62,7 +62,8 @@ class JwtCirce(override val clock: Clock) extends JwtCirceParser[JwtHeader, JwtC
       expiration = cursor.get[Long]("exp").toOption,
       notBefore = cursor.get[Long]("nbf").toOption,
       issuedAt = cursor.get[Long]("iat").toOption,
-      jwtId = cursor.get[String]("jti").toOption
+      jwtId = cursor.get[String]("jti").toOption,
+      scope = cursor.get[Set[String]]("scope").orElse(cursor.get[String]("scope").map(s => Set(s))).toOption
     )
   }
 

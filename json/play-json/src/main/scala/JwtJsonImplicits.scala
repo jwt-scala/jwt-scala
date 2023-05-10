@@ -48,8 +48,9 @@ trait JwtJsonImplicits {
               notBefore = extractLong(value, "nbf"),
               issuedAt = extractLong(value, "iat"),
               jwtId = extractString(value, "jti"),
+              scope = extractStringSetOrString(value, "scope"),
               content =
-                Json.stringify(value - "iss" - "sub" - "aud" - "exp" - "nbf" - "iat" - "jti")
+                Json.stringify(value - "iss" - "sub" - "aud" - "exp" - "nbf" - "iat" - "jti" - "scope")
             )
           )
         } catch {

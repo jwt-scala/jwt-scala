@@ -43,6 +43,7 @@ class JwtJson4sNativeSpec extends JwtJsonCommonSpec[JObject] with Json4sNativeFi
       JwtClaim(audience = Some(Set("you", "another")))
         .by("me")
         .about("something")
+        .withScope(Set("email", "profile"))
         .issuedAt(10)
         .startsAt(10)
         .expiresAt(15)
@@ -51,6 +52,7 @@ class JwtJson4sNativeSpec extends JwtJsonCommonSpec[JObject] with Json4sNativeFi
         ("iss" -> "me") ~
           ("aud" -> Set("you", "another")) ~
           ("sub" -> "something") ~
+          ("scope" -> Set("email", "profile")) ~
           ("exp" -> 15) ~
           ("nbf" -> 10) ~
           ("iat" -> 10)

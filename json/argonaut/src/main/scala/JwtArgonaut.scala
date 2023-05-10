@@ -63,7 +63,7 @@ class JwtArgonaut(override val clock: Clock) extends JwtArgonautParser[JwtHeader
     JwtHeader(alg, typ, contentType, keyId)
   }
 
-  private val jwtSpecificFieldNames = List("iss", "sub", "aud", "exp", "nbf", "iat", "jti")
+  private val jwtSpecificFieldNames = List("iss", "sub", "aud", "exp", "nbf", "iat", "jti", "scope")
 
   private def jsonToJwtClaim(json: Json): JwtClaim = {
     val issuer = json -|>> "iss"
@@ -73,6 +73,7 @@ class JwtArgonaut(override val clock: Clock) extends JwtArgonautParser[JwtHeader
     val notBefore = json -||> "nbf"
     val issuedAt = json -||> "iat"
     val jwtId = json -|>> "jti"
+    val scope = json -||| "scope"
     val content = json.objectFieldsOrEmpty
       .filterNot(jwtSpecificFieldNames.contains)
       .map { field =>
@@ -81,6 +82,6 @@ class JwtArgonaut(override val clock: Clock) extends JwtArgonautParser[JwtHeader
       .foldRight(jEmptyObject) { case ((fieldName, field), obj) =>
         (fieldName := field) ->: obj
       }
-    JwtClaim(content.nospaces, issuer, subject, audience, expiration, notBefore, issuedAt, jwtId)
+    JwtClaim(content.nospaces, issuer, subject, audience, expiration, notBefore, issuedAt, jwtId, scope)
   }
 }
