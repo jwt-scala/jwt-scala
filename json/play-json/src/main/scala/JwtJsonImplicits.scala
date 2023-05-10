@@ -49,8 +49,9 @@ trait JwtJsonImplicits {
               issuedAt = extractLong(value, "iat"),
               jwtId = extractString(value, "jti"),
               scope = extractStringSetOrString(value, "scope"),
-              content =
-                Json.stringify(value - "iss" - "sub" - "aud" - "exp" - "nbf" - "iat" - "jti" - "scope")
+              content = Json.stringify(
+                value - "iss" - "sub" - "aud" - "exp" - "nbf" - "iat" - "jti" - "scope"
+              )
             )
           )
         } catch {

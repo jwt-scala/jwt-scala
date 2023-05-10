@@ -82,6 +82,16 @@ class JwtArgonaut(override val clock: Clock) extends JwtArgonautParser[JwtHeader
       .foldRight(jEmptyObject) { case ((fieldName, field), obj) =>
         (fieldName := field) ->: obj
       }
-    JwtClaim(content.nospaces, issuer, subject, audience, expiration, notBefore, issuedAt, jwtId, scope)
+    JwtClaim(
+      content.nospaces,
+      issuer,
+      subject,
+      audience,
+      expiration,
+      notBefore,
+      issuedAt,
+      jwtId,
+      scope
+    )
   }
 }

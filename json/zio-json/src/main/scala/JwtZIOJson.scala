@@ -73,5 +73,4 @@ class JwtZIOJson(override val clock: Clock) extends JwtZIOJsonParser[JwtHeader, 
     .toOption
     .orElse(json.get(field(fieldName)).flatMap(_.as[String]).map(s => Set(s)).toOption)
 
-
 }
