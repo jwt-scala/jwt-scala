@@ -108,9 +108,9 @@ jobs:
       matrix:
         exclude:
           - project: playJson
-            scala: 3.2.2
+            scala: 3.3.0
           - project: playFramework
-            scala: 3.2.2
+            scala: 3.3.0
         project:
           - coreJVM
           - coreJS
@@ -126,7 +126,7 @@ jobs:
         scala:
           - 2.12.15
           - 2.13.8
-          - 3.2.2
+          - 3.3.0
 name: CI
 on:
   pull_request:
