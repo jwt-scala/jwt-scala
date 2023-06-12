@@ -67,10 +67,12 @@ jobs:
         project:
           - coreJVM
           - coreJS
+          - coreNative
           - playJson
           - playFramework
           - circeJVM
           - circeJS
+          - circeNative
           - upickle
           - json4sNative
           - json4sJackson
@@ -114,18 +116,20 @@ jobs:
         project:
           - coreJVM
           - coreJS
+          - coreNative
           - playJson
           - playFramework
           - circeJVM
           - circeJS
+          - circeNative
           - upickle
           - json4sNative
           - json4sJackson
           - argonaut
           - zioJson
         scala:
-          - 2.12.15
-          - 2.13.8
+          - 2.12.18
+          - 2.13.11
           - 3.3.0
 name: CI
 on:

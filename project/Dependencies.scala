@@ -26,10 +26,6 @@ object Dependencies {
     val json4sNative = "org.json4s" %% "json4s-native-core" % V.json4s
     val json4sJackson = "org.json4s" %% "json4s-jackson-core" % V.json4s
 
-    val circeCore = "io.circe" %% "circe-core" % V.circe
-    val circeGeneric = "io.circe" %% "circe-generic" % V.circe
-    val circeParse = "io.circe" %% "circe-parser" % V.circe
-
     val upickle = "com.lihaoyi" %% "upickle" % V.upickle
 
     val zioJson = "dev.zio" %% "zio-json" % V.zioJson

@@ -264,9 +264,9 @@ lazy val docs = project
       Libs.play,
       Libs.playTestProvided,
       Libs.json4sNative,
-      Libs.circeCore,
-      Libs.circeGeneric,
-      Libs.circeParse,
+      "io.circe" %%% "circe-core" % V.circe,
+      "io.circe" %%% "circe-generic" % V.circe,
+      "io.circe" %%% "circe-parser" % V.circe,
       Libs.upickle,
       Libs.zioJson,
       Libs.argonaut
@@ -274,21 +274,23 @@ lazy val docs = project
   )
   .dependsOn(playFramework, json4sNative, circe.jvm, upickle, zioJson, argonaut)
 
-lazy val core = crossProject(JSPlatform, JVMPlatform)
+lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .settings(releaseSettings)
   .settings(
     name := "jwt-core",
     libraryDependencies ++= Seq(Libs.bouncyCastle)
   )
   .jsSettings(Test / fork := false)
+  .nativeSettings(Test / fork := false)
 
-lazy val jsonCommon = crossProject(JSPlatform, JVMPlatform)
+lazy val jsonCommon = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .in(file("json/common"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-json-common"
   )
   .jsSettings(Test / fork := false)
+  .nativeSettings(Test / fork := false)
   .aggregate(core)
   .dependsOn(core % "compile->compile;test->test")
 
@@ -303,14 +305,19 @@ lazy val playJson = project
   .aggregate(jsonCommon.jvm)
   .dependsOn(jsonCommon.jvm % "compile->compile;test->test")
 
-lazy val circe = crossProject(JSPlatform, JVMPlatform)
+lazy val circe = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .in(file("json/circe"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-circe",
-    libraryDependencies ++= Seq(Libs.circeCore, Libs.circeParse, Libs.circeGeneric % "test")
+    libraryDependencies ++= Seq(
+      "io.circe" %%% "circe-core" % V.circe,
+      "io.circe" %%% "circe-parser" % V.circe,
+      "io.circe" %%% "circe-generic" % V.circe % "test"
+    )
   )
   .jsSettings(Test / fork := false)
+  .nativeSettings(Test / fork := false)
   .aggregate(jsonCommon)
   .dependsOn(jsonCommon % "compile->compile;test->test")
 
