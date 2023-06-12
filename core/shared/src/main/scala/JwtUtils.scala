@@ -307,8 +307,8 @@ object JwtUtils {
       signatureDER += 0x81.toByte
 
     signatureDER += signatureLength.toByte
-    signatureDER += 2.toByte += r.length.toByte ++= r
-    signatureDER += 2.toByte += s.length.toByte ++= s
+    val _ = signatureDER += 2.toByte += r.length.toByte ++= r
+    val _ = signatureDER += 2.toByte += s.length.toByte ++= s
 
     signatureDER.toArray
   }

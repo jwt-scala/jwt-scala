@@ -113,40 +113,40 @@ abstract class JwtJsonCommonSpec[J] extends munit.FunSuite with JsonCommonFixtur
 
   test("should fail to decodeJsonAll and decodeJson when now is after expiration date") {
     dataJson.foreach { d =>
-      intercept[JwtExpirationException] {
+      val _ = intercept[JwtExpirationException] {
         afterExpirationJwt.decodeJsonAll(d.token, secretKey, JwtAlgorithm.allHmac()).get
       }
       assert(
         afterExpirationJwt.decodeJsonAll(d.token, secretKey, JwtAlgorithm.allHmac()).isFailure
       )
 
-      intercept[JwtExpirationException] {
+      val _ = intercept[JwtExpirationException] {
         afterExpirationJwt.decodeJson(d.token, secretKey, JwtAlgorithm.allHmac()).get
       }
       assert(afterExpirationJwt.decodeJson(d.token, secretKey, JwtAlgorithm.allHmac()).isFailure)
 
-      intercept[JwtExpirationException] {
+      val _ = intercept[JwtExpirationException] {
         afterExpirationJwt.decodeAll(d.token, secretKey, JwtAlgorithm.allHmac()).get
       }
       assert(afterExpirationJwt.decodeAll(d.token, secretKey, JwtAlgorithm.allHmac()).isFailure)
     }
 
     dataRSAJson.foreach { d =>
-      intercept[JwtExpirationException] {
+      val _ = intercept[JwtExpirationException] {
         afterExpirationJwt.decodeJsonAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA()).get
       }
       assert(
         afterExpirationJwt.decodeJsonAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA()).isFailure
       )
 
-      intercept[JwtExpirationException] {
+      val _ = intercept[JwtExpirationException] {
         afterExpirationJwt.decodeJson(d.token, publicKeyRSA, JwtAlgorithm.allRSA()).get
       }
       assert(
         afterExpirationJwt.decodeJson(d.token, publicKeyRSA, JwtAlgorithm.allRSA()).isFailure
       )
 
-      intercept[JwtExpirationException] {
+      val _ = intercept[JwtExpirationException] {
         afterExpirationJwt.decodeAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA()).get
       }
       assert(afterExpirationJwt.decodeAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA()).isFailure)
@@ -159,21 +159,22 @@ abstract class JwtJsonCommonSpec[J] extends munit.FunSuite with JsonCommonFixtur
     val options = JwtOptions(expiration = false)
 
     dataJson.foreach { d =>
-      afterExpirationJwt.decodeJsonAll(d.token, secretKey, JwtAlgorithm.allHmac(), options).get
+      val _ =
+        afterExpirationJwt.decodeJsonAll(d.token, secretKey, JwtAlgorithm.allHmac(), options).get
       assert(
         afterExpirationJwt
           .decodeJsonAll(d.token, secretKey, JwtAlgorithm.allHmac(), options)
           .isSuccess
       )
 
-      afterExpirationJwt.decodeJson(d.token, secretKey, JwtAlgorithm.allHmac(), options).get
+      val _ = afterExpirationJwt.decodeJson(d.token, secretKey, JwtAlgorithm.allHmac(), options).get
       assert(
         afterExpirationJwt
           .decodeJson(d.token, secretKey, JwtAlgorithm.allHmac(), options)
           .isSuccess
       )
 
-      afterExpirationJwt.decodeAll(d.token, secretKey, JwtAlgorithm.allHmac(), options).get
+      val _ = afterExpirationJwt.decodeAll(d.token, secretKey, JwtAlgorithm.allHmac(), options).get
       assert(
         afterExpirationJwt
           .decodeAll(d.token, secretKey, JwtAlgorithm.allHmac(), options)
@@ -182,21 +183,24 @@ abstract class JwtJsonCommonSpec[J] extends munit.FunSuite with JsonCommonFixtur
     }
 
     dataRSAJson.foreach { d =>
-      afterExpirationJwt.decodeJsonAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options).get
+      val _ =
+        afterExpirationJwt.decodeJsonAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options).get
       assert(
         afterExpirationJwt
           .decodeJsonAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options)
           .isSuccess
       )
 
-      afterExpirationJwt.decodeJson(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options).get
+      val _ =
+        afterExpirationJwt.decodeJson(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options).get
       assert(
         afterExpirationJwt
           .decodeJson(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options)
           .isSuccess
       )
 
-      afterExpirationJwt.decodeAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options).get
+      val _ =
+        afterExpirationJwt.decodeAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options).get
       assert(
         afterExpirationJwt
           .decodeAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options)

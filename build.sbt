@@ -27,7 +27,7 @@ val crossProjects = Seq(
   "core",
   "circe"
 )
-val allProjects = crossProjects.flatMap(p => Seq(s"${p}JVM", s"${p}JS")) ++ projects
+val allProjects = crossProjects.flatMap(p => Seq(s"${p}JVM", s"${p}JS", s"${p}Native")) ++ projects
 
 addCommandAlias("publish-doc", "docs/makeMicrosite; docs/publishMicrosite")
 
@@ -231,6 +231,7 @@ lazy val jwtScala = project
     json4sJackson,
     circe.jvm,
     circe.js,
+    circe.native,
     upickle,
     zioJson,
     playFramework,
@@ -241,6 +242,7 @@ lazy val jwtScala = project
     json4sJackson,
     circe.jvm,
     circe.js,
+    circe.native,
     upickle,
     zioJson,
     playFramework,
@@ -267,6 +269,7 @@ lazy val docs = project
       "io.circe" %%% "circe-core" % V.circe,
       "io.circe" %%% "circe-generic" % V.circe,
       "io.circe" %%% "circe-parser" % V.circe,
+      "io.circe" %%% "circe-jawn" % V.circe,
       Libs.upickle,
       Libs.zioJson,
       Libs.argonaut
@@ -313,6 +316,7 @@ lazy val circe = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     libraryDependencies ++= Seq(
       "io.circe" %%% "circe-core" % V.circe,
       "io.circe" %%% "circe-parser" % V.circe,
+      "io.circe" %%% "circe-jawn" % V.circe,
       "io.circe" %%% "circe-generic" % V.circe % "test"
     )
   )
