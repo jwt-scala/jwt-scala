@@ -246,7 +246,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
     val tokens = Seq("1", "abcde", "", "a.b.c.d")
 
     tokens.foreach { token =>
-      val _ = intercept[JwtLengthException] {
+      intercept[JwtLengthException] {
         Jwt.validate(token, secretKey, JwtAlgorithm.allHmac())
       }
       assert(!Jwt.isValid(token, secretKey, JwtAlgorithm.allHmac()), token)
@@ -257,7 +257,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
     val tokens = Seq("a.b", "a.b.c", "1.2.3", "abcde.azer.azer", "aze$.azer.azer")
 
     tokens.foreach { token =>
-      val _ = intercept[IllegalArgumentException] {
+      intercept[IllegalArgumentException] {
         Jwt.validate(token, secretKey, JwtAlgorithm.allHmac())
       }
       assert(!Jwt.isValid(token, secretKey, JwtAlgorithm.allHmac()), token)
@@ -266,21 +266,21 @@ class JwtSpec extends munit.FunSuite with Fixture {
 
   test("should invalidate expired tokens") {
     data.foreach { d =>
-      val _ = intercept[JwtExpirationException] {
+      intercept[JwtExpirationException] {
         afterExpirationJwt.validate(d.token, secretKey, JwtAlgorithm.allHmac())
       }
       assert(
         !afterExpirationJwt.isValid(d.token, secretKey, JwtAlgorithm.allHmac()),
         d.algo.fullName
       )
-      val _ = intercept[JwtExpirationException] {
+      intercept[JwtExpirationException] {
         afterExpirationJwt.validate(d.token, secretKeyOf(d.algo))
       }
       assert(!afterExpirationJwt.isValid(d.token, secretKeyOf(d.algo)), d.algo.fullName)
     }
 
     dataRSA.foreach { d =>
-      val _ = intercept[JwtExpirationException] {
+      intercept[JwtExpirationException] {
         afterExpirationJwt.validate(d.token, publicKeyRSA, JwtAlgorithm.allRSA())
       }
       assert(
@@ -290,7 +290,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
     }
 
     dataEdDSA.foreach { d =>
-      val _ = intercept[JwtExpirationException] {
+      intercept[JwtExpirationException] {
         afterExpirationJwt.validate(d.token, publicKeyEd25519, JwtAlgorithm.allEdDSA())
       }
       assert(
@@ -335,11 +335,11 @@ class JwtSpec extends munit.FunSuite with Fixture {
       val claimNotBefore = claimClass.startsAt(notBefore)
       val token = beforeNotBeforeJwt.encode(claimNotBefore, secretKey, d.algo)
 
-      val _ = intercept[JwtNotBeforeException] {
+      intercept[JwtNotBeforeException] {
         beforeNotBeforeJwt.validate(token, secretKey, JwtAlgorithm.allHmac())
       }
       assert(!beforeNotBeforeJwt.isValid(token, secretKey, JwtAlgorithm.allHmac()), d.algo.fullName)
-      val _ = intercept[JwtNotBeforeException] {
+      intercept[JwtNotBeforeException] {
         beforeNotBeforeJwt.validate(token, secretKeyOf(d.algo))
       }
       assert(!beforeNotBeforeJwt.isValid(token, secretKeyOf(d.algo)), d.algo.fullName)
@@ -349,7 +349,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
       val claimNotBefore = claimClass.startsAt(notBefore)
       val token = beforeNotBeforeJwt.encode(claimNotBefore, privateKeyRSA, d.algo)
 
-      val _ = intercept[JwtNotBeforeException] {
+      intercept[JwtNotBeforeException] {
         beforeNotBeforeJwt.validate(token, publicKeyRSA, JwtAlgorithm.allRSA())
       }
       assert(
@@ -362,7 +362,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
       val claimNotBefore = claimClass.startsAt(notBefore)
       val token = beforeNotBeforeJwt.encode(claimNotBefore, privateKeyEd25519, d.algo)
 
-      val _ = intercept[JwtNotBeforeException] {
+      intercept[JwtNotBeforeException] {
         beforeNotBeforeJwt.validate(token, publicKeyEd25519, JwtAlgorithm.allEdDSA())
       }
       assert(
@@ -392,7 +392,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
       val claimNotBefore = claimClass.startsAt(notBefore)
       val token = beforeNotBeforeJwt.encode(claimNotBefore, privateKeyRSA, d.algo)
 
-      val _ = intercept[JwtNotBeforeException] {
+      intercept[JwtNotBeforeException] {
         beforeNotBeforeJwt.validate(token, publicKeyRSA, JwtAlgorithm.allRSA())
       }
       assert(
@@ -405,7 +405,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
       val claimNotBefore = claimClass.startsAt(notBefore)
       val token = beforeNotBeforeJwt.encode(claimNotBefore, privateKeyEd25519, d.algo)
 
-      val _ = intercept[JwtNotBeforeException] {
+      intercept[JwtNotBeforeException] {
         beforeNotBeforeJwt.validate(token, publicKeyEd25519, JwtAlgorithm.allEdDSA())
       }
       assert(
@@ -417,7 +417,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
 
   test("should invalidate wrong keys") {
     data.foreach { d =>
-      val _ = intercept[JwtValidationException] {
+      intercept[JwtValidationException] {
         validTimeJwt.validate(d.token, "wrong key", JwtAlgorithm.allHmac())
       }
       assert(!validTimeJwt.isValid(d.token, "wrong key", JwtAlgorithm.allHmac()), d.algo.fullName)
@@ -434,7 +434,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
 
   test("should fail on non-exposed algorithms") {
     data.foreach { d =>
-      val _ = intercept[JwtValidationException] {
+      intercept[JwtValidationException] {
         validTimeJwt.validate(d.token, secretKey, Seq.empty[JwtHmacAlgorithm])
       }
       assert(
@@ -444,14 +444,14 @@ class JwtSpec extends munit.FunSuite with Fixture {
     }
 
     data.foreach { d =>
-      val _ = intercept[JwtValidationException] {
+      intercept[JwtValidationException] {
         validTimeJwt.validate(d.token, secretKey, JwtAlgorithm.allRSA())
       }
       assert(!validTimeJwt.isValid(d.token, secretKey, JwtAlgorithm.allRSA()), d.algo.fullName)
     }
 
     dataRSA.foreach { d =>
-      val _ = intercept[JwtValidationException] {
+      intercept[JwtValidationException] {
         validTimeJwt.validate(d.token, publicKeyRSA, JwtAlgorithm.allHmac())
       }
       assert(!validTimeJwt.isValid(d.token, publicKeyRSA, JwtAlgorithm.allHmac()), d.algo.fullName)
@@ -461,7 +461,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
   test("should invalidate wrong algos") {
     val token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJXVEYifQ.e30"
     assert(Jwt.decode(token).isFailure)
-    val _ = intercept[JwtNonSupportedAlgorithm] { Jwt.decode(token).get }
+    intercept[JwtNonSupportedAlgorithm] { Jwt.decode(token).get }
   }
 
   test("should decode tokens with unknown algos depending on options") {

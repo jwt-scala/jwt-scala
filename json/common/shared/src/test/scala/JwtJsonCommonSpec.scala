@@ -113,40 +113,40 @@ abstract class JwtJsonCommonSpec[J] extends munit.FunSuite with JsonCommonFixtur
 
   test("should fail to decodeJsonAll and decodeJson when now is after expiration date") {
     dataJson.foreach { d =>
-      val _ = intercept[JwtExpirationException] {
+      intercept[JwtExpirationException] {
         afterExpirationJwt.decodeJsonAll(d.token, secretKey, JwtAlgorithm.allHmac()).get
       }
       assert(
         afterExpirationJwt.decodeJsonAll(d.token, secretKey, JwtAlgorithm.allHmac()).isFailure
       )
 
-      val _ = intercept[JwtExpirationException] {
+      intercept[JwtExpirationException] {
         afterExpirationJwt.decodeJson(d.token, secretKey, JwtAlgorithm.allHmac()).get
       }
       assert(afterExpirationJwt.decodeJson(d.token, secretKey, JwtAlgorithm.allHmac()).isFailure)
 
-      val _ = intercept[JwtExpirationException] {
+      intercept[JwtExpirationException] {
         afterExpirationJwt.decodeAll(d.token, secretKey, JwtAlgorithm.allHmac()).get
       }
       assert(afterExpirationJwt.decodeAll(d.token, secretKey, JwtAlgorithm.allHmac()).isFailure)
     }
 
     dataRSAJson.foreach { d =>
-      val _ = intercept[JwtExpirationException] {
+      intercept[JwtExpirationException] {
         afterExpirationJwt.decodeJsonAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA()).get
       }
       assert(
         afterExpirationJwt.decodeJsonAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA()).isFailure
       )
 
-      val _ = intercept[JwtExpirationException] {
+      intercept[JwtExpirationException] {
         afterExpirationJwt.decodeJson(d.token, publicKeyRSA, JwtAlgorithm.allRSA()).get
       }
       assert(
         afterExpirationJwt.decodeJson(d.token, publicKeyRSA, JwtAlgorithm.allRSA()).isFailure
       )
 
-      val _ = intercept[JwtExpirationException] {
+      intercept[JwtExpirationException] {
         afterExpirationJwt.decodeAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA()).get
       }
       assert(afterExpirationJwt.decodeAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA()).isFailure)
@@ -167,14 +167,14 @@ abstract class JwtJsonCommonSpec[J] extends munit.FunSuite with JsonCommonFixtur
           .isSuccess
       )
 
-      val _ = afterExpirationJwt.decodeJson(d.token, secretKey, JwtAlgorithm.allHmac(), options).get
+      afterExpirationJwt.decodeJson(d.token, secretKey, JwtAlgorithm.allHmac(), options).get
       assert(
         afterExpirationJwt
           .decodeJson(d.token, secretKey, JwtAlgorithm.allHmac(), options)
           .isSuccess
       )
 
-      val _ = afterExpirationJwt.decodeAll(d.token, secretKey, JwtAlgorithm.allHmac(), options).get
+      afterExpirationJwt.decodeAll(d.token, secretKey, JwtAlgorithm.allHmac(), options).get
       assert(
         afterExpirationJwt
           .decodeAll(d.token, secretKey, JwtAlgorithm.allHmac(), options)
