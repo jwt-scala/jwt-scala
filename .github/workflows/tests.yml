@@ -128,8 +128,8 @@ jobs:
           - argonaut
           - zioJson
         scala:
-          - 2.12.18
-          - 2.13.11
+          - 2.12.15
+          - 2.13.8
           - 3.3.0
 name: CI
 on:
