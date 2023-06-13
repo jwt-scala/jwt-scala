@@ -246,9 +246,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
     val tokens = Seq("1", "abcde", "", "a.b.c.d")
 
     tokens.foreach { token =>
-      intercept[JwtLengthException] {
-        Jwt.validate(token, secretKey, JwtAlgorithm.allHmac())
-      }
+      intercept[JwtLengthException] { Jwt.validate(token, secretKey, JwtAlgorithm.allHmac()) }
       assert(!Jwt.isValid(token, secretKey, JwtAlgorithm.allHmac()), token)
     }
   }
@@ -339,9 +337,7 @@ class JwtSpec extends munit.FunSuite with Fixture {
         beforeNotBeforeJwt.validate(token, secretKey, JwtAlgorithm.allHmac())
       }
       assert(!beforeNotBeforeJwt.isValid(token, secretKey, JwtAlgorithm.allHmac()), d.algo.fullName)
-      intercept[JwtNotBeforeException] {
-        beforeNotBeforeJwt.validate(token, secretKeyOf(d.algo))
-      }
+      intercept[JwtNotBeforeException] { beforeNotBeforeJwt.validate(token, secretKeyOf(d.algo)) }
       assert(!beforeNotBeforeJwt.isValid(token, secretKeyOf(d.algo)), d.algo.fullName)
     }
 

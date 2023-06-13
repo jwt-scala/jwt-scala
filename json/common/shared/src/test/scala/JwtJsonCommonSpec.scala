@@ -159,8 +159,7 @@ abstract class JwtJsonCommonSpec[J] extends munit.FunSuite with JsonCommonFixtur
     val options = JwtOptions(expiration = false)
 
     dataJson.foreach { d =>
-      val _ =
-        afterExpirationJwt.decodeJsonAll(d.token, secretKey, JwtAlgorithm.allHmac(), options).get
+      afterExpirationJwt.decodeJsonAll(d.token, secretKey, JwtAlgorithm.allHmac(), options).get
       assert(
         afterExpirationJwt
           .decodeJsonAll(d.token, secretKey, JwtAlgorithm.allHmac(), options)
@@ -183,24 +182,21 @@ abstract class JwtJsonCommonSpec[J] extends munit.FunSuite with JsonCommonFixtur
     }
 
     dataRSAJson.foreach { d =>
-      val _ =
-        afterExpirationJwt.decodeJsonAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options).get
+      afterExpirationJwt.decodeJsonAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options).get
       assert(
         afterExpirationJwt
           .decodeJsonAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options)
           .isSuccess
       )
 
-      val _ =
-        afterExpirationJwt.decodeJson(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options).get
+      afterExpirationJwt.decodeJson(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options).get
       assert(
         afterExpirationJwt
           .decodeJson(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options)
           .isSuccess
       )
 
-      val _ =
-        afterExpirationJwt.decodeAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options).get
+      afterExpirationJwt.decodeAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options).get
       assert(
         afterExpirationJwt
           .decodeAll(d.token, publicKeyRSA, JwtAlgorithm.allRSA(), options)
