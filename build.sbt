@@ -157,7 +157,6 @@ val noPublishSettings = Seq(
 
 lazy val commonJsSettings = Seq(
   Test / fork := false,
-  Test / test := (()) // TODO
 )
 
 // Normal published settings
@@ -279,7 +278,7 @@ lazy val docs = project
   .dependsOn(playFramework, json4sNative, circe.jvm, upickle, zioJson, argonaut)
 
 lazy val core = crossProject(JSPlatform, JVMPlatform)
-  .crossType(CrossType.Pure)
+  .crossType(CrossType.Full)
   .settings(releaseSettings)
   .settings(name := "jwt-core", libraryDependencies ++= Seq(Libs.bouncyCastle))
   .jsSettings(commonJsSettings)
@@ -313,7 +312,7 @@ lazy val playJson = project
   .dependsOn(jsonCommon.jvm % "compile->compile;test->test")
 
 lazy val circe = crossProject(JSPlatform, JVMPlatform)
-  .crossType(CrossType.Pure)
+  .crossType(CrossType.Full)
   .in(file("json/circe"))
   .settings(releaseSettings)
   .settings(
