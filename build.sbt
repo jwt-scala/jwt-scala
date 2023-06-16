@@ -227,13 +227,7 @@ lazy val jwtScala = project
   .in(file("."))
   .settings(localSettings)
   .settings(
-    name := "jwt-scala",
-    dependencyOverrides ++= List(
-      "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
-    ),
-    libraryDependencies ++= List(
-      "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
-    )
+    name := "jwt-scala"
   )
   .aggregate(
     json4sNative,
@@ -321,13 +315,7 @@ lazy val playJson = project
   .settings(
     name := "jwt-play-json",
     crossScalaVersions := crossVersion2Only,
-    libraryDependencies ++= Seq(Libs.playJson),
-    dependencyOverrides ++= List(
-      "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
-    ),
-    libraryDependencies ++= List(
-      "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
-    )
+    libraryDependencies ++= Seq(Libs.playJson)
   )
   .aggregate(jsonCommon.jvm)
   .dependsOn(jsonCommon.jvm % "compile->compile;test->test")
@@ -425,12 +413,6 @@ lazy val playFramework = project
     Test / testGrouping := groupPlayTest(
       (Test / definedTests).value,
       (Test / dependencyClasspath).value.files
-    ),
-    dependencyOverrides ++= List(
-      "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
-    ),
-    libraryDependencies ++= List(
-      "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
     )
   )
   .aggregate(playJson)
