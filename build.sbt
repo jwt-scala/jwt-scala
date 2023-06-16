@@ -413,6 +413,9 @@ lazy val playFramework = project
     Test / testGrouping := groupPlayTest(
       (Test / definedTests).value,
       (Test / dependencyClasspath).value.files
+    ),
+    dependencyOverrides ++= List(
+      "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
     )
   )
   .aggregate(playJson)
