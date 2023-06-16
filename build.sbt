@@ -156,7 +156,7 @@ val noPublishSettings = Seq(
 )
 
 lazy val commonJsSettings = Seq(
-  Test / fork := false,
+  Test / fork := false
 )
 
 // Normal published settings
@@ -290,7 +290,12 @@ lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
       Libs.scalajsSecureRandom.value
     )
   )
-  .nativeSettings(Test / fork := false)
+  .nativeSettings(
+    libraryDependencies ++= Seq(
+      Libs.scalaJavaTime.value
+    ),
+    Test / fork := false
+  )
 
 lazy val jsonCommon = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Pure)
