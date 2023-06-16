@@ -373,7 +373,10 @@ lazy val json4sNative = project
   .settings(releaseSettings)
   .settings(
     name := "jwt-json4s-native",
-    libraryDependencies ++= Seq(Libs.json4sNative)
+    libraryDependencies ++= Seq(Libs.json4sNative),
+    dependencyOverrides ++= List(
+      "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
+    )
   )
   .aggregate(json4sCommon)
   .dependsOn(json4sCommon % "compile->compile;test->test")
