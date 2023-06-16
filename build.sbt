@@ -227,7 +227,13 @@ lazy val jwtScala = project
   .in(file("."))
   .settings(localSettings)
   .settings(
-    name := "jwt-scala"
+    name := "jwt-scala",
+    dependencyOverrides ++= List(
+      "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
+    ),
+    libraryDependencies ++= List(
+      "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
+    )
   )
   .aggregate(
     json4sNative,
@@ -317,6 +323,9 @@ lazy val playJson = project
     crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.playJson),
     dependencyOverrides ++= List(
+      "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
+    ),
+    libraryDependencies ++= List(
       "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
     )
   )
@@ -418,6 +427,9 @@ lazy val playFramework = project
       (Test / dependencyClasspath).value.files
     ),
     dependencyOverrides ++= List(
+      "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
+    ),
+    libraryDependencies ++= List(
       "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
     )
   )
