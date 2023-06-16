@@ -315,7 +315,10 @@ lazy val playJson = project
   .settings(
     name := "jwt-play-json",
     crossScalaVersions := crossVersion2Only,
-    libraryDependencies ++= Seq(Libs.playJson)
+    libraryDependencies ++= Seq(Libs.playJson),
+    dependencyOverrides ++= List(
+      "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
+    )
   )
   .aggregate(jsonCommon.jvm)
   .dependsOn(jsonCommon.jvm % "compile->compile;test->test")
@@ -373,10 +376,7 @@ lazy val json4sNative = project
   .settings(releaseSettings)
   .settings(
     name := "jwt-json4s-native",
-    libraryDependencies ++= Seq(Libs.json4sNative),
-    dependencyOverrides ++= List(
-      "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
-    )
+    libraryDependencies ++= Seq(Libs.json4sNative)
   )
   .aggregate(json4sCommon)
   .dependsOn(json4sCommon % "compile->compile;test->test")
