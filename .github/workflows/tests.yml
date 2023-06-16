@@ -100,7 +100,7 @@ jobs:
       - if: "!startsWith(matrix.scala, '2.13')"
         name: Test
         run: "sbt ++${{ matrix.scala }} ${{ matrix.project }}/test"
-      - if: "startsWith(matrix.scala, '2.13') && !startsWith(matrix.project, 'Native')"
+      - if: "startsWith(matrix.scala, '2.13') && !endsWith(matrix.project, 'Native')"
         name: Test with coverage
         run: "sbt ++${{ matrix.scala }} coverage ${{ matrix.project }}/test coverageReport"
       - if: "startsWith(matrix.scala, '2.13')"
