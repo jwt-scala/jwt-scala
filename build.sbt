@@ -90,9 +90,8 @@ val baseSettings = Seq(
   version := buildVersion,
   ThisBuild / scalaVersion := scala213,
   crossScalaVersions := crossVersionAll,
-  crossVersion := CrossVersion.binary,
   autoAPIMappings := true,
-  libraryDependencies ++= Seq(Libs.munit, Libs.munitScalacheck),
+  libraryDependencies ++= Seq(Libs.munit.value, Libs.munitScalacheck.value),
   testFrameworks += new TestFramework("munit.Framework"),
   mimaFailOnNoPrevious := false,
   Test / aggregate := false,
@@ -154,6 +153,10 @@ val noPublishSettings = Seq(
   publish := (()),
   publishLocal := (()),
   publishArtifact := false
+)
+
+lazy val commonJsSettings = Seq(
+  Test / fork := false,
 )
 
 // Normal published settings
@@ -264,9 +267,9 @@ lazy val docs = project
       Libs.play,
       Libs.playTestProvided,
       Libs.json4sNative,
-      Libs.circeCore,
-      Libs.circeGeneric,
-      Libs.circeParse,
+      Libs.circeCore.value,
+      Libs.circeGeneric.value,
+      Libs.circeParse.value,
       Libs.upickle,
       Libs.zioJson,
       Libs.argonaut
@@ -275,20 +278,25 @@ lazy val docs = project
   .dependsOn(playFramework, json4sNative, circe.jvm, upickle, zioJson, argonaut)
 
 lazy val core = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Full)
   .settings(releaseSettings)
-  .settings(
-    name := "jwt-core",
-    libraryDependencies ++= Seq(Libs.bouncyCastle)
+  .settings(name := "jwt-core", libraryDependencies ++= Seq(Libs.bouncyCastle))
+  .jsSettings(commonJsSettings)
+  .jsSettings(
+    libraryDependencies ++= Seq(
+      Libs.scalaJavaTime.value,
+      Libs.scalajsSecureRandom.value
+    )
   )
-  .jsSettings(Test / fork := false)
 
 lazy val jsonCommon = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
   .in(file("json/common"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-json-common"
   )
-  .jsSettings(Test / fork := false)
+  .jsSettings(commonJsSettings)
   .aggregate(core)
   .dependsOn(core % "compile->compile;test->test")
 
@@ -304,13 +312,19 @@ lazy val playJson = project
   .dependsOn(jsonCommon.jvm % "compile->compile;test->test")
 
 lazy val circe = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Full)
   .in(file("json/circe"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-circe",
-    libraryDependencies ++= Seq(Libs.circeCore, Libs.circeParse, Libs.circeGeneric % "test")
+    libraryDependencies ++= Seq(
+      Libs.circeCore.value,
+      Libs.circeJawn.value,
+      Libs.circeParse.value,
+      Libs.circeGeneric.value % "test"
+    )
   )
-  .jsSettings(Test / fork := false)
+  .jsSettings(commonJsSettings)
   .aggregate(jsonCommon)
   .dependsOn(jsonCommon % "compile->compile;test->test")
 
