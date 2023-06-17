@@ -27,7 +27,7 @@ val crossProjects = Seq(
   "core",
   "circe"
 )
-val allProjects = crossProjects.flatMap(p => Seq(s"${p}JVM", s"${p}JS")) ++ projects
+val allProjects = crossProjects.flatMap(p => Seq(s"${p}JVM", s"${p}JS", s"${p}Native")) ++ projects
 
 addCommandAlias("publish-doc", "docs/makeMicrosite; docs/publishMicrosite")
 
@@ -156,7 +156,7 @@ val noPublishSettings = Seq(
 )
 
 lazy val commonJsSettings = Seq(
-  Test / fork := false,
+  Test / fork := false
 )
 
 // Normal published settings
@@ -234,6 +234,7 @@ lazy val jwtScala = project
     json4sJackson,
     circe.jvm,
     circe.js,
+    circe.native,
     upickle,
     zioJson,
     playFramework,
@@ -244,6 +245,7 @@ lazy val jwtScala = project
     json4sJackson,
     circe.jvm,
     circe.js,
+    circe.native,
     upickle,
     zioJson,
     playFramework,
@@ -277,7 +279,7 @@ lazy val docs = project
   )
   .dependsOn(playFramework, json4sNative, circe.jvm, upickle, zioJson, argonaut)
 
-lazy val core = crossProject(JSPlatform, JVMPlatform)
+lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Full)
   .settings(releaseSettings)
   .settings(name := "jwt-core", libraryDependencies ++= Seq(Libs.bouncyCastle))
@@ -288,8 +290,14 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
       Libs.scalajsSecureRandom.value
     )
   )
+  .nativeSettings(
+    libraryDependencies ++= Seq(
+      Libs.scalaJavaTime.value
+    ),
+    Test / fork := false
+  )
 
-lazy val jsonCommon = crossProject(JSPlatform, JVMPlatform)
+lazy val jsonCommon = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Pure)
   .in(file("json/common"))
   .settings(releaseSettings)
@@ -297,6 +305,7 @@ lazy val jsonCommon = crossProject(JSPlatform, JVMPlatform)
     name := "jwt-json-common"
   )
   .jsSettings(commonJsSettings)
+  .nativeSettings(Test / fork := false)
   .aggregate(core)
   .dependsOn(core % "compile->compile;test->test")
 
@@ -311,7 +320,7 @@ lazy val playJson = project
   .aggregate(jsonCommon.jvm)
   .dependsOn(jsonCommon.jvm % "compile->compile;test->test")
 
-lazy val circe = crossProject(JSPlatform, JVMPlatform)
+lazy val circe = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Full)
   .in(file("json/circe"))
   .settings(releaseSettings)
@@ -325,6 +334,7 @@ lazy val circe = crossProject(JSPlatform, JVMPlatform)
     )
   )
   .jsSettings(commonJsSettings)
+  .nativeSettings(Test / fork := false)
   .aggregate(jsonCommon)
   .dependsOn(jsonCommon % "compile->compile;test->test")
 

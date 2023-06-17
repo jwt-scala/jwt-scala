@@ -21,7 +21,7 @@ trait PlayFixture extends Fixture {
 
   def HEADER_NAME: String
 
-  implicit val userFormat = Json.format[User]
+  implicit val userFormat: OFormat[User] = Json.format[User]
 
   val user = User(1, "Paul")
   val userJson = Json.obj("id" -> 1, "name" -> "Paul")
