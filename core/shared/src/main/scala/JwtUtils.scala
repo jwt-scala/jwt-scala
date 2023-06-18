@@ -90,12 +90,7 @@ object JwtUtils {
   }
 
   private def parseKey(key: String): Array[Byte] = JwtBase64.decodeNonSafe(
-    key
-      .replaceAll("-----BEGIN (.*)-----", "")
-      .replaceAll("-----END (.*)-----", "")
-      .replaceAll("\r\n", "")
-      .replaceAll("\n", "")
-      .trim
+    key.replaceAll("-----BEGIN ([^-]*)-----|-----END ([^-]*)-----|\\s*", "")
   )
 
   private def parsePrivateKey(key: String, keyAlgo: String) = {
