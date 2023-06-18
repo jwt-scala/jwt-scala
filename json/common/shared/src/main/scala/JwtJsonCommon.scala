@@ -3,10 +3,7 @@ package pdi.jwt
 import scala.util.Try
 
 import pdi.jwt.algorithms.*
-import pdi.jwt.exceptions.{
-  JwtEmptyAlgorithmException,
-  JwtNonEmptyAlgorithmException,
-}
+import pdi.jwt.exceptions.{JwtEmptyAlgorithmException, JwtNonEmptyAlgorithmException}
 
 trait JwtJsonCommon[J, H, C] extends JwtCore[H, C] with JwtJsonCommonPlatform[J, H, C] {
   protected def parse(value: String): J
@@ -73,7 +70,7 @@ trait JwtJsonCommon[J, H, C] extends JwtCore[H, C] with JwtJsonCommonPlatform[J,
   ): Try[(J, J, String)] =
     decodeJsonAll(token, key, algorithms, JwtOptions.DEFAULT)
 
-     def decodeJson(token: String, options: JwtOptions): Try[J] =
+  def decodeJson(token: String, options: JwtOptions): Try[J] =
     decodeJsonAll(token, options).map(_._2)
 
   def decodeJson(token: String): Try[J] =

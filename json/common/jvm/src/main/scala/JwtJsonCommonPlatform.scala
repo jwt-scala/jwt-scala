@@ -5,9 +5,7 @@ import javax.crypto.SecretKey
 import scala.util.Try
 
 import pdi.jwt.algorithms.*
-import pdi.jwt.exceptions.{
-  JwtValidationException
-}
+import pdi.jwt.exceptions.JwtValidationException
 
 trait JwtJsonCommonPlatform[J, H, C] extends JwtCore[H, C] { self: JwtJsonCommon[J, H, C] =>
   def encode(header: J, claim: J, key: Key): String = (getAlgorithm(header), key) match {
@@ -27,7 +25,7 @@ trait JwtJsonCommonPlatform[J, H, C] extends JwtCore[H, C] { self: JwtJsonCommon
   def encode(claim: J, key: PrivateKey, algorithm: JwtAsymmetricAlgorithm): String =
     encode(stringify(claim), key, algorithm)
 
-    def decodeJsonAll(
+  def decodeJsonAll(
       token: String,
       key: SecretKey,
       algorithms: Seq[JwtHmacAlgorithm],
@@ -73,7 +71,7 @@ trait JwtJsonCommonPlatform[J, H, C] extends JwtCore[H, C] { self: JwtJsonCommon
   def decodeJsonAll(token: String, key: PublicKey): Try[(J, J, String)] =
     decodeJsonAll(token, key, JwtOptions.DEFAULT)
 
-    def decodeJson(
+  def decodeJson(
       token: String,
       key: SecretKey,
       algorithms: Seq[JwtHmacAlgorithm],
