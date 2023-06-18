@@ -105,7 +105,8 @@ request.jwtSession.getAs[User]("user")
 There are also implicit helpers around `Result` to help you manipulate the session inside it.
 
 ```scala mdoc
-implicit val implRequest = request
+import play.api.mvc._
+implicit val implRequest: FakeRequest[AnyContentAsEmpty.type] = request
 
 // Let's begin by creating a Result
 var result: play.api.mvc.Result = play.api.mvc.Results.Ok
