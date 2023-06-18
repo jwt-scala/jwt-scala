@@ -11,7 +11,7 @@ case class TestObject(value: String) {
   override def toString(): String = this.value
 }
 
-class JwtUtilsSpec extends munit.ScalaCheckSuite with Fixture {
+class JwtUtilsSpec extends munit.ScalaCheckSuite with Fixture with JwtUtilsPlatformSpec {
   val ENCODING = JwtUtils.ENCODING
 
   test("hashToJson should transform a seq of tuples to a valid JSON") {
