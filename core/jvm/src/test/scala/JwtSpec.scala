@@ -226,6 +226,19 @@ class JwtSpec extends munit.FunSuite with Fixture {
     }
   }
 
+  def oneLine(key: String) = key.replaceAll("\r\n", " ").replaceAll("\n", " ")
+
+  test("should validate using RSA keys converted to single line") {
+    val pubKey = oneLine(publicKeyRSA)
+    dataRSA.foreach { d =>
+      assertEquals(
+        (),
+        validTimeJwt.validate(d.token, pubKey, JwtAlgorithm.allRSA()),
+        d.algo.fullName
+      )
+    }
+  }
+
   test("should validate ECDSA from other implementations") {
     val publicKey =
       "MIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQASisgweVL1tAtIvfmpoqvdXF8sPKTV9YTKNxBwkdkm+/auh4pR8TbaIfsEzcsGUVv61DFNFXb0ozJfurQ59G2XcgAn3vROlSSnpbIvuhKrzL5jwWDTaYa5tVF1Zjwia/5HUhKBkcPuWGXg05nMjWhZfCuEetzMLoGcHmtvabugFrqsAg="
