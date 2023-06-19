@@ -4,7 +4,7 @@ import sbt._
 object Dependencies {
   object V {
     val munit = "1.0.0-M8"
-    val bouncyCastle = "1.73"
+    val bouncyCastle = "1.74"
     val guice = "4.2.3"
 
     val scalaJavaTime = "2.5.0"
