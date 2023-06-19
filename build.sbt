@@ -8,8 +8,8 @@ import sbt.Keys._
 import sbt.Tests._
 import sbt._
 
-val previousVersion = "9.2.0"
-val buildVersion = "9.3.0"
+val previousVersion = "9.3.0"
+val buildVersion = "9.4.0"
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 ThisBuild / versionScheme := Some("early-semver")
