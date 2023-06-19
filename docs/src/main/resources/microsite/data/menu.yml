@@ -26,3 +26,6 @@ options:
   - title: upickle
     url: jwt-upickle.html
     menu_section: upickle
+
+  - title: ZIO Json
+    url: jwt-zio-json.html
