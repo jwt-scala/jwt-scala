@@ -29,3 +29,4 @@ options:
 
   - title: ZIO Json
     url: jwt-zio-json.html
+    menu_section: zio
