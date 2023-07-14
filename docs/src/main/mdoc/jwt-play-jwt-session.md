@@ -1,6 +1,6 @@
 ---
 layout: docs
-title:  "Play"
+title: "Play"
 position: 60
 ---
 
@@ -64,11 +64,11 @@ If you have implicit `Reads` and/or `Writes`, you can access and/or add data dir
 
 ```scala mdoc
 // First, creating the implicits
-import play.api.libs.json.Json
+import play.api.libs.json._
 import pdi.jwt.JwtSession
 
 case class User(id: Long, name: String)
-implicit val formatUser = Json.format[User]
+implicit val formatUser: Format[User] = Json.format[User]
 
 // Next, adding it to a new session
 val session2 = JwtSession() + ("user", User(42, "Paul"))
@@ -160,7 +160,6 @@ The secret key is used to secure cryptographics functions. We are using the same
 
 The PKCS8 format private key is used to sign JWT session. If `play.http.session.privateKey` is missing `play.http.secret.key` used instead.
 
-
 ### Public key
 
 `play.http.session.publicKey`
@@ -168,7 +167,6 @@ The PKCS8 format private key is used to sign JWT session. If `play.http.session.
 > Default: none
 
 The X.509 format public key is used to verify JWT session signed with private key `play.http.session.privateKey`
-
 
 ### Session timeout
 
@@ -203,7 +201,6 @@ You can change the name of the header in which the token should be stored. It wi
 > Default: none
 
 If you need to have a different header for request and response, you can override the response header using this key.
-
 
 ### Token prefix
 
