@@ -62,6 +62,7 @@ trait Fixture extends ClockFixture {
   // Bouncycastle is not included by default. Add it for each test.
   if (Security.getProvider("BC") == null) {
     Security.addProvider(new BouncyCastleProvider())
+    ()
   }
 
   val Ed25519 = "Ed25519"
