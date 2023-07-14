@@ -1,7 +1,6 @@
 import scala.io.Source
 import scala.sys.process._
 
-import Dependencies._
 import com.jsuereth.sbtpgp.PgpKeys._
 import microsites._
 import sbt.Keys._
@@ -10,6 +9,10 @@ import sbt._
 
 val previousVersion = "9.4.0"
 val buildVersion = "9.4.1"
+
+val scala212 = "2.12.15"
+val scala213 = "2.13.8"
+val scala3 = "3.3.0"
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 ThisBuild / versionScheme := Some("early-semver")
@@ -77,10 +80,6 @@ cleanScript := {
 
 lazy val docsMappingsAPIDir: SettingKey[String] =
   settingKey[String]("Name of subdirectory in site target directory for api docs")
-
-val scala212 = Source.fromFile("./versions/scala212").getLines.mkString
-val scala213 = Source.fromFile("./versions/scala213").getLines.mkString
-val scala3 = Source.fromFile("./versions/scala3").getLines.mkString
 
 val crossVersionAll = Seq(scala212, scala213, scala3)
 val crossVersion2Only = Seq(scala212, scala213)

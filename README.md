@@ -1,7 +1,5 @@
 # JWT Scala
 
-[![codecov](https://codecov.io/gh/jwt-scala/jwt-scala/branch/master/graph/badge.svg?token=q5p4MAH3YS)](https://codecov.io/gh/jwt-scala/jwt-scala)
-
 Scala support for JSON Web Token ([JWT](http://tools.ietf.org/html/draft-ietf-oauth-json-web-token)).
 Supports Java 8+, Scala 2.12, Scala 2.13 and Scala 3 (for json libraries that support it).
 Dependency free.
@@ -22,20 +20,20 @@ If you are using `String` key, please keep in mind that such keys need to be par
 
 Check [ECDSA samples](https://jwt-scala.github.io/jwt-scala/jwt-core-jwt-ecdsa.html) for more infos.
 
-|Name|Description|
-|----|-----------|
-|HMD5|HMAC using MD5 algorithm|
-|HS224|HMAC using SHA-224 algorithm|
-|HS256|HMAC using SHA-256 algorithm|
-|HS384|HMAC using SHA-384 algorithm|
-|HS512|HMAC using SHA-512 algorithm|
-|RS256|RSASSA using SHA-256 algorithm|
-|RS384|RSASSA using SHA-384 algorithm|
-|RS512|RSASSA using SHA-512 algorithm|
-|ES256|ECDSA using SHA-256 algorithm|
-|ES384|ECDSA using SHA-384 algorithm|
-|ES512|ECDSA using SHA-512 algorithm|
-|EdDSA|EdDSA signature algorithms|
+| Name  | Description                    |
+| ----- | ------------------------------ |
+| HMD5  | HMAC using MD5 algorithm       |
+| HS224 | HMAC using SHA-224 algorithm   |
+| HS256 | HMAC using SHA-256 algorithm   |
+| HS384 | HMAC using SHA-384 algorithm   |
+| HS512 | HMAC using SHA-512 algorithm   |
+| RS256 | RSASSA using SHA-256 algorithm |
+| RS384 | RSASSA using SHA-384 algorithm |
+| RS512 | RSASSA using SHA-512 algorithm |
+| ES256 | ECDSA using SHA-256 algorithm  |
+| ES384 | ECDSA using SHA-384 algorithm  |
+| ES512 | ECDSA using SHA-512 algorithm  |
+| EdDSA | EdDSA signature algorithms     |
 
 ## Security concerns
 
