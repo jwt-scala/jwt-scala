@@ -11,8 +11,10 @@ object JwtClaim {
       expiration: Option[Long] = None,
       notBefore: Option[Long] = None,
       issuedAt: Option[Long] = None,
-      jwtId: Option[String] = None
-  ) = new JwtClaim(content, issuer, subject, audience, expiration, notBefore, issuedAt, jwtId)
+      jwtId: Option[String] = None,
+      scope: Option[Set[String]] = None
+  ) =
+    new JwtClaim(content, issuer, subject, audience, expiration, notBefore, issuedAt, jwtId, scope)
 }
 
 class JwtClaim(
@@ -23,7 +25,8 @@ class JwtClaim(
     val expiration: Option[Long],
     val notBefore: Option[Long],
     val issuedAt: Option[Long],
-    val jwtId: Option[String]
+    val jwtId: Option[String],
+    val scope: Option[Set[String]]
 ) {
 
   def toJson: String = JwtUtils.mergeJson(
@@ -35,7 +38,8 @@ class JwtClaim(
         "exp" -> expiration,
         "nbf" -> notBefore,
         "iat" -> issuedAt,
-        "jti" -> jwtId
+        "jti" -> jwtId,
+        "scope" -> scope.map(set => if (set.size == 1) set.head else set)
       ).collect { case (key, Some(value)) =>
         key -> value
       }
@@ -52,7 +56,8 @@ class JwtClaim(
       expiration,
       notBefore,
       issuedAt,
-      jwtId
+      jwtId,
+      scope
     )
   }
 
@@ -65,7 +70,8 @@ class JwtClaim(
       expiration,
       notBefore,
       issuedAt,
-      jwtId
+      jwtId,
+      scope
     )
   }
 
@@ -81,17 +87,28 @@ class JwtClaim(
       expiration,
       notBefore,
       issuedAt,
-      jwtId
+      jwtId,
+      scope
     )
   }
 
   def by(issuer: String): JwtClaim = {
-    JwtClaim(content, Option(issuer), subject, audience, expiration, notBefore, issuedAt, jwtId)
+    JwtClaim(
+      content,
+      Option(issuer),
+      subject,
+      audience,
+      expiration,
+      notBefore,
+      issuedAt,
+      jwtId,
+      scope
+    )
   }
 
   // content should be a valid stringified JSON
   def withContent(content: String): JwtClaim = {
-    JwtClaim(content, issuer, subject, audience, expiration, notBefore, issuedAt, jwtId)
+    JwtClaim(content, issuer, subject, audience, expiration, notBefore, issuedAt, jwtId, scope)
   }
 
   def to(audience: String): JwtClaim = {
@@ -103,24 +120,59 @@ class JwtClaim(
       expiration,
       notBefore,
       issuedAt,
-      jwtId
+      jwtId,
+      scope
     )
   }
 
   def to(audience: Set[String]): JwtClaim = {
-    JwtClaim(content, issuer, subject, Option(audience), expiration, notBefore, issuedAt, jwtId)
+    JwtClaim(
+      content,
+      issuer,
+      subject,
+      Option(audience),
+      expiration,
+      notBefore,
+      issuedAt,
+      jwtId,
+      scope
+    )
   }
 
   def about(subject: String): JwtClaim = {
-    JwtClaim(content, issuer, Option(subject), audience, expiration, notBefore, issuedAt, jwtId)
+    JwtClaim(
+      content,
+      issuer,
+      Option(subject),
+      audience,
+      expiration,
+      notBefore,
+      issuedAt,
+      jwtId,
+      scope
+    )
   }
 
   def withId(id: String): JwtClaim = {
-    JwtClaim(content, issuer, subject, audience, expiration, notBefore, issuedAt, Option(id))
+    JwtClaim(content, issuer, subject, audience, expiration, notBefore, issuedAt, Option(id), scope)
+  }
+
+  def withScope(scope: Set[String]): JwtClaim = {
+    JwtClaim(
+      content,
+      issuer,
+      subject,
+      audience,
+      expiration,
+      notBefore,
+      issuedAt,
+      jwtId,
+      Option(scope)
+    )
   }
 
   def expiresAt(seconds: Long): JwtClaim =
-    JwtClaim(content, issuer, subject, audience, Option(seconds), notBefore, issuedAt, jwtId)
+    JwtClaim(content, issuer, subject, audience, Option(seconds), notBefore, issuedAt, jwtId, scope)
 
   def expiresIn(seconds: Long)(implicit clock: Clock): JwtClaim = expiresAt(
     JwtTime.nowSeconds + seconds
@@ -129,7 +181,17 @@ class JwtClaim(
   def expiresNow(implicit clock: Clock): JwtClaim = expiresAt(JwtTime.nowSeconds)
 
   def startsAt(seconds: Long): JwtClaim =
-    JwtClaim(content, issuer, subject, audience, expiration, Option(seconds), issuedAt, jwtId)
+    JwtClaim(
+      content,
+      issuer,
+      subject,
+      audience,
+      expiration,
+      Option(seconds),
+      issuedAt,
+      jwtId,
+      scope
+    )
 
   def startsIn(seconds: Long)(implicit clock: Clock): JwtClaim = startsAt(
     JwtTime.nowSeconds + seconds
@@ -138,7 +200,17 @@ class JwtClaim(
   def startsNow(implicit clock: Clock): JwtClaim = startsAt(JwtTime.nowSeconds)
 
   def issuedAt(seconds: Long): JwtClaim =
-    JwtClaim(content, issuer, subject, audience, expiration, notBefore, Option(seconds), jwtId)
+    JwtClaim(
+      content,
+      issuer,
+      subject,
+      audience,
+      expiration,
+      notBefore,
+      Option(seconds),
+      jwtId,
+      scope
+    )
 
   def issuedIn(seconds: Long)(implicit clock: Clock): JwtClaim = issuedAt(
     JwtTime.nowSeconds + seconds
@@ -168,15 +240,17 @@ class JwtClaim(
       expiration == that.expiration &&
       notBefore == that.notBefore &&
       issuedAt == that.issuedAt &&
-      jwtId == that.jwtId
+      jwtId == that.jwtId &&
+      scope == that.scope
     case _ => false
   }
 
   override def hashCode(): Int = {
-    val state = Seq(content, issuer, subject, audience, expiration, notBefore, issuedAt, jwtId)
+    val state =
+      Seq(content, issuer, subject, audience, expiration, notBefore, issuedAt, jwtId, scope)
     state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
   }
 
   override def toString: String =
-    s"JwtClaim($content, $issuer, $subject, $audience, $expiration, $notBefore, $issuedAt, $jwtId)"
+    s"JwtClaim($content, $issuer, $subject, $audience, $expiration, $notBefore, $issuedAt, $jwtId, $scope)"
 }

@@ -33,6 +33,9 @@ claim = claim.about("Something")
 // Set the id
 claim = claim.withId("42")
 
+// Set the scope
+claim = claim.withScope(Set("email", "profile"))
+
 // Set the expiration
 // In 10 seconds from now
 claim = claim.expiresIn(5)

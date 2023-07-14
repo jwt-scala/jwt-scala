@@ -31,7 +31,7 @@ trait JwtUpickleImplicits {
         json match {
           case obj: ujson.Obj =>
             val fieldMap = obj.value.toMap
-            val content = fieldMap -- Seq("iss", "sub", "aud", "exp", "nbf", "iat", "jti")
+            val content = fieldMap -- Seq("iss", "sub", "aud", "exp", "nbf", "iat", "jti", "scope")
             JwtClaim(
               content = write(content),
               issuer = fieldMap.get("iss").map(_.str.toString()),
@@ -44,7 +44,12 @@ trait JwtUpickleImplicits {
               expiration = fieldMap.get("exp").map(_.num.toLong),
               notBefore = fieldMap.get("nbf").map(_.num.toLong),
               issuedAt = fieldMap.get("iat").map(_.num.toLong),
-              jwtId = fieldMap.get("jti").map(_.str.toString())
+              jwtId = fieldMap.get("jti").map(_.str.toString()),
+              scope = fieldMap.get("scope").map {
+                case ujson.Arr(arr) => arr.map(_.str.toString()).toSet
+                case ujson.Str(s)   => Set(s.toString)
+                case _              => throw new JwtNonStringSetOrStringException("scope")
+              }
             )
           case _ => throw new RuntimeException("Expected a ujson.Obj")
         }

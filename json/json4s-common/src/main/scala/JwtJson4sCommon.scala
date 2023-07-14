@@ -26,7 +26,8 @@ trait JwtJson4sCommon[H, C] extends JwtJsonCommon[JObject, H, C] {
         notBefore = extractLong(value, "nbf"),
         issuedAt = extractLong(value, "iat"),
         jwtId = extractString(value, "jti"),
-        content = stringify(filterClaimFields(value))
+        content = stringify(filterClaimFields(value)),
+        scope = extractStringSetOrString(value, "scope")
       )
     case _ => throw new RuntimeException("Expected a JObject")
   }
@@ -80,14 +81,15 @@ trait JwtJson4sCommon[H, C] extends JwtJsonCommon[JObject, H, C] {
     }
 
   protected def filterClaimFields(json: JObject): JObject = json.removeField {
-    case JField("iss", _) => true
-    case JField("sub", _) => true
-    case JField("aud", _) => true
-    case JField("exp", _) => true
-    case JField("nbf", _) => true
-    case JField("iat", _) => true
-    case JField("jti", _) => true
-    case _                => false
+    case JField("iss", _)   => true
+    case JField("sub", _)   => true
+    case JField("aud", _)   => true
+    case JField("exp", _)   => true
+    case JField("nbf", _)   => true
+    case JField("iat", _)   => true
+    case JField("jti", _)   => true
+    case JField("scope", _) => true
+    case _                  => false
   } match {
     case res: JObject => res
     case _ =>

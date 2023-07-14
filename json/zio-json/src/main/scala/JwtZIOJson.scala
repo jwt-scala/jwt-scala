@@ -43,7 +43,7 @@ class JwtZIOJson(override val clock: Clock) extends JwtZIOJsonParser[JwtHeader, 
 
   private def parseClaimHelp(claim: String): JwtClaim = {
     val json = parse(claim)
-    val keys = Set("iss", "sub", "aud", "exp", "nbf", "iat", "jti")
+    val keys = Set("iss", "sub", "aud", "exp", "nbf", "iat", "jti", "scope")
     val content =
       json
         .as[Json.Obj]
@@ -51,12 +51,8 @@ class JwtZIOJson(override val clock: Clock) extends JwtZIOJsonParser[JwtHeader, 
         .map(tuples => Json.Obj(tuples))
         .getOrElse(Json.Obj())
 
-    val audience =
-      json
-        .get(field("aud"))
-        .flatMap(_.as[Set[String]])
-        .toOption
-        .orElse(json.get(field("aud")).flatMap(_.as[String]).map(s => Set(s)).toOption)
+    val audience = parseSetString(json, "aud")
+    val scope = parseSetString(json, "scope")
 
     JwtClaim(
       content = content.toJson,
@@ -66,8 +62,15 @@ class JwtZIOJson(override val clock: Clock) extends JwtZIOJsonParser[JwtHeader, 
       expiration = json.get(field("exp").isNumber).toOption.map(_.value.longValue()),
       notBefore = json.get(field("nbf").isNumber).toOption.map(_.value.longValue()),
       issuedAt = json.get(field("iat").isNumber).toOption.map(_.value.longValue()),
-      jwtId = json.get(field("jti").isString).toOption.map(_.value)
+      jwtId = json.get(field("jti").isString).toOption.map(_.value),
+      scope = scope
     )
   }
+
+  private def parseSetString(json: Json, fieldName: String): Option[Set[String]] = json
+    .get(field(fieldName))
+    .flatMap(_.as[Set[String]])
+    .toOption
+    .orElse(json.get(field(fieldName)).flatMap(_.as[String]).map(s => Set(s)).toOption)
 
 }

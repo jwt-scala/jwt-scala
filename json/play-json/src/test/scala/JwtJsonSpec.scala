@@ -50,6 +50,7 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
       JwtClaim(audience = Some(Set("you", "another")))
         .by("me")
         .about("something")
+        .withScope(Set("email", "profile"))
         .issuedAt(10)
         .startsAt(10)
         .expiresAt(15)
@@ -58,6 +59,7 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
         ("iss" -> "me"),
         ("aud" -> Set("you", "another")),
         ("sub" -> "something"),
+        ("scope" -> Set("email", "profile")),
         ("exp" -> 15),
         ("nbf" -> 10),
         ("iat" -> 10)
