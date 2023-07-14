@@ -1,6 +1,16 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
 env:
   SCALA212: 2.12.15
-  SCALA213: 2.13.8
+  SCALA213: 2.13.11
   SCALA3: 3.3.0
 
 jobs:
@@ -85,6 +95,7 @@ jobs:
           - zioJson
   tests:
     runs-on: ubuntu-latest
+    name: Tests ${{ matrix.project }} (${{ matrix.scala }})
     steps:
       - uses: "actions/checkout@v2"
       - name: Setup Java and Scala
@@ -129,11 +140,3 @@ jobs:
           - $SCALA212
           - $SCALA213
           - $SCALA3
-name: CI
-on:
-  pull_request:
-    branches:
-      - master
-  push:
-    branches:
-      - master
