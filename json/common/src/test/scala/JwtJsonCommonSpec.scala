@@ -1,10 +1,12 @@
 package pdi.jwt
 
 import java.time.Clock
+import scala.annotation.nowarn
 import scala.util.Success
 
 import pdi.jwt.exceptions.*
 
+@nowarn
 abstract class JwtJsonCommonSpec[J] extends munit.FunSuite with JsonCommonFixture[J] {
   import JwtJsonCommonSpec.JwtJsonUnderTest
 

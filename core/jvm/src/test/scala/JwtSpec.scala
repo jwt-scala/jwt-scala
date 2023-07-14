@@ -1,11 +1,13 @@
 package pdi.jwt
 
+import scala.annotation.nowarn
 import scala.util.Success
 import scala.util.Try
 
 import pdi.jwt.algorithms.*
 import pdi.jwt.exceptions.*
 
+@nowarn
 class JwtSpec extends munit.FunSuite with Fixture {
   val afterExpirationJwt: Jwt = Jwt(afterExpirationClock)
   val beforeNotBeforeJwt: Jwt = Jwt(beforeNotBeforeClock)
