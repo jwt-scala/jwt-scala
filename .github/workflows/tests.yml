@@ -1,3 +1,8 @@
+env:
+  SCALA212: 2.12.15
+  SCALA213: 2.13.8
+  SCALA3: 3.3.0
+
 jobs:
   linting:
     runs-on: ubuntu-latest
@@ -103,9 +108,9 @@ jobs:
       matrix:
         exclude:
           - project: playJson
-            scala: 3.3.0
+            scala: $SCALA3
           - project: playFramework
-            scala: 3.3.0
+            scala: $SCALA3
         project:
           - coreJVM
           - coreJS
@@ -121,9 +126,9 @@ jobs:
           - argonaut
           - zioJson
         scala:
-          - 2.12.15
-          - 2.13.8
-          - 3.3.0
+          - $SCALA212
+          - $SCALA213
+          - $SCALA3
 name: CI
 on:
   pull_request:
