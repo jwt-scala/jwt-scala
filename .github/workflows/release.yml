@@ -3,10 +3,6 @@ on:
   push:
     branches: [master, main]
     tags: ["*"]
-env:
-  SCALA212: 2.12.15
-  SCALA213: 2.13.11
-  SCALA3: 3.3.0
 jobs:
   publish:
     runs-on: ubuntu-20.04
@@ -19,34 +15,9 @@ jobs:
           distribution: temurin
           java-version: 8
           cache: sbt
-      - run: sbt "++${{ matrix.scala }}; project ${{ matrix.project }}; ci-release"
+      - run: sbt ci-release
         env:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-    strategy:
-      matrix:
-        exclude:
-          - project: playJson
-            scala: $SCALA3
-          - project: playFramework
-            scala: $SCALA3
-        project:
-          - coreJVM
-          - coreJS
-          - coreNative
-          - playJson
-          - playFramework
-          - circeJVM
-          - circeJS
-          - circeNative
-          - upickle
-          - json4sNative
-          - json4sJackson
-          - argonaut
-          - zioJson
-        scala:
-          - $SCALA212
-          - $SCALA213
-          - $SCALA3
