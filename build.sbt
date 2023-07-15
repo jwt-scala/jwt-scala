@@ -17,6 +17,9 @@ val scala3 = "3.3.0"
 Global / onChangedBuildSource := ReloadOnSourceChanges
 ThisBuild / versionScheme := Some("early-semver")
 
+ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org"
+sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
+
 val projects = Seq(
   "playJson",
   "json4sNative",
@@ -63,16 +66,6 @@ scaladocScript := {
   "./scripts/scaladoc.sh " + buildVersion !
 }
 
-lazy val bumpScript = taskKey[Unit]("Bump the new version all around")
-bumpScript := {
-  "./scripts/bump.sh " + previousVersion + " " + buildVersion !
-}
-
-lazy val pushScript = taskKey[Unit]("Push to GitHub")
-pushScript := {
-  "./scripts/pu.sh " + buildVersion !
-}
-
 lazy val cleanScript = taskKey[Unit]("Clean tmp files")
 cleanScript := {
   "./scripts/clean.sh" !
@@ -86,7 +79,6 @@ val crossVersion2Only = Seq(scala212, scala213)
 
 val baseSettings = Seq(
   organization := "com.github.jwt-scala",
-  version := buildVersion,
   ThisBuild / scalaVersion := scala213,
   crossScalaVersions := crossVersionAll,
   autoAPIMappings := true,
@@ -110,17 +102,8 @@ val baseSettings = Seq(
 val publishSettings = Seq(
   homepage := Some(url("https://jwt-scala.github.io/jwt-scala/")),
   apiURL := Some(url("https://jwt-scala.github.io/jwt-scala/api/")),
-  publishMavenStyle := true,
   Test / publishArtifact := false,
   licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0")),
-  sonatypeCredentialHost := "s01.oss.sonatype.org",
-  publishTo := {
-    val nexus = "https://s01.oss.sonatype.org/"
-    if (isSnapshot.value)
-      Some("snapshots".at(nexus + "content/repositories/snapshots"))
-    else
-      Some("releases".at(nexus + "service/local/staging/deploy/maven2"))
-  },
   pomIncludeRepository := { _ => false },
   scmInfo := Some(
     ScmInfo(
