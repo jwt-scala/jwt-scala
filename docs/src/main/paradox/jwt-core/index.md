@@ -15,7 +15,13 @@ It is based a naive parsing of Json strings, and doesn't support any custom para
 
 - [API Documentation](https://jwt-scala.github.io/jwt-scala/api/pdi/jwt/Jwt$.html)
 
-{% include_relative _install.md artifact="jwt-core" %}
+@@@vars
+
+```scala
+libraryDependencies += "com.github.jwt-scala" %% "jwt-core" % "$project.version$"
+```
+
+@@@
 
 ### Basic usage
 

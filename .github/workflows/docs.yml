@@ -2,6 +2,9 @@ name: Docs
 on:
   push:
     branches: [master, main]
+concurrency:
+  group: docs
+
 jobs:
   publish:
     runs-on: ubuntu-20.04
