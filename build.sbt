@@ -20,14 +20,14 @@ val projects = Seq(
   "playJson",
   "json4sNative",
   "json4sJackson",
-  "upickle",
   "zioJson",
   "argonaut",
   "playFramework"
 )
 val crossProjects = Seq(
   "core",
-  "circe"
+  "circe",
+  "upickle"
 )
 val allProjects = crossProjects.flatMap(p => Seq(s"${p}JVM", s"${p}JS", s"${p}Native")) ++ projects
 
@@ -38,11 +38,6 @@ addCommandAlias("testAll", allProjects.map(p => p + "/test").mkString(";", ";", 
 addCommandAlias("format", "all scalafmtAll scalafmtSbt")
 
 addCommandAlias("formatCheck", "all scalafmtCheckAll scalafmtSbtCheck")
-
-lazy val scaladocScript = taskKey[Unit]("Generate scaladoc and copy it to docs site")
-scaladocScript := {
-  "./scripts/scaladoc.sh " + buildVersion !
-}
 
 lazy val cleanScript = taskKey[Unit]("Clean tmp files")
 cleanScript := {
@@ -139,7 +134,9 @@ lazy val jwtScala = project
     circe.jvm,
     circe.js,
     circe.native,
-    upickle,
+    upickle.jvm,
+    upickle.js,
+    upickle.native,
     zioJson,
     playFramework,
     argonaut
@@ -150,7 +147,9 @@ lazy val jwtScala = project
     circe.jvm,
     circe.js,
     circe.native,
-    upickle,
+    upickle.jvm,
+    upickle.js,
+    upickle.native,
     zioJson,
     playFramework,
     argonaut
@@ -179,7 +178,7 @@ lazy val docs = project
       core.jvm,
       circe.jvm,
       json4sNative,
-      upickle,
+      upickle.jvm,
       zioJson,
       playJson,
       playFramework,
@@ -193,7 +192,7 @@ lazy val docs = project
     )),
     packageSite / artifactPath := new java.io.File("target/artifact.zip")
   )
-  .dependsOn(playFramework, json4sNative, circe.jvm, upickle, zioJson, argonaut)
+  .dependsOn(playFramework, json4sNative, circe.jvm, upickle.jvm, zioJson, argonaut)
 
 lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Full)
@@ -254,15 +253,18 @@ lazy val circe = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .aggregate(jsonCommon)
   .dependsOn(jsonCommon % "compile->compile;test->test")
 
-lazy val upickle = project
+lazy val upickle = crossProject(JSPlatform, JVMPlatform, NativePlatform)
+  .crossType(CrossType.Full)
   .in(file("json/upickle"))
   .settings(releaseSettings)
   .settings(
     name := "jwt-upickle",
-    libraryDependencies ++= Seq(Libs.upickle)
+    libraryDependencies ++= Seq(Libs.upickle.value)
   )
-  .aggregate(jsonCommon.jvm)
-  .dependsOn(jsonCommon.jvm % "compile->compile;test->test")
+  .jsSettings(commonJsSettings)
+  .nativeSettings(Test / fork := false)
+  .aggregate(jsonCommon)
+  .dependsOn(jsonCommon % "compile->compile;test->test")
 
 lazy val zioJson = project
   .in(file("json/zio-json"))

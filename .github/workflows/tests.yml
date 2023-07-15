@@ -56,7 +56,9 @@ jobs:
           - circeJVM
           - circeJS
           - circeNative
-          - upickle
+          - upickleJVM
+          - upickleJS
+          - upickleNative
           - json4sNative
           - json4sJackson
           - argonaut
@@ -89,7 +91,9 @@ jobs:
           - circeJVM
           - circeJS
           - circeNative
-          - upickle
+          - upickleJVM
+          - upickleJS
+          - upickleNative
           - json4sNative
           - json4sJackson
           - argonaut

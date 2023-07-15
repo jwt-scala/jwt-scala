@@ -1,5 +1,8 @@
 package pdi.jwt.docs
 
+import scala.annotation.nowarn
+
+@nowarn
 object JwtPlayJwtSessionDoc {
   // #example
   import java.time.Clock

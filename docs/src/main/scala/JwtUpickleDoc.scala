@@ -1,5 +1,8 @@
 package pdi.jwt.docs
 
+import scala.annotation.nowarn
+
+@nowarn
 object JwtUpickleDoc {
   // #example
   import java.time.Instant
@@ -22,6 +25,7 @@ object JwtUpickleDoc {
   // #encoding
 }
 
+@nowarn
 object UpickleEncode {
   import java.time.Instant
 
@@ -40,6 +44,7 @@ object UpickleEncode {
   // #encoding
 }
 
+@nowarn
 object UpickleDecode {
   // #decoding
   import java.time.Instant
