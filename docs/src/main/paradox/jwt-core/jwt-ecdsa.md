@@ -1,8 +1,3 @@
----
-layout: docs
-title:  "ECDSA"
----
-
 ## Jwt with ECDSA algorithms
 
 ### With generated keys

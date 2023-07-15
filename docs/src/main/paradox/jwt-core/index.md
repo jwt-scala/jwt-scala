@@ -1,14 +1,17 @@
----
-layout: docs
-title:  "Native"
-position: 10
----
+@@@ index
+
+- [Claim](jwt-claim.md)
+- [Claim Private](jwt-claim-private.md)
+- [Header](jwt-header.md)
+- [ECDSA](jwt-ecdsa.md)
+
+@@@
 
 This module doesn't use any dependency, it is useful if you don't have any Json library in your project.
 
 It is based a naive parsing of Json strings, and doesn't support any custom parameter in the Claim so if you need any custom parameter, or if you're already using one of the supported Json libraries, consider using that instead.
 
-## Jwt object
+## Native
 
 - [API Documentation](https://jwt-scala.github.io/jwt-scala/api/pdi/jwt/Jwt$.html)
 

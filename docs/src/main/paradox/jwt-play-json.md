@@ -1,14 +1,14 @@
----
-layout: docs
-title:  "Play Json"
-position: 50
----
-
-## JwtJson Object
+## Play Json
 
 - [API Documentation](https://jwt-scala.github.io/jwt-scala/api/pdi/jwt/JwtJson$.html)
 
-{% include_relative _install.md artifact="jwt-play-json" %}
+@@@vars
+
+```scala
+libraryDependencies += "com.github.jwt-scala" %% "jwt-play-json" % "$project.version$"
+```
+
+@@@
 
 ### Basic usage
 

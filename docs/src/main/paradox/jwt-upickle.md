@@ -1,14 +1,14 @@
----
-layout: docs
-title:  "upickle"
-position: 80
----
-
-## JwtUpickle Object
+## upickle
 
 - [API Documentation](https://jwt-scala.github.io/jwt-scala/api/pdi/jwt/JwtUpickle$.html)
 
-{% include_relative _install.md artifact="jwt-upickle" %}
+@@@vars
+
+```scala
+libraryDependencies += "com.github.jwt-scala" %% "jwt-upickle" % "$project.version$"
+```
+
+@@@
 
 ### Basic usage
 

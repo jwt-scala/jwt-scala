@@ -1,14 +1,14 @@
----
-layout: docs
-title:  "Json4s"
-position: 40
----
-
-## JwtJson4s Object
+## Json4s
 
 - [API Documentation](https://jwt-scala.github.io/jwt-scala/api/pdi/jwt/JwtJson4s$.html)
 
-{% include_relative _install.md artifact="jwt-json4s-native" %}
+@@@vars
+
+```scala
+libraryDependencies += "com.github.jwt-scala" %% "jwt-json4s" % "$project.version$"
+```
+
+@@@
 
 ### Basic usage
 
