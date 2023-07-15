@@ -1,5 +1,8 @@
 package pdi.jwt.docs
 
+import scala.annotation.nowarn
+
+@nowarn
 object JwtZioDoc {
   // #example
   import java.time.Instant
@@ -20,6 +23,7 @@ object JwtZioDoc {
   // #example
 }
 
+@nowarn
 object ZioEncoding {
   // #encoding
   import java.time.Instant
@@ -45,6 +49,7 @@ object ZioEncoding {
   // #encoding
 }
 
+@nowarn
 object ZioDecoding {
   // #decoding
   import java.time.Instant
