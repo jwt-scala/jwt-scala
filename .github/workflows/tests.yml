@@ -52,8 +52,8 @@ jobs:
             ~/.cache/coursier/v1
             ~/AppData/Local/Coursier/Cache/v1
             ~/Library/Caches/Coursier/v1
-      - name: Check the mdoc documentation
-        run: sbt docs/mdoc
+      - name: Check the documentation
+        run: sbt docs/compile
   mima:
     runs-on: ubuntu-latest
     steps:

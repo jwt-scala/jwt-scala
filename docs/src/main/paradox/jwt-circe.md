@@ -1,14 +1,14 @@
----
-layout: docs
-title:  "Circe"
-position: 30
----
-
-## JwtCirce Object
+## Circe
 
 - [API Documentation](https://jwt-scala.github.io/jwt-scala/api/pdi/jwt/JwtCirce$.html)
 
-{% include_relative _install.md artifact="jwt-circe" %}
+@@@vars
+
+```scala
+libraryDependencies += "com.github.jwt-scala" %% "jwt-circe" % "$project.version$"
+```
+
+@@@
 
 ### Basic usage
 

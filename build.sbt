@@ -2,7 +2,6 @@ import scala.io.Source
 import scala.sys.process._
 
 import com.jsuereth.sbtpgp.PgpKeys._
-import microsites._
 import sbt.Keys._
 import sbt.Tests._
 import sbt._
@@ -128,64 +127,6 @@ val releaseSettings = baseSettings ++ publishSettings
 // Local non-published projects
 val localSettings = baseSettings ++ noPublishSettings
 
-val docSettings = Seq(
-  micrositeName := "JWT Scala",
-  micrositeDescription := "JWT Scala",
-  micrositeAuthor := "JWT Scala contributors",
-  micrositeFooterText := Some(
-    """
-      |<p>© 2020 <a href="https://github.com/jwt-scala/jwt-scala">The JWT Scala Maintainers</a></p>
-      |<p style="font-size: 80%; margin-top: 10px">Website built with <a href="https://47deg.github.io/sbt-microsites/">sbt-microsites © 2020 47 Degrees</a></p>
-      |""".stripMargin
-  ),
-  micrositeHomepage := "https://jwt-scala.github.io/jwt-scala/",
-  micrositeBaseUrl := "jwt-scala",
-  micrositeDocumentationUrl := "/jwt-scala/api/index.html",
-  micrositeGitterChannel := false,
-  micrositeDocumentationLabelDescription := "API Documentation",
-  micrositeExtraMdFilesOutput := resourceManaged.value / "main" / "jekyll",
-  micrositeExtraMdFiles := Map(
-    file("README.md") -> ExtraMdFileConfig(
-      "index.md",
-      "home",
-      Map("title" -> "Home", "section" -> "home", "position" -> "0")
-    )
-  ),
-  micrositeGithubRepo := "jwt-scala",
-  micrositeSearchEnabled := false,
-  ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(
-    core.jvm,
-    playJson,
-    playFramework,
-    json4sNative,
-    circe.jvm,
-    upickle,
-    zioJson,
-    argonaut
-  ),
-  ScalaUnidoc / docsMappingsAPIDir := "api",
-  addMappingsToSiteDir(ScalaUnidoc / packageDoc / mappings, ScalaUnidoc / docsMappingsAPIDir),
-  autoAPIMappings := true,
-  ghpagesNoJekyll := false,
-  ScalaUnidoc / unidoc / scalacOptions ++= Seq(
-    "-Xfatal-warnings",
-    "-groups",
-    "-doc-source-url",
-    scmInfo.value.get.browseUrl + "/tree/main€{FILE_PATH}.scala",
-    "-sourcepath",
-    (LocalRootProject / baseDirectory).value.getAbsolutePath,
-    "-diagrams"
-  ),
-  scalacOptions ~= (_.filterNot(
-    Set("-Ywarn-unused-import", "-Ywarn-unused:imports", "-Ywarn-dead-code", "-Xfatal-warnings")
-  )),
-  git.remoteRepo := "git@github.com:jwt-scala/jwt-scala.git",
-  makeSite / includeFilter := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.yml" | "*.md" | "*.svg",
-  Jekyll / includeFilter := (makeSite / includeFilter).value,
-  mdocIn := (LocalRootProject / baseDirectory).value / "docs" / "src" / "main" / "mdoc",
-  mdocExtraArguments := Seq("--no-link-hygiene")
-)
-
 lazy val jwtScala = project
   .in(file("."))
   .settings(localSettings)
@@ -218,27 +159,23 @@ lazy val jwtScala = project
 
 lazy val docs = project
   .in(file("docs"))
-  .enablePlugins(PreprocessPlugin)
-  .enablePlugins(GhpagesPlugin)
-  .enablePlugins(MicrositesPlugin)
-  .enablePlugins(ScalaUnidocPlugin)
+  .enablePlugins(
+    SitePreviewPlugin,
+    SiteScaladocPlugin,
+    ParadoxSitePlugin,
+    ParadoxMaterialThemePlugin
+  )
   .settings(name := "jwt-docs")
   .settings(localSettings)
-  .settings(docSettings)
   .settings(
-    libraryDependencies ++= Seq(
-      Libs.bouncyCastleTut,
-      Libs.playJson,
-      Libs.play,
-      Libs.playTestProvided,
-      Libs.json4sNative,
-      Libs.circeCore.value,
-      Libs.circeGeneric.value,
-      Libs.circeParse.value,
-      Libs.upickle,
-      Libs.zioJson,
-      Libs.argonaut
-    )
+//    SiteScaladocPlugin
+//      .scaladocSettings(ZinkConfig, zink / Compile / packageDoc / mappings, "api/jwt-scala"),
+    baseSettings,
+    publishArtifact := false,
+    Compile / paradoxMaterialTheme ~= (_.withRepository(
+      uri("https://github.com/jwt-scala/jwt-scala")
+    )),
+    packageSite / artifactPath := new java.io.File("target/artifact.zip")
   )
   .dependsOn(playFramework, json4sNative, circe.jvm, upickle, zioJson, argonaut)
 

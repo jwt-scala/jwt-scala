@@ -1,14 +1,14 @@
----
-layout: docs
-title:  "zio-json"
-position: 80
----
-
-## JwtZIOJson Object
+## ZIO Json
 
 - [API Documentation](https://jwt-scala.github.io/jwt-scala/api/pdi/jwt/JwtZioJson$.html)
 
-{% include_relative _install.md artifact="jwt-zio-json" %}
+@@@vars
+
+```scala
+libraryDependencies += "com.github.jwt-scala" %% "jwt-zio-json" % "$project.version$"
+```
+
+@@@
 
 ### Basic usage
 
