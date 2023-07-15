@@ -49,7 +49,7 @@ class JwtUtilsSpec extends munit.ScalaCheckSuite with Fixture {
     )
 
     values.zipWithIndex.foreach { case (value, index) =>
-      assertEquals(value._1, JwtUtils.mergeJson(value._2, value._3: _*), "at index " + index)
+      assertEquals(value._1, JwtUtils.mergeJson((value._2 +: value._3): _*), "at index " + index)
     }
   }
 

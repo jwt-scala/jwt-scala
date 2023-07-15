@@ -53,7 +53,8 @@ object Libs {
   val circeJawn = Def.setting("io.circe" %%% "circe-jawn" % Versions.circe)
   val circeParse = Def.setting("io.circe" %%% "circe-parser" % Versions.circe)
 
-  val upickle = "com.lihaoyi" %% "upickle" % Versions.upickle
+  val ujson = Def.setting("com.lihaoyi" %%% "ujson" % Versions.upickle)
+  val upickle = Def.setting("com.lihaoyi" %%% "upickle" % Versions.upickle)
 
   val zioJson = "dev.zio" %% "zio-json" % Versions.zioJson
 

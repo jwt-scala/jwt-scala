@@ -9,6 +9,7 @@ import scala.annotation.nowarn
 import pdi.jwt.JwtAlgorithm.{ES256, ES384, ES512}
 import pdi.jwt.algorithms.*
 import pdi.jwt.exceptions.{JwtNonSupportedAlgorithm, JwtSignatureFormatException}
+import ujson.Value
 
 object JwtUtils {
   val ENCODING = "UTF-8"
@@ -77,17 +78,16 @@ object JwtUtils {
 
   /** Merge multiple JSON strings to a unique one
     */
-  def mergeJson(json: String, jsonSeq: String*): String = {
-    val initJson = json.trim match {
-      case ""    => ""
-      case value => value.drop(1).dropRight(1)
-    }
+  def mergeJson(jsonSeq: String*): String = {
+    val pairs: Iterator[(String, Value)] = jsonSeq
+      .map { jsonStr =>
+        ujson.read(jsonStr).obj.iterator
+      }
+      .reduce { (acc, pairs) =>
+        acc ++ pairs
+      }
 
-    "{" + jsonSeq.map(_.trim).fold(initJson) {
-      case (j1, result) if j1.length < 5 => result.drop(1).dropRight(1)
-      case (result, j2) if j2.length < 7 => result
-      case (j1, j2)                      => j1 + "," + j2.drop(1).dropRight(1)
-    } + "}"
+    ujson.write(ujson.Obj.from(pairs))
   }
 
   private def parseKey(key: String): Array[Byte] = JwtBase64.decodeNonSafe(
