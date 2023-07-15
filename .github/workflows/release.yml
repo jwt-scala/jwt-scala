@@ -19,7 +19,7 @@ jobs:
           distribution: temurin
           java-version: 8
           cache: sbt
-      - run: sbt ++${{ matrix.scala }} ${{ matrix.project }}/ci-release
+      - run: sbt "++${{ matrix.scala }}; project ${{ matrix.project }}; ci-release"
         env:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
           PGP_SECRET: ${{ secrets.PGP_SECRET }}

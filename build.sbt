@@ -17,9 +17,6 @@ val scala3 = "3.3.0"
 Global / onChangedBuildSource := ReloadOnSourceChanges
 ThisBuild / versionScheme := Some("early-semver")
 
-ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org"
-sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
-
 val projects = Seq(
   "playJson",
   "json4sNative",
@@ -42,24 +39,6 @@ addCommandAlias("testAll", allProjects.map(p => p + "/test").mkString(";", ";", 
 addCommandAlias("format", "all scalafmtAll scalafmtSbt")
 
 addCommandAlias("formatCheck", "all scalafmtCheckAll scalafmtSbtCheck")
-
-// ";+coreProject/publishSigned"
-// ";+playJsonProject/publishSigned"
-// ";+json4sNativeProject/publishSigned"
-// ";+json4sJacksonProject/publishSigned"
-// ";+circeProject/publishSigned"
-// ";+upickleProject/publishSigned"
-// ";+argonautProject/publishSigned"
-// ";+playProject/publishSigned"
-addCommandAlias(
-  "publishAll",
-  allProjects.map(p => "+" + p + "/publishSigned").mkString(";", ";", "")
-)
-
-addCommandAlias(
-  "releaseAll",
-  ";bumpScript;publish-doc;publishAll;sonatypeRelease;pushScript"
-)
 
 lazy val scaladocScript = taskKey[Unit]("Generate scaladoc and copy it to docs site")
 scaladocScript := {
@@ -100,6 +79,8 @@ val baseSettings = Seq(
 )
 
 val publishSettings = Seq(
+  ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org",
+  sonatypeRepository := "https://s01.oss.sonatype.org/service/local",
   homepage := Some(url("https://jwt-scala.github.io/jwt-scala/")),
   apiURL := Some(url("https://jwt-scala.github.io/jwt-scala/api/")),
   Test / publishArtifact := false,
