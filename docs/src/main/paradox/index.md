@@ -10,7 +10,6 @@
 - [Play Framework](jwt-play-jwt-session.md)
 - [upickle](jwt-upickle.md)
 - [ZIO Json](jwt-zio-json.md)
-- [API Documentation](/api)
 
 @@@
 
