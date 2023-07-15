@@ -12,39 +12,12 @@ libraryDependencies += "com.github.jwt-scala" %% "jwt-json4s" % "$project.versio
 
 ### Basic usage
 
-```scala mdoc
-import pdi.jwt.{JwtJson4s, JwtAlgorithm}, org.json4s._, org.json4s.JsonDSL.WithBigDecimal._
-
-val claim = JObject(("user", 1), ("nbf", 1431520421))
-val key = "secretKey"
-val algo = JwtAlgorithm.HS256
-
-JwtJson4s.encode(claim)
-
-val token = JwtJson4s.encode(claim, key, algo)
-
-JwtJson4s.decodeJson(token, key, Seq(JwtAlgorithm.HS256))
-
-JwtJson4s.decode(token, key, Seq(JwtAlgorithm.HS256))
-```
+@@snip [JwtJson4sDoc.scala](/docs/src/main/scala/JwtJson4sDoc.scala) { #example }
 
 ### Encoding
 
-```scala mdoc
-val header = JObject(("typ", "JWT"), ("alg", "HS256"))
-
-JwtJson4s.encode(claim)
-JwtJson4s.encode(claim, key, algo)
-JwtJson4s.encode(header, claim, key)
-```
+@@snip [JwtJson4sDoc.scala](/docs/src/main/scala/JwtJson4sDoc.scala) { #encode }
 
 ### Decoding
 
-```scala mdoc
-// You can decode to JsObject
-JwtJson4s.decodeJson(token, key, Seq(JwtAlgorithm.HS256))
-JwtJson4s.decodeJsonAll(token, key, Seq(JwtAlgorithm.HS256))
-// Or to case classes
-JwtJson4s.decode(token, key, Seq(JwtAlgorithm.HS256))
-JwtJson4s.decodeAll(token, key, Seq(JwtAlgorithm.HS256))
-```
+@@snip [JwtJson4sDoc.scala](/docs/src/main/scala/JwtJson4sDoc.scala) { #decode }
