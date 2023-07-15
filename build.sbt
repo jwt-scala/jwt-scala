@@ -39,11 +39,6 @@ addCommandAlias("format", "all scalafmtAll scalafmtSbt")
 
 addCommandAlias("formatCheck", "all scalafmtCheckAll scalafmtSbtCheck")
 
-lazy val scaladocScript = taskKey[Unit]("Generate scaladoc and copy it to docs site")
-scaladocScript := {
-  "./scripts/scaladoc.sh " + buildVersion !
-}
-
 lazy val cleanScript = taskKey[Unit]("Clean tmp files")
 cleanScript := {
   "./scripts/clean.sh" !
