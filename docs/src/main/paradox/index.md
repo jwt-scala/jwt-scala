@@ -10,6 +10,7 @@
 - [Play Framework](jwt-play-jwt-session.md)
 - [upickle](jwt-upickle.md)
 - [ZIO Json](jwt-zio-json.md)
+- [API Documentation](/api)
 
 @@@
 
@@ -17,8 +18,6 @@ Scala support for JSON Web Token ([JWT](http://tools.ietf.org/html/draft-ietf-oa
 Supports Java 8+, Scala 2.12, Scala 2.13 and Scala 3 (for json libraries that support it).
 Dependency free.
 Optional helpers for Play Framework, Play JSON, Json4s Native, Json4s Jackson, Circe, uPickle and Argonaut.
-
-[Contributor's guide](https://github.com/jwt-scala/jwt-scala/blob/main/CONTRIBUTING.md)
 
 ## Usage
 

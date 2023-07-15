@@ -16,7 +16,19 @@ jobs:
           distribution: temurin
           java-version: 11
           cache: sbt
-      - name: Build site
-        run: sbt docs/makeMicrosite
-      - name: Publish site
-        run: sbt docs/publishMicrosite
+      - name: "Get latest tag"
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+      - name: Build
+        run: sbt 'set docs/version := "${{ steps.previoustag.outputs.tag }}".drop(1)' docs/makeSite
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+      - name: Deploy
+        run: |
+          git checkout --orphan gh-pages
+          git add -f docs/target/site
+          git commit -m "Rebuild GitHub pages"
+          git filter-branch -f --prune-empty --subdirectory-filter docs/target/site
+          git push -f origin gh-pages
