@@ -2,6 +2,8 @@ package pdi.jwt
 
 import java.time.Clock
 
+import pdi.jwt.exceptions._
+
 object JwtClaim {
   def apply(
       content: String = "{}",
@@ -12,11 +14,23 @@ object JwtClaim {
       notBefore: Option[Long] = None,
       issuedAt: Option[Long] = None,
       jwtId: Option[String] = None
-  ) = new JwtClaim(content, issuer, subject, audience, expiration, notBefore, issuedAt, jwtId)
+  ) = new JwtClaim(
+    ujson.read(content) match {
+      case obj: ujson.Obj => obj
+      case _              => throw new JwtInvalidJsonException()
+    },
+    issuer,
+    subject,
+    audience,
+    expiration,
+    notBefore,
+    issuedAt,
+    jwtId
+  )
 }
 
 class JwtClaim(
-    val content: String,
+    val content: ujson.Obj,
     val issuer: Option[String],
     val subject: Option[String],
     val audience: Option[Set[String]],
@@ -26,28 +40,25 @@ class JwtClaim(
     val jwtId: Option[String]
 ) {
 
-  def toJson: String = JwtUtils.mergeJson(
-    ujson.write(
-      ujson.Obj.from(
-        Seq(
-          "iss" -> issuer.map(ujson.Str),
-          "sub" -> subject.map(ujson.Str),
-          "aud" -> audience.map(set => if (set.size == 1) ujson.Str(set.head) else ujson.Arr(set)),
-          "exp" -> expiration.map(e => ujson.Num(e.toDouble)),
-          "nbf" -> notBefore.map(nbf => ujson.Num(nbf.toDouble)),
-          "iat" -> issuedAt.map(e => ujson.Num(e.toDouble)),
-          "jti" -> jwtId.map(ujson.Str)
-        ).collect { case (key, Some(value)) =>
-          key -> value
-        }
-      )
-    ),
-    content
+  def toJson: String = ujson.write(
+    ujson.Obj.from(
+      content.value ++ Seq(
+        "iss" -> issuer.map(ujson.Str),
+        "sub" -> subject.map(ujson.Str),
+        "aud" -> audience.map(set => if (set.size == 1) ujson.Str(set.head) else ujson.Arr(set)),
+        "exp" -> expiration.map(e => ujson.Num(e.toDouble)),
+        "nbf" -> notBefore.map(nbf => ujson.Num(nbf.toDouble)),
+        "iat" -> issuedAt.map(e => ujson.Num(e.toDouble)),
+        "jti" -> jwtId.map(ujson.Str)
+      ).collect { case (key, Some(value)) =>
+        key -> value
+      }
+    )
   )
 
   def +(json: String): JwtClaim = {
-    JwtClaim(
-      JwtUtils.mergeJson(this.content, json),
+    new JwtClaim(
+      ujson.Obj.from(this.content.value ++ ujson.read(json).obj),
       issuer,
       subject,
       audience,
@@ -60,7 +71,7 @@ class JwtClaim(
 
   def +(key: String, value: Any): JwtClaim = {
     JwtClaim(
-      JwtUtils.mergeJson(this.content, JwtUtils.hashToJson(Seq(key -> value))),
+      JwtUtils.mergeJson(ujson.write(this.content), JwtUtils.hashToJson(Seq(key -> value))),
       issuer,
       subject,
       audience,
@@ -76,7 +87,7 @@ class JwtClaim(
   // there is no way to serialize them to JSON out of the box.
   def ++[T <: Any](fields: (String, T)*): JwtClaim = {
     JwtClaim(
-      JwtUtils.mergeJson(this.content, JwtUtils.hashToJson(fields)),
+      JwtUtils.mergeJson(ujson.write(this.content), JwtUtils.hashToJson(fields)),
       issuer,
       subject,
       audience,
@@ -88,7 +99,7 @@ class JwtClaim(
   }
 
   def by(issuer: String): JwtClaim = {
-    JwtClaim(content, Option(issuer), subject, audience, expiration, notBefore, issuedAt, jwtId)
+    new JwtClaim(content, Option(issuer), subject, audience, expiration, notBefore, issuedAt, jwtId)
   }
 
   // content should be a valid stringified JSON
@@ -97,7 +108,7 @@ class JwtClaim(
   }
 
   def to(audience: String): JwtClaim = {
-    JwtClaim(
+    new JwtClaim(
       content,
       issuer,
       subject,
@@ -110,19 +121,19 @@ class JwtClaim(
   }
 
   def to(audience: Set[String]): JwtClaim = {
-    JwtClaim(content, issuer, subject, Option(audience), expiration, notBefore, issuedAt, jwtId)
+    new JwtClaim(content, issuer, subject, Option(audience), expiration, notBefore, issuedAt, jwtId)
   }
 
   def about(subject: String): JwtClaim = {
-    JwtClaim(content, issuer, Option(subject), audience, expiration, notBefore, issuedAt, jwtId)
+    new JwtClaim(content, issuer, Option(subject), audience, expiration, notBefore, issuedAt, jwtId)
   }
 
   def withId(id: String): JwtClaim = {
-    JwtClaim(content, issuer, subject, audience, expiration, notBefore, issuedAt, Option(id))
+    new JwtClaim(content, issuer, subject, audience, expiration, notBefore, issuedAt, Option(id))
   }
 
   def expiresAt(seconds: Long): JwtClaim =
-    JwtClaim(content, issuer, subject, audience, Option(seconds), notBefore, issuedAt, jwtId)
+    new JwtClaim(content, issuer, subject, audience, Option(seconds), notBefore, issuedAt, jwtId)
 
   def expiresIn(seconds: Long)(implicit clock: Clock): JwtClaim = expiresAt(
     JwtTime.nowSeconds + seconds
@@ -131,7 +142,7 @@ class JwtClaim(
   def expiresNow(implicit clock: Clock): JwtClaim = expiresAt(JwtTime.nowSeconds)
 
   def startsAt(seconds: Long): JwtClaim =
-    JwtClaim(content, issuer, subject, audience, expiration, Option(seconds), issuedAt, jwtId)
+    new JwtClaim(content, issuer, subject, audience, expiration, Option(seconds), issuedAt, jwtId)
 
   def startsIn(seconds: Long)(implicit clock: Clock): JwtClaim = startsAt(
     JwtTime.nowSeconds + seconds
@@ -140,7 +151,7 @@ class JwtClaim(
   def startsNow(implicit clock: Clock): JwtClaim = startsAt(JwtTime.nowSeconds)
 
   def issuedAt(seconds: Long): JwtClaim =
-    JwtClaim(content, issuer, subject, audience, expiration, notBefore, Option(seconds), jwtId)
+    new JwtClaim(content, issuer, subject, audience, expiration, notBefore, Option(seconds), jwtId)
 
   def issuedIn(seconds: Long)(implicit clock: Clock): JwtClaim = issuedAt(
     JwtTime.nowSeconds + seconds

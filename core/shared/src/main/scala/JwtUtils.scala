@@ -37,6 +37,20 @@ object JwtUtils {
 
   private def escape(value: String): String = value.replaceAll("\"", "\\\\\"")
 
+  private[jwt] def anyToJson(v: Any): ujson.Value = v match {
+    case value: String        => ujson.Str(value)
+    case value: Boolean       => ujson.Bool(value)
+    case value: Double        => ujson.Num(value)
+    case value: Short         => ujson.Num(value.toDouble)
+    case value: Float         => ujson.Num(value.toDouble)
+    case value: Long          => ujson.Num(value.toDouble)
+    case value: Int           => ujson.Num(value.toDouble)
+    case value: BigDecimal    => ujson.Num(value.toDouble)
+    case value: BigInt        => ujson.Num(value.toDouble)
+    case (key: String, value) => hashToJson(Seq(key -> value))
+    case value: Any           => "\"" + escape(value.toString) + "\""
+  }
+
   /** Convert a sequence to a JSON array
     */
   def seqToJson(seq: Seq[Any]): String = seq

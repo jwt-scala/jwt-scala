@@ -10,6 +10,8 @@ class JwtValidationException(message: String) extends JwtException(message)
 
 class JwtSignatureFormatException(message: String) extends JwtException(message)
 
+class JwtInvalidJsonException() extends JwtException("Json is invalid or of invalid type")
+
 class JwtEmptySignatureException()
     extends JwtException(
       "No signature found inside the token while trying to verify it with a key."
