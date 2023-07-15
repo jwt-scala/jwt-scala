@@ -200,9 +200,14 @@ lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .settings(releaseSettings)
   .settings(
     name := "jwt-core",
-    libraryDependencies ++= Seq(Libs.bouncyCastle, Libs.upickle),
+    libraryDependencies += Libs.bouncyCastle,
+    libraryDependencies += Libs.upickle.value,
     shadedModules += "com.lihaoyi" %% "upickle",
-    shadingRules += ShadingRule.moveUnder("com.lihaoyi", "pdi.upickle")
+    shadingRules ++= Seq(
+      ShadingRule.moveUnder("upickle", "pdi.shaded"),
+      ShadingRule.moveUnder("ujson", "pdi.shaded"),
+      ShadingRule.moveUnder("upack", "pdi.shaded")
+    )
   )
   .jsSettings(commonJsSettings)
   .jsSettings(
