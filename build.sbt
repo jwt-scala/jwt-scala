@@ -171,7 +171,7 @@ val docSettings = Seq(
     "-Xfatal-warnings",
     "-groups",
     "-doc-source-url",
-    scmInfo.value.get.browseUrl + "/tree/master€{FILE_PATH}.scala",
+    scmInfo.value.get.browseUrl + "/tree/main€{FILE_PATH}.scala",
     "-sourcepath",
     (LocalRootProject / baseDirectory).value.getAbsolutePath,
     "-diagrams"

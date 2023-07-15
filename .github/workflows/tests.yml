@@ -2,11 +2,9 @@ name: CI
 
 on:
   pull_request:
-    branches:
-      - master
+    branches: [master, main]
   push:
-    branches:
-      - master
+    branches: [master, main]
 
 env:
   SCALA212: 2.12.15

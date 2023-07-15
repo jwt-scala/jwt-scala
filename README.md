@@ -5,7 +5,7 @@ Supports Java 8+, Scala 2.12, Scala 2.13 and Scala 3 (for json libraries that su
 Dependency free.
 Optional helpers for Play Framework, Play JSON, Json4s Native, Json4s Jackson, Circe, uPickle and Argonaut.
 
-[Contributor's guide](https://github.com/jwt-scala/jwt-scala/blob/master/CONTRIBUTING.md)
+[Contributor's guide](https://github.com/jwt-scala/jwt-scala/blob/main/CONTRIBUTING.md)
 
 ## Usage
 
