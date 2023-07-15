@@ -16,6 +16,8 @@ object Versions {
 
   val playJson = "2.9.4"
 
+  val jackson = "2.15.2"
+
   val json4s = "4.0.6"
 
   val circe = "0.14.5"

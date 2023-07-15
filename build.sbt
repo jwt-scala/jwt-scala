@@ -244,8 +244,14 @@ lazy val docs = project
 
 lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Full)
+  .enablePlugins(ShadingPlugin)
   .settings(releaseSettings)
-  .settings(name := "jwt-core", libraryDependencies ++= Seq(Libs.bouncyCastle))
+  .settings(
+    name := "jwt-core",
+    libraryDependencies ++= Seq(Libs.bouncyCastle, Libs.upickle),
+    shadedModules += "com.lihaoyi" %% "upickle",
+    shadingRules += ShadingRule.moveUnder("com.lihaoyi", "pdi.upickle")
+  )
   .jsSettings(commonJsSettings)
   .jsSettings(
     libraryDependencies ++= Seq(
