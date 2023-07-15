@@ -12,60 +12,12 @@ libraryDependencies += "com.github.jwt-scala" %% "jwt-circe" % "$project.version
 
 ### Basic usage
 
-```scala mdoc:reset
-import java.time.Instant
-import pdi.jwt.{JwtCirce, JwtAlgorithm, JwtClaim}
-
-val claim = JwtClaim(
-    expiration = Some(Instant.now.plusSeconds(157784760).getEpochSecond)
-  , issuedAt = Some(Instant.now.getEpochSecond)
-)
-val key = "secretKey"
-val algo = JwtAlgorithm.HS256
-
-val token = JwtCirce.encode(claim, key, algo)
-
-JwtCirce.decodeJson(token, key, Seq(JwtAlgorithm.HS256))
-JwtCirce.decode(token, key, Seq(JwtAlgorithm.HS256))
-```
+@@snip [JwtCirceDoc.scala](/docs/src/main/scala/JwtCirceDoc.scala) { #example }
 
 ### Encoding
 
-```scala mdoc:reset
-import java.time.Instant
-import io.circe._, jawn.{parse => jawnParse}
-import pdi.jwt.{JwtCirce, JwtAlgorithm}
-
-val key = "secretKey"
-val algo = JwtAlgorithm.HS256
-
-val Right(claimJson) = jawnParse(s"""{"expires":${Instant.now.getEpochSecond}}""")
-val Right(header) = jawnParse( """{"typ":"JWT","alg":"HS256"}""")
-// From just the claim to all possible attributes
-JwtCirce.encode(claimJson)
-JwtCirce.encode(claimJson, key, algo)
-JwtCirce.encode(header, claimJson, key)
-```
+@@snip [JwtCirceDoc.scala](/docs/src/main/scala/JwtCirceDoc.scala) { #encoding }
 
 ### Decoding
 
-```scala mdoc:reset
-import java.time.Instant
-import pdi.jwt.{JwtCirce, JwtAlgorithm, JwtClaim}
-
-val claim = JwtClaim(
-    expiration = Some(Instant.now.plusSeconds(157784760).getEpochSecond)
-  , issuedAt = Some(Instant.now.getEpochSecond)
-)
-val key = "secretKey"
-val algo = JwtAlgorithm.HS256
-
-val token = JwtCirce.encode(claim, key, algo)
-
-// You can decode to JsObject
-JwtCirce.decodeJson(token, key, Seq(JwtAlgorithm.HS256))
-JwtCirce.decodeJsonAll(token, key, Seq(JwtAlgorithm.HS256))
-// Or to case classes
-JwtCirce.decode(token, key, Seq(JwtAlgorithm.HS256))
-JwtCirce.decodeAll(token, key, Seq(JwtAlgorithm.HS256))
-```
+@@snip [JwtCirceDoc.scala](/docs/src/main/scala/JwtCirceDoc.scala) { #decoding }
