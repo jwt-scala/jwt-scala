@@ -177,10 +177,14 @@ lazy val docs = project
     ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(
       core.jvm,
       circe.jvm,
+      json4sNative,
+      json4sJackson,
       upickle,
       zioJson,
+      playJson,
       playFramework,
-      argonaut
+      argonaut,
+      zioJson
     ),
     baseSettings,
     publishArtifact := false,
