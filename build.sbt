@@ -162,14 +162,26 @@ lazy val docs = project
   .enablePlugins(
     SitePreviewPlugin,
     SiteScaladocPlugin,
+    ScalaUnidocPlugin,
     ParadoxSitePlugin,
     ParadoxMaterialThemePlugin
   )
   .settings(name := "jwt-docs")
   .settings(localSettings)
   .settings(
-//    SiteScaladocPlugin
-//      .scaladocSettings(ZinkConfig, zink / Compile / packageDoc / mappings, "api/jwt-scala"),
+    ScalaUnidoc / siteSubdirName := "api",
+    addMappingsToSiteDir(
+      ScalaUnidoc / packageDoc / mappings,
+      ScalaUnidoc / siteSubdirName
+    ),
+    ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(
+      core.jvm,
+      circe.jvm,
+      upickle,
+      zioJson,
+      playFramework,
+      argonaut
+    ),
     baseSettings,
     publishArtifact := false,
     Compile / paradoxMaterialTheme ~= (_.withRepository(
