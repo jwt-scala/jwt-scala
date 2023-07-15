@@ -15,64 +15,34 @@ jobs:
   linting:
     runs-on: ubuntu-latest
     steps:
-      - uses: "actions/checkout@v2"
-      - name: Setup Java and Scala
-        uses: "olafurpg/setup-scala@v10"
+      - uses: "actions/checkout@v3"
+      - uses: actions/setup-java@v3
         with:
-          java-version: "adopt@1.8"
-      - name: Cache sbt
-        uses: "actions/cache@v2"
-        with:
-          key: "${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}"
-          path: |
-            ~/.sbt
-            ~/.ivy2/cache
-            ~/.coursier/cache/v1
-            ~/.cache/coursier/v1
-            ~/AppData/Local/Coursier/Cache/v1
-            ~/Library/Caches/Coursier/v1
+          distribution: temurin
+          java-version: 11
+          cache: sbt
       - name: Checking code formatting
         run: sbt formatCheck
-  mdoc:
+  docs-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: "actions/checkout@v2"
-      - name: Setup Java and Scala
-        uses: "olafurpg/setup-scala@v10"
+      - uses: "actions/checkout@v3"
+      - uses: actions/setup-java@v3
         with:
-          java-version: "adopt@1.8"
-      - name: Cache sbt
-        uses: "actions/cache@v2"
-        with:
-          key: "${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}"
-          path: |
-            ~/.sbt
-            ~/.ivy2/cache
-            ~/.coursier/cache/v1
-            ~/.cache/coursier/v1
-            ~/AppData/Local/Coursier/Cache/v1
-            ~/Library/Caches/Coursier/v1
+          distribution: temurin
+          java-version: 11
+          cache: sbt
       - name: Check the documentation
-        run: sbt docs/compile
+        run: sbt docs/makeSite
   mima:
     runs-on: ubuntu-latest
     steps:
-      - uses: "actions/checkout@v2"
-      - name: Setup Java and Scala
-        uses: "olafurpg/setup-scala@v10"
+      - uses: "actions/checkout@v3"
+      - uses: actions/setup-java@v3
         with:
-          java-version: "adopt@1.8"
-      - name: Cache sbt
-        uses: "actions/cache@v2"
-        with:
-          key: "${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}"
-          path: |
-            ~/.sbt
-            ~/.ivy2/cache
-            ~/.coursier/cache/v1
-            ~/.cache/coursier/v1
-            ~/AppData/Local/Coursier/Cache/v1
-            ~/Library/Caches/Coursier/v1
+          distribution: temurin
+          java-version: 11
+          cache: sbt
       - name: Report binary issues
         run: "sbt ${{ matrix.project }}/mimaReportBinaryIssues"
     strategy:
@@ -95,22 +65,12 @@ jobs:
     runs-on: ubuntu-latest
     name: Tests ${{ matrix.project }} (${{ matrix.scala }})
     steps:
-      - uses: "actions/checkout@v2"
-      - name: Setup Java and Scala
-        uses: "olafurpg/setup-scala@v10"
+      - uses: "actions/checkout@v3"
+      - uses: actions/setup-java@v3
         with:
-          java-version: "adopt@1.8"
-      - name: Cache sbt
-        uses: "actions/cache@v2"
-        with:
-          key: "${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}"
-          path: |
-            ~/.sbt
-            ~/.ivy2/cache
-            ~/.coursier/cache/v1
-            ~/.cache/coursier/v1
-            ~/AppData/Local/Coursier/Cache/v1
-            ~/Library/Caches/Coursier/v1
+          distribution: temurin
+          java-version: 11
+          cache: sbt
       - name: Test
         run: "sbt ++${{ matrix.scala }} ${{ matrix.project }}/test"
     strategy:

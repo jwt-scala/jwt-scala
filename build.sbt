@@ -178,7 +178,6 @@ lazy val docs = project
       core.jvm,
       circe.jvm,
       json4sNative,
-      json4sJackson,
       upickle,
       zioJson,
       playJson,
