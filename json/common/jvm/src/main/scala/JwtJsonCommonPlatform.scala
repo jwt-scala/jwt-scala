@@ -5,9 +5,18 @@ import javax.crypto.SecretKey
 import scala.util.Try
 
 import pdi.jwt.algorithms.*
-import pdi.jwt.exceptions.JwtValidationException
+import pdi.jwt.exceptions.{JwtEmptyAlgorithmException, JwtValidationException}
 
 trait JwtJsonCommonPlatform[J, H, C] extends JwtCore[H, C] { self: JwtJsonCommon[J, H, C] =>
+
+  def encode(header: J, claim: J, key: String): String = getAlgorithm(header) match {
+    case Some(algo: JwtAlgorithm) => encode(stringify(header), stringify(claim), key, algo)
+    case _                        => throw new JwtEmptyAlgorithmException()
+  }
+
+  def encode(claim: J, key: String, algorithm: JwtAlgorithm): String =
+    encode(stringify(claim), key, algorithm)
+
   def encode(header: J, claim: J, key: Key): String = (getAlgorithm(header), key) match {
     case (Some(algo: JwtHmacAlgorithm), k: SecretKey) =>
       encode(stringify(header), stringify(claim), k, algo)
@@ -24,6 +33,40 @@ trait JwtJsonCommonPlatform[J, H, C] extends JwtCore[H, C] { self: JwtJsonCommon
 
   def encode(claim: J, key: PrivateKey, algorithm: JwtAsymmetricAlgorithm): String =
     encode(stringify(claim), key, algorithm)
+
+  def decodeJsonAll(
+      token: String,
+      key: String,
+      algorithms: Seq[JwtHmacAlgorithm],
+      options: JwtOptions
+  ): Try[(J, J, String)] =
+    decodeRawAll(token, key, algorithms, options).map { tuple =>
+      (parse(tuple._1), parse(tuple._2), tuple._3)
+    }
+
+  def decodeJsonAll(
+      token: String,
+      key: String,
+      algorithms: Seq[JwtHmacAlgorithm]
+  ): Try[(J, J, String)] =
+    decodeJsonAll(token, key, algorithms, JwtOptions.DEFAULT)
+
+  def decodeJsonAll(
+      token: String,
+      key: String,
+      algorithms: => Seq[JwtAsymmetricAlgorithm],
+      options: JwtOptions
+  ): Try[(J, J, String)] =
+    decodeRawAll(token, key, algorithms, options).map { tuple =>
+      (parse(tuple._1), parse(tuple._2), tuple._3)
+    }
+
+  def decodeJsonAll(
+      token: String,
+      key: String,
+      algorithms: => Seq[JwtAsymmetricAlgorithm]
+  ): Try[(J, J, String)] =
+    decodeJsonAll(token, key, algorithms, JwtOptions.DEFAULT)
 
   def decodeJsonAll(
       token: String,
@@ -70,6 +113,28 @@ trait JwtJsonCommonPlatform[J, H, C] extends JwtCore[H, C] { self: JwtJsonCommon
 
   def decodeJsonAll(token: String, key: PublicKey): Try[(J, J, String)] =
     decodeJsonAll(token, key, JwtOptions.DEFAULT)
+
+  def decodeJson(
+      token: String,
+      key: String,
+      algorithms: Seq[JwtHmacAlgorithm],
+      options: JwtOptions
+  ): Try[J] =
+    decodeJsonAll(token, key, algorithms, options).map(_._2)
+
+  def decodeJson(token: String, key: String, algorithms: Seq[JwtHmacAlgorithm]): Try[J] =
+    decodeJson(token, key, algorithms, JwtOptions.DEFAULT)
+
+  def decodeJson(
+      token: String,
+      key: String,
+      algorithms: => Seq[JwtAsymmetricAlgorithm],
+      options: JwtOptions
+  ): Try[J] =
+    decodeJsonAll(token, key, algorithms, options).map(_._2)
+
+  def decodeJson(token: String, key: String, algorithms: => Seq[JwtAsymmetricAlgorithm]): Try[J] =
+    decodeJson(token, key, algorithms, JwtOptions.DEFAULT)
 
   def decodeJson(
       token: String,
