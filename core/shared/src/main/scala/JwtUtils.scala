@@ -9,7 +9,6 @@ import scala.annotation.nowarn
 import pdi.jwt.JwtAlgorithm.{ES256, ES384, ES512}
 import pdi.jwt.algorithms.*
 import pdi.jwt.exceptions.{JwtNonSupportedAlgorithm, JwtSignatureFormatException}
-import ujson.Value
 
 object JwtUtils {
   val ENCODING = "UTF-8"
@@ -35,51 +34,52 @@ object JwtUtils {
     */
   def bytify(str: String): Array[Byte] = str.getBytes(ENCODING)
 
-  private def escape(value: String): String = value.replaceAll("\"", "\\\\\"")
+  def hashToJson(hash: Seq[(String, Any)]): String = ujson.write(hashToJsonInternal(hash))
 
   /** Convert a sequence to a JSON array
     */
-  def seqToJson(seq: Seq[Any]): String = seq
-    .map {
-      case value: String        => "\"" + escape(value) + "\""
-      case value: Boolean       => if (value) "true" else "false"
-      case value: Double        => value.toString
-      case value: Short         => value.toString
-      case value: Float         => value.toString
-      case value: Long          => value.toString
-      case value: Int           => value.toString
-      case value: BigDecimal    => value.toString
-      case value: BigInt        => value.toString
-      case (key: String, value) => hashToJson(Seq(key -> value))
-      case value: Any           => "\"" + escape(value.toString) + "\""
+  private def seqToJson(seq: Seq[Any]): ujson.Arr = {
+    val jsonArr: Seq[ujson.Value] = seq.map {
+      case value: String        => ujson.Str(value)
+      case value: Boolean       => ujson.Bool(value)
+      case value: Double        => ujson.Num(value)
+      case value: Short         => ujson.Num(value.toDouble)
+      case value: Float         => ujson.Num(value.toDouble)
+      case value: Long          => ujson.Num(value.toDouble)
+      case value: Int           => ujson.Num(value.toDouble)
+      case value: BigDecimal    => ujson.Num(value.toDouble)
+      case value: BigInt        => ujson.Num(value.toDouble)
+      case (key: String, value) => hashToJsonInternal(Seq(key -> value))
+      case value: Any           => ujson.Str(value.toString)
     }
-    .mkString("[", ",", "]")
+    ujson.Arr(jsonArr)
+  }
 
   /** Convert a sequence of tuples to a JSON object
     */
-  def hashToJson(hash: Seq[(String, Any)]): String = hash
-    .map {
-      case (key, value: String)     => "\"" + escape(key) + "\":\"" + escape(value) + "\""
-      case (key, value: Boolean)    => "\"" + escape(key) + "\":" + (if (value) "true" else "false")
-      case (key, value: Double)     => "\"" + escape(key) + "\":" + value.toString
-      case (key, value: Short)      => "\"" + escape(key) + "\":" + value.toString
-      case (key, value: Float)      => "\"" + escape(key) + "\":" + value.toString
-      case (key, value: Long)       => "\"" + escape(key) + "\":" + value.toString
-      case (key, value: Int)        => "\"" + escape(key) + "\":" + value.toString
-      case (key, value: BigDecimal) => "\"" + escape(key) + "\":" + value.toString
-      case (key, value: BigInt)     => "\"" + escape(key) + "\":" + value.toString
-      case (key, (vKey: String, vValue)) =>
-        "\"" + escape(key) + "\":" + hashToJson(Seq(vKey -> vValue))
-      case (key, value: Seq[Any]) => "\"" + escape(key) + "\":" + seqToJson(value)
-      case (key, value: Set[_])   => "\"" + escape(key) + "\":" + seqToJson(value.toSeq)
-      case (key, value: Any)      => "\"" + escape(key) + "\":\"" + escape(value.toString) + "\""
+  private def hashToJsonInternal(hash: Seq[(String, Any)]): ujson.Obj = {
+    val jsonHash: Seq[(String, ujson.Value)] = hash.map {
+      case (key, value: String)          => key -> ujson.Str(value)
+      case (key, value: Boolean)         => key -> ujson.Bool(value)
+      case (key, value: Double)          => key -> ujson.Num(value)
+      case (key, value: Short)           => key -> ujson.Num(value.toDouble)
+      case (key, value: Float)           => key -> ujson.Num(value.toDouble)
+      case (key, value: Long)            => key -> ujson.Num(value.toDouble)
+      case (key, value: Int)             => key -> ujson.Num(value.toDouble)
+      case (key, value: BigDecimal)      => key -> ujson.Num(value.toDouble)
+      case (key, value: BigInt)          => key -> ujson.Num(value.toDouble)
+      case (key, (vKey: String, vValue)) => key -> hashToJsonInternal(Seq(vKey -> vValue))
+      case (key, value: Seq[Any])        => key -> seqToJson(value)
+      case (key, value: Set[_])          => key -> seqToJson(value.toSeq)
+      case (key, value: Any)             => key -> ujson.Str(value.toString)
     }
-    .mkString("{", ",", "}")
+    ujson.Obj(upickle.core.LinkedHashMap(jsonHash))
+  }
 
   /** Merge multiple JSON strings to a unique one
     */
   def mergeJson(jsonSeq: String*): String = {
-    val pairs: Iterator[(String, Value)] = jsonSeq
+    val pairs: Iterator[(String, ujson.Value)] = jsonSeq
       .map { jsonStr =>
         ujson.read(jsonStr).obj.iterator
       }

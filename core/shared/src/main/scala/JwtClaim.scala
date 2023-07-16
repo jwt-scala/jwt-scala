@@ -30,13 +30,13 @@ class JwtClaim(
     ujson.write(
       ujson.Obj.from(
         Seq(
-          "iss" -> issuer.map(ujson.Str),
-          "sub" -> subject.map(ujson.Str),
+          "iss" -> issuer.map(ujson.Str.apply),
+          "sub" -> subject.map(ujson.Str.apply),
           "aud" -> audience.map(set => if (set.size == 1) ujson.Str(set.head) else ujson.Arr(set)),
           "exp" -> expiration.map(e => ujson.Num(e.toDouble)),
           "nbf" -> notBefore.map(nbf => ujson.Num(nbf.toDouble)),
           "iat" -> issuedAt.map(e => ujson.Num(e.toDouble)),
-          "jti" -> jwtId.map(ujson.Str)
+          "jti" -> jwtId.map(ujson.Str.apply)
         ).collect { case (key, Some(value)) =>
           key -> value
         }
