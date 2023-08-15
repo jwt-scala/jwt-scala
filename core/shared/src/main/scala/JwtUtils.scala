@@ -4,7 +4,6 @@ import java.security.spec.{PKCS8EncodedKeySpec, X509EncodedKeySpec}
 import java.security.{KeyFactory, PrivateKey, PublicKey, Signature}
 import javax.crypto.spec.SecretKeySpec
 import javax.crypto.{Mac, SecretKey}
-import scala.annotation.nowarn
 
 import pdi.jwt.JwtAlgorithm.{ES256, ES384, ES512}
 import pdi.jwt.algorithms.*
@@ -282,7 +281,6 @@ object JwtUtils {
     *   If the ECDSA JWS signature format is invalid.
     */
   @throws[JwtSignatureFormatException]
-  @nowarn
   def transcodeSignatureToDER(signature: Array[Byte]): Array[Byte] = {
     var (r, s) = signature.splitAt(signature.length / 2)
     r = r.dropWhile(_ == 0)
@@ -304,8 +302,8 @@ object JwtUtils {
       signatureDER += 0x81.toByte
 
     signatureDER += signatureLength.toByte
-    signatureDER += 2.toByte += r.length.toByte ++= r
-    signatureDER += 2.toByte += s.length.toByte ++= s
+    signatureDER ++= (Seq(2.toByte, r.length.toByte) ++ r)
+    signatureDER ++= (Seq(2.toByte, s.length.toByte) ++ s)
 
     signatureDER.toArray
   }
