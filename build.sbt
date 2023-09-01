@@ -213,7 +213,7 @@ lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   )
 
 lazy val jsonCommon = crossProject(JSPlatform, JVMPlatform, NativePlatform)
-  .crossType(CrossType.Pure)
+  .crossType(CrossType.Full)
   .in(file("json/common"))
   .settings(releaseSettings)
   .settings(
@@ -236,7 +236,7 @@ lazy val playJson = project
   .dependsOn(jsonCommon.jvm % "compile->compile;test->test")
 
 lazy val circe = crossProject(JSPlatform, JVMPlatform, NativePlatform)
-  .crossType(CrossType.Full)
+  .crossType(CrossType.Pure)
   .in(file("json/circe"))
   .settings(releaseSettings)
   .settings(

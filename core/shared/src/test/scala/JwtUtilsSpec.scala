@@ -1,8 +1,5 @@
 package pdi.jwt
 
-import java.security.spec.ECGenParameterSpec
-import java.security.{KeyPairGenerator, SecureRandom}
-
 import org.scalacheck.Gen
 import org.scalacheck.Prop.*
 import pdi.jwt.exceptions.JwtSignatureFormatException
@@ -11,17 +8,15 @@ case class TestObject(value: String) {
   override def toString(): String = this.value
 }
 
-class JwtUtilsSpec extends munit.ScalaCheckSuite with Fixture {
-  val ENCODING = JwtUtils.ENCODING
+class JwtUtilsSpec extends munit.ScalaCheckSuite with Fixture with JwtUtilsPlatformSpec {
 
   test("hashToJson should transform a seq of tuples to a valid JSON") {
     val values: Seq[(String, Seq[(String, Any)])] = Seq(
-      """{"a":"b","c":1,"d":true,"e":2,"f":3.4,"g":5.6}""" -> Seq(
+      """{"a":"b","c":1,"d":true,"e":2,"g":5.6}""" -> Seq(
         "a" -> "b",
         "c" -> 1,
         "d" -> true,
         "e" -> 2L,
-        "f" -> 3.4f,
         "g" -> 5.6
       ),
       "{}" -> Seq(),
@@ -124,30 +119,6 @@ class JwtUtilsSpec extends munit.ScalaCheckSuite with Fixture {
       JwtUtils.getSignatureByteArrayLength(JwtAlgorithm.ES512)
     )
     assertArrayEquals(signature, result)
-  }
-
-  test(
-    "transcodeSignatureToConcat and transcodeSignatureToDER should be symmetric for generated tokens"
-  ) {
-    val ecGenSpec = new ECGenParameterSpec(ecCurveName)
-    val generatorEC = KeyPairGenerator.getInstance(JwtUtils.ECDSA)
-    generatorEC.initialize(ecGenSpec, new SecureRandom())
-    val randomECKey = generatorEC.generateKeyPair()
-    val header = """{"typ":"JWT","alg":"ES512"}"""
-    val claim = """{"test":"t"}"""
-
-    val signature = Jwt(validTimeClock)
-      .encode(header, claim, randomECKey.getPrivate, JwtAlgorithm.ES512)
-      .split("\\.")(2)
-    assertEquals(
-      signature,
-      JwtUtils.stringify(
-        JwtUtils.transcodeSignatureToConcat(
-          JwtUtils.transcodeSignatureToDER(JwtUtils.bytify(signature)),
-          JwtUtils.getSignatureByteArrayLength(JwtAlgorithm.ES512)
-        )
-      )
-    )
   }
 
   test("splitString should do nothing") {
