@@ -1,7 +1,6 @@
 package pdi.jwt
 
 import java.time.Clock
-import scala.annotation.nowarn
 
 import io.circe.*
 import io.circe.jawn.{parse => jawnParse}
@@ -41,10 +40,7 @@ class JwtCirce(override val clock: Clock) extends JwtCirceParser[JwtHeader, JwtC
     )
   }
 
-  @nowarn // The cats import is necessary for 2.12 but not for 2.13, causing a warning
   private def parseClaimHelp(claim: String): JwtClaim = {
-    import cats.syntax.either.*
-
     val cursor = parse(claim).hcursor
     val contentCursor = List("iss", "sub", "aud", "exp", "nbf", "iat", "jti").foldLeft(cursor) {
       (cursor, field) =>
@@ -57,8 +53,10 @@ class JwtCirce(override val clock: Clock) extends JwtCirceParser[JwtHeader, JwtC
       content = contentCursor.top.asJson.noSpaces,
       issuer = cursor.get[String]("iss").toOption,
       subject = cursor.get[String]("sub").toOption,
-      audience =
-        cursor.get[Set[String]]("aud").orElse(cursor.get[String]("aud").map(s => Set(s))).toOption,
+      audience = cursor
+        .get[Set[String]]("aud")
+        .toOption
+        .orElse(cursor.get[String]("aud").map(s => Set(s)).toOption),
       expiration = cursor.get[Long]("exp").toOption,
       notBefore = cursor.get[Long]("nbf").toOption,
       issuedAt = cursor.get[Long]("iat").toOption,
