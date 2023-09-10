@@ -22,7 +22,7 @@ object Versions {
 
   val upickle = "3.1.2"
 
-  val zioJson = "0.6.1"
+  val zioJson = "0.6.2"
 
   val argonaut = "6.3.8"
 }
