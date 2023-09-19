@@ -12,7 +12,7 @@ class JwtJsonSpec extends JwtJsonCommonSpec[JsObject] with JsonFixture {
 
   import pdi.jwt.JwtJson.*
 
-  override def jwtJsonCommon(clock: Clock) = JwtJson(clock)
+  override def jwtJsonCommon(clock: Clock): JwtJson = JwtJson(clock)
 
   test("JwtJson should implicitly convert to JsValue") {
     assertEquals(

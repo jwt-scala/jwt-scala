@@ -8,7 +8,7 @@ import org.json4s.JsonDSL.*
 class JwtJson4sJacksonSpec extends JwtJsonCommonSpec[JObject] with Json4sJacksonFixture {
   import pdi.jwt.JwtJson4s.*
 
-  override def jwtJsonCommon(clock: Clock) = JwtJson4s(clock)
+  override def jwtJsonCommon(clock: Clock): JwtJson4s = JwtJson4s(clock)
 
   test("JwtJson should implicitly convert to JValue") {
     assertEquals(
