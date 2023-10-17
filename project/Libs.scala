@@ -24,7 +24,7 @@ object Versions {
 
   val zioJson = "0.6.2"
 
-  val argonaut = "6.3.8"
+  val argonaut = "6.3.9"
 }
 
 object Libs {
