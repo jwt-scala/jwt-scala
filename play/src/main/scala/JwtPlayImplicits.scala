@@ -136,7 +136,7 @@ trait JwtPlayImplicits {
 
     /** Remove some keys from the current [[JwtSession]] */
     def removingFromJwtSession(keys: String*)(implicit request: RequestHeader): Result = {
-      withJwtSession(jwtSession -- (keys: _*))
+      withJwtSession(jwtSession.--(keys: _*))
     }
   }
 

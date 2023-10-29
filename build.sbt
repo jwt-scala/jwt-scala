@@ -49,6 +49,7 @@ lazy val docsMappingsAPIDir: SettingKey[String] =
 
 val crossVersionAll = Seq(scala212, scala213, scala3)
 val crossVersion2Only = Seq(scala212, scala213)
+val crossVersionNo212 = Seq(scala213, scala3)
 
 val baseSettings = Seq(
   organization := "com.github.jwt-scala",
@@ -229,7 +230,6 @@ lazy val playJson = project
   .settings(releaseSettings)
   .settings(
     name := "jwt-play-json",
-    crossScalaVersions := crossVersion2Only,
     libraryDependencies ++= Seq(Libs.playJson)
   )
   .aggregate(jsonCommon.jvm)
@@ -326,7 +326,7 @@ lazy val playFramework = project
   .settings(releaseSettings)
   .settings(
     name := "jwt-play",
-    crossScalaVersions := crossVersion2Only,
+    crossScalaVersions := crossVersionNo212,
     libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.guice),
     Test / testGrouping := groupPlayTest(
       (Test / definedTests).value,

@@ -78,10 +78,8 @@ jobs:
     strategy:
       matrix:
         exclude:
-          - project: playJson
-            scala: $SCALA3
           - project: playFramework
-            scala: $SCALA3
+            scala: $SCALA212
         project:
           - coreJVM
           - coreJS
