@@ -31,6 +31,20 @@ class JwtSpec extends munit.FunSuite with Fixture {
     }
   }
 
+  test("should decode jti with dashes") {
+    val id = java.util.UUID.randomUUID().toString
+    Jwt.decode(validTimeJwt.encode(s"""{"jti":"$id"""")) match {
+      case Success(jwt) => assertEquals(jwt.jwtId, Option(id))
+      case _            => fail("failed decoding token")
+    }
+  }
+
+  test("should decode issuer with dashes") {
+    Jwt.decode(validTimeJwt.encode(s"""{"iss":"das-_hed"""")) match {
+      case Success(jwt) => assertEquals(jwt.issuer, Option("das-_hed"))
+      case _            => fail("failed decoding token")
+    }
+  }
   test("should encode Hmac") {
     data.foreach { d => battleTestEncode(d, secretKey, validTimeJwt) }
   }
