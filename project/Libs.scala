@@ -12,7 +12,7 @@ object Versions {
 
   val scalajsSecureRandom = "1.0.0"
 
-  val play = "2.9.0"
+  val play = "3.0.0"
 
   val playJson = "2.10.2"
 
@@ -36,10 +36,10 @@ object Libs {
     )
   )
 
-  val play = "com.typesafe.play" %% "play" % Versions.play
+  val play = "org.playframework" %% "play" % Versions.play
   val playJson = "com.typesafe.play" %% "play-json" % Versions.playJson
-  val playTest = "com.typesafe.play" %% "play-test" % Versions.play % Test
-  val playTestProvided = "com.typesafe.play" %% "play-test" % Versions.play
+  val playTest = "org.playframework" %% "play-test" % Versions.play % Test
+  val playTestProvided = "org.playframework" %% "play-test" % Versions.play
   val guice = "com.google.inject" % "guice" % Versions.guice % "test"
 
   val json4sCore = "org.json4s" %% "json4s-core" % Versions.json4s
