@@ -48,7 +48,6 @@ lazy val docsMappingsAPIDir: SettingKey[String] =
   settingKey[String]("Name of subdirectory in site target directory for api docs")
 
 val crossVersionAll = Seq(scala212, scala213, scala3)
-val crossVersion2Only = Seq(scala212, scala213)
 val crossVersionNo212 = Seq(scala213, scala3)
 
 val baseSettings = Seq(
