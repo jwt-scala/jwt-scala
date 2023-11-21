@@ -4,7 +4,7 @@ import sbt._
 object Versions {
   val munit = "1.0.0-M10"
 
-  val bouncyCastle = "1.76"
+  val bouncyCastle = "1.77"
 
   val guice = "4.2.3"
 
@@ -14,7 +14,7 @@ object Versions {
 
   val play = "2.9.0"
 
-  val playJson = "2.10.2"
+  val playJson = "3.0.1"
 
   val json4s = "4.0.6"
 
@@ -37,7 +37,7 @@ object Libs {
   )
 
   val play = "com.typesafe.play" %% "play" % Versions.play
-  val playJson = "com.typesafe.play" %% "play-json" % Versions.playJson
+  val playJson = "org.playframework" %% "play-json" % Versions.playJson
   val playTest = "com.typesafe.play" %% "play-test" % Versions.play % Test
   val playTestProvided = "com.typesafe.play" %% "play-test" % Versions.play
   val guice = "com.google.inject" % "guice" % Versions.guice % "test"
