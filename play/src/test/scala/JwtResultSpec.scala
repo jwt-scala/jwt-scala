@@ -1,6 +1,6 @@
 package pdi.jwt
 
-import org.apache.pekko.stream.Materializer
+import akka.stream.Materializer
 import play.api.Configuration
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.*
