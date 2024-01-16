@@ -3,8 +3,8 @@ package pdi.jwt
 import java.time.Clock
 import scala.concurrent.Future
 
-import akka.stream.Materializer
-import akka.util.Timeout
+import org.apache.pekko.stream.Materializer
+import org.apache.pekko.util.Timeout
 import play.api.Configuration
 import play.api.libs.json.*
 import play.api.mvc.*

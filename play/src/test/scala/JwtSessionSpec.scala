@@ -2,7 +2,7 @@ package pdi.jwt
 
 import scala.concurrent.duration.Duration
 
-import akka.stream.Materializer
+import org.apache.pekko.stream.Materializer
 import play.api.Configuration
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.*

@@ -168,7 +168,7 @@ lazy val docs = project
   .settings(name := "jwt-docs")
   .settings(localSettings)
   .settings(
-    libraryDependencies ++= Seq("com.typesafe.play" %% "play-test" % Versions.play),
+    libraryDependencies ++= Seq("org.playframework" %% "play-test" % Versions.play),
     ScalaUnidoc / siteSubdirName := "api",
     addMappingsToSiteDir(
       ScalaUnidoc / packageDoc / mappings,
