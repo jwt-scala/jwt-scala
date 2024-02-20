@@ -2,7 +2,7 @@ import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbt._
 
 object Versions {
-  val munit = "1.0.0-M10"
+  val munit = "1.0.0-M11"
 
   val bouncyCastle = "1.77"
 
