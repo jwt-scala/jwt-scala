@@ -7,7 +7,7 @@ on:
     branches: [master, main]
 
 env:
-  SCALA212: 2.12.18
+  SCALA212: 2.12.19
   SCALA213: 2.13.12
   SCALA3: 3.3.0
 
