@@ -4,7 +4,7 @@ import sbt._
 object Versions {
   val munit = "1.0.0-M11"
 
-  val bouncyCastle = "1.77"
+  val bouncyCastle = "1.78.1"
 
   val guice = "4.2.3"
 
@@ -12,13 +12,13 @@ object Versions {
 
   val scalajsSecureRandom = "1.0.0"
 
-  val play = "3.0.0"
+  val play = "3.0.2"
 
-  val playJson = "3.0.2"
+  val playJson = "3.0.3"
 
   val json4s = "4.0.7"
 
-  val circe = "0.14.6"
+  val circe = "0.14.7"
 
   val upickle = "3.1.4"
 

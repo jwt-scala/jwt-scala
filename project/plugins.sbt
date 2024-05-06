@@ -1,6 +1,6 @@
 // Documentation
 
-addSbtPlugin("com.github.sbt" % "sbt-site-paradox" % "1.5.0")
+addSbtPlugin("com.github.sbt" % "sbt-site-paradox" % "1.7.0")
 
 addSbtPlugin("com.github.sbt" % "sbt-unidoc" % "0.5.0")
 
@@ -22,13 +22,13 @@ addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.5.12")
 
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.2")
 
-addSbtPlugin("org.typelevel" % "sbt-tpolecat" % "0.5.0")
+addSbtPlugin("org.typelevel" % "sbt-tpolecat" % "0.5.1")
 
 addSbtPlugin("com.typesafe" % "sbt-mima-plugin" % "1.1.3")
 
 // Scala JS / Scala Native
 
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.14.0")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.16.0")
 
 addSbtPlugin("org.scala-native" % "sbt-scala-native" % "0.4.17")
 
