@@ -9,7 +9,7 @@ on:
 env:
   SCALA212: 2.12.18
   SCALA213: 2.13.14
-  SCALA3: 3.3.0
+  SCALA3: 3.3.3
 
 jobs:
   linting:
