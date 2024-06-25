@@ -18,7 +18,7 @@ object Versions {
 
   val json4s = "4.0.7"
 
-  val circe = "0.14.7"
+  val circe = "0.14.8"
 
   val upickle = "3.1.4"
 
