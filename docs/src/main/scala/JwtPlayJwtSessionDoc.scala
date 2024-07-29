@@ -50,7 +50,6 @@ object JwtPlayJwtSessionDoc {
 // is not a real Play application, we cannot do that, so here, the refresh will do nothing.
   session = session.refresh()
   // #example
-
   import pdi.jwt.JwtSession
 // #implicits
 // First, creating the implicits
@@ -65,7 +64,6 @@ object JwtPlayJwtSessionDoc {
 // Finally, accessing it
   session2.getAs[User]("user")
 // #implicits
-
 // #requestheader
   import pdi.jwt.JwtSession._
   import play.api.Configuration
@@ -83,7 +81,6 @@ object JwtPlayJwtSessionDoc {
 // And that's pretty cool
   request.jwtSession.getAs[User]("user")
 // #requestheader
-
 // #result
   import play.api.mvc._
   implicit val implRequest: FakeRequest[AnyContentAsEmpty.type] = request
