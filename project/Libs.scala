@@ -24,7 +24,7 @@ object Versions {
 
   val zioJson = "0.7.3"
 
-  val argonaut = "6.3.10"
+  val argonaut = "6.3.11"
 }
 
 object Libs {
@@ -55,7 +55,7 @@ object Libs {
 
   val zioJson = "dev.zio" %% "zio-json" % Versions.zioJson
 
-  val argonaut = "io.argonaut" %% "argonaut" % Versions.argonaut
+  val argonaut = "io.github.argonaut-io" %% "argonaut" % Versions.argonaut
 
   val bouncyCastle = "org.bouncycastle" % "bcpkix-jdk18on" % Versions.bouncyCastle % Test
   val bouncyCastleTut = "org.bouncycastle" % "bcpkix-jdk18on" % Versions.bouncyCastle
