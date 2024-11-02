@@ -2,13 +2,13 @@ import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbt._
 
 object Versions {
-  val munit = "1.0.0-M11"
+  val munit = "1.0.0"
 
   val bouncyCastle = "1.78.1"
 
   val guice = "4.2.3"
 
-  val scalaJavaTime = "2.5.0"
+  val scalaJavaTime = "2.6.0"
 
   val scalajsSecureRandom = "1.0.0"
 
@@ -18,9 +18,9 @@ object Versions {
 
   val json4s = "4.0.7"
 
-  val circe = "0.14.8"
+  val circe = "0.14.10"
 
-  val upickle = "3.1.4"
+  val upickle = "3.3.1"
 
   val zioJson = "0.7.3"
 
