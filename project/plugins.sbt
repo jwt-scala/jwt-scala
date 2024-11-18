@@ -30,7 +30,7 @@ addSbtPlugin("com.typesafe" % "sbt-mima-plugin" % "1.1.3")
 
 addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.17.0")
 
-addSbtPlugin("org.scala-native" % "sbt-scala-native" % "0.5.5")
+addSbtPlugin("org.scala-native" % "sbt-scala-native" % "0.5.6")
 
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.3.2")
 
