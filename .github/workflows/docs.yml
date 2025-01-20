@@ -17,6 +17,7 @@ jobs:
           distribution: temurin
           java-version: 11
           cache: sbt
+      - uses: sbt/setup-sbt@v1
       - name: "Get latest tag"
         id: previoustag
         uses: "WyriHaximus/github-action-get-previous-tag@v1"
