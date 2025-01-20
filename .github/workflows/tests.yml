@@ -21,6 +21,7 @@ jobs:
           distribution: temurin
           java-version: 11
           cache: sbt
+      - uses: sbt/setup-sbt@v1
       - name: Checking code formatting
         run: sbt formatCheck
   docs-check:
@@ -32,6 +33,7 @@ jobs:
           distribution: temurin
           java-version: 11
           cache: sbt
+      - uses: sbt/setup-sbt@v1
       - name: Check the documentation
         run: sbt docs/makeSite
   mima:
@@ -43,6 +45,7 @@ jobs:
           distribution: temurin
           java-version: 11
           cache: sbt
+      - uses: sbt/setup-sbt@v1
       - name: Report binary issues
         run: "sbt ${{ matrix.project }}/mimaReportBinaryIssues"
     strategy:
@@ -73,6 +76,7 @@ jobs:
           distribution: temurin
           java-version: 11
           cache: sbt
+      - uses: sbt/setup-sbt@v1
       - name: Test
         run: "sbt ++${{ matrix.scala }} ${{ matrix.project }}/test"
     strategy:
