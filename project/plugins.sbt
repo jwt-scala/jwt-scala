@@ -28,7 +28,7 @@ addSbtPlugin("com.typesafe" % "sbt-mima-plugin" % "1.1.3")
 
 // Scala JS / Scala Native
 
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.17.0")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.18.2")
 
 addSbtPlugin("org.scala-native" % "sbt-scala-native" % "0.5.6")
 
