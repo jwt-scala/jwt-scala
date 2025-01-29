@@ -27,7 +27,7 @@ class JwtSessionAsymetricSpec extends munit.FunSuite with PlayFixture {
   val app =
     new GuiceApplicationBuilder()
       .configure(
-        Map(
+        Map.apply[String, Any](
           "play.http.session.privateKey" -> privateKey,
           "play.http.session.publicKey" -> publicKey,
           "play.http.session.jwtName" -> HEADER_NAME,
