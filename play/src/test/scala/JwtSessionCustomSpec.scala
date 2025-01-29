@@ -21,7 +21,7 @@ class JwtSessionCustomSpec extends munit.FunSuite with PlayFixture {
   val app =
     new GuiceApplicationBuilder()
       .configure(
-        Map(
+        Map.apply[String, Any](
           "play.http.secret.key" -> secretKey,
           "play.http.session.jwtName" -> HEADER_NAME,
           "play.http.session.maxAge" -> sessionTimeout * 1000,

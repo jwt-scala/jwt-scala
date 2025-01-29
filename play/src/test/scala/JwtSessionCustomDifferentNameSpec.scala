@@ -24,7 +24,7 @@ class JwtSessionCustomDifferentNameSpec extends munit.FunSuite with Injecting wi
   val app =
     new GuiceApplicationBuilder()
       .configure(
-        Map(
+        Map.apply[String, Any](
           "play.http.secret.key" -> secretKey,
           "play.http.session.jwtName" -> HEADER_NAME,
           "play.http.session.jwtResponseName" -> RESPONSE_HEADER_NAME,
