@@ -51,7 +51,7 @@ val crossVersionAll = Seq(scala212, scala213, scala3)
 val crossVersionNo212 = Seq(scala213, scala3)
 
 val baseSettings = Seq(
-  organization := "com.github.jwt-scala",
+  organization := "com.guizmaii",
   ThisBuild / scalaVersion := scala213,
   crossScalaVersions := crossVersionAll,
   autoAPIMappings := true,
@@ -122,7 +122,7 @@ val releaseSettings = baseSettings ++ publishSettings
 // Local non-published projects
 val localSettings = baseSettings ++ noPublishSettings
 
-lazy val jwtScala = project
+lazy val root = project
   .in(file("."))
   .settings(localSettings)
   .settings(
