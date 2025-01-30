@@ -73,8 +73,6 @@ val baseSettings = Seq(
 )
 
 val publishSettings = Seq(
-  ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org",
-  sonatypeRepository := "https://s01.oss.sonatype.org/service/local",
   homepage := Some(url("https://jwt-scala.github.io/jwt-scala/")),
   apiURL := Some(url("https://jwt-scala.github.io/jwt-scala/api/")),
   Test / publishArtifact := false,
@@ -82,8 +80,8 @@ val publishSettings = Seq(
   pomIncludeRepository := { _ => false },
   scmInfo := Some(
     ScmInfo(
-      url("https://github.com/jwt-scala/jwt-scala"),
-      "scm:git@github.com:jwt-scala/jwt-scala.git"
+      url("https://github.com/guizmaii-opensource/jwt-scala"),
+      "scm:git@github.com:guizmaii-opensource/jwt-scala.git"
     )
   ),
   developers := List(
@@ -100,10 +98,6 @@ val publishSettings = Seq(
       url = url("https://caffeinelab.net")
     )
   ),
-  publishConfiguration := publishConfiguration.value.withOverwrite(true),
-  publishSignedConfiguration := publishSignedConfiguration.value.withOverwrite(true),
-  publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true),
-  publishLocalSignedConfiguration := publishLocalSignedConfiguration.value.withOverwrite(true)
 )
 
 val noPublishSettings = Seq(
