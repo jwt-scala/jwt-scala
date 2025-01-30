@@ -7,45 +7,48 @@ on:
     branches: [master, main]
 
 env:
-  SCALA212: 2.12.20
-  SCALA213: 2.13.14
-  SCALA3: 3.3.0
+  SCALA212: 2.12.x
+  SCALA213: 2.13.x
+  SCALA3: 3.x
 
 jobs:
   linting:
     runs-on: ubuntu-latest
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: actions/setup-java@v3
+      - uses: actions/checkout@v4
+      - uses: sbt/setup-sbt@v1
+      - uses: coursier/cache-action@v6
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 11
-          cache: sbt
-      - uses: sbt/setup-sbt@v1
+          java-version: 21
+          check-latest: true
       - name: Checking code formatting
         run: sbt formatCheck
   docs-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: actions/setup-java@v3
+      - uses: actions/checkout@v4
+      - uses: sbt/setup-sbt@v1
+      - uses: coursier/cache-action@v6
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 11
-          cache: sbt
-      - uses: sbt/setup-sbt@v1
+          java-version: 21
+          check-latest: true
       - name: Check the documentation
         run: sbt docs/makeSite
   mima:
     runs-on: ubuntu-latest
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: actions/setup-java@v3
+      - uses: actions/checkout@v4
+      - uses: sbt/setup-sbt@v1
+      - uses: coursier/cache-action@v6
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 11
-          cache: sbt
-      - uses: sbt/setup-sbt@v1
+          java-version: 21
+          check-latest: true
       - name: Report binary issues
         run: "sbt ${{ matrix.project }}/mimaReportBinaryIssues"
     strategy:
@@ -70,13 +73,14 @@ jobs:
     runs-on: ubuntu-latest
     name: Tests ${{ matrix.project }} (${{ matrix.scala }})
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: actions/setup-java@v3
+      - uses: actions/checkout@v4
+      - uses: sbt/setup-sbt@v1
+      - uses: coursier/cache-action@v6
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 11
-          cache: sbt
-      - uses: sbt/setup-sbt@v1
+          check-latest: true
       - name: Test
         run: "sbt ++${{ matrix.scala }} ${{ matrix.project }}/test"
     strategy:
