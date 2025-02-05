@@ -2,27 +2,27 @@ import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbt._
 
 object Versions {
-  val munit = "1.0.0-M11"
+  val munit = "1.1.0"
 
-  val bouncyCastle = "1.78.1"
+  val bouncyCastle = "1.80"
 
   val guice = "4.2.3"
 
-  val scalaJavaTime = "2.5.0"
+  val scalaJavaTime = "2.6.0"
 
   val scalajsSecureRandom = "1.0.0"
 
-  val play = "3.0.5"
+  val play = "3.0.6"
 
   val playJson = "3.0.4"
 
   val json4s = "4.0.7"
 
-  val circe = "0.14.8"
+  val circe = "0.14.10"
 
-  val upickle = "3.1.4"
+  val upickle = "4.1.0"
 
-  val zioJson = "0.7.3"
+  val zioJson = "0.7.14"
 
   val argonaut = "6.3.10"
 }
