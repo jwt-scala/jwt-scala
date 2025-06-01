@@ -57,7 +57,7 @@ trait JwtJson4sCommon[H, C] extends JwtJsonCommon[JObject, H, C] {
   protected def extractStringSetOrString(json: JObject, fieldName: String): Option[Set[String]] =
     (json \ fieldName) match {
       case JString(value) => Option(Set(value))
-      case JArray(_) =>
+      case JArray(_)      =>
         try {
           (json \ fieldName) match {
             case JArray(values) => Some(values.map(_.asInstanceOf[JString].s).toSet)
@@ -90,7 +90,7 @@ trait JwtJson4sCommon[H, C] extends JwtJsonCommon[JObject, H, C] {
     case _                => false
   } match {
     case res: JObject => res
-    case _ =>
+    case _            =>
       throw new RuntimeException(
         "How did we manage to go from JObject to something else by just removing fields?"
       )

@@ -19,7 +19,7 @@ trait JwtJsonImplicits {
   private def extractStringSetOrString(json: JsObject, fieldName: String): Option[Set[String]] =
     (json \ fieldName).validateOpt[Set[String]] match {
       case JsSuccess(set, _) => set
-      case JsError(_) =>
+      case JsError(_)        =>
         (json \ fieldName).validateOpt[String] match {
           case JsSuccess(string, _) => string.map(s => Set(s))
           case JsError(_)           => throw new JwtNonStringSetOrStringException(fieldName)
