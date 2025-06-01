@@ -121,7 +121,7 @@ object JwtUtils {
     signer.initSign(key)
     signer.update(data)
     algorithm match {
-      case _: JwtRSAAlgorithm => signer.sign
+      case _: JwtRSAAlgorithm           => signer.sign
       case algorithm: JwtECDSAAlgorithm =>
         transcodeSignatureToConcat(signer.sign, getSignatureByteArrayLength(algorithm))
       case _: JwtEdDSAAlgorithm => signer.sign

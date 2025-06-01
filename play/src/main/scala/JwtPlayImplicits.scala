@@ -85,7 +85,7 @@ trait JwtPlayImplicits {
       */
     def refreshJwtSession(implicit request: RequestHeader): Result = JwtSession.MAX_AGE match {
       case None => result
-      case _ => {
+      case _    => {
         // Only refresh if we actually have a proper JWT session
         if (hasJwtHeader) {
           result.withJwtSession(jwtSession.refresh())
