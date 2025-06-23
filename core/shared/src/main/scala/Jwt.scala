@@ -22,23 +22,18 @@ object Jwt extends Jwt(Clock.systemUTC) {
 }
 
 class Jwt(override val clock: Clock) extends JwtCore[JwtHeader, JwtClaim] {
-  // charsAndNums only allows alphanumeric characters (with no diacritics)
-  private val charsAndNums = "a-zA-Z0-9"
-  // charsAndNumsAndSomePunctuation adds `_` and `-` to charsAndNums
-  private val charsAndNumsAndSomePunctuation = s"\\-${charsAndNums}_"
-
-  private val extractAlgorithmRegex = s"\"alg\" *: *\"([$charsAndNums]+)\"".r
+  private val extractAlgorithmRegex = "\"alg\" *: *\"([a-zA-Z0-9]+)\"".r
   protected def extractAlgorithm(header: String): Option[JwtAlgorithm] =
     (extractAlgorithmRegex.findFirstMatchIn(header)).map(_.group(1)).flatMap {
       case "none"       => None
       case name: String => Some(JwtAlgorithm.fromString(name))
     }
 
-  private val extractIssuerRegex = s"\"iss\" *: *\"([$charsAndNumsAndSomePunctuation]*)\"".r
+  private val extractIssuerRegex = "\"iss\" *: *\"([\\-a-zA-Z0-9_]*)\"".r
   protected def extractIssuer(claim: String): Option[String] =
     (extractIssuerRegex.findFirstMatchIn(claim)).map(_.group(1))
 
-  private val extractSubjectRegex = s"\"sub\" *: *\"([$charsAndNumsAndSomePunctuation]*)\"".r
+  private val extractSubjectRegex = "\"sub\" *: *\"([\\-a-zA-Z0-9_]*)\"".r
   protected def extractSubject(claim: String): Option[String] =
     (extractSubjectRegex.findFirstMatchIn(claim)).map(_.group(1))
 
@@ -54,7 +49,7 @@ class Jwt(override val clock: Clock) extends JwtCore[JwtHeader, JwtClaim] {
   protected def extractIssuedAt(claim: String): Option[Long] =
     (extractIssuedAtRegex.findFirstMatchIn(claim)).map(_.group(1)).map(_.toLong)
 
-  private val extractJwtIdRegex = s"\"jti\" *: *\"([$charsAndNumsAndSomePunctuation]*)\"".r
+  private val extractJwtIdRegex = "\"jti\" *: *\"([\\-a-zA-Z0-9_]*)\"".r
   protected def extractJwtId(claim: String): Option[String] =
     (extractJwtIdRegex.findFirstMatchIn(claim)).map(_.group(1))
 
