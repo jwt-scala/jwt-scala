@@ -14,7 +14,7 @@ object Versions {
 
   val play = "3.0.7"
 
-  val playJson = "3.0.4"
+  val playJson = "3.0.5"
 
   val json4s = "4.0.7"
 
