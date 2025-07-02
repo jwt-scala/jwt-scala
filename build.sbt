@@ -73,8 +73,6 @@ val baseSettings = Seq(
 )
 
 val publishSettings = Seq(
-  ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org",
-  sonatypeRepository := "https://s01.oss.sonatype.org/service/local",
   homepage := Some(url("https://jwt-scala.github.io/jwt-scala/")),
   apiURL := Some(url("https://jwt-scala.github.io/jwt-scala/api/")),
   Test / publishArtifact := false,
