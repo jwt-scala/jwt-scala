@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="description" content="jwt-docs">
+<meta name="generator" content="Paradox, paradox-material-theme=0.7.0, mkdocs-material=3.0.3">
+
+<meta name="lang:clipboard.copy" content="Copy to clipboard">
+<meta name="lang:clipboard.copied" content="Copied to clipboard">
+<meta name="lang:search.language" content="">
+<meta name="lang:search.pipeline.stopwords" content="true">
+<meta name="lang:search.pipeline.trimmer" content="true">
+<meta name="lang:search.result.none" content="No matching documents">
+<meta name="lang:search.result.one" content="1 matching document">
+<meta name="lang:search.result.other" content="# matching documents">
+<meta name="lang:search.tokenizer" content="[\s\-]+">
+
+
+<meta name="description" content="jwt-docs">
+<link rel="shortcut icon" href="assets/images/favicon.png">
+<title>JWT Scala</title>
+<link rel="stylesheet" href="assets/stylesheets/application.451f80e5.css">
+<link rel="stylesheet" href="lib/material__tabs/dist/mdc.tabs.min.css">
+<link rel="stylesheet" href="lib/prettify/prettify.css">
+<script src="assets/javascripts/modernizr.1aa3b519.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+<style>
+body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}
+code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
+</style>
+<link rel="stylesheet" href="assets/fonts/font-awesome.css">
+<link rel="stylesheet" href="assets/fonts/material-icons.css">
+<link rel="stylesheet" href="assets/stylesheets/paradox-material-theme.css">
+</head>
+<body
+>
+<input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+<input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+<label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+<header class="md-header" data-md-component="header">
+<nav class="md-header-nav md-grid">
+<div class="md-flex">
+<div class="md-flex__cell md-flex__cell--shrink">
+<a href="index.html" title="JWT Scala" class="md-header-nav__button md-logo">
+<i class="md-icon">local_library</i>
+</a>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+</div>
+<div class="md-flex__cell md-flex__cell--stretch">
+<div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+JWT Scala
+</div>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+<label class="md-icon md-search__icon" for="__search"></label>
+<button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">&#xE5CD;</button>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix>
+<div class="md-search-result" data-md-component="result">
+<div class="md-search-result__meta">
+Type to start searching
+</div>
+<ol class="md-search-result__list"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<div class="md-header-nav__source">
+<a href="https://github.com/jwt-scala/jwt-scala"
+title="Go to repository"
+class="md-source"
+data-md-source="github">
+<div class="md-source__icon">
+<i class="fa fa-github"></i>
+</div>
+<div class="md-source__repository">
+jwt-scala/jwt-scala
+</div>
+</a>
+
+</div>
+</div>
+</div>
+</nav>
+</header>
+
+<div class="md-container">
+<main class="md-main">
+<div class="md-main__inner md-grid" data-md-component="container">
+<div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--primary" data-md-level="0" style="visibility: hidden">
+<label class="md-nav__title md-nav__title--site" for="drawer">
+<a href="index.html" title="JWT Scala" class="md-nav__button md-logo">
+<span class="md-nav__button md-logo">
+<i class="md-icon">local_library</i>
+</a>
+<a href="index.html" title="JWT Scala">
+JWT Scala
+</a>
+</label>
+<div class="md-nav__source">
+<a href="https://github.com/jwt-scala/jwt-scala"
+title="Go to repository"
+class="md-source"
+data-md-source="github">
+<div class="md-source__icon">
+<i class="fa fa-github"></i>
+</div>
+<div class="md-source__repository">
+jwt-scala/jwt-scala
+</div>
+</a>
+
+</div>
+<ul>
+  <li><a href="jwt-core/index.html" class="page">Native</a>
+  <ul>
+    <li><a href="jwt-core/jwt-claim.html" class="page">JwtClaim Class</a></li>
+    <li><a href="jwt-core/jwt-claim-private.html" class="page">Jwt Reserved Claims and Private Claims</a></li>
+    <li><a href="jwt-core/jwt-header.html" class="page">JwtHeader Case Class</a></li>
+    <li><a href="jwt-core/jwt-ecdsa.html" class="page">Jwt with ECDSA algorithms</a></li>
+  </ul></li>
+  <li><a href="jwt-argonaut.html" class="page">Argonaut</a></li>
+  <li><a href="jwt-circe.html" class="page">Circe</a></li>
+  <li><a href="jwt-json4s.html" class="page">Json4s</a></li>
+  <li><a href="jwt-play-json.html" class="page">Play Json</a></li>
+  <li><a href="jwt-play-jwt-session.html" class="page">JwtSession case class</a></li>
+  <li><a href="jwt-upickle.html" class="page">upickle</a></li>
+  <li><a href="jwt-zio-json.html" class="page">ZIO Json</a></li>
+</ul>
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">Table of contents</label>
+<ul>
+  <li><a href="index.html#jwt-scala" class="header">JWT Scala</a>
+  <ul>
+    <li><a href="index.html#usage" class="header">Usage</a></li>
+    <li><a href="index.html#algorithms" class="header">Algorithms</a></li>
+    <li><a href="index.html#security-concerns" class="header">Security concerns</a></li>
+    <li><a href="index.html#license" class="header">License</a></li>
+  </ul></li>
+</ul>
+</nav>
+
+</nav>
+<ul style="display: none">
+<li class="md-nav__item md-version" id="project.version">
+<label class="md-nav__link" for="__version">
+<i class="md-icon" title="Version">label_outline</i> 11.0.3
+</label>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">Table of contents</label>
+<ul>
+  <li><a href="index.html#jwt-scala" class="header">JWT Scala</a>
+  <ul>
+    <li><a href="index.html#usage" class="header">Usage</a></li>
+    <li><a href="index.html#algorithms" class="header">Algorithms</a></li>
+    <li><a href="index.html#security-concerns" class="header">Security concerns</a></li>
+    <li><a href="index.html#license" class="header">License</a></li>
+  </ul></li>
+</ul>
+</nav>
+
+</div>
+</div>
+</div>
+<div class="md-content">
+<article class="md-content__inner md-typeset">
+<div class="md-content__searchable">
+<h1><a href="#jwt-scala" name="jwt-scala" class="anchor"><span class="anchor-link"></span></a>JWT Scala</h1>
+<p>Scala support for JSON Web Token (<a href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token">JWT</a>). Supports Java 8+, Scala 2.12, Scala 2.13 and Scala 3 (for json libraries that support it). Dependency free. Optional helpers for Play Framework, Play JSON, Json4s Native, Json4s Jackson, Circe, uPickle and Argonaut.</p>
+<h2><a href="#usage" name="usage" class="anchor"><span class="anchor-link"></span></a>Usage</h2>
+<p>JWT Scala is divided in several sub-projects each targeting a specific JSON library, check the doc from the menu for installation and usage instructions.</p>
+<h2><a href="#algorithms" name="algorithms" class="anchor"><span class="anchor-link"></span></a>Algorithms</h2>
+<p>If you are using <code>String</code> key, please keep in mind that such keys need to be parsed. Rather than implementing a super complex parser, the one in JWT Scala is pretty simple and might not work for all use-cases (especially for ECDSA keys). In such case, consider using <code>SecretKey</code> or <code>PrivateKey</code> or <code>PublicKey</code> directly. It is way better for you. All API support all those types.</p>
+<p>Check <a href="jwt-core/jwt-ecdsa.html">ECDSA samples</a> for more infos.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Name </th>
+      <th>Description </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>HMD5 </td>
+      <td>HMAC using MD5 algorithm </td>
+    </tr>
+    <tr>
+      <td>HS224 </td>
+      <td>HMAC using SHA-224 algorithm </td>
+    </tr>
+    <tr>
+      <td>HS256 </td>
+      <td>HMAC using SHA-256 algorithm </td>
+    </tr>
+    <tr>
+      <td>HS384 </td>
+      <td>HMAC using SHA-384 algorithm </td>
+    </tr>
+    <tr>
+      <td>HS512 </td>
+      <td>HMAC using SHA-512 algorithm </td>
+    </tr>
+    <tr>
+      <td>RS256 </td>
+      <td>RSASSA using SHA-256 algorithm </td>
+    </tr>
+    <tr>
+      <td>RS384 </td>
+      <td>RSASSA using SHA-384 algorithm </td>
+    </tr>
+    <tr>
+      <td>RS512 </td>
+      <td>RSASSA using SHA-512 algorithm </td>
+    </tr>
+    <tr>
+      <td>ES256 </td>
+      <td>ECDSA using SHA-256 algorithm </td>
+    </tr>
+    <tr>
+      <td>ES384 </td>
+      <td>ECDSA using SHA-384 algorithm </td>
+    </tr>
+    <tr>
+      <td>ES512 </td>
+      <td>ECDSA using SHA-512 algorithm </td>
+    </tr>
+    <tr>
+      <td>EdDSA </td>
+      <td>EdDSA signature algorithms </td>
+    </tr>
+  </tbody>
+</table>
+<h2><a href="#security-concerns" name="security-concerns" class="anchor"><span class="anchor-link"></span></a>Security concerns</h2>
+<p>This lib doesn&rsquo;t want to impose anything, that&rsquo;s why, by default, a JWT claim is totally empty. That said, you should always add an <code>issuedAt</code> attribute to it, probably using <code>claim.issuedNow</code>. The reason is that even HTTPS isn&rsquo;t perfect and having always the same chunk of data transfered can be of a big help to crack it. Generating a slightly different token at each request is way better even if it adds a bit of payload to the response. If you are using a session timeout through the <code>expiration</code> attribute which is extended at each request, that&rsquo;s fine too. I can&rsquo;t find the article I read about that vulnerability but if someone has some resources about the topic, I would be glad to link them.</p>
+<h2><a href="#license" name="license" class="anchor"><span class="anchor-link"></span></a>License</h2>
+<p>This software is licensed under the Apache 2 license, quoted below.</p>
+<p>Copyright 2021 JWT-Scala Contributors.</p>
+<p>Licensed under the Apache License, Version 2.0 (the &ldquo;License&rdquo;); you may not use this project except in compliance with the License. You may obtain a copy of the License at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>.</p>
+<p>Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an &ldquo;AS IS&rdquo; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</p>
+</div>
+<div>
+<a href="https://github.com/jwt-scala/jwt-scala/tree/v11.0.3/docs/src/main/paradox/index.md" title="Edit this page" class="md-source-file md-edit">
+Edit this page
+</a>
+</div>
+<div class="print-only">
+<span class="md-source-file md-version">
+11.0.3
+</span>
+</div>
+</article>
+</div>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-nav">
+<nav class="md-footer-nav__inner md-grid">
+<a href="jwt-core/index.html" title="Native" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+<span class="md-flex__ellipsis">
+<span class="md-footer-nav__direction">
+Next
+</span>
+Native
+</span>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+</div>
+</a>
+</nav>
+</div>
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-footer-copyright">
+Powered by
+<a href="https://github.com/lightbend/paradox">Paradox</a>
+and
+<a href="https://sbt.github.io/sbt-paradox-material-theme/">Paradox Material Theme</a>
+
+</div>
+</div>
+</div>
+</footer>
+
+</div>
+<script src="assets/javascripts/application.583bbe55.js"></script>
+<script src="assets/javascripts/paradox-material-theme.js"></script>
+<script>app.initialize({version:"0.17",url:{base:"."}})</script>
+<script type="text/javascript" src="lib/prettify/prettify.js"></script>
+<script type="text/javascript" src="lib/prettify/lang-scala.js"></script>
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(event) {
+window.prettyPrint && prettyPrint();
+});
+</script>
+</body>
+</html>

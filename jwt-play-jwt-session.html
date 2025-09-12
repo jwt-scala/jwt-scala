@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="description" content="jwt-docs">
+<meta name="generator" content="Paradox, paradox-material-theme=0.7.0, mkdocs-material=3.0.3">
+
+<meta name="lang:clipboard.copy" content="Copy to clipboard">
+<meta name="lang:clipboard.copied" content="Copied to clipboard">
+<meta name="lang:search.language" content="">
+<meta name="lang:search.pipeline.stopwords" content="true">
+<meta name="lang:search.pipeline.trimmer" content="true">
+<meta name="lang:search.result.none" content="No matching documents">
+<meta name="lang:search.result.one" content="1 matching document">
+<meta name="lang:search.result.other" content="# matching documents">
+<meta name="lang:search.tokenizer" content="[\s\-]+">
+
+
+<meta name="description" content="jwt-docs">
+<link rel="shortcut icon" href="assets/images/favicon.png">
+<title>JwtSession case class · JWT Scala</title>
+<link rel="stylesheet" href="assets/stylesheets/application.451f80e5.css">
+<link rel="stylesheet" href="lib/material__tabs/dist/mdc.tabs.min.css">
+<link rel="stylesheet" href="lib/prettify/prettify.css">
+<script src="assets/javascripts/modernizr.1aa3b519.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+<style>
+body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}
+code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
+</style>
+<link rel="stylesheet" href="assets/fonts/font-awesome.css">
+<link rel="stylesheet" href="assets/fonts/material-icons.css">
+<link rel="stylesheet" href="assets/stylesheets/paradox-material-theme.css">
+</head>
+<body
+>
+<input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+<input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+<label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+<header class="md-header" data-md-component="header">
+<nav class="md-header-nav md-grid">
+<div class="md-flex">
+<div class="md-flex__cell md-flex__cell--shrink">
+<a href="index.html" title="JWT Scala" class="md-header-nav__button md-logo">
+<i class="md-icon">local_library</i>
+</a>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+</div>
+<div class="md-flex__cell md-flex__cell--stretch">
+<div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+<span class="md-header-nav__topic">
+JWT Scala
+</span>
+<span class="md-header-nav__topic">
+JwtSession case class
+</span>
+</div>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+<label class="md-icon md-search__icon" for="__search"></label>
+<button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">&#xE5CD;</button>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix>
+<div class="md-search-result" data-md-component="result">
+<div class="md-search-result__meta">
+Type to start searching
+</div>
+<ol class="md-search-result__list"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<div class="md-header-nav__source">
+<a href="https://github.com/jwt-scala/jwt-scala"
+title="Go to repository"
+class="md-source"
+data-md-source="github">
+<div class="md-source__icon">
+<i class="fa fa-github"></i>
+</div>
+<div class="md-source__repository">
+jwt-scala/jwt-scala
+</div>
+</a>
+
+</div>
+</div>
+</div>
+</nav>
+</header>
+
+<div class="md-container">
+<main class="md-main">
+<div class="md-main__inner md-grid" data-md-component="container">
+<div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--primary" data-md-level="0" style="visibility: hidden">
+<label class="md-nav__title md-nav__title--site" for="drawer">
+<a href="index.html" title="JWT Scala" class="md-nav__button md-logo">
+<span class="md-nav__button md-logo">
+<i class="md-icon">local_library</i>
+</a>
+<a href="index.html" title="JWT Scala">
+JWT Scala
+</a>
+</label>
+<div class="md-nav__source">
+<a href="https://github.com/jwt-scala/jwt-scala"
+title="Go to repository"
+class="md-source"
+data-md-source="github">
+<div class="md-source__icon">
+<i class="fa fa-github"></i>
+</div>
+<div class="md-source__repository">
+jwt-scala/jwt-scala
+</div>
+</a>
+
+</div>
+<ul>
+  <li><a href="jwt-core/index.html" class="page">Native</a>
+  <ul>
+    <li><a href="jwt-core/jwt-claim.html" class="page">JwtClaim Class</a></li>
+    <li><a href="jwt-core/jwt-claim-private.html" class="page">Jwt Reserved Claims and Private Claims</a></li>
+    <li><a href="jwt-core/jwt-header.html" class="page">JwtHeader Case Class</a></li>
+    <li><a href="jwt-core/jwt-ecdsa.html" class="page">Jwt with ECDSA algorithms</a></li>
+  </ul></li>
+  <li><a href="jwt-argonaut.html" class="page">Argonaut</a></li>
+  <li><a href="jwt-circe.html" class="page">Circe</a></li>
+  <li><a href="jwt-json4s.html" class="page">Json4s</a></li>
+  <li><a href="jwt-play-json.html" class="page">Play Json</a></li>
+  <li><a href="jwt-play-jwt-session.html" class="active page">JwtSession case class</a></li>
+  <li><a href="jwt-upickle.html" class="page">upickle</a></li>
+  <li><a href="jwt-zio-json.html" class="page">ZIO Json</a></li>
+</ul>
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">Table of contents</label>
+<ul>
+  <li><a href="jwt-play-jwt-session.html#jwtsession-case-class" class="header">JwtSession case class</a>
+  <ul>
+    <li><a href="jwt-play-jwt-session.html#basic-usage" class="header">Basic usage</a></li>
+    <li><a href="jwt-play-jwt-session.html#using-implicits" class="header">Using implicits</a></li>
+    <li><a href="jwt-play-jwt-session.html#play-requestheader" class="header">Play RequestHeader</a></li>
+    <li><a href="jwt-play-jwt-session.html#play-result" class="header">Play Result</a></li>
+    <li><a href="jwt-play-jwt-session.html#play-configuration" class="header">Play configuration</a></li>
+  </ul></li>
+</ul>
+</nav>
+
+</nav>
+<ul style="display: none">
+<li class="md-nav__item md-version" id="project.version">
+<label class="md-nav__link" for="__version">
+<i class="md-icon" title="Version">label_outline</i> 11.0.3
+</label>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">Table of contents</label>
+<ul>
+  <li><a href="jwt-play-jwt-session.html#jwtsession-case-class" class="header">JwtSession case class</a>
+  <ul>
+    <li><a href="jwt-play-jwt-session.html#basic-usage" class="header">Basic usage</a></li>
+    <li><a href="jwt-play-jwt-session.html#using-implicits" class="header">Using implicits</a></li>
+    <li><a href="jwt-play-jwt-session.html#play-requestheader" class="header">Play RequestHeader</a></li>
+    <li><a href="jwt-play-jwt-session.html#play-result" class="header">Play Result</a></li>
+    <li><a href="jwt-play-jwt-session.html#play-configuration" class="header">Play configuration</a></li>
+  </ul></li>
+</ul>
+</nav>
+
+</div>
+</div>
+</div>
+<div class="md-content">
+<article class="md-content__inner md-typeset">
+<div class="md-content__searchable">
+<h2><a href="#jwtsession-case-class" name="jwtsession-case-class" class="anchor"><span class="anchor-link"></span></a>JwtSession case class</h2>
+<pre class="prettyprint"><code class="language-scala">libraryDependencies += &quot;com.github.jwt-scala&quot; %% &quot;jwt-play&quot; % &quot;11.0.3&quot;
+</code></pre>
+<p>Provides an API similar to the Play <a href="https://www.playframework.com/documentation/2.3.x/api/scala/index.html#play.api.mvc.Session">Session</a> but using <code>JsValue</code> rather than <code>String</code> as values. It also separates <code>headerData</code> from <code>claimData</code> rather than having only one <code>data</code>.</p>
+<h3><a href="#basic-usage" name="basic-usage" class="anchor"><span class="anchor-link"></span></a>Basic usage</h3>
+<pre class="prettyprint"><button class="snippet-button copy-snippet" title="Copy snippet to clipboard">copy</button><a class="snippet-button go-to-source" href="https://github.com/jwt-scala/jwt-scala/tree/v11.0.3/docs/src/main/scala/JwtPlayJwtSessionDoc.scala#L8-L51" target="_blank" title="Go to snippet source">source</a><code class="language-scala">  import java.time.Clock
+
+  import pdi.jwt.JwtSession
+  import play.api.Configuration
+
+  implicit val clock: Clock = Clock.systemUTC
+
+//In a real Play! App this should normally be injected in the constructor with @Inject()
+  implicit val conf: Configuration = Configuration.reference
+
+// Let&#39;s create a session, it will automatically assign a default header. No
+// In your app, the default header would be generated from &quot;application.conf&quot; file
+// but here, it will just use the default values (which are all empty)
+  var session = JwtSession()
+
+// We can add a (key, value)
+  session = session + (&quot;user&quot;, 1)
+
+// Or several of them
+  session = session ++ ((&quot;nbf&quot;, 1431520421), (&quot;key&quot;, &quot;value&quot;), (&quot;key2&quot;, 2), (&quot;key3&quot;, 3))
+
+// Also remove a key
+  session = session - &quot;key&quot;
+
+// Or several
+  session = session -- (&quot;key2&quot;, &quot;key3&quot;)
+
+// We can access a specific key
+  session.get(&quot;user&quot;)
+
+// Test if the session is empty or not
+// (it is not here since we have several keys in the claimData)
+  session.isEmpty()
+
+// Serializing the session is the same as encoding it as a JSON Web Token
+  val token = session.serialize
+
+// You can create a JwtSession from a token of course
+  JwtSession.deserialize(token)
+
+// You could refresh the session to set its expiration in a few seconds from now
+// but you need to set &quot;session.maxAge&quot; in your &quot;application.conf&quot; and since this
+// is not a real Play application, we cannot do that, so here, the refresh will do nothing.
+  session = session.refresh()</code></pre>
+<h3><a href="#using-implicits" name="using-implicits" class="anchor"><span class="anchor-link"></span></a>Using implicits</h3>
+<p>If you have implicit <code>Reads</code> and/or <code>Writes</code>, you can access and/or add data directly as case class or object.</p>
+<pre class="prettyprint"><button class="snippet-button copy-snippet" title="Copy snippet to clipboard">copy</button><a class="snippet-button go-to-source" href="https://github.com/jwt-scala/jwt-scala/tree/v11.0.3/docs/src/main/scala/JwtPlayJwtSessionDoc.scala#L55-L65" target="_blank" title="Go to snippet source">source</a><code class="language-scala">// First, creating the implicits
+  import play.api.libs.json._
+
+  case class User(id: Long, name: String)
+  implicit val formatUser: Format[User] = Json.format[User]
+
+// Next, adding it to a new session
+  val session2 = JwtSession() + (&quot;user&quot;, User(42, &quot;Paul&quot;))
+
+// Finally, accessing it
+  session2.getAs[User](&quot;user&quot;)</code></pre>
+<h2><a href="#play-requestheader" name="play-requestheader" class="anchor"><span class="anchor-link"></span></a>Play RequestHeader</h2>
+<p>You can extract a <code>JwtSession</code> from a <code>RequestHeader</code>.</p>
+<pre class="prettyprint"><button class="snippet-button copy-snippet" title="Copy snippet to clipboard">copy</button><a class="snippet-button go-to-source" href="https://github.com/jwt-scala/jwt-scala/tree/v11.0.3/docs/src/main/scala/JwtPlayJwtSessionDoc.scala#L68-L82" target="_blank" title="Go to snippet source">source</a><code class="language-scala">  import pdi.jwt.JwtSession._
+  import play.api.Configuration
+  import play.api.test.FakeRequest
+
+// Default JwtSession
+  FakeRequest().jwtSession
+
+// What about some headers?
+// (the default header for a JSON Web Token is &quot;Authorization&quot; and it should be prefixed by &quot;Bearer &quot;)
+  val request = FakeRequest().withHeaders((&quot;Authorization&quot;, &quot;Bearer &quot; + session2.serialize))
+  request.jwtSession
+
+// It means you can directly read case classes from the session!
+// And that&#39;s pretty cool
+  request.jwtSession.getAs[User](&quot;user&quot;)</code></pre>
+<h2><a href="#play-result" name="play-result" class="anchor"><span class="anchor-link"></span></a>Play Result</h2>
+<p>There are also implicit helpers around <code>Result</code> to help you manipulate the session inside it.</p>
+<pre class="prettyprint"><button class="snippet-button copy-snippet" title="Copy snippet to clipboard">copy</button><a class="snippet-button go-to-source" href="https://github.com/jwt-scala/jwt-scala/tree/v11.0.3/docs/src/main/scala/JwtPlayJwtSessionDoc.scala#L85-L119" target="_blank" title="Go to snippet source">source</a><code class="language-scala">  import play.api.mvc._
+  implicit val implRequest: FakeRequest[AnyContentAsEmpty.type] = request
+
+// Let&#39;s begin by creating a Result
+  var result: play.api.mvc.Result = play.api.mvc.Results.Ok
+
+// We can already get a JwtSession from our implicit RequestHeader
+  result.jwtSession
+
+// Setting a new empty JwtSession
+  result = result.withNewJwtSession
+
+// Or from an existing JwtSession
+  result = result.withJwtSession(session2)
+
+// Or from a JsObject
+  result = result.withJwtSession(Json.obj((&quot;id&quot;, 1), (&quot;key&quot;, &quot;value&quot;)))
+
+// Or from (key, value)
+  result = result.withJwtSession((&quot;id&quot;, 1), (&quot;key&quot;, &quot;value&quot;))
+
+// We can add stuff to the current session (only (String, String))
+  result = result.addingToJwtSession((&quot;key2&quot;, &quot;value2&quot;), (&quot;key3&quot;, &quot;value3&quot;))
+
+// Or directly classes or objects if you have the correct implicit Writes
+  result = result.addingToJwtSession(&quot;user&quot;, User(1, &quot;Paul&quot;))
+
+// Removing from session
+  result = result.removingFromJwtSession(&quot;key2&quot;, &quot;key3&quot;)
+
+// Refresh the current session
+  result = result.refreshJwtSession
+
+// So, at the end, you can do
+  result.jwtSession.getAs[User](&quot;user&quot;)</code></pre>
+<h2><a href="#play-configuration" name="play-configuration" class="anchor"><span class="anchor-link"></span></a>Play configuration</h2>
+<h3><a href="#secret-key" name="secret-key" class="anchor"><span class="anchor-link"></span></a>Secret key</h3>
+<p><code>play.http.secret.key</code></p>
+<blockquote>
+  <p>Default: none</p>
+</blockquote>
+<p>The secret key is used to secure cryptographics functions. We are using the same key to sign Json Web Tokens so you don&rsquo;t need to worry about it.</p>
+<h3><a href="#private-key" name="private-key" class="anchor"><span class="anchor-link"></span></a>Private key</h3>
+<p><code>play.http.session.privateKey</code></p>
+<blockquote>
+  <p>Default: none</p>
+</blockquote>
+<p>The PKCS8 format private key is used to sign JWT session. If <code>play.http.session.privateKey</code> is missing <code>play.http.secret.key</code> used instead.</p>
+<h3><a href="#public-key" name="public-key" class="anchor"><span class="anchor-link"></span></a>Public key</h3>
+<p><code>play.http.session.publicKey</code></p>
+<blockquote>
+  <p>Default: none</p>
+</blockquote>
+<p>The X.509 format public key is used to verify JWT session signed with private key <code>play.http.session.privateKey</code></p>
+<h3><a href="#session-timeout" name="session-timeout" class="anchor"><span class="anchor-link"></span></a>Session timeout</h3>
+<p><code>play.http.session.maxAge</code></p>
+<blockquote>
+  <p>Default: none</p>
+</blockquote>
+<p>Just like for the cookie session, you can use this key to specify the duration, in milliseconds or using the duration syntax (for example 30m or 1h), after which the user should be logout, which mean the token will no longer be valid. It means you need to refresh the expiration date at each request</p>
+<h3><a href="#signature-algorithm" name="signature-algorithm" class="anchor"><span class="anchor-link"></span></a>Signature algorithm</h3>
+<p><code>play.http.session.algorithm</code></p>
+<blockquote>
+  <p>Default: HS256</p>
+  <p>Supported: HMD5, HS1, HS224, HS256, HS384, HS512, RS256, RS384, RS512, ES256, ES384, ES512</p>
+</blockquote>
+<p>You can specify which algorithm you want to use, among the supported ones, in order to create the signature which will assure you that nobody can actually change the token. You should probably stick with the default one or use HmacSHA512 for maximum security.</p>
+<h3><a href="#header-name" name="header-name" class="anchor"><span class="anchor-link"></span></a>Header name</h3>
+<p><code>play.http.session.jwtName</code></p>
+<blockquote>
+  <p>Default: Authorization</p>
+</blockquote>
+<p>You can change the name of the header in which the token should be stored. It will be used for both requests and responses.</p>
+<h3><a href="#response-header-name" name="response-header-name" class="anchor"><span class="anchor-link"></span></a>Response header name</h3>
+<p><code>play.http.session.jwtResponseName</code></p>
+<blockquote>
+  <p>Default: none</p>
+</blockquote>
+<p>If you need to have a different header for request and response, you can override the response header using this key.</p>
+<h3><a href="#token-prefix" name="token-prefix" class="anchor"><span class="anchor-link"></span></a>Token prefix</h3>
+<p><code>play.http.session.tokenPrefix</code></p>
+<blockquote>
+  <p>Default: &ldquo;Bearer &rdquo;</p>
+</blockquote>
+<p>Authorization header should have a prefix before the token, like &ldquo;Basic&rdquo; for example. For a JWT token, it should be &ldquo;Bearer&rdquo; (which is the default value) but you can freely change or remove it (using an empty string). The token prefix will be directly prepend before the token, so be sure to put any necessary whitespaces in it.</p>
+</div>
+<div>
+<a href="https://github.com/jwt-scala/jwt-scala/tree/v11.0.3/docs/src/main/paradox/jwt-play-jwt-session.md" title="Edit this page" class="md-source-file md-edit">
+Edit this page
+</a>
+</div>
+<div class="print-only">
+<span class="md-source-file md-version">
+11.0.3
+</span>
+</div>
+</article>
+</div>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-nav">
+<nav class="md-footer-nav__inner md-grid">
+<a href="jwt-play-json.html" title="Play Json" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<div class="md-flex__cell md-flex__cell--shrink">
+<i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+</div>
+<div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+<span class="md-flex__ellipsis">
+<span class="md-footer-nav__direction">
+Previous
+</span>
+Play Json
+</span>
+</div>
+</a>
+<a href="jwt-upickle.html" title="upickle" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+<span class="md-flex__ellipsis">
+<span class="md-footer-nav__direction">
+Next
+</span>
+upickle
+</span>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+</div>
+</a>
+</nav>
+</div>
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-footer-copyright">
+Powered by
+<a href="https://github.com/lightbend/paradox">Paradox</a>
+and
+<a href="https://sbt.github.io/sbt-paradox-material-theme/">Paradox Material Theme</a>
+
+</div>
+</div>
+</div>
+</footer>
+
+</div>
+<script src="assets/javascripts/application.583bbe55.js"></script>
+<script src="assets/javascripts/paradox-material-theme.js"></script>
+<script>app.initialize({version:"0.17",url:{base:"."}})</script>
+<script type="text/javascript" src="lib/prettify/prettify.js"></script>
+<script type="text/javascript" src="lib/prettify/lang-scala.js"></script>
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(event) {
+window.prettyPrint && prettyPrint();
+});
+</script>
+</body>
+</html>

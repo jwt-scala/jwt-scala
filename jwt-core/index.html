@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="description" content="jwt-docs">
+<meta name="generator" content="Paradox, paradox-material-theme=0.7.0, mkdocs-material=3.0.3">
+
+<meta name="lang:clipboard.copy" content="Copy to clipboard">
+<meta name="lang:clipboard.copied" content="Copied to clipboard">
+<meta name="lang:search.language" content="">
+<meta name="lang:search.pipeline.stopwords" content="true">
+<meta name="lang:search.pipeline.trimmer" content="true">
+<meta name="lang:search.result.none" content="No matching documents">
+<meta name="lang:search.result.one" content="1 matching document">
+<meta name="lang:search.result.other" content="# matching documents">
+<meta name="lang:search.tokenizer" content="[\s\-]+">
+
+
+<meta name="description" content="jwt-docs">
+<link rel="shortcut icon" href="../assets/images/favicon.png">
+<title>Native · JWT Scala</title>
+<link rel="stylesheet" href="../assets/stylesheets/application.451f80e5.css">
+<link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
+<link rel="stylesheet" href="../lib/prettify/prettify.css">
+<script src="../assets/javascripts/modernizr.1aa3b519.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+<style>
+body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}
+code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
+</style>
+<link rel="stylesheet" href="../assets/fonts/font-awesome.css">
+<link rel="stylesheet" href="../assets/fonts/material-icons.css">
+<link rel="stylesheet" href="../assets/stylesheets/paradox-material-theme.css">
+</head>
+<body
+>
+<input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+<input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+<label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+<header class="md-header" data-md-component="header">
+<nav class="md-header-nav md-grid">
+<div class="md-flex">
+<div class="md-flex__cell md-flex__cell--shrink">
+<a href="../index.html" title="JWT Scala" class="md-header-nav__button md-logo">
+<i class="md-icon">local_library</i>
+</a>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+</div>
+<div class="md-flex__cell md-flex__cell--stretch">
+<div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+<span class="md-header-nav__topic">
+JWT Scala
+</span>
+<span class="md-header-nav__topic">
+Native
+</span>
+</div>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+<label class="md-icon md-search__icon" for="__search"></label>
+<button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">&#xE5CD;</button>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix>
+<div class="md-search-result" data-md-component="result">
+<div class="md-search-result__meta">
+Type to start searching
+</div>
+<ol class="md-search-result__list"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<div class="md-header-nav__source">
+<a href="https://github.com/jwt-scala/jwt-scala"
+title="Go to repository"
+class="md-source"
+data-md-source="github">
+<div class="md-source__icon">
+<i class="fa fa-github"></i>
+</div>
+<div class="md-source__repository">
+jwt-scala/jwt-scala
+</div>
+</a>
+
+</div>
+</div>
+</div>
+</nav>
+</header>
+
+<div class="md-container">
+<main class="md-main">
+<div class="md-main__inner md-grid" data-md-component="container">
+<div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--primary" data-md-level="0" style="visibility: hidden">
+<label class="md-nav__title md-nav__title--site" for="drawer">
+<a href="../index.html" title="JWT Scala" class="md-nav__button md-logo">
+<span class="md-nav__button md-logo">
+<i class="md-icon">local_library</i>
+</a>
+<a href="../index.html" title="JWT Scala">
+JWT Scala
+</a>
+</label>
+<div class="md-nav__source">
+<a href="https://github.com/jwt-scala/jwt-scala"
+title="Go to repository"
+class="md-source"
+data-md-source="github">
+<div class="md-source__icon">
+<i class="fa fa-github"></i>
+</div>
+<div class="md-source__repository">
+jwt-scala/jwt-scala
+</div>
+</a>
+
+</div>
+<ul>
+  <li><a href="../jwt-core/index.html" class="active page">Native</a>
+  <ul>
+    <li><a href="../jwt-core/jwt-claim.html" class="page">JwtClaim Class</a></li>
+    <li><a href="../jwt-core/jwt-claim-private.html" class="page">Jwt Reserved Claims and Private Claims</a></li>
+    <li><a href="../jwt-core/jwt-header.html" class="page">JwtHeader Case Class</a></li>
+    <li><a href="../jwt-core/jwt-ecdsa.html" class="page">Jwt with ECDSA algorithms</a></li>
+  </ul></li>
+  <li><a href="../jwt-argonaut.html" class="page">Argonaut</a></li>
+  <li><a href="../jwt-circe.html" class="page">Circe</a></li>
+  <li><a href="../jwt-json4s.html" class="page">Json4s</a></li>
+  <li><a href="../jwt-play-json.html" class="page">Play Json</a></li>
+  <li><a href="../jwt-play-jwt-session.html" class="page">JwtSession case class</a></li>
+  <li><a href="../jwt-upickle.html" class="page">upickle</a></li>
+  <li><a href="../jwt-zio-json.html" class="page">ZIO Json</a></li>
+</ul>
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">Table of contents</label>
+<ul>
+  <li><a href="../jwt-core/index.html#native" class="header">Native</a>
+  <ul>
+    <li><a href="../jwt-core/index.html#basic-usage" class="header">Basic usage</a></li>
+    <li><a href="../jwt-core/index.html#encoding" class="header">Encoding</a></li>
+    <li><a href="../jwt-core/index.html#decoding" class="header">Decoding</a></li>
+    <li><a href="../jwt-core/index.html#validating" class="header">Validating</a></li>
+    <li><a href="../jwt-core/index.html#using-a-custom-clock" class="header">Using a custom clock</a></li>
+    <li><a href="../jwt-core/index.html#options" class="header">Options</a></li>
+  </ul></li>
+</ul>
+</nav>
+
+</nav>
+<ul style="display: none">
+<li class="md-nav__item md-version" id="project.version">
+<label class="md-nav__link" for="__version">
+<i class="md-icon" title="Version">label_outline</i> 11.0.3
+</label>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">Table of contents</label>
+<ul>
+  <li><a href="../jwt-core/index.html#native" class="header">Native</a>
+  <ul>
+    <li><a href="../jwt-core/index.html#basic-usage" class="header">Basic usage</a></li>
+    <li><a href="../jwt-core/index.html#encoding" class="header">Encoding</a></li>
+    <li><a href="../jwt-core/index.html#decoding" class="header">Decoding</a></li>
+    <li><a href="../jwt-core/index.html#validating" class="header">Validating</a></li>
+    <li><a href="../jwt-core/index.html#using-a-custom-clock" class="header">Using a custom clock</a></li>
+    <li><a href="../jwt-core/index.html#options" class="header">Options</a></li>
+  </ul></li>
+</ul>
+</nav>
+
+</div>
+</div>
+</div>
+<div class="md-content">
+<article class="md-content__inner md-typeset">
+<div class="md-content__searchable">
+<p>This module doesn&rsquo;t use any dependency, it is useful if you don&rsquo;t have any Json library in your project.</p>
+<p>It is based a naive parsing of Json strings, and doesn&rsquo;t support any custom parameter in the Claim so if you need any custom parameter, or if you&rsquo;re already using one of the supported Json libraries, consider using that instead.</p>
+<h2><a href="#native" name="native" class="anchor"><span class="anchor-link"></span></a>Native</h2>
+<ul>
+  <li><a href="https://jwt-scala.github.io/jwt-scala/api/pdi/jwt/Jwt$.html">API Documentation</a></li>
+</ul>
+<pre class="prettyprint"><code class="language-scala">libraryDependencies += &quot;com.github.jwt-scala&quot; %% &quot;jwt-core&quot; % &quot;11.0.3&quot;
+</code></pre>
+<h3><a href="#basic-usage" name="basic-usage" class="anchor"><span class="anchor-link"></span></a>Basic usage</h3>
+<pre class="prettyprint"><code class="language-scala mdoc:reset">import java.time.Clock
+import pdi.jwt.{Jwt, JwtAlgorithm, JwtHeader, JwtClaim, JwtOptions}
+implicit val clock: Clock = Clock.systemUTC
+val token = Jwt.encode(&quot;&quot;&quot;{&quot;user&quot;:1}&quot;&quot;&quot;, &quot;secretKey&quot;, JwtAlgorithm.HS256)
+Jwt.decodeRawAll(token, &quot;secretKey&quot;, Seq(JwtAlgorithm.HS256))
+Jwt.decodeRawAll(token, &quot;wrongKey&quot;, Seq(JwtAlgorithm.HS256))
+</code></pre>
+<h3><a href="#encoding" name="encoding" class="anchor"><span class="anchor-link"></span></a>Encoding</h3>
+<pre class="prettyprint"><code class="language-scala mdoc">// Encode from string, header automatically generated
+Jwt.encode(&quot;&quot;&quot;{&quot;user&quot;:1}&quot;&quot;&quot;, &quot;secretKey&quot;, JwtAlgorithm.HS384)
+
+// Encode from case class, header automatically generated
+// Set that the token has been issued now and expires in 10 seconds
+Jwt.encode(JwtClaim({&quot;&quot;&quot;{&quot;user&quot;:1}&quot;&quot;&quot;}).issuedNow.expiresIn(10), &quot;secretKey&quot;, JwtAlgorithm.HS512)
+
+// You can encode without signing it
+Jwt.encode(&quot;&quot;&quot;{&quot;user&quot;:1}&quot;&quot;&quot;)
+
+// You can specify a string header but also need to specify the algorithm just to be sure
+// This is not really typesafe, so please use it with care
+Jwt.encode(&quot;&quot;&quot;{&quot;typ&quot;:&quot;JWT&quot;,&quot;alg&quot;:&quot;HS256&quot;}&quot;&quot;&quot;, &quot;&quot;&quot;{&quot;user&quot;:1}&quot;&quot;&quot;, &quot;key&quot;, JwtAlgorithm.HS256)
+
+// If using a case class header, no need to repeat the algorithm
+// This is way better than the previous one
+Jwt.encode(JwtHeader(JwtAlgorithm.HS256), JwtClaim(&quot;&quot;&quot;{&quot;user&quot;:1}&quot;&quot;&quot;), &quot;key&quot;)
+</code></pre>
+<h3><a href="#decoding" name="decoding" class="anchor"><span class="anchor-link"></span></a>Decoding</h3>
+<p>In JWT Scala, espcially when using raw strings which are not typesafe at all, there are a lot of possible errors. This is why nearly all <code>decode</code> functions will return a <code>Try</code> rather than directly the expected result. In case of failure, the wrapped exception should tell you what went wrong.</p>
+<p>Take note that nearly all decoding methods (including those from helper libs) support either a <code>String</code> key, or a <code>PrivateKey</code> with a Hmac algorithm or a <code>PublicKey</code> with a RSA or ECDSA algorithm.</p>
+<pre class="prettyprint"><code class="language-scala mdoc">// Decode all parts of the token as string
+Jwt.decodeRawAll(token, &quot;secretKey&quot;, JwtAlgorithm.allHmac())
+
+// Decode only the claim as a string
+Jwt.decodeRaw(token, &quot;secretKey&quot;, Seq(JwtAlgorithm.HS256))
+
+// Decode all parts and cast them as a better type if possible.
+// Since the implementation in JWT Core only use string, it is the same as decodeRawAll
+// But check the result in JWT Play JSON to see the difference
+Jwt.decodeAll(token, &quot;secretKey&quot;, Seq(JwtAlgorithm.HS256))
+
+// Same as before, but only the claim
+// (you should start to see a pattern in the naming convention of the functions)
+Jwt.decode(token, &quot;secretKey&quot;, Seq(JwtAlgorithm.HS256))
+
+// Failure because the token is not a token at all
+Jwt.decode(&quot;Hey there!&quot;)
+
+// Failure if not Base64 encoded
+Jwt.decode(&quot;a.b.c&quot;)
+
+// Failure in case we use the wrong key
+Jwt.decode(token, &quot;wrongKey&quot;, Seq(JwtAlgorithm.HS256))
+
+// Failure if the token only starts in 5 seconds
+Jwt.decode(Jwt.encode(JwtClaim().startsIn(5)))
+</code></pre>
+<h3><a href="#validating" name="validating" class="anchor"><span class="anchor-link"></span></a>Validating</h3>
+<p>If you only want to check if a token is valid without decoding it. You have two options: <code>validate</code> functions that will throw the exceptions we saw in the decoding section, so you know what went wrong, or <code>isValid</code> functions that will return a boolean in case you don&rsquo;t care about the actual error and don&rsquo;t want to bother with catching exception.</p>
+<pre class="prettyprint"><code class="language-scala mdoc:crash">// All good
+Jwt.validate(token, &quot;secretKey&quot;, Seq(JwtAlgorithm.HS256))
+Jwt.isValid(token, &quot;secretKey&quot;, Seq(JwtAlgorithm.HS256))
+
+// Wrong key here
+Jwt.validate(token, &quot;wrongKey&quot;, Seq(JwtAlgorithm.HS256))
+Jwt.isValid(token, &quot;wrongKey&quot;, Seq(JwtAlgorithm.HS256))
+
+// No key for unsigned token =&gt; ok
+Jwt.validate(Jwt.encode(&quot;{}&quot;))
+Jwt.isValid(Jwt.encode(&quot;{}&quot;))
+
+// No key while the token is actually signed =&gt; wrong
+Jwt.validate(token)
+Jwt.isValid(token)
+
+// The token hasn&#39;t started yet!
+Jwt.validate(Jwt.encode(JwtClaim().startsIn(5)))
+Jwt.isValid(Jwt.encode(JwtClaim().startsIn(5)))
+
+// This is no token
+Jwt.validate(&quot;a.b.c&quot;)
+Jwt.isValid(&quot;a.b.c&quot;)
+</code></pre>
+<h3><a href="#using-a-custom-clock" name="using-a-custom-clock" class="anchor"><span class="anchor-link"></span></a>Using a custom clock</h3>
+<p>For testing, it can sometimes be useful to use a fake clock that will always return a fixed time. It can be done by instanciating <code>Jwt</code> instead of using the object (based on the system clock):</p>
+<pre class="prettyprint"><code class="language-scala mdoc">import java.time.{Clock, Instant, ZoneId}
+
+val startTime = Clock.fixed(Instant.ofEpochSecond(0), ZoneId.of(&quot;UTC&quot;))
+val endTime = Clock.fixed(Instant.ofEpochSecond(5), ZoneId.of(&quot;UTC&quot;))
+
+val customJwt = Jwt(endTime)
+
+val claim = JwtClaim().issuedNow(startTime).expiresIn(10)(startTime)
+val encoded = customJwt.encode(claim, &quot;key&quot;, JwtAlgorithm.HS256)
+
+customJwt.decode(encoded, &quot;key&quot;, JwtAlgorithm.allHmac())
+</code></pre>
+<h3><a href="#options" name="options" class="anchor"><span class="anchor-link"></span></a>Options</h3>
+<p>All validating and decoding methods support a final optional argument as a <code>JwtOptions</code> which allow you to disable validation checks. This is useful if you need to access data from an expired token for example. You can disable <code>expiration</code>, <code>notBefore</code> and <code>signature</code> checks. Be warned that if you disable the last one, you have no guarantee that the user didn&rsquo;t change the content of the token.</p>
+<pre class="prettyprint"><code class="language-scala mdoc">val expiredToken = Jwt.encode(JwtClaim().by(&quot;me&quot;).expiresIn(-1))
+
+// Fail since the token is expired
+Jwt.isValid(expiredToken)
+Jwt.decode(expiredToken)
+
+// Let&#39;s disable expiration check
+Jwt.isValid(expiredToken, JwtOptions(expiration = false))
+Jwt.decode(expiredToken, JwtOptions(expiration = false))
+</code></pre>
+<p>You can also specify a leeway, in seconds, to account for clock skew.</p>
+<pre class="prettyprint"><code class="language-scala mdoc">// Allow 30sec leeway
+Jwt.isValid(expiredToken, JwtOptions(leeway = 30))
+Jwt.decode(expiredToken, JwtOptions(leeway = 30))
+</code></pre>
+</div>
+<div>
+<a href="https://github.com/jwt-scala/jwt-scala/tree/v11.0.3/docs/src/main/paradox/jwt-core/index.md" title="Edit this page" class="md-source-file md-edit">
+Edit this page
+</a>
+</div>
+<div class="print-only">
+<span class="md-source-file md-version">
+11.0.3
+</span>
+</div>
+</article>
+</div>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-nav">
+<nav class="md-footer-nav__inner md-grid">
+<a href="../index.html" title="JWT Scala" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<div class="md-flex__cell md-flex__cell--shrink">
+<i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+</div>
+<div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+<span class="md-flex__ellipsis">
+<span class="md-footer-nav__direction">
+Previous
+</span>
+JWT Scala
+</span>
+</div>
+</a>
+<a href="../jwt-core/jwt-claim.html" title="JwtClaim Class" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+<span class="md-flex__ellipsis">
+<span class="md-footer-nav__direction">
+Next
+</span>
+JwtClaim Class
+</span>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+</div>
+</a>
+</nav>
+</div>
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-footer-copyright">
+Powered by
+<a href="https://github.com/lightbend/paradox">Paradox</a>
+and
+<a href="https://sbt.github.io/sbt-paradox-material-theme/">Paradox Material Theme</a>
+
+</div>
+</div>
+</div>
+</footer>
+
+</div>
+<script src="../assets/javascripts/application.583bbe55.js"></script>
+<script src="../assets/javascripts/paradox-material-theme.js"></script>
+<script>app.initialize({version:"0.17",url:{base:"../."}})</script>
+<script type="text/javascript" src="../lib/prettify/prettify.js"></script>
+<script type="text/javascript" src="../lib/prettify/lang-scala.js"></script>
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(event) {
+window.prettyPrint && prettyPrint();
+});
+</script>
+</body>
+</html>
