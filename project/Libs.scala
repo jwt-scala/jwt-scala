@@ -4,7 +4,7 @@ import sbt._
 object Versions {
   val munit = "1.1.0"
 
-  val bouncyCastle = "1.81"
+  val bouncyCastle = "1.82"
 
   val guice = "4.2.3"
 
