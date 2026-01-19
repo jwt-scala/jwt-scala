@@ -20,7 +20,7 @@ object Versions {
 
   val circe = "0.14.14"
 
-  val upickle = "4.4.0"
+  val upickle = "4.4.2"
 
   val zioJson = "0.7.44"
 
