@@ -12,7 +12,7 @@ object Versions {
 
   val scalajsSecureRandom = "1.0.0"
 
-  val play = "3.0.9"
+  val play = "3.0.10"
 
   val playJson = "3.0.5"
 
