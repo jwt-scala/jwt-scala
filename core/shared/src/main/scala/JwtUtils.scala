@@ -296,16 +296,33 @@ object JwtUtils {
     if (signatureLength > 255)
       throw new JwtSignatureFormatException("Invalid ECDSA signature format")
 
-    val signatureDER = scala.collection.mutable.ListBuffer.empty[Byte]
-    signatureDER += 48
-    if (signatureLength >= 128)
-      signatureDER += 0x81.toByte
+    val packetLength = if (signatureLength >= 128) 3 + signatureLength else 2 + signatureLength
+    val signatureDER = new Array[Byte](packetLength)
 
-    signatureDER += signatureLength.toByte
-    signatureDER ++= (Seq(2.toByte, r.length.toByte) ++ r)
-    signatureDER ++= (Seq(2.toByte, s.length.toByte) ++ s)
+    var i = 0
+    signatureDER(i) = 48
+    i += 1
+    if (signatureLength >= 128) {
+      signatureDER(i) = 0x81.toByte
+      i += 1
+    }
+    signatureDER(i) = signatureLength.toByte
+    i += 1
 
-    signatureDER.toArray
+    signatureDER(i) = 2
+    i += 1
+    signatureDER(i) = r.length.toByte
+    i += 1
+    System.arraycopy(r, 0, signatureDER, i, r.length)
+    i += r.length
+
+    signatureDER(i) = 2
+    i += 1
+    signatureDER(i) = s.length.toByte
+    i += 1
+    System.arraycopy(s, 0, signatureDER, i, s.length)
+
+    signatureDER
   }
 
   def splitString(input: String, separator: Char): Array[String] = {
