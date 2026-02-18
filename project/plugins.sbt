@@ -24,7 +24,7 @@ addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.6")
 
 addSbtPlugin("org.typelevel" % "sbt-tpolecat" % "0.5.3")
 
-addSbtPlugin("com.typesafe" % "sbt-mima-plugin" % "1.1.4")
+addSbtPlugin("com.typesafe" % "sbt-mima-plugin" % "1.1.5")
 
 // Scala JS / Scala Native
 
