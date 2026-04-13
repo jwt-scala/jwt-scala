@@ -16,7 +16,7 @@ object Versions {
 
   val playJson = "3.0.5"
 
-  val json4s = "4.0.7"
+  val json4s = "4.1.0"
 
   val circe = "0.14.14"
 
@@ -42,9 +42,9 @@ object Libs {
   val playTestProvided = "org.playframework" %% "play-test" % Versions.play
   val guice = "com.google.inject" % "guice" % Versions.guice % "test"
 
-  val json4sCore = "org.json4s" %% "json4s-core" % Versions.json4s
-  val json4sNative = "org.json4s" %% "json4s-native-core" % Versions.json4s
-  val json4sJackson = "org.json4s" %% "json4s-jackson-core" % Versions.json4s
+  val json4sCore = "io.github.json4s" %% "json4s-core" % Versions.json4s
+  val json4sNative = "io.github.json4s" %% "json4s-native-core" % Versions.json4s
+  val json4sJackson = "io.github.json4s" %% "json4s-jackson-core" % Versions.json4s
 
   val circeCore = Def.setting("io.circe" %%% "circe-core" % Versions.circe)
   val circeGeneric = Def.setting("io.circe" %%% "circe-generic" % Versions.circe)
