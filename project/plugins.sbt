@@ -1,6 +1,6 @@
 // Documentation
 
-addSbtPlugin("com.github.sbt" % "sbt-site-paradox" % "1.7.0")
+addSbtPlugin("com.github.sbt" % "sbt-site-paradox" % "1.8.0")
 
 addSbtPlugin("com.github.sbt" % "sbt-unidoc" % "0.6.1")
 
