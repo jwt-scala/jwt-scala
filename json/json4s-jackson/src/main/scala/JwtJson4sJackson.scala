@@ -18,6 +18,10 @@ trait JwtJson4sParser[H, C] extends JwtJson4sCommon[H, C] with JwtJson4sImplicit
   }
 
   protected def stringify(value: JObject): String = compact(render(value))
+
+  def parseJwk(json: String): Jwk = readJwk(jparse(json))
+
+  def parseJwkSet(json: String): JwkSet = readJwkSet(jparse(json))
 }
 
 object JwtJson4s extends JwtJson4s(Clock.systemUTC) {

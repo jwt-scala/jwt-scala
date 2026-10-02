@@ -1,6 +1,7 @@
 package pdi.jwt
 
 import java.time.Clock
+import scala.util.Try
 
 import pdi.jwt.exceptions.{JwtNonNumberException, JwtNonStringException, JwtValidationException}
 import play.api.libs.json.*
@@ -22,6 +23,35 @@ trait JwtJsonParser[H, C] extends JwtJsonCommon[JsObject, H, C] with JwtJsonImpl
       case JsNull           => None
       case _                => throw new JwtNonStringException("alg")
     }
+
+  def parseJwk(json: String): Jwk = Json.parse(json) match {
+    case obj: JsObject => readJwk(obj)
+    case _             => throw new JwtValidationException("A JWK must be a JSON object.")
+  }
+
+  def parseJwkSet(json: String): JwkSet = Json.parse(json) \ "keys" match {
+    case JsDefined(JsArray(keys)) =>
+      JwkSet(
+        keys.collect { case obj: JsObject => obj }.flatMap(key => Try(readJwk(key)).toOption).toList
+      )
+    case _ => throw new JwtValidationException("A JWK Set must have a [keys] array.")
+  }
+
+  private def readJwk(json: JsObject): Jwk = Jwk.fromMembers(
+    name =>
+      json.value.get(name).map {
+        case JsString(value) => value
+        case _               => throw new JwtNonStringException(name)
+      },
+    name =>
+      json.value.get(name).map {
+        case JsArray(elements) =>
+          val strings = elements.collect { case JsString(value) => value }
+          if (strings.length == elements.length) strings.toList
+          else throw new JwtNonStringException(name)
+        case _ => throw new JwtNonStringException(name)
+      }
+  )
 
 }
 

@@ -1,9 +1,11 @@
 package pdi.jwt
 
 import java.time.Clock
+import scala.util.Try
 
 import argonaut.*
 import argonaut.Argonaut.*
+import pdi.jwt.exceptions.{JwtNonStringException, JwtValidationException}
 
 trait JwtArgonautParser[H, C] extends JwtJsonCommon[Json, H, C] {
   override protected def parse(value: String): Json = Parse.parseOption(value).get
@@ -15,6 +17,29 @@ trait JwtArgonautParser[H, C] extends JwtJsonCommon[Json, H, C] {
     .map(_.stringOrEmpty)
     .filterNot(_ == "none")
     .map(JwtAlgorithm.fromString)
+
+  def parseJwk(json: String): Jwk = readJwk(
+    parse(json).obj.getOrElse(throw new JwtValidationException("A JWK must be a JSON object."))
+  )
+
+  def parseJwkSet(json: String): JwkSet = {
+    val keys = parse(json)
+      .field("keys")
+      .flatMap(_.array)
+      .getOrElse(throw new JwtValidationException("A JWK Set must have a [keys] array."))
+    JwkSet(keys.flatMap(_.obj).flatMap(key => Try(readJwk(key)).toOption))
+  }
+
+  private def readJwk(json: JsonObject): Jwk = Jwk.fromMembers(
+    name => json(name).map(_.string.getOrElse(throw new JwtNonStringException(name))),
+    name =>
+      json(name).map { value =>
+        value.array
+          .map(array => array.flatMap(_.string) -> array.length)
+          .collect { case (strings, length) if strings.length == length => strings }
+          .getOrElse(throw new JwtNonStringException(name))
+      }
+  )
 }
 
 object JwtArgonaut extends JwtArgonaut(Clock.systemUTC) {

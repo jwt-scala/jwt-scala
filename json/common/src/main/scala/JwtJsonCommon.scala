@@ -200,4 +200,29 @@ trait JwtJsonCommon[J, H, C] extends JwtCore[H, C] {
 
   def decodeJson(token: String, key: PublicKey): Try[J] =
     decodeJson(token, key, JwtOptions.DEFAULT)
+
+  /** Parse a public JWK. Private members such as `d`, `p` or `q` are ignored. If the document is
+    * not valid JSON, the parse error of the JSON library is let through.
+    *
+    * @throws pdi.jwt.exceptions.JwtValidationException
+    *   if the document is not a JSON object, or a key parameter is empty, has the wrong length or
+    *   is a point that is not on the curve
+    * @throws pdi.jwt.exceptions.JwtNonStringException
+    *   if a member is missing or is not a string, or `key_ops` is not an array of strings
+    * @throws pdi.jwt.exceptions.JwtNonSupportedAlgorithm
+    *   if the key type is not `RSA`, `EC` or `OKP`
+    * @throws pdi.jwt.exceptions.JwtNonSupportedCurve
+    *   if the curve is not supported
+    * @throws java.lang.IllegalArgumentException
+    *   if a key parameter is not valid base64url
+    */
+  def parseJwk(json: String): Jwk
+
+  /** Parse a JWK Set. As per RFC 7517 section 5, keys that are not usable are skipped. If the
+    * document is not valid JSON, the parse error of the JSON library is let through.
+    *
+    * @throws pdi.jwt.exceptions.JwtValidationException
+    *   if the document has no `keys` array
+    */
+  def parseJwkSet(json: String): JwkSet
 }
