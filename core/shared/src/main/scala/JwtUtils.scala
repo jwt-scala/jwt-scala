@@ -33,7 +33,25 @@ object JwtUtils {
     */
   def bytify(str: String): Array[Byte] = str.getBytes(ENCODING)
 
-  private def escape(value: String): String = value.replaceAll("\"", "\\\\\"")
+  private def escape(value: String): String = {
+    val builder = new java.lang.StringBuilder(value.length + 2)
+    value.foreach {
+      case '"'          => builder.append("\\\"")
+      case '\\'         => builder.append("\\\\")
+      case '\b'         => builder.append("\\b")
+      case '\f'         => builder.append("\\f")
+      case '\n'         => builder.append("\\n")
+      case '\r'         => builder.append("\\r")
+      case '\t'         => builder.append("\\t")
+      case c if c < ' ' =>
+        builder
+          .append("\\u00")
+          .append(Character.forDigit(c >> 4, 16))
+          .append(Character.forDigit(c & 0xf, 16))
+      case c => builder.append(c)
+    }
+    builder.toString
+  }
 
   /** Convert a sequence to a JSON array
     */

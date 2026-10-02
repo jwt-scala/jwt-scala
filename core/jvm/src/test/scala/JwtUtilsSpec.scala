@@ -37,6 +37,34 @@ class JwtUtilsSpec extends munit.ScalaCheckSuite with Fixture {
     }
   }
 
+  test("hashToJson should escape backslashes, quotes and control characters") {
+    assertEquals(JwtUtils.hashToJson(Seq("a" -> "x\\y")), "{\"a\":\"x\\\\y\"}")
+    assertEquals(JwtUtils.hashToJson(Seq("a" -> "x\"y")), "{\"a\":\"x\\\"y\"}")
+    assertEquals(
+      JwtUtils.hashToJson(Seq("a" -> "\b\f\n\r\t")),
+      "{\"a\":\"\\b\\f\\n\\r\\t\"}"
+    )
+    assertEquals(
+      JwtUtils.hashToJson(Seq("a" -> "\u0000\u0001\u001f")),
+      "{\"a\":\"\\u0000\\u0001\\u001f\"}"
+    )
+    assertEquals(JwtUtils.hashToJson(Seq("k\\\n" -> "v")), "{\"k\\\\\\n\":\"v\"}")
+  }
+
+  test("hashToJson should not escape the slash, DEL and non ASCII characters") {
+    assertEquals(
+      JwtUtils.hashToJson(Seq("a" -> "/\u007f\u00e9\u20ac\ud83d\ude00 ")),
+      "{\"a\":\"/\u007f\u00e9\u20ac\ud83d\ude00 \"}"
+    )
+  }
+
+  test("seqToJson should escape its strings") {
+    assertEquals(
+      JwtUtils.seqToJson(Seq("a\\b", "c\nd", TestObject("e\"f"))),
+      "[\"a\\\\b\",\"c\\nd\",\"e\\\"f\"]"
+    )
+  }
+
   test("mergeJson should correctly merge 2 JSONs") {
     val values: Seq[(String, String, Seq[String])] = Seq(
       ("{}", "{}", Seq("{}")),
