@@ -1,12 +1,13 @@
 package pdi.jwt
 
 import java.time.Clock
-import scala.util.Success
+import scala.util.{Failure, Success}
 
 import pdi.jwt.exceptions.{
   JwtNonStringException,
   JwtNonSupportedAlgorithm,
   JwtNonSupportedCurve,
+  JwtUnknownKeyIdException,
   JwtValidationException
 }
 
@@ -92,6 +93,31 @@ abstract class JwtJsonCommonSpec[J] extends munit.FunSuite with JsonCommonFixtur
         success,
         d.algo.fullName
       )
+    }
+  }
+
+  test("should decodeWithJwks with the key of the set that has the kid of the token") {
+    val keys = JwkSet(
+      Seq(
+        Jwk.fromPublicKey(JwtUtils.parsePublicKey(publicKeyRSA, JwtUtils.RSA), Some("rsa-1"))
+      )
+    )
+    def tokenWith(kid: String): String = validTimeJwt.encode(
+      s"""{"typ":"JWT","alg":"RS256","kid":"$kid"}""",
+      claim,
+      privateKeyRSA,
+      JwtAlgorithm.RS256
+    )
+
+    val algorithms = JwtAlgorithm.allRSA()
+
+    assertEquals(
+      validTimeJwt.decodeWithJwks(tokenWith("rsa-1"), keys, algorithms),
+      Success(claimClass)
+    )
+    validTimeJwt.decodeWithJwks(tokenWith("other"), keys, algorithms) match {
+      case Failure(e: JwtUnknownKeyIdException) => assertEquals(e.keyId, "other")
+      case other                                => fail(s"Unexpected result: $other")
     }
   }
 
