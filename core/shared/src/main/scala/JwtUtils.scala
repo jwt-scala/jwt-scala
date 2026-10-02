@@ -9,7 +9,11 @@ import javax.crypto.{Mac, SecretKey}
 
 import pdi.jwt.JwtAlgorithm.{ES256, ES384, ES512}
 import pdi.jwt.algorithms.*
-import pdi.jwt.exceptions.{JwtNonSupportedAlgorithm, JwtSignatureFormatException}
+import pdi.jwt.exceptions.{
+  JwtNonSupportedAlgorithm,
+  JwtSignatureFormatException,
+  JwtValidationException
+}
 
 object JwtUtils {
   val ENCODING = "UTF-8"
@@ -151,6 +155,62 @@ object JwtUtils {
       .getInstance(RSA)
       .generatePublic(new RSAPublicKeySpec(modulus, exponent))
       .asInstanceOf[RSAPublicKey]
+
+  /** Minimal-length unsigned big-endian bytes of a non-negative number. */
+  private def unsigned(value: BigInteger): Array[Byte] = {
+    if (value.signum < 0)
+      throw new JwtValidationException("A key parameter cannot be a negative number.")
+    val bytes = value.toByteArray
+    // BigInteger.toByteArray prepends a 0x00 sign byte when the top bit is set
+    if (bytes.length > 1 && bytes(0) == 0) bytes.drop(1) else bytes
+  }
+
+  /** Unsigned big-endian bytes left-padded with zeros to exactly `length` bytes. */
+  private def fixedBytes(value: BigInteger, length: Int): Array[Byte] = {
+    val bytes = unsigned(value)
+    if (bytes.length > length)
+      throw new JwtValidationException(s"A key parameter does not fit in $length bytes.")
+    new Array[Byte](length - bytes.length) ++ bytes
+  }
+
+  private def decodeBytes(member: String, value: String): Array[Byte] = {
+    val bytes = JwtBase64.decode(value)
+    if (bytes.isEmpty) throw new JwtValidationException(s"The [$member] member is empty.")
+    bytes
+  }
+
+  /** JOSE Base64urlUInt (RFC 7518 section 2) of a non-negative number. */
+  private[jwt] def encodeUInt(value: BigInteger): String =
+    JwtBase64.encodeString(unsigned(value))
+
+  private[jwt] def requireFits(value: BigInteger, length: Int): Unit = {
+    val bytes = unsigned(value)
+    if (bytes.length > length)
+      throw new JwtValidationException(s"A key parameter does not fit in $length bytes.")
+  }
+
+  private[jwt] def encodeFixed(value: BigInteger, length: Int): String =
+    JwtBase64.encodeString(fixedBytes(value, length))
+
+  private[jwt] def decodeUInt(member: String, value: String): BigInteger =
+    new BigInteger(1, decodeBytes(member, value))
+
+  private[jwt] def requireDecodedLength(member: String, value: String, length: Int): Unit = {
+    val bytes = decodeBytes(member, value)
+    if (bytes.length != length)
+      throw new JwtValidationException(
+        s"The [$member] member must be $length bytes, got ${bytes.length}."
+      )
+  }
+
+  private[jwt] def decodeFixed(member: String, value: String, length: Int): Array[Byte] = {
+    val bytes = decodeBytes(member, value)
+    if (bytes.length != length)
+      throw new JwtValidationException(
+        s"The [$member] member must be $length bytes, got ${bytes.length}."
+      )
+    bytes
+  }
 
   /** Generate the signature for a given data using the key and HMAC algorithm provided.
     */
