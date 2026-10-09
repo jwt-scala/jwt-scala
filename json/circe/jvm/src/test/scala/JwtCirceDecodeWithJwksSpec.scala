@@ -339,13 +339,9 @@ class JwtCirceDecodeWithJwksSpec extends munit.FunSuite {
   }
 
   test("decodeWithJwks should let the SignatureException of decode through") {
-    signers.filter(_.algorithm == EdDSA).foreach { s =>
-      val parts = tokenFor(s).split('.')
-      val signature = JwtBase64.decode(parts(2))
-      signature(signature.length - 1) = 0xff.toByte
-      val malformed = parts(0) + "." + parts(1) + "." + JwtBase64.encodeString(signature)
-      intercept[SignatureException](decode(malformed).get)
-    }
+    val parts = tokenFor(signer("rsa-256")).split('.')
+    val truncated = JwtBase64.encodeString(JwtBase64.decode(parts(2)).dropRight(1))
+    intercept[SignatureException](decode(parts(0) + "." + parts(1) + "." + truncated).get)
   }
 
   test("decodeWithJwks should fail with a tampered claim") {

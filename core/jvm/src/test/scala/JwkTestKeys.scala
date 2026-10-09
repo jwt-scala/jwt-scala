@@ -3,9 +3,18 @@ package pdi.jwt
 import java.math.BigInteger
 import java.security.interfaces.{ECPublicKey, RSAPublicKey}
 import java.security.spec.ECGenParameterSpec
-import java.security.{KeyPair, KeyPairGenerator}
+import java.security.{KeyPair, KeyPairGenerator, Security}
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 
 object JwkTestKeys {
+
+  // Ed25519 and Ed448 are only in the JDK since 15, Bouncycastle provides them before.
+  if (Security.getProvider("BC") == null) {
+    Security.addProvider(new BouncyCastleProvider())
+    ()
+  }
+
   val Rfc7638Modulus =
     "0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPeb" +
       "WKRXjBZCiFV4n3oknjhMstn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMicAtaSqzs8KJZgn" +
