@@ -341,7 +341,8 @@ class JwkSpec extends munit.FunSuite {
   test("thumbprint should match the RFC 8037 appendix A.3 Ed25519 example") {
     val jwk = OkpJwk(None, None, None, OkpCurve.Ed25519, Rfc8037Ed25519X)
     assertEquals(jwk.thumbprint.base64Url, Rfc8037Ed25519Thumbprint)
-    assertEquals(jwk.publicKey.getAlgorithm, "EdDSA")
+    // JDK versions differ on PublicKey.getAlgorithm ("EdDSA" vs "Ed25519")
+    assertEquals(Jwk.fromPublicKey(jwk.publicKey).asInstanceOf[OkpJwk].x, Rfc8037Ed25519X)
   }
 
   EcCurve.all().foreach { curve =>
