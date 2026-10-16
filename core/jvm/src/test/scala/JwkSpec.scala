@@ -136,12 +136,8 @@ class JwkSpec extends munit.FunSuite {
   }
 
   test("toJson should pad generated EC coordinates that have leading zero bytes") {
-    val short = Iterator
-      .continually(ecPublic(ec(EcCurve.P521)))
-      .take(500)
-      .find(k => unsignedBytes(k.getW.getAffineX).length < 66)
-    assert(short.isDefined)
-    val key = short.get
+    val key = ShortP521Key
+    assert(unsignedBytes(key.getW.getAffineX).length < 66)
     val jwk = Jwk.fromPublicKey(key).asInstanceOf[EcJwk]
     assertEquals(jwk.x.length, 88)
     assertEquals(jwk.y.length, 88)
@@ -357,12 +353,8 @@ class JwkSpec extends munit.FunSuite {
   }
 
   test("thumbprint of an EC key should pad short coordinates to the curve length") {
-    val short = Iterator
-      .continually(ecPublic(ec(EcCurve.P384)))
-      .take(500)
-      .find(k => unsignedBytes(k.getW.getAffineX).length < 48)
-    assert(short.isDefined)
-    val key = short.get
+    val key = ShortP384Key
+    assert(unsignedBytes(key.getW.getAffineX).length < 48)
     val jwk = Jwk.fromPublicKey(key).asInstanceOf[EcJwk]
     val json = "{\"crv\":\"P-384\",\"kty\":\"EC\",\"x\":\"" + jwk.x + "\",\"y\":\"" + jwk.y + "\"}"
     assertEquals(jwk.thumbprint.base64Url, independentThumbprint(json))
@@ -444,12 +436,9 @@ class JwkSpec extends munit.FunSuite {
   }
 
   test("EcJwk should expose P-521 coordinates of 66 bytes, 88 base64url characters") {
-    val short = Iterator
-      .continually(ecPublic(ec(EcCurve.P521)))
-      .take(500)
-      .find(k => unsignedBytes(k.getW.getAffineX).length < 66)
-    assert(short.isDefined)
-    val jwk = Jwk.fromPublicKey(short.get).asInstanceOf[EcJwk]
+    val key = ShortP521Key
+    assert(unsignedBytes(key.getW.getAffineX).length < 66)
+    val jwk = Jwk.fromPublicKey(key).asInstanceOf[EcJwk]
     assertEquals(jwk.x.length, 88)
     assertEquals(jwk.y.length, 88)
     assertEquals(JwtBase64.decode(jwk.x).length, 66)

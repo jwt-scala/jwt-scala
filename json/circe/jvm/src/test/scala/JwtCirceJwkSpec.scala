@@ -39,11 +39,8 @@ class JwtCirceJwkSpec extends munit.FunSuite {
   }
 
   test("parseJwk should round trip an EC key with a short coordinate") {
-    val key = Iterator
-      .continually(ecPublic(ec(EcCurve.P521)))
-      .take(500)
-      .find(k => unsignedBytes(k.getW.getAffineY).length < 66)
-      .get
+    val key = ShortP521Key
+    assert(unsignedBytes(key.getW.getAffineY).length < 66)
     val jwk = Jwk.fromPublicKey(key)
     assertEquals(parseJwk(jwk.toJson).publicKey, key)
   }
