@@ -65,7 +65,7 @@ val baseSettings = Seq(
     "-no-link-warnings" // Suppresses problems with Scaladoc @throws links
   ),
   scalacOptions ++= (CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, _)) => Seq("-Xsource:3")
+    case Some((2, _)) => Seq("-Xsource:3-cross")
     case _            => Nil
   })
 )

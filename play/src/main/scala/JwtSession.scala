@@ -39,7 +39,7 @@ case class JwtSession @Inject() (headerData: JsObject, claimData: JsObject, sign
     this + Json.obj(key -> writer.writes(value))
 
   /** Add a sequence of (key, value) to `claimData` */
-  def ++(fields: (String, JsValueWrapper)*): JwtSession = this + Json.obj(fields: _*)
+  def ++(fields: (String, JsValueWrapper)*): JwtSession = this + Json.obj(fields*)
 
   /** Remove one key from `claimData` */
   def -(fieldName: String): JwtSession = this.copy(claimData = claimData - fieldName)
@@ -177,7 +177,7 @@ object JwtSession extends JwtJsonImplicits with JwtPlayImplicits {
     if (fields.isEmpty) {
       JwtSession.apply(defaultHeader, JwtClaim())
     } else {
-      JwtSession.apply(Json.obj(fields: _*))
+      JwtSession.apply(Json.obj(fields*))
     }
 
   def apply(jsHeader: JsObject, jsClaim: JsObject)(implicit

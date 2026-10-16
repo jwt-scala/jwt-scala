@@ -1,6 +1,6 @@
 package pdi.jwt
 
-import zio.json._
+import zio.json.*
 import zio.json.ast.Json
 
 case class JsonDataEntry(

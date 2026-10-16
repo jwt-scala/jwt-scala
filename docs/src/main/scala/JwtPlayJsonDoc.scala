@@ -7,7 +7,7 @@ object JwtPlayJsonDoc {
   // #example
   import java.time.Clock
 
-  import pdi.jwt._
+  import pdi.jwt.*
   import play.api.libs.json.Json
 
   implicit val clock: Clock = Clock.systemUTC
@@ -44,7 +44,7 @@ object JwtPlayJsonDoc {
 
   implicit val c: Clock = Clock.systemUTC
   // #format
-  import pdi.jwt.JwtJson._
+  import pdi.jwt.JwtJson.*
 
   // Reads
   Json.fromJson[JwtHeader](header)
