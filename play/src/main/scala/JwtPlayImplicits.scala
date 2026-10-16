@@ -88,7 +88,7 @@ trait JwtPlayImplicits {
       case _    => {
         // Only refresh if we actually have a proper JWT session
         if (hasJwtHeader) {
-          result.withJwtSession(jwtSession.refresh())
+          withJwtSession(jwtSession.refresh())
         } else {
           result
         }

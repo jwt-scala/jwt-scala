@@ -1,5 +1,4 @@
-import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
-import sbt._
+import sbt.{given, *}
 
 object Versions {
   val munit = "1.1.0"
@@ -29,9 +28,9 @@ object Versions {
 
 object Libs {
   val scalaJavaTime =
-    Def.setting("io.github.cquiroz" %%% "scala-java-time" % Versions.scalaJavaTime)
+    Def.setting("io.github.cquiroz" %% "scala-java-time" % Versions.scalaJavaTime)
   val scalajsSecureRandom = Def.setting(
-    ("org.scala-js" %%% "scalajs-java-securerandom" % Versions.scalajsSecureRandom).cross(
+    ("org.scala-js" %% "scalajs-java-securerandom" % Versions.scalajsSecureRandom).cross(
       CrossVersion.for3Use2_13
     )
   )
@@ -46,12 +45,12 @@ object Libs {
   val json4sNative = "org.json4s" %% "json4s-native-core" % Versions.json4s
   val json4sJackson = "org.json4s" %% "json4s-jackson-core" % Versions.json4s
 
-  val circeCore = Def.setting("io.circe" %%% "circe-core" % Versions.circe)
-  val circeGeneric = Def.setting("io.circe" %%% "circe-generic" % Versions.circe)
-  val circeJawn = Def.setting("io.circe" %%% "circe-jawn" % Versions.circe)
-  val circeParse = Def.setting("io.circe" %%% "circe-parser" % Versions.circe)
+  val circeCore = Def.setting("io.circe" %% "circe-core" % Versions.circe)
+  val circeGeneric = Def.setting("io.circe" %% "circe-generic" % Versions.circe)
+  val circeJawn = Def.setting("io.circe" %% "circe-jawn" % Versions.circe)
+  val circeParse = Def.setting("io.circe" %% "circe-parser" % Versions.circe)
 
-  val upickle = Def.setting("com.lihaoyi" %%% "upickle" % Versions.upickle)
+  val upickle = Def.setting("com.lihaoyi" %% "upickle" % Versions.upickle)
 
   val zioJson = "dev.zio" %% "zio-json" % Versions.zioJson
 
@@ -60,7 +59,7 @@ object Libs {
   val bouncyCastle = "org.bouncycastle" % "bcpkix-jdk18on" % Versions.bouncyCastle % Test
   val bouncyCastleTut = "org.bouncycastle" % "bcpkix-jdk18on" % Versions.bouncyCastle
 
-  val munit = Def.setting("org.scalameta" %%% "munit" % Versions.munit % Test)
+  val munit = Def.setting("org.scalameta" %% "munit" % Versions.munit % Test)
   val munitScalacheck =
-    Def.setting("org.scalameta" %%% "munit-scalacheck" % Versions.munit % Test)
+    Def.setting("org.scalameta" %% "munit-scalacheck" % Versions.munit % Test)
 }

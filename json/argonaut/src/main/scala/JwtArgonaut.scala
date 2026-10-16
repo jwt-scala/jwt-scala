@@ -58,13 +58,13 @@ class JwtArgonaut(override val clock: Clock) extends JwtArgonautParser[JwtHeader
       (json -| field).map(f)
 
     def -|>>(field: String): Option[String] =
-      (json -|> field)(_.stringOrEmpty)
+      this.-|>(field)(_.stringOrEmpty)
 
     def -||>(field: String): Option[Long] =
-      (json -|> field)(_.nospaces.toLong)
+      this.-|>(field)(_.nospaces.toLong)
 
     def -|||(field: String): Option[Set[String]] =
-      (json -|> field)(_.arrayOrEmpty.map(_.nospaces).toSet)
+      this.-|>(field)(_.arrayOrEmpty.map(_.nospaces).toSet)
   }
 
   private def parseClaimHelp(claim: String): JwtClaim =

@@ -15,14 +15,14 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 17
           cache: sbt
       - uses: sbt/setup-sbt@v1
       - name: "Get latest tag"
         id: previoustag
         uses: "WyriHaximus/github-action-get-previous-tag@v1"
       - name: Build
-        run: sbt 'set docs/version := "${{ steps.previoustag.outputs.tag }}".drop(1)' docs/makeSite
+        run: sbt 'set docs/version := "${{ steps.previoustag.outputs.tag }}".drop(1); docs/makeSite'
       - name: setup git config
         run: |
           git config user.name "GitHub Actions Bot"
@@ -30,7 +30,7 @@ jobs:
       - name: Deploy
         run: |
           git checkout --orphan gh-pages
-          git add -f docs/target/site
+          git add -f target/site
           git commit -m "Rebuild GitHub pages"
-          git filter-branch -f --prune-empty --subdirectory-filter docs/target/site
+          git filter-branch -f --prune-empty --subdirectory-filter target/site
           git push -f origin gh-pages
