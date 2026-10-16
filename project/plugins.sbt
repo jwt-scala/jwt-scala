@@ -12,7 +12,7 @@ addSbtPlugin("com.github.sbt" % "sbt-ghpages" % "0.10.0")
 
 addSbtPlugin("com.github.sbt" % "sbt-pgp" % "2.3.1")
 
-addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.12.0")
+addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.12.1")
 
 // Linting
 
