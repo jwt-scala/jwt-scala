@@ -17,6 +17,11 @@ import pdi.jwt.exceptions.*
   *
   * The certificate members `x5c`, `x5t`, `x5t#S256` and `x5u` are ignored too: no certificate chain
   * is read, validated or checked against the key, and they are never written by `toJson`.
+  *
+  * Keys are immutable values. Use the companion factories to construct them, named accessors to
+  * inspect them and `withKeyId`, `withUse`, `withAlgorithm` or `withKeyOperations` to update their
+  * metadata. They deliberately do not expose case-class `copy`, extractors or `Product` APIs, so
+  * that the model can evolve without changing those public signatures.
   */
 sealed trait Jwk {
 
@@ -165,14 +170,50 @@ object Jwk {
   }
 }
 
-final case class RsaJwk(
-    keyId: Option[String],
-    use: Option[JwkUse],
-    algorithm: Option[String],
-    modulus: BigInteger,
-    exponent: BigInteger,
-    keyOperations: Option[Set[String]] = None
+object RsaJwk {
+  def apply(
+      keyId: Option[String],
+      use: Option[JwkUse],
+      algorithm: Option[String],
+      modulus: BigInteger,
+      exponent: BigInteger,
+      keyOperations: Option[Set[String]] = None
+  ): RsaJwk = new RsaJwk(keyId, use, algorithm, modulus, exponent, keyOperations)
+}
+
+final class RsaJwk private (
+    val keyId: Option[String],
+    val use: Option[JwkUse],
+    val algorithm: Option[String],
+    val modulus: BigInteger,
+    val exponent: BigInteger,
+    val keyOperations: Option[Set[String]]
 ) extends Jwk {
+
+  def withKeyId(keyId: Option[String]): RsaJwk =
+    RsaJwk(keyId, use, algorithm, modulus, exponent, keyOperations)
+
+  def withUse(use: Option[JwkUse]): RsaJwk =
+    RsaJwk(keyId, use, algorithm, modulus, exponent, keyOperations)
+
+  def withAlgorithm(algorithm: Option[String]): RsaJwk =
+    RsaJwk(keyId, use, algorithm, modulus, exponent, keyOperations)
+
+  def withKeyOperations(keyOperations: Option[Set[String]]): RsaJwk =
+    RsaJwk(keyId, use, algorithm, modulus, exponent, keyOperations)
+
+  override def equals(other: Any): Boolean = other match {
+    case that: RsaJwk =>
+      keyId == that.keyId && use == that.use && algorithm == that.algorithm &&
+      modulus == that.modulus && exponent == that.exponent && keyOperations == that.keyOperations
+    case _ => false
+  }
+
+  override def hashCode(): Int =
+    (keyId, use, algorithm, modulus, exponent, keyOperations).hashCode()
+
+  override def toString: String =
+    s"RsaJwk($keyId,$use,$algorithm,$modulus,$exponent,$keyOperations)"
 
   lazy val publicKey: RSAPublicKey = JwtUtils.rsaPublicKey(modulus, exponent)
 
@@ -190,21 +231,59 @@ final case class RsaJwk(
     algorithm.isInstanceOf[JwtRSAAlgorithm]
 }
 
+object EcJwk {
+  def apply(
+      keyId: Option[String],
+      use: Option[JwkUse],
+      algorithm: Option[String],
+      curve: EcCurve,
+      xCoordinate: BigInteger,
+      yCoordinate: BigInteger,
+      keyOperations: Option[Set[String]] = None
+  ): EcJwk = new EcJwk(keyId, use, algorithm, curve, xCoordinate, yCoordinate, keyOperations)
+}
+
 /** @throws JwtValidationException
   *   if a coordinate does not fit the curve length, is negative, or the point is not on the curve
   */
-final case class EcJwk(
-    keyId: Option[String],
-    use: Option[JwkUse],
-    algorithm: Option[String],
-    curve: EcCurve,
-    xCoordinate: BigInteger,
-    yCoordinate: BigInteger,
-    keyOperations: Option[Set[String]] = None
+final class EcJwk private (
+    val keyId: Option[String],
+    val use: Option[JwkUse],
+    val algorithm: Option[String],
+    val curve: EcCurve,
+    val xCoordinate: BigInteger,
+    val yCoordinate: BigInteger,
+    val keyOperations: Option[Set[String]]
 ) extends Jwk {
   JwtUtils.requireFits(xCoordinate, curve.coordinateLength)
   JwtUtils.requireFits(yCoordinate, curve.coordinateLength)
   if (!isOnCurve) throw new JwtValidationException("The point is not on the curve.")
+
+  def withKeyId(keyId: Option[String]): EcJwk =
+    EcJwk(keyId, use, algorithm, curve, xCoordinate, yCoordinate, keyOperations)
+
+  def withUse(use: Option[JwkUse]): EcJwk =
+    EcJwk(keyId, use, algorithm, curve, xCoordinate, yCoordinate, keyOperations)
+
+  def withAlgorithm(algorithm: Option[String]): EcJwk =
+    EcJwk(keyId, use, algorithm, curve, xCoordinate, yCoordinate, keyOperations)
+
+  def withKeyOperations(keyOperations: Option[Set[String]]): EcJwk =
+    EcJwk(keyId, use, algorithm, curve, xCoordinate, yCoordinate, keyOperations)
+
+  override def equals(other: Any): Boolean = other match {
+    case that: EcJwk =>
+      keyId == that.keyId && use == that.use && algorithm == that.algorithm &&
+      curve == that.curve && xCoordinate == that.xCoordinate && yCoordinate == that.yCoordinate &&
+      keyOperations == that.keyOperations
+    case _ => false
+  }
+
+  override def hashCode(): Int =
+    (keyId, use, algorithm, curve, xCoordinate, yCoordinate, keyOperations).hashCode()
+
+  override def toString: String =
+    s"EcJwk($keyId,$use,$algorithm,$curve,$xCoordinate,$yCoordinate,$keyOperations)"
 
   /** The `x` member: the coordinate as base64url of exactly `curve.coordinateLength` bytes. */
   lazy val x: String = JwtUtils.encodeFixed(xCoordinate, curve.coordinateLength)
@@ -244,6 +323,17 @@ final case class EcJwk(
     }
 }
 
+object OkpJwk {
+  def apply(
+      keyId: Option[String],
+      use: Option[JwkUse],
+      algorithm: Option[String],
+      curve: OkpCurve,
+      x: String,
+      keyOperations: Option[Set[String]] = None
+  ): OkpJwk = new OkpJwk(keyId, use, algorithm, curve, x, keyOperations)
+}
+
 /** An `OKP` JWK (RFC 8037) holding an Ed25519 or Ed448 public key.
   *
   * Building the `publicKey` of such a key requires a JDK that provides the `EdDSA` `KeyFactory`,
@@ -256,15 +346,39 @@ final case class EcJwk(
   * @throws java.lang.IllegalArgumentException
   *   if `x` is not valid base64url
   */
-final case class OkpJwk(
-    keyId: Option[String],
-    use: Option[JwkUse],
-    algorithm: Option[String],
-    curve: OkpCurve,
-    x: String,
-    keyOperations: Option[Set[String]] = None
+final class OkpJwk private (
+    val keyId: Option[String],
+    val use: Option[JwkUse],
+    val algorithm: Option[String],
+    val curve: OkpCurve,
+    val x: String,
+    val keyOperations: Option[Set[String]]
 ) extends Jwk {
   JwtUtils.requireDecodedLength("x", x, curve.keyLength)
+
+  def withKeyId(keyId: Option[String]): OkpJwk =
+    OkpJwk(keyId, use, algorithm, curve, x, keyOperations)
+
+  def withUse(use: Option[JwkUse]): OkpJwk =
+    OkpJwk(keyId, use, algorithm, curve, x, keyOperations)
+
+  def withAlgorithm(algorithm: Option[String]): OkpJwk =
+    OkpJwk(keyId, use, algorithm, curve, x, keyOperations)
+
+  def withKeyOperations(keyOperations: Option[Set[String]]): OkpJwk =
+    OkpJwk(keyId, use, algorithm, curve, x, keyOperations)
+
+  override def equals(other: Any): Boolean = other match {
+    case that: OkpJwk =>
+      keyId == that.keyId && use == that.use && algorithm == that.algorithm &&
+      curve == that.curve && x == that.x && keyOperations == that.keyOperations
+    case _ => false
+  }
+
+  override def hashCode(): Int =
+    (keyId, use, algorithm, curve, x, keyOperations).hashCode()
+
+  override def toString: String = s"OkpJwk($keyId,$use,$algorithm,$curve,$x,$keyOperations)"
 
   /** The raw public key. A fresh array is returned on every call. */
   def keyBytes: Array[Byte] = JwtBase64.decode(x)
