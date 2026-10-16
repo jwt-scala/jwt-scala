@@ -1,6 +1,8 @@
 package pdi.jwt
 
-import java.security.spec.{PKCS8EncodedKeySpec, X509EncodedKeySpec}
+import java.math.BigInteger
+import java.security.interfaces.RSAPublicKey
+import java.security.spec.{PKCS8EncodedKeySpec, RSAPublicKeySpec, X509EncodedKeySpec}
 import java.security.{KeyFactory, PrivateKey, PublicKey, Signature}
 import javax.crypto.spec.SecretKeySpec
 import javax.crypto.{Mac, SecretKey}
@@ -33,7 +35,25 @@ object JwtUtils {
     */
   def bytify(str: String): Array[Byte] = str.getBytes(ENCODING)
 
-  private def escape(value: String): String = value.replaceAll("\"", "\\\\\"")
+  private def escape(value: String): String = {
+    val builder = new java.lang.StringBuilder(value.length + 2)
+    value.foreach {
+      case '"'          => builder.append("\\\"")
+      case '\\'         => builder.append("\\\\")
+      case '\b'         => builder.append("\\b")
+      case '\f'         => builder.append("\\f")
+      case '\n'         => builder.append("\\n")
+      case '\r'         => builder.append("\\r")
+      case '\t'         => builder.append("\\t")
+      case c if c < ' ' =>
+        builder
+          .append("\\u00")
+          .append(Character.forDigit(c >> 4, 16))
+          .append(Character.forDigit(c & 0xf, 16))
+      case c => builder.append(c)
+    }
+    builder.toString
+  }
 
   /** Convert a sequence to a JSON array
     */
@@ -93,15 +113,44 @@ object JwtUtils {
     key.replaceAll("-----BEGIN ([^-]*)-----|-----END ([^-]*)-----|\\s*", "")
   )
 
-  private def parsePrivateKey(key: String, keyAlgo: String) = {
+  /** Parse a PKCS#8 private key, as PEM or bare base64.
+    *
+    * @throws java.security.spec.InvalidKeySpecException
+    *   if the key is not a valid key of the given algorithm
+    * @throws java.security.NoSuchAlgorithmException
+    *   if `keyAlgo` is not available
+    * @throws java.lang.IllegalArgumentException
+    *   if the key is not valid base64
+    */
+  def parsePrivateKey(key: String, keyAlgo: String): PrivateKey = {
     val spec = new PKCS8EncodedKeySpec(parseKey(key))
     KeyFactory.getInstance(keyAlgo).generatePrivate(spec)
   }
 
-  private def parsePublicKey(key: String, keyAlgo: String): PublicKey = {
+  /** Parse an X.509 public key, as PEM or bare base64.
+    *
+    * @throws java.security.spec.InvalidKeySpecException
+    *   if the key is not a valid key of the given algorithm
+    * @throws java.security.NoSuchAlgorithmException
+    *   if `keyAlgo` is not available
+    * @throws java.lang.IllegalArgumentException
+    *   if the key is not valid base64
+    */
+  def parsePublicKey(key: String, keyAlgo: String): PublicKey = {
     val spec = new X509EncodedKeySpec(parseKey(key))
     KeyFactory.getInstance(keyAlgo).generatePublic(spec)
   }
+
+  /** Build an RSA public key from its modulus and public exponent.
+    *
+    * @throws java.security.spec.InvalidKeySpecException
+    *   if the modulus and exponent do not make a valid RSA key
+    */
+  def rsaPublicKey(modulus: BigInteger, exponent: BigInteger): RSAPublicKey =
+    KeyFactory
+      .getInstance(RSA)
+      .generatePublic(new RSAPublicKeySpec(modulus, exponent))
+      .asInstanceOf[RSAPublicKey]
 
   /** Generate the signature for a given data using the key and HMAC algorithm provided.
     */
