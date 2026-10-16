@@ -13,7 +13,7 @@ import pdi.jwt.exceptions.JwtLengthException
   *
   * Only SHA-256 is supported at the moment. RFC 7638 permits other hash functions.
   */
-final case class JwkThumbprint(base64Url: String) {
+final class JwkThumbprint private (val base64Url: String) {
   {
     val length = JwtBase64.decode(base64Url).length
     if (length != JwkThumbprint.Sha256Length)
@@ -29,12 +29,21 @@ final case class JwkThumbprint(base64Url: String) {
     */
   def uri: String = JwkThumbprint.UriPrefix + base64Url
 
+  override def equals(other: Any): Boolean = other match {
+    case that: JwkThumbprint => base64Url == that.base64Url
+    case _                   => false
+  }
+
+  override def hashCode(): Int = base64Url.hashCode()
+
   override def toString: String = base64Url
 }
 
 object JwkThumbprint {
   private val UriPrefix = "urn:ietf:params:oauth:jwk-thumbprint:sha-256:"
   private val Sha256Length = 32
+
+  def apply(base64Url: String): JwkThumbprint = new JwkThumbprint(base64Url)
 
   /** Compute the SHA-256 JWK thumbprint of a key (RFC 7638 section 3, RFC 8037 section 2).
     *

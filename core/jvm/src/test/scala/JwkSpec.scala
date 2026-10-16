@@ -212,8 +212,8 @@ class JwkSpec extends munit.FunSuite {
     assertEquals(a.hashCode, b.hashCode)
     val other = new Array[Byte](32)
     other(0) = 1
-    assertNotEquals(a, a.copy(x = encode(other)))
-    assertNotEquals(a, a.copy(keyId = None))
+    assertNotEquals(a, OkpJwk(a.keyId, a.use, a.algorithm, a.curve, encode(other)))
+    assertNotEquals(a, a.withKeyId(None))
   }
 
   test("OkpJwk should keep its key as the base64url member it was built from") {
@@ -235,21 +235,20 @@ class JwkSpec extends munit.FunSuite {
     assertEquals(jwk.publicKey, published)
   }
 
-  test("OkpJwk.copy should validate the key it is given and keep the other members") {
+  test("OkpJwk factory should validate replacement key material") {
     val jwk = OkpJwk(Some("k"), None, None, OkpCurve.Ed25519, encode(new Array[Byte](32)))
     val bytes = new Array[Byte](32)
     bytes(0) = 1
-    val copy = jwk.copy(keyId = Some("other"), x = encode(bytes))
-    assertEquals(copy.keyId, Some("other"))
-    assertEquals(copy.keyBytes(0), 1.toByte)
-    assertEquals(jwk.copy(), jwk)
+    val replacement = OkpJwk(Some("other"), jwk.use, jwk.algorithm, jwk.curve, encode(bytes))
+    assertEquals(replacement.keyId, Some("other"))
+    assertEquals(replacement.keyBytes(0), 1.toByte)
     assertEquals(jwk.keyBytes.toList, List.fill(32)(0.toByte))
     intercept[JwtValidationException] {
-      jwk.copy(x = encode(new Array[Byte](31)))
+      OkpJwk(jwk.keyId, jwk.use, jwk.algorithm, jwk.curve, encode(new Array[Byte](31)))
     }
   }
 
-  test("OkpJwk.unapply should extract the members") {
+  test("OkpJwk should expose its members through named accessors") {
     val x = encode(new Array[Byte](32))
     val jwk = OkpJwk(
       Some("k"),
@@ -259,13 +258,12 @@ class JwkSpec extends munit.FunSuite {
       x,
       Some(Set("verify"))
     )
-    jwk match {
-      case OkpJwk(keyId, use, algorithm, curve, member, keyOperations) =>
-        assertEquals(
-          (keyId, use, algorithm, curve, member, keyOperations),
-          (Some("k"), Some(JwkUse.Signature), None, OkpCurve.Ed25519, x, Some(Set("verify")))
-        )
-    }
+    assertEquals(jwk.keyId, Some("k"))
+    assertEquals(jwk.use, Some(JwkUse.Signature))
+    assertEquals(jwk.algorithm, None)
+    assertEquals(jwk.curve, OkpCurve.Ed25519)
+    assertEquals(jwk.x, x)
+    assertEquals(jwk.keyOperations, Some(Set("verify")))
   }
 
   test("keyOperations should default to None and be kept by fromPublicKey") {
@@ -296,11 +294,11 @@ class JwkSpec extends munit.FunSuite {
       jwk.toJson
     )
     assert(rfcRsa().toJson.startsWith("{\"kty\":\"RSA\",\"n\":"), rfcRsa().toJson)
-    assert(rfcRsa().copy(keyOperations = Some(Set.empty)).toJson.contains("\"key_ops\":[],"))
+    assert(rfcRsa().withKeyOperations(Some(Set.empty)).toJson.contains("\"key_ops\":[],"))
   }
 
   test("thumbprint should ignore key_ops") {
-    val jwk = rfcRsa().copy(keyOperations = Some(Set("verify")))
+    val jwk = rfcRsa().withKeyOperations(Some(Set("verify")))
     assertEquals(jwk.thumbprint.base64Url, Rfc7638Thumbprint)
     val okpJwk = OkpJwk(
       None,
@@ -318,9 +316,9 @@ class JwkSpec extends munit.FunSuite {
     val b = OkpJwk(None, None, None, OkpCurve.Ed25519, Rfc8037Ed25519X, Some(Set("verify")))
     assertEquals(a, b)
     assertEquals(a.hashCode, b.hashCode)
-    assertNotEquals(a, a.copy(keyOperations = None))
-    assertNotEquals(a, a.copy(keyOperations = Some(Set("sign"))))
-    assertNotEquals(rfcRsa(), rfcRsa().copy(keyOperations = Some(Set("verify"))))
+    assertNotEquals(a, a.withKeyOperations(None))
+    assertNotEquals(a, a.withKeyOperations(Some(Set("sign"))))
+    assertNotEquals(rfcRsa(), rfcRsa().withKeyOperations(Some(Set("verify"))))
   }
 
   test("thumbprint should match the RFC 7638 section 3.1 example") {
@@ -329,8 +327,10 @@ class JwkSpec extends munit.FunSuite {
   }
 
   test("thumbprint should ignore kid, use and alg") {
-    val jwk =
-      rfcRsa().copy(keyId = Some("k"), use = Some(JwkUse.Signature), algorithm = Some("RS256"))
+    val jwk = rfcRsa()
+      .withKeyId(Some("k"))
+      .withUse(Some(JwkUse.Signature))
+      .withAlgorithm(Some("RS256"))
     assertEquals(jwk.thumbprint.base64Url, Rfc7638Thumbprint)
   }
 
