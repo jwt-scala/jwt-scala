@@ -1,7 +1,9 @@
 package pdi.jwt
 
 import java.time.Clock
+import scala.util.Try
 
+import pdi.jwt.exceptions.{JwtNonStringException, JwtValidationException}
 import zio.json.*
 import zio.json.ast.*
 import zio.json.ast.JsonCursor.*
@@ -19,6 +21,37 @@ trait JwtZIOJsonParser[H, C] extends JwtJsonCommon[Json, H, C] {
       .map(_.value)
       .filterNot(_ == "none")
       .map(JwtAlgorithm.fromString)
+
+  def parseJwk(json: String): Jwk = parse(json) match {
+    case obj: Json.Obj => readJwk(obj)
+    case _             => throw new JwtValidationException("A JWK must be a JSON object.")
+  }
+
+  def parseJwkSet(json: String): JwkSet = {
+    val keys = parse(json).asObject
+      .flatMap(_.get("keys"))
+      .flatMap(_.asArray)
+      .getOrElse(throw new JwtValidationException("A JWK Set must have a [keys] array."))
+    JwkSet(
+      keys.collect { case key: Json.Obj => key }.flatMap(key => Try(readJwk(key)).toOption).toList
+    )
+  }
+
+  private def readJwk(json: Json.Obj): Jwk = Jwk.fromMembers(
+    name =>
+      json.get(name).map {
+        case Json.Str(value) => value
+        case _               => throw new JwtNonStringException(name)
+      },
+    name =>
+      json.get(name).map {
+        case Json.Arr(elements) =>
+          val strings = elements.collect { case Json.Str(value) => value }
+          if (strings.length == elements.length) strings.toList
+          else throw new JwtNonStringException(name)
+        case _ => throw new JwtNonStringException(name)
+      }
+  )
 }
 
 object JwtZIOJson extends JwtZIOJson(Clock.systemUTC) {
