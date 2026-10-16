@@ -1,7 +1,6 @@
 package pdi.jwt
 
 import java.time.Clock
-import scala.util.Try
 
 import pdi.jwt.exceptions.{JwtNonStringException, JwtValidationException}
 import zio.json.*
@@ -32,9 +31,7 @@ trait JwtZIOJsonParser[H, C] extends JwtJsonCommon[Json, H, C] {
       .flatMap(_.get("keys"))
       .flatMap(_.asArray)
       .getOrElse(throw new JwtValidationException("A JWK Set must have a [keys] array."))
-    JwkSet(
-      keys.collect { case key: Json.Obj => key }.flatMap(key => Try(readJwk(key)).toOption).toList
-    )
+    JwtJsonCommon.readJwkSetKeys(keys.iterator.collect { case key: Json.Obj => key })(readJwk)
   }
 
   private def readJwk(json: Json.Obj): Jwk = Jwk.fromMembers(

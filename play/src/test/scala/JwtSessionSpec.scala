@@ -36,9 +36,6 @@ class JwtSessionSpec extends munit.FunSuite with PlayFixture {
   // This is session3 serialized (if no bug...)
   val token =
     "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." + claim64 + ".IPSERPZc5wyxrZ4Yiq7l31wFk_qaDY5YrnfLjIC0Lmc"
-  // Order in the Json changed for Scala 2.13 so this is correct too
-  val token2 =
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZSwiaXNzIjoiam9lIiwiZXhwIjoxMzAwODE5MzgwfQ.XCvpOGm7aPRy5hozuniyxFJJOMSdo5VYykpZmiGJ3d37WZAIHCrUI1TtkEIU3IbOny2fevilILBliPNgrXl3tA"
 
   test("Init FakeApplication with the correct config") {
     assertEquals(app.configuration.getOptional[String]("play.http.secret.key"), Option(secretKey))
@@ -113,7 +110,7 @@ class JwtSessionSpec extends munit.FunSuite with PlayFixture {
   }
 
   test("JwtSession must serialize") {
-    assert(Set(token, token2).contains(session3.serialize))
+    assertEquals(session3.serialize, token)
   }
 
   test("JwtSession must deserialize") {

@@ -39,10 +39,7 @@ class JwtSessionCustomSpec extends munit.FunSuite with PlayFixture {
   def session = JwtSession()
   def sessionCustom = JwtSession(JwtHeader(JwtAlgorithm.HS512), claimClass, signature)
   def tokenCustom = header + "." + playClaim64 + "." + signature
-  // Order in the Json changed for Scala 2.13 so this is correct too
-  def tokenCustom2 =
-    s"$header.eyJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZSwiaXNzIjoiam9lIiwiZXhwIjoxMzAwODE5MzgwfQ.aK_C250FUCSYbfjAfUgvAHoOfqa3EAdadSYkO0xEt1LJijGR0b89t2bl9AZJXdM4azAFj4RbzPyxSpIVczlchA"
-  def tokenCustom3 =
+  def serializedToken =
     s"$header.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.ngZsdQj8p2wvUAo8xCbJPwganGPnG5UnLkg7VrE6NgmQdV16UITjlBajZxcai_U5PjQdeN-yJtyA5kxf8O5BOQ"
 
   test("Init FakeApplication with correct config") {
@@ -75,7 +72,7 @@ class JwtSessionCustomSpec extends munit.FunSuite with PlayFixture {
   }
 
   test("JwtSession must serialize") {
-    assert(Set(tokenCustom, tokenCustom2, tokenCustom3).contains(clue(sessionCustom.serialize)))
+    assertEquals(sessionCustom.serialize, serializedToken)
   }
 
   test("JwtSession must deserialize") {

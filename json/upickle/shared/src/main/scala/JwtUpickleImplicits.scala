@@ -10,15 +10,12 @@ trait JwtUpickleImplicits {
       json =>
         json match {
           case obj: ujson.Obj =>
-            val fieldMap = obj.value.toMap
+            val fields = obj.value
             JwtHeader(
-              algorithm = fieldMap
-                .get("alg")
-                .map(_.str.toString())
-                .flatMap(alg => JwtAlgorithm.optionFromString(alg)),
-              typ = fieldMap.get("typ").map(_.str.toString()),
-              contentType = fieldMap.get("cty").map(_.str.toString()),
-              keyId = fieldMap.get("kid").map(_.str.toString())
+              algorithm = fields.get("alg").flatMap(alg => JwtAlgorithm.optionFromString(alg.str)),
+              typ = fields.get("typ").map(_.str),
+              contentType = fields.get("cty").map(_.str),
+              keyId = fields.get("kid").map(_.str)
             )
           case _ => throw new RuntimeException("Expected a ujson.Obj")
         }

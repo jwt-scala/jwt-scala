@@ -1,7 +1,6 @@
 package pdi.jwt
 
 import java.time.Clock
-import scala.util.Try
 
 import argonaut.*
 import argonaut.Argonaut.*
@@ -27,7 +26,7 @@ trait JwtArgonautParser[H, C] extends JwtJsonCommon[Json, H, C] {
       .field("keys")
       .flatMap(_.array)
       .getOrElse(throw new JwtValidationException("A JWK Set must have a [keys] array."))
-    JwkSet(keys.flatMap(_.obj).flatMap(key => Try(readJwk(key)).toOption))
+    JwtJsonCommon.readJwkSetKeys(keys.iterator.flatMap(_.obj))(readJwk)
   }
 
   private def readJwk(json: JsonObject): Jwk = Jwk.fromMembers(

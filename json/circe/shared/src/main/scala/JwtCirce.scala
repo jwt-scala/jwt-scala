@@ -1,7 +1,6 @@
 package pdi.jwt
 
 import java.time.Clock
-import scala.util.Try
 
 import io.circe.*
 import io.circe.jawn.{parse => jawnParse}
@@ -31,7 +30,7 @@ trait JwtCirceParser[H, C] extends JwtJsonCommon[Json, H, C] {
       .flatMap(_("keys"))
       .flatMap(_.asArray)
       .getOrElse(throw new JwtValidationException("A JWK Set must have a [keys] array."))
-    JwkSet(keys.flatMap(_.asObject).flatMap(key => Try(readJwk(key)).toOption).toList)
+    JwtJsonCommon.readJwkSetKeys(keys.iterator.flatMap(_.asObject))(readJwk)
   }
 
   private def readJwk(json: JsonObject): Jwk = Jwk.fromMembers(
