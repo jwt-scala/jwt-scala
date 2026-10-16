@@ -29,8 +29,8 @@ object ZioEncoding {
   import java.time.Instant
 
   import pdi.jwt.{JwtAlgorithm, JwtZIOJson}
-  import zio.json._
-  import zio.json.ast._
+  import zio.json.*
+  import zio.json.ast.*
 
   val key = "secretKey"
   val algo = JwtAlgorithm.HS256

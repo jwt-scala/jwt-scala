@@ -93,7 +93,7 @@ object JwtUtils {
       case (key, (vKey: String, vValue)) =>
         "\"" + escape(key) + "\":" + hashToJson(Seq(vKey -> vValue))
       case (key, value: Seq[Any]) => "\"" + escape(key) + "\":" + seqToJson(value)
-      case (key, value: Set[_])   => "\"" + escape(key) + "\":" + seqToJson(value.toSeq)
+      case (key, value: Set[?])   => "\"" + escape(key) + "\":" + seqToJson(value.toSeq)
       case (key, value: Any)      => "\"" + escape(key) + "\":\"" + escape(value.toString) + "\""
     }
     .mkString("{", ",", "}")

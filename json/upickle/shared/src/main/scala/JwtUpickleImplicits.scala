@@ -31,17 +31,17 @@ trait JwtUpickleImplicits {
             val content = fieldMap -- Seq("iss", "sub", "aud", "exp", "nbf", "iat", "jti")
             JwtClaim(
               content = write(content),
-              issuer = fieldMap.get("iss").map(_.str.toString()),
-              subject = fieldMap.get("sub").map(_.str.toString()),
+              issuer = fieldMap.get("iss").map(_.str),
+              subject = fieldMap.get("sub").map(_.str),
               audience = fieldMap.get("aud").map {
-                case ujson.Arr(arr) => arr.map(_.str.toString()).toSet
-                case ujson.Str(s)   => Set(s.toString)
+                case ujson.Arr(arr) => arr.map(_.str).toSet
+                case ujson.Str(s)   => Set(s)
                 case _              => throw new JwtNonStringSetOrStringException("aud")
               },
               expiration = fieldMap.get("exp").map(_.num.toLong),
               notBefore = fieldMap.get("nbf").map(_.num.toLong),
               issuedAt = fieldMap.get("iat").map(_.num.toLong),
-              jwtId = fieldMap.get("jti").map(_.str.toString())
+              jwtId = fieldMap.get("jti").map(_.str)
             )
           case _ => throw new RuntimeException("Expected a ujson.Obj")
         }

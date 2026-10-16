@@ -906,10 +906,10 @@ trait JwtCore[H, C] {
   // Validate
   protected def validateTiming(claim: C, options: JwtOptions): Try[Unit] = {
     val maybeExpiration: Option[Long] =
-      if (options.expiration) extractExpiration(claim) else None
+      Option.when(options.expiration)(extractExpiration(claim)).flatten
 
     val maybeNotBefore: Option[Long] =
-      if (options.notBefore) extractNotBefore(claim) else None
+      Option.when(options.notBefore)(extractNotBefore(claim)).flatten
 
     JwtTime.validateNowIsBetweenSeconds(
       maybeNotBefore.map(_ - options.leeway),
