@@ -4,6 +4,7 @@ import java.time.Clock
 
 import argonaut.*
 import argonaut.Argonaut.*
+import pdi.jwt.exceptions.{JwtNonStringException, JwtValidationException}
 
 trait JwtArgonautParser[H, C] extends JwtJsonCommon[Json, H, C] {
   override protected def parse(value: String): Json = Parse.parseOption(value).get
@@ -15,6 +16,29 @@ trait JwtArgonautParser[H, C] extends JwtJsonCommon[Json, H, C] {
     .map(_.stringOrEmpty)
     .filterNot(_ == "none")
     .map(JwtAlgorithm.fromString)
+
+  def parseJwk(json: String): Jwk = readJwk(
+    parse(json).obj.getOrElse(throw new JwtValidationException("A JWK must be a JSON object."))
+  )
+
+  def parseJwkSet(json: String): JwkSet = {
+    val keys = parse(json)
+      .field("keys")
+      .flatMap(_.array)
+      .getOrElse(throw new JwtValidationException("A JWK Set must have a [keys] array."))
+    JwtJsonCommon.readJwkSetKeys(keys.iterator.flatMap(_.obj))(readJwk)
+  }
+
+  private def readJwk(json: JsonObject): Jwk = Jwk.fromMembers(
+    name => json(name).map(_.string.getOrElse(throw new JwtNonStringException(name))),
+    name =>
+      json(name).map { value =>
+        value.array
+          .map(array => array.flatMap(_.string) -> array.length)
+          .collect { case (strings, length) if strings.length == length => strings }
+          .getOrElse(throw new JwtNonStringException(name))
+      }
+  )
 }
 
 object JwtArgonaut extends JwtArgonaut(Clock.systemUTC) {
@@ -34,13 +58,13 @@ class JwtArgonaut(override val clock: Clock) extends JwtArgonautParser[JwtHeader
       (json -| field).map(f)
 
     def -|>>(field: String): Option[String] =
-      (json -|> field)(_.stringOrEmpty)
+      this.-|>(field)(_.stringOrEmpty)
 
     def -||>(field: String): Option[Long] =
-      (json -|> field)(_.nospaces.toLong)
+      this.-|>(field)(_.nospaces.toLong)
 
     def -|||(field: String): Option[Set[String]] =
-      (json -|> field)(_.arrayOrEmpty.map(_.nospaces).toSet)
+      this.-|>(field)(_.arrayOrEmpty.map(_.nospaces).toSet)
   }
 
   private def parseClaimHelp(claim: String): JwtClaim =

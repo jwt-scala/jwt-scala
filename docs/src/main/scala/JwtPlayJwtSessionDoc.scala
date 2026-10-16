@@ -53,7 +53,7 @@ object JwtPlayJwtSessionDoc {
   import pdi.jwt.JwtSession
 // #implicits
 // First, creating the implicits
-  import play.api.libs.json._
+  import play.api.libs.json.*
 
   case class User(id: Long, name: String)
   implicit val formatUser: Format[User] = Json.format[User]
@@ -65,7 +65,7 @@ object JwtPlayJwtSessionDoc {
   session2.getAs[User]("user")
 // #implicits
 // #requestheader
-  import pdi.jwt.JwtSession._
+  import pdi.jwt.JwtSession.*
   import play.api.Configuration
   import play.api.test.FakeRequest
 
@@ -82,7 +82,7 @@ object JwtPlayJwtSessionDoc {
   request.jwtSession.getAs[User]("user")
 // #requestheader
 // #result
-  import play.api.mvc._
+  import play.api.mvc.*
   implicit val implRequest: FakeRequest[AnyContentAsEmpty.type] = request
 
 // Let's begin by creating a Result

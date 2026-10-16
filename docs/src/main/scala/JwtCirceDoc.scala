@@ -29,8 +29,8 @@ object CirceEncoding {
   // #encoding
   import java.time.Instant
 
-  import io.circe._
-  import jawn.{parse => jawnParse}
+  import io.circe.*
+  import jawn.{parse as jawnParse}
   import pdi.jwt.{JwtAlgorithm, JwtCirce}
 
   val key = "secretKey"

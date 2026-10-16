@@ -5,8 +5,8 @@ import scala.annotation.nowarn
 @nowarn
 object JwtJson4sDoc {
   // #example
-  import org.json4s.JsonDSL.WithBigDecimal._
-  import org.json4s._
+  import org.json4s.JsonDSL.WithBigDecimal.*
+  import org.json4s.*
   import pdi.jwt.{JwtAlgorithm, JwtJson4s}
 
   val claim = JObject(("user", 1), ("nbf", 1431520421))

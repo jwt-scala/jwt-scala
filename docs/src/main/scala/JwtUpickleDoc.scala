@@ -30,7 +30,7 @@ object UpickleEncode {
   import java.time.Instant
 
   import pdi.jwt.{JwtAlgorithm, JwtUpickle}
-  import upickle.default._
+  import upickle.default.*
 
   val key = "secretKey"
   val algo = JwtAlgorithm.HS256

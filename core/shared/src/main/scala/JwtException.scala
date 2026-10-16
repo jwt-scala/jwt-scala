@@ -52,6 +52,13 @@ object JwtNonStringException {
   def unapply(e: JwtNonStringException) = Some(e.key)
 }
 
+class JwtUnknownKeyIdException(val keyId: String)
+    extends JwtException("No key of the set has the key id of the token.")
+
+object JwtUnknownKeyIdException {
+  def unapply(e: JwtUnknownKeyIdException) = Some(e.keyId)
+}
+
 class JwtNonStringSetOrStringException(val key: String)
     extends JwtException(s"During JSON parsing, expected a Set[String] or String for key [$key]") {
   @deprecated("Use key instead", since = "9.0.1")

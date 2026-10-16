@@ -4,7 +4,8 @@ import org.json4s.*
 import pdi.jwt.exceptions.{
   JwtNonNumberException,
   JwtNonStringException,
-  JwtNonStringSetOrStringException
+  JwtNonStringSetOrStringException,
+  JwtValidationException
 }
 
 trait JwtJson4sCommon[H, C] extends JwtJsonCommon[JObject, H, C] {
@@ -53,6 +54,40 @@ trait JwtJson4sCommon[H, C] extends JwtJsonCommon[JObject, H, C] {
       case JNothing       => None
       case _              => throw new JwtNonStringException(fieldName)
     }
+
+  protected def readJwk(json: JValue): Jwk = json match {
+    case obj: JObject => readJwkObject(obj)
+    case _            => throw new JwtValidationException("A JWK must be a JSON object.")
+  }
+
+  protected def readJwkSet(json: JValue): JwkSet = {
+    val keys = json match {
+      case JObject(fields) => fields.collectFirst { case ("keys", JArray(keys)) => keys }
+      case _               => None
+    }
+    JwtJsonCommon.readJwkSetKeys(
+      keys
+        .getOrElse(throw new JwtValidationException("A JWK Set must have a [keys] array."))
+        .iterator
+        .collect { case key: JObject => key }
+    )(readJwkObject)
+  }
+
+  private def readJwkObject(json: JObject): Jwk = Jwk.fromMembers(
+    name =>
+      json.obj.collectFirst { case (`name`, value) => value }.map {
+        case JString(value) => value
+        case _              => throw new JwtNonStringException(name)
+      },
+    name =>
+      json.obj.collectFirst { case (`name`, value) => value }.map {
+        case JArray(elements) =>
+          val strings = elements.collect { case JString(value) => value }
+          if (strings.length == elements.length) strings
+          else throw new JwtNonStringException(name)
+        case _ => throw new JwtNonStringException(name)
+      }
+  )
 
   protected def extractStringSetOrString(json: JObject, fieldName: String): Option[Set[String]] =
     (json \ fieldName) match {

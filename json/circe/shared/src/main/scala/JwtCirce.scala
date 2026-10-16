@@ -5,6 +5,7 @@ import java.time.Clock
 import io.circe.*
 import io.circe.jawn.{parse => jawnParse}
 import io.circe.syntax.*
+import pdi.jwt.exceptions.{JwtNonStringException, JwtValidationException}
 
 /** Implementation of `JwtCore` using `Json` from Circe.
   */
@@ -18,6 +19,30 @@ trait JwtCirceParser[H, C] extends JwtJsonCommon[Json, H, C] {
     .toOption
     .filterNot(_ == "none")
     .map(JwtAlgorithm.fromString)
+
+  def parseJwk(json: String): Jwk = readJwk(
+    parse(json).asObject
+      .getOrElse(throw new JwtValidationException("A JWK must be a JSON object."))
+  )
+
+  def parseJwkSet(json: String): JwkSet = {
+    val keys = parse(json).asObject
+      .flatMap(_("keys"))
+      .flatMap(_.asArray)
+      .getOrElse(throw new JwtValidationException("A JWK Set must have a [keys] array."))
+    JwtJsonCommon.readJwkSetKeys(keys.iterator.flatMap(_.asObject))(readJwk)
+  }
+
+  private def readJwk(json: JsonObject): Jwk = Jwk.fromMembers(
+    name => json(name).map(_.asString.getOrElse(throw new JwtNonStringException(name))),
+    name =>
+      json(name).map { value =>
+        value.asArray
+          .map(array => array.flatMap(_.asString).toList -> array.length)
+          .collect { case (strings, length) if strings.length == length => strings }
+          .getOrElse(throw new JwtNonStringException(name))
+      }
+  )
 }
 
 object JwtCirce extends JwtCirce(Clock.systemUTC) {

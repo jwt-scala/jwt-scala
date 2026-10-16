@@ -10,15 +10,12 @@ trait JwtUpickleImplicits {
       json =>
         json match {
           case obj: ujson.Obj =>
-            val fieldMap = obj.value.toMap
+            val fields = obj.value
             JwtHeader(
-              algorithm = fieldMap
-                .get("alg")
-                .map(_.str.toString())
-                .flatMap(alg => JwtAlgorithm.optionFromString(alg)),
-              typ = fieldMap.get("typ").map(_.str.toString()),
-              contentType = fieldMap.get("cty").map(_.str.toString()),
-              keyId = fieldMap.get("kid").map(_.str.toString())
+              algorithm = fields.get("alg").flatMap(alg => JwtAlgorithm.optionFromString(alg.str)),
+              typ = fields.get("typ").map(_.str),
+              contentType = fields.get("cty").map(_.str),
+              keyId = fields.get("kid").map(_.str)
             )
           case _ => throw new RuntimeException("Expected a ujson.Obj")
         }
@@ -34,17 +31,17 @@ trait JwtUpickleImplicits {
             val content = fieldMap -- Seq("iss", "sub", "aud", "exp", "nbf", "iat", "jti")
             JwtClaim(
               content = write(content),
-              issuer = fieldMap.get("iss").map(_.str.toString()),
-              subject = fieldMap.get("sub").map(_.str.toString()),
+              issuer = fieldMap.get("iss").map(_.str),
+              subject = fieldMap.get("sub").map(_.str),
               audience = fieldMap.get("aud").map {
-                case ujson.Arr(arr) => arr.map(_.str.toString()).toSet
-                case ujson.Str(s)   => Set(s.toString)
+                case ujson.Arr(arr) => arr.map(_.str).toSet
+                case ujson.Str(s)   => Set(s)
                 case _              => throw new JwtNonStringSetOrStringException("aud")
               },
               expiration = fieldMap.get("exp").map(_.num.toLong),
               notBefore = fieldMap.get("nbf").map(_.num.toLong),
               issuedAt = fieldMap.get("iat").map(_.num.toLong),
-              jwtId = fieldMap.get("jti").map(_.str.toString())
+              jwtId = fieldMap.get("jti").map(_.str)
             )
           case _ => throw new RuntimeException("Expected a ujson.Obj")
         }

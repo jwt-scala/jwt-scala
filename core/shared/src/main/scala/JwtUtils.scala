@@ -1,13 +1,19 @@
 package pdi.jwt
 
-import java.security.spec.{PKCS8EncodedKeySpec, X509EncodedKeySpec}
+import java.math.BigInteger
+import java.security.interfaces.RSAPublicKey
+import java.security.spec.{PKCS8EncodedKeySpec, RSAPublicKeySpec, X509EncodedKeySpec}
 import java.security.{KeyFactory, PrivateKey, PublicKey, Signature}
 import javax.crypto.spec.SecretKeySpec
 import javax.crypto.{Mac, SecretKey}
 
 import pdi.jwt.JwtAlgorithm.{ES256, ES384, ES512}
 import pdi.jwt.algorithms.*
-import pdi.jwt.exceptions.{JwtNonSupportedAlgorithm, JwtSignatureFormatException}
+import pdi.jwt.exceptions.{
+  JwtNonSupportedAlgorithm,
+  JwtSignatureFormatException,
+  JwtValidationException
+}
 
 object JwtUtils {
   val ENCODING = "UTF-8"
@@ -33,7 +39,25 @@ object JwtUtils {
     */
   def bytify(str: String): Array[Byte] = str.getBytes(ENCODING)
 
-  private def escape(value: String): String = value.replaceAll("\"", "\\\\\"")
+  private def escape(value: String): String = {
+    val builder = new java.lang.StringBuilder(value.length + 2)
+    value.foreach {
+      case '"'          => builder.append("\\\"")
+      case '\\'         => builder.append("\\\\")
+      case '\b'         => builder.append("\\b")
+      case '\f'         => builder.append("\\f")
+      case '\n'         => builder.append("\\n")
+      case '\r'         => builder.append("\\r")
+      case '\t'         => builder.append("\\t")
+      case c if c < ' ' =>
+        builder
+          .append("\\u00")
+          .append(Character.forDigit(c >> 4, 16))
+          .append(Character.forDigit(c & 0xf, 16))
+      case c => builder.append(c)
+    }
+    builder.toString
+  }
 
   /** Convert a sequence to a JSON array
     */
@@ -69,7 +93,7 @@ object JwtUtils {
       case (key, (vKey: String, vValue)) =>
         "\"" + escape(key) + "\":" + hashToJson(Seq(vKey -> vValue))
       case (key, value: Seq[Any]) => "\"" + escape(key) + "\":" + seqToJson(value)
-      case (key, value: Set[_])   => "\"" + escape(key) + "\":" + seqToJson(value.toSeq)
+      case (key, value: Set[?])   => "\"" + escape(key) + "\":" + seqToJson(value.toSeq)
       case (key, value: Any)      => "\"" + escape(key) + "\":\"" + escape(value.toString) + "\""
     }
     .mkString("{", ",", "}")
@@ -93,14 +117,99 @@ object JwtUtils {
     key.replaceAll("-----BEGIN ([^-]*)-----|-----END ([^-]*)-----|\\s*", "")
   )
 
-  private def parsePrivateKey(key: String, keyAlgo: String) = {
+  /** Parse a PKCS#8 private key, as PEM or bare base64.
+    *
+    * @throws java.security.spec.InvalidKeySpecException
+    *   if the key is not a valid key of the given algorithm
+    * @throws java.security.NoSuchAlgorithmException
+    *   if `keyAlgo` is not available
+    * @throws java.lang.IllegalArgumentException
+    *   if the key is not valid base64
+    */
+  def parsePrivateKey(key: String, keyAlgo: String): PrivateKey = {
     val spec = new PKCS8EncodedKeySpec(parseKey(key))
     KeyFactory.getInstance(keyAlgo).generatePrivate(spec)
   }
 
-  private def parsePublicKey(key: String, keyAlgo: String): PublicKey = {
+  /** Parse an X.509 public key, as PEM or bare base64.
+    *
+    * @throws java.security.spec.InvalidKeySpecException
+    *   if the key is not a valid key of the given algorithm
+    * @throws java.security.NoSuchAlgorithmException
+    *   if `keyAlgo` is not available
+    * @throws java.lang.IllegalArgumentException
+    *   if the key is not valid base64
+    */
+  def parsePublicKey(key: String, keyAlgo: String): PublicKey = {
     val spec = new X509EncodedKeySpec(parseKey(key))
     KeyFactory.getInstance(keyAlgo).generatePublic(spec)
+  }
+
+  /** Build an RSA public key from its modulus and public exponent.
+    *
+    * @throws java.security.spec.InvalidKeySpecException
+    *   if the modulus and exponent do not make a valid RSA key
+    */
+  def rsaPublicKey(modulus: BigInteger, exponent: BigInteger): RSAPublicKey =
+    KeyFactory
+      .getInstance(RSA)
+      .generatePublic(new RSAPublicKeySpec(modulus, exponent))
+      .asInstanceOf[RSAPublicKey]
+
+  /** Minimal-length unsigned big-endian bytes of a non-negative number. */
+  private def unsigned(value: BigInteger): Array[Byte] = {
+    if (value.signum < 0)
+      throw new JwtValidationException("A key parameter cannot be a negative number.")
+    val bytes = value.toByteArray
+    // BigInteger.toByteArray prepends a 0x00 sign byte when the top bit is set
+    if (bytes.length > 1 && bytes(0) == 0) bytes.drop(1) else bytes
+  }
+
+  /** Unsigned big-endian bytes left-padded with zeros to exactly `length` bytes. */
+  private def fixedBytes(value: BigInteger, length: Int): Array[Byte] = {
+    val bytes = unsigned(value)
+    if (bytes.length > length)
+      throw new JwtValidationException(s"A key parameter does not fit in $length bytes.")
+    new Array[Byte](length - bytes.length) ++ bytes
+  }
+
+  private def decodeBytes(member: String, value: String): Array[Byte] = {
+    val bytes = JwtBase64.decode(value)
+    if (bytes.isEmpty) throw new JwtValidationException(s"The [$member] member is empty.")
+    bytes
+  }
+
+  /** JOSE Base64urlUInt (RFC 7518 section 2) of a non-negative number. */
+  private[jwt] def encodeUInt(value: BigInteger): String =
+    JwtBase64.encodeString(unsigned(value))
+
+  private[jwt] def requireFits(value: BigInteger, length: Int): Unit = {
+    val bytes = unsigned(value)
+    if (bytes.length > length)
+      throw new JwtValidationException(s"A key parameter does not fit in $length bytes.")
+  }
+
+  private[jwt] def encodeFixed(value: BigInteger, length: Int): String =
+    JwtBase64.encodeString(fixedBytes(value, length))
+
+  private[jwt] def decodeUInt(member: String, value: String): BigInteger =
+    new BigInteger(1, decodeBytes(member, value))
+
+  private[jwt] def requireDecodedLength(member: String, value: String, length: Int): Unit = {
+    val bytes = decodeBytes(member, value)
+    if (bytes.length != length)
+      throw new JwtValidationException(
+        s"The [$member] member must be $length bytes, got ${bytes.length}."
+      )
+  }
+
+  private[jwt] def decodeFixed(member: String, value: String, length: Int): Array[Byte] = {
+    val bytes = decodeBytes(member, value)
+    if (bytes.length != length)
+      throw new JwtValidationException(
+        s"The [$member] member must be $length bytes, got ${bytes.length}."
+      )
+    bytes
   }
 
   /** Generate the signature for a given data using the key and HMAC algorithm provided.

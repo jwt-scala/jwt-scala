@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: 8
+          java-version: 17
           cache: sbt
       - uses: sbt/setup-sbt@v1
       - run: sbt ci-release

@@ -7,9 +7,8 @@ on:
     branches: [master, main]
 
 env:
-  SCALA212: 2.12.20
-  SCALA213: 2.13.14
-  SCALA3: 3.3.0
+  SCALA213: 2.13.18
+  SCALA3: 3.3.7
 
 jobs:
   linting:
@@ -19,7 +18,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 17
           cache: sbt
       - uses: sbt/setup-sbt@v1
       - name: Checking code formatting
@@ -31,7 +30,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 17
           cache: sbt
       - uses: sbt/setup-sbt@v1
       - name: Check the documentation
@@ -43,7 +42,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 17
           cache: sbt
       - uses: sbt/setup-sbt@v1
       - name: Report binary issues
@@ -74,16 +73,13 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 17
           cache: sbt
       - uses: sbt/setup-sbt@v1
       - name: Test
-        run: "sbt ++${{ matrix.scala }} ${{ matrix.project }}/test"
+        run: sbt "++${{ matrix.scala }}; ${{ matrix.project }}/Test/testFull"
     strategy:
       matrix:
-        exclude:
-          - project: playFramework
-            scala: $SCALA212
         project:
           - coreJVM
           - coreJS
@@ -101,6 +97,5 @@ jobs:
           - argonaut
           - zioJson
         scala:
-          - $SCALA212
           - $SCALA213
           - $SCALA3

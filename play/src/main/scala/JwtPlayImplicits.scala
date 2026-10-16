@@ -88,7 +88,7 @@ trait JwtPlayImplicits {
       case _    => {
         // Only refresh if we actually have a proper JWT session
         if (hasJwtHeader) {
-          result.withJwtSession(jwtSession.refresh())
+          withJwtSession(jwtSession.refresh())
         } else {
           result
         }
@@ -107,7 +107,7 @@ trait JwtPlayImplicits {
 
     /** Override the current [[JwtSession]] with a new one created from a sequence of tuples */
     def withJwtSession(fields: (String, JsValueWrapper)*): Result = withJwtSession(
-      JwtSession(fields: _*)
+      JwtSession(fields*)
     )
 
     /** Override the current [[JwtSession]] with a new empty one */
@@ -122,7 +122,9 @@ trait JwtPlayImplicits {
       * will be overriden.
       */
     def addingToJwtSession(values: (String, String)*)(implicit request: RequestHeader): Result = {
-      withJwtSession(jwtSession + new JsObject(values.map(kv => kv._1 -> JsString(kv._2)).toMap))
+      withJwtSession(jwtSession + new JsObject(values.map { case (k, v) =>
+        k -> JsString(v)
+      }.toMap))
     }
 
     /** Keep the current [[JwtSession]] and add some values in it, if a key is already defined, it
@@ -136,7 +138,7 @@ trait JwtPlayImplicits {
 
     /** Remove some keys from the current [[JwtSession]] */
     def removingFromJwtSession(keys: String*)(implicit request: RequestHeader): Result = {
-      withJwtSession(jwtSession.--(keys: _*))
+      withJwtSession(jwtSession.--(keys*))
     }
   }
 
