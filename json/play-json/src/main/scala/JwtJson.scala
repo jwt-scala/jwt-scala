@@ -1,7 +1,6 @@
 package pdi.jwt
 
 import java.time.Clock
-import scala.util.Try
 
 import pdi.jwt.exceptions.{JwtNonNumberException, JwtNonStringException, JwtValidationException}
 import play.api.libs.json.*
@@ -31,9 +30,7 @@ trait JwtJsonParser[H, C] extends JwtJsonCommon[JsObject, H, C] with JwtJsonImpl
 
   def parseJwkSet(json: String): JwkSet = Json.parse(json) \ "keys" match {
     case JsDefined(JsArray(keys)) =>
-      JwkSet(
-        keys.collect { case obj: JsObject => obj }.flatMap(key => Try(readJwk(key)).toOption).toList
-      )
+      JwtJsonCommon.readJwkSetKeys(keys.iterator.collect { case obj: JsObject => obj })(readJwk)
     case _ => throw new JwtValidationException("A JWK Set must have a [keys] array.")
   }
 

@@ -2,6 +2,7 @@ package pdi.jwt
 
 import java.security.{Key, PrivateKey, PublicKey}
 import javax.crypto.SecretKey
+import scala.collection.IterableOnce
 import scala.util.Try
 
 import pdi.jwt.algorithms.*
@@ -11,6 +12,13 @@ import pdi.jwt.exceptions.{
   JwtNonEmptyAlgorithmException,
   JwtUnknownKeyIdException,
   JwtValidationException
+}
+
+object JwtJsonCommon {
+
+  /** Read each candidate once, keeping usable keys in input order. */
+  private[jwt] def readJwkSetKeys[J](keys: IterableOnce[J])(readKey: J => Jwk): JwkSet =
+    JwkSet(keys.iterator.flatMap(key => Try(readKey(key)).toOption).toList)
 }
 
 trait JwtJsonCommon[J, H, C] extends JwtCore[H, C] {

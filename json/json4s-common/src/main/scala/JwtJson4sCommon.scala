@@ -1,7 +1,5 @@
 package pdi.jwt
 
-import scala.util.Try
-
 import org.json4s.*
 import pdi.jwt.exceptions.{
   JwtNonNumberException,
@@ -67,12 +65,12 @@ trait JwtJson4sCommon[H, C] extends JwtJsonCommon[JObject, H, C] {
       case JObject(fields) => fields.collectFirst { case ("keys", JArray(keys)) => keys }
       case _               => None
     }
-    JwkSet(
+    JwtJsonCommon.readJwkSetKeys(
       keys
         .getOrElse(throw new JwtValidationException("A JWK Set must have a [keys] array."))
+        .iterator
         .collect { case key: JObject => key }
-        .flatMap(key => Try(readJwkObject(key)).toOption)
-    )
+    )(readJwkObject)
   }
 
   private def readJwkObject(json: JObject): Jwk = Jwk.fromMembers(

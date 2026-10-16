@@ -9,7 +9,6 @@ import sbt._
 val previousVersion = "9.4.0"
 val buildVersion = "9.4.1"
 
-val scala212 = "2.12.20"
 val scala213 = "2.13.16"
 val scala3 = "3.3.7"
 
@@ -47,13 +46,10 @@ cleanScript := {
 lazy val docsMappingsAPIDir: SettingKey[String] =
   settingKey[String]("Name of subdirectory in site target directory for api docs")
 
-val crossVersionAll = Seq(scala212, scala213, scala3)
-val crossVersionNo212 = Seq(scala213, scala3)
-
 val baseSettings = Seq(
   organization := "com.github.jwt-scala",
   ThisBuild / scalaVersion := scala213,
-  crossScalaVersions := crossVersionAll,
+  crossScalaVersions := Seq(scala213, scala3),
   autoAPIMappings := true,
   libraryDependencies ++= Seq(Libs.munit.value, Libs.munitScalacheck.value),
   testFrameworks += new TestFramework("munit.Framework"),
@@ -323,7 +319,6 @@ lazy val playFramework = project
   .settings(releaseSettings)
   .settings(
     name := "jwt-play",
-    crossScalaVersions := crossVersionNo212,
     libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.guice),
     Test / testGrouping := groupPlayTest(
       (Test / definedTests).value,

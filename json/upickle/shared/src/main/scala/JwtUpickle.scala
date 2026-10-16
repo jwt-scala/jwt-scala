@@ -1,7 +1,6 @@
 package pdi.jwt
 
 import java.time.Clock
-import scala.util.Try
 
 import pdi.jwt.exceptions.{JwtNonStringException, JwtValidationException}
 import upickle.default.*
@@ -18,8 +17,7 @@ trait JwtUpickleParser[H, C] extends JwtJsonCommon[ujson.Value, H, C] with JwtUp
 
   protected def getAlgorithm(header: ujson.Value): Option[JwtAlgorithm] = header match {
     case obj: ujson.Obj =>
-      val fields = obj.value.toMap
-      fields.get("alg").flatMap(alg => JwtAlgorithm.optionFromString(alg.str.toString()))
+      obj.value.get("alg").flatMap(alg => JwtAlgorithm.optionFromString(alg.str))
 
     case _ => None
   }
@@ -34,9 +32,7 @@ trait JwtUpickleParser[H, C] extends JwtJsonCommon[ujson.Value, H, C] with JwtUp
       .flatMap(_.get("keys"))
       .flatMap(_.arrOpt)
       .getOrElse(throw new JwtValidationException("A JWK Set must have a [keys] array."))
-    JwkSet(
-      keys.collect { case key: ujson.Obj => key }.flatMap(key => Try(readJwk(key)).toOption).toList
-    )
+    JwtJsonCommon.readJwkSetKeys(keys.iterator.collect { case key: ujson.Obj => key })(readJwk)
   }
 
   private def readJwk(json: ujson.Obj): Jwk = Jwk.fromMembers(

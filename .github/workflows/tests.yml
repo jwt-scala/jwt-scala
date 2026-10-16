@@ -7,9 +7,8 @@ on:
     branches: [master, main]
 
 env:
-  SCALA212: 2.12.20
-  SCALA213: 2.13.14
-  SCALA3: 3.3.0
+  SCALA213: 2.13.16
+  SCALA3: 3.3.7
 
 jobs:
   linting:
@@ -81,9 +80,6 @@ jobs:
         run: "sbt ++${{ matrix.scala }} ${{ matrix.project }}/test"
     strategy:
       matrix:
-        exclude:
-          - project: playFramework
-            scala: $SCALA212
         project:
           - coreJVM
           - coreJS
@@ -101,6 +97,5 @@ jobs:
           - argonaut
           - zioJson
         scala:
-          - $SCALA212
           - $SCALA213
           - $SCALA3

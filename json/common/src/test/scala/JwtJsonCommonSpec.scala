@@ -322,6 +322,24 @@ abstract class JwtJsonCommonSpec[J] extends munit.FunSuite with JsonCommonFixtur
     assertEquals(set.find("hmac"), None)
   }
 
+  test("should parseJwkSet with no usable keys") {
+    Seq(
+      """{"keys":[]}""",
+      """{"keys":[null,42,"a string",[],{}, {"kty":"oct","k":"c2VjcmV0"}]}"""
+    ).foreach { json => assertEquals(defaultJwt.parseJwkSet(json), JwkSet(Seq.empty)) }
+  }
+
+  test("should read JWK set candidates once and preserve usable key order") {
+    var attempted = Vector.empty[Int]
+    val set = JwtJsonCommon.readJwkSetKeys(Iterator(0, 1, 2)) { index =>
+      attempted :+= index
+      if (index == 1) throw new IllegalArgumentException("Unusable key")
+      defaultJwt.parseJwk(s"""{"kty":"RSA","kid":"$index","n":"$RsaModulus","e":"AQAB"}""")
+    }
+    assertEquals(attempted, Vector(0, 1, 2))
+    assertEquals(set.keys.map(_.keyId), List(Some("0"), Some("2")))
+  }
+
   test("should parseJwkSet that round trips through toJson") {
     val set = defaultJwt.parseJwkSet(
       s"""{"keys":[{"kty":"RSA","kid":"rsa-1","use":"sig","n":"$RsaModulus","e":"AQAB"},{"kty":"OKP","crv":"Ed25519","kid":"okp-1","x":"$Ed25519X"}]}"""
