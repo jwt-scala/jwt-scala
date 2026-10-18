@@ -9,7 +9,7 @@ import sbt.{given, *}
 val previousVersion = "9.4.0"
 val buildVersion = "9.4.1"
 
-val scala213 = "2.13.18"
+val scala213 = "3.10.0"
 val scala3 = "3.3.7"
 
 Global / onChangedBuildSource := ReloadOnSourceChanges

@@ -7,7 +7,7 @@ on:
     branches: [master, main]
 
 env:
-  SCALA213: 2.13.18
+  SCALA213: 3.10.0
   SCALA3: 3.3.7
 
 jobs:
