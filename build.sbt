@@ -15,6 +15,59 @@ val scala3 = "3.3.7"
 Global / onChangedBuildSource := ReloadOnSourceChanges
 versionScheme := Some("early-semver")
 
+// Common / bare settings automatically applied to all projects in SBT 2
+organization := "com.github.jwt-scala"
+scalaVersion := scala213
+crossScalaVersions := Seq(scala213, scala3)
+autoAPIMappings := true
+libraryDependencies ++= Seq(Libs.munit, Libs.munitScalacheck)
+testFrameworks += new TestFramework("munit.Framework")
+mimaFailOnNoPrevious := false
+Test / aggregate := false
+Test / fork := true
+Test / parallelExecution := false
+javacOptions ++= Seq("--release", "17")
+scalacOptions += "-release:17"
+Compile / doc / scalacOptions ~= (_.filterNot(_ == "-Xfatal-warnings"))
+Compile / doc / scalacOptions ++= Seq(
+  "-no-link-warnings" // Suppresses problems with Scaladoc @throws links
+)
+scalacOptions ++= (CrossVersion.partialVersion(scalaVersion.value) match {
+  case Some((2, _)) => Seq("-Xsource:3-cross")
+  case _            => Nil
+})
+
+// Publishing settings (common to published modules)
+homepage := Some(uri("https://jwt-scala.github.io/jwt-scala/"))
+apiURL := Some(uri("https://jwt-scala.github.io/jwt-scala/api/"))
+Test / publishArtifact := false
+licenses := Seq(License.Apache2)
+pomIncludeRepository := { _ => false }
+scmInfo := Some(
+  ScmInfo(
+    uri("https://github.com/jwt-scala/jwt-scala"),
+    "scm:git@github.com:jwt-scala/jwt-scala.git"
+  )
+)
+developers := List(
+  Developer(
+    id = "pdi",
+    name = "Paul Dijou",
+    email = "paul.dijou@gmail.com",
+    url = uri("http://pauldijou.fr")
+  ),
+  Developer(
+    id = "erwan",
+    name = "Erwan Loisant",
+    email = "erwan@loisant.com",
+    url = uri("https://caffeinelab.net")
+  )
+)
+publishConfiguration := publishConfiguration.value.withOverwrite(true)
+publishSignedConfiguration := publishSignedConfiguration.value.withOverwrite(true)
+publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
+publishLocalSignedConfiguration := publishLocalSignedConfiguration.value.withOverwrite(true)
+
 val projects = Seq(
   "playJson",
   "json4sCommon",
@@ -49,68 +102,8 @@ LocalRootProject / cleanScript := Def.uncached {
 lazy val docsMappingsAPIDir: SettingKey[String] =
   settingKey[String]("Name of subdirectory in site target directory for api docs")
 
-val baseSettings = Seq(
-  organization := "com.github.jwt-scala",
-  scalaVersion := scala213,
-  crossScalaVersions := Seq(scala213, scala3),
-  autoAPIMappings := true,
-  libraryDependencies ++= Seq(Libs.munit.value, Libs.munitScalacheck.value),
-  testFrameworks += new TestFramework("munit.Framework"),
-  mimaFailOnNoPrevious := false,
-  Test / aggregate := false,
-  Test / fork := true,
-  Test / parallelExecution := false,
-  Compile / doc / scalacOptions ~= (_.filterNot(_ == "-Xfatal-warnings")),
-  Compile / doc / scalacOptions ++= Seq(
-    "-no-link-warnings" // Suppresses problems with Scaladoc @throws links
-  ),
-  scalacOptions ++= (CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, _)) => Seq("-Xsource:3-cross")
-    case _            => Nil
-  })
-)
-
-val commonJvmSettings = Seq(
-  javacOptions ++= Seq("--release", "17"),
-  scalacOptions += "-release:17"
-)
-
-val publishSettings = Seq(
-  homepage := Some(uri("https://jwt-scala.github.io/jwt-scala/")),
-  apiURL := Some(uri("https://jwt-scala.github.io/jwt-scala/api/")),
-  Test / publishArtifact := false,
-  licenses += ("Apache-2.0", uri("http://www.apache.org/licenses/LICENSE-2.0")),
-  pomIncludeRepository := { _ => false },
-  scmInfo := Some(
-    ScmInfo(
-      uri("https://github.com/jwt-scala/jwt-scala"),
-      "scm:git@github.com:jwt-scala/jwt-scala.git"
-    )
-  ),
-  developers := List(
-    Developer(
-      id = "pdi",
-      name = "Paul Dijou",
-      email = "paul.dijou@gmail.com",
-      url = uri("http://pauldijou.fr")
-    ),
-    Developer(
-      id = "erwan",
-      name = "Erwan Loisant",
-      email = "erwan@loisant.com",
-      url = uri("https://caffeinelab.net")
-    )
-  ),
-  publishConfiguration := publishConfiguration.value.withOverwrite(true),
-  publishSignedConfiguration := publishSignedConfiguration.value.withOverwrite(true),
-  publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true),
-  publishLocalSignedConfiguration := publishLocalSignedConfiguration.value.withOverwrite(true)
-)
-
 val noPublishSettings = Seq(
   publish / skip := true,
-  publish := Def.uncached { () },
-  publishLocal := Def.uncached { () },
   publishArtifact := false
 )
 
@@ -120,24 +113,25 @@ lazy val commonJsSettings = Seq(
 
 val commonNativeSettings = Seq(
   libraryDependencySchemes += "org.scala-native" %
-    s"test-interface_native0.5_${scalaBinaryVersion.value}" % VersionScheme.EarlySemVer
+    s"test-interface_native0.5_${scalaBinaryVersion.value}" % VersionScheme.EarlySemVer,
+  Test / fork := false
 )
-
-// Normal published settings
-val releaseSettings = baseSettings ++ publishSettings
-
-// Local non-published projects
-val localSettings = baseSettings ++ noPublishSettings
 
 lazy val jwtScala = project
   .in(file("."))
-  .settings(localSettings, commonJvmSettings)
+  .settings(noPublishSettings)
   .settings(
-    name := "jwt-scala"
+    name := "jwt-scala",
+    crossScalaVersions := List()
   )
   .aggregate(
-    json4sNative,
-    json4sJackson,
+    core.jvm,
+    core.js,
+    core.native,
+    jsonCommon.jvm,
+    jsonCommon.js,
+    jsonCommon.native,
+    playJson,
     circe.jvm,
     circe.js,
     circe.native,
@@ -145,23 +139,12 @@ lazy val jwtScala = project
     upickle.js,
     upickle.native,
     zioJson,
-    playFramework,
-    argonaut
-  )
-  .dependsOn(
+    json4sCommon,
     json4sNative,
     json4sJackson,
-    circe.jvm,
-    circe.js,
-    circe.native,
-    upickle.jvm,
-    upickle.js,
-    upickle.native,
-    zioJson,
-    playFramework,
-    argonaut
+    argonaut,
+    playFramework
   )
-  .settings(crossScalaVersions := List())
 
 lazy val docs = project
   .in(file("docs"))
@@ -173,9 +156,9 @@ lazy val docs = project
     ParadoxSitePlugin,
     ParadoxMaterialThemePlugin
   )
-  .settings(name := "jwt-docs")
-  .settings(localSettings, commonJvmSettings)
+  .settings(noPublishSettings)
   .settings(
+    name := "jwt-docs",
     libraryDependencies ++= Seq("org.playframework" %% "play-test" % Versions.play),
     ScalaUnidoc / siteSubdirName := "api",
     addMappingsToSiteDir(
@@ -190,11 +173,8 @@ lazy val docs = project
       zioJson,
       playJson,
       playFramework,
-      argonaut,
-      zioJson
+      argonaut
     ),
-    baseSettings,
-    publishArtifact := false,
     Compile / paradoxMaterialTheme ~= (_.withRepository(
       uri("https://github.com/jwt-scala/jwt-scala")
     )),
@@ -208,131 +188,103 @@ lazy val docs = project
 
 lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Full)
-  .settings(releaseSettings)
-  .jvmSettings(commonJvmSettings)
-  .nativeSettings(commonNativeSettings)
-  .settings(name := "jwt-core", libraryDependencies ++= Seq(Libs.bouncyCastle))
-  .jsSettings(commonJsSettings)
+  .settings(
+    name := "jwt-core",
+    libraryDependencies += Libs.bouncyCastle
+  )
   .jsSettings(
+    commonJsSettings,
     libraryDependencies ++= Seq(
-      Libs.scalaJavaTime.value,
-      Libs.scalajsSecureRandom.value
+      Libs.scalaJavaTime,
+      Libs.scalajsSecureRandom
     )
   )
   .nativeSettings(
-    libraryDependencies ++= Seq(
-      Libs.scalaJavaTime.value
-    ),
-    Test / fork := false
+    commonNativeSettings,
+    libraryDependencies += Libs.scalaJavaTime
   )
 
 lazy val jsonCommon = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Pure)
   .in(file("json/common"))
-  .settings(releaseSettings)
-  .jvmSettings(commonJvmSettings)
-  .nativeSettings(commonNativeSettings)
-  .settings(
-    name := "jwt-json-common"
-  )
+  .settings(name := "jwt-json-common")
   .jsSettings(commonJsSettings)
-  .nativeSettings(Test / fork := false)
-  .aggregate(core)
+  .nativeSettings(commonNativeSettings)
   .dependsOn(core % "compile->compile;test->test")
 
 lazy val playJson = project
   .in(file("json/play-json"))
-  .settings(releaseSettings, commonJvmSettings)
   .settings(
     name := "jwt-play-json",
-    libraryDependencies ++= Seq(Libs.playJson)
+    libraryDependencies += Libs.playJson
   )
-  .aggregate(jsonCommon.jvm)
   .dependsOn(jsonCommon.jvm % "compile->compile;test->test")
 
 lazy val circe = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Full)
   .in(file("json/circe"))
-  .settings(releaseSettings)
-  .jvmSettings(commonJvmSettings)
-  .nativeSettings(commonNativeSettings)
   .settings(
     name := "jwt-circe",
     libraryDependencies ++= Seq(
-      Libs.circeCore.value,
-      Libs.circeJawn.value,
-      Libs.circeParse.value,
-      Libs.circeGeneric.value % "test"
+      Libs.circeCore,
+      Libs.circeJawn,
+      Libs.circeParse,
+      Libs.circeGeneric % "test"
     )
   )
   .jsSettings(commonJsSettings)
-  .nativeSettings(Test / fork := false)
-  .aggregate(jsonCommon)
+  .nativeSettings(commonNativeSettings)
   .dependsOn(jsonCommon % "compile->compile;test->test")
 
 lazy val upickle = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Full)
   .in(file("json/upickle"))
-  .settings(releaseSettings)
-  .jvmSettings(commonJvmSettings)
-  .nativeSettings(commonNativeSettings)
   .settings(
     name := "jwt-upickle",
-    libraryDependencies ++= Seq(Libs.upickle.value)
+    libraryDependencies += Libs.upickle
   )
   .jsSettings(commonJsSettings)
-  .nativeSettings(Test / fork := false)
-  .aggregate(jsonCommon)
+  .nativeSettings(commonNativeSettings)
   .dependsOn(jsonCommon % "compile->compile;test->test")
 
 lazy val zioJson = project
   .in(file("json/zio-json"))
-  .settings(releaseSettings, commonJvmSettings)
   .settings(
     name := "jwt-zio-json",
-    libraryDependencies ++= Seq(Libs.zioJson)
+    libraryDependencies += Libs.zioJson
   )
-  .aggregate(jsonCommon.jvm)
   .dependsOn(jsonCommon.jvm % "compile->compile;test->test")
 
 lazy val json4sCommon = project
   .in(file("json/json4s-common"))
-  .settings(releaseSettings, commonJvmSettings)
   .settings(
     name := "jwt-json4s-common",
-    libraryDependencies ++= Seq(Libs.json4sCore)
+    libraryDependencies += Libs.json4sCore
   )
-  .aggregate(jsonCommon.jvm)
   .dependsOn(jsonCommon.jvm % "compile->compile;test->test")
 
 lazy val json4sNative = project
   .in(file("json/json4s-native"))
-  .settings(releaseSettings, commonJvmSettings)
   .settings(
     name := "jwt-json4s-native",
-    libraryDependencies ++= Seq(Libs.json4sNative)
+    libraryDependencies += Libs.json4sNative
   )
-  .aggregate(json4sCommon)
   .dependsOn(json4sCommon % "compile->compile;test->test")
 
 lazy val json4sJackson = project
   .in(file("json/json4s-jackson"))
-  .settings(releaseSettings, commonJvmSettings)
   .settings(
     name := "jwt-json4s-jackson",
-    libraryDependencies ++= Seq(Libs.json4sJackson)
+    libraryDependencies += Libs.json4sJackson
   )
-  .aggregate(json4sCommon)
   .dependsOn(json4sCommon % "compile->compile;test->test")
 
 lazy val argonaut = project
   .in(file("json/argonaut"))
-  .settings(releaseSettings, commonJvmSettings)
   .settings(
     name := "jwt-argonaut",
-    libraryDependencies ++= Seq(Libs.argonaut)
+    libraryDependencies += Libs.argonaut
   )
-  .aggregate(jsonCommon.jvm)
   .dependsOn(jsonCommon.jvm % "compile->compile;test->test")
 
 def groupPlayTest(tests: Seq[TestDefinition]) = tests.map { t =>
@@ -342,7 +294,6 @@ def groupPlayTest(tests: Seq[TestDefinition]) = tests.map { t =>
 
 lazy val playFramework = project
   .in(file("play"))
-  .settings(releaseSettings, commonJvmSettings)
   .settings(
     name := "jwt-play",
     libraryDependencies ++= Seq(Libs.play, Libs.playTest, Libs.guice),
@@ -350,5 +301,4 @@ lazy val playFramework = project
       groupPlayTest((Test / definedTests).value)
     }
   )
-  .aggregate(playJson)
   .dependsOn(playJson % "compile->compile;test->test")
