@@ -8,7 +8,20 @@ sealed trait JwkUse {
 object JwkUse {
   case object Signature extends JwkUse { def value = "sig" }
   case object Encryption extends JwkUse { def value = "enc" }
-  final case class Other(value: String) extends JwkUse
+  final class Other private (val value: String) extends JwkUse {
+    override def equals(other: Any): Boolean = other match {
+      case that: Other => value == that.value
+      case _           => false
+    }
+
+    override def hashCode(): Int = value.hashCode()
+
+    override def toString: String = s"Other($value)"
+  }
+
+  object Other {
+    def apply(value: String): Other = new Other(value)
+  }
 
   def fromString(value: String): JwkUse = value match {
     case "sig" => Signature

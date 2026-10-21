@@ -1,7 +1,20 @@
 package pdi.jwt
 
-/** A JWK Set (RFC 7517 section 5). */
-final case class JwkSet(keys: Seq[Jwk]) {
+object JwkSet {
+  def apply(keys: Seq[Jwk]): JwkSet = new JwkSet(keys)
+}
+
+/** An immutable JWK Set (RFC 7517 section 5). */
+final class JwkSet private (val keys: Seq[Jwk]) {
+
+  override def equals(other: Any): Boolean = other match {
+    case that: JwkSet => keys == that.keys
+    case _            => false
+  }
+
+  override def hashCode(): Int = keys.hashCode()
+
+  override def toString: String = s"JwkSet($keys)"
 
   /** The first key of the set with this `kid`, even when other keys carry the same `kid`, see
     * [[findAll]]. Keys without a `kid` never match.
