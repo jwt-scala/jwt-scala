@@ -7,7 +7,7 @@ object Versions {
 
   val guice = "4.2.3"
 
-  val scalaJavaTime = "2.6.0"
+  val scalaJavaTime = "2.8.0"
 
   val scalajsSecureRandom = "1.0.0"
 
