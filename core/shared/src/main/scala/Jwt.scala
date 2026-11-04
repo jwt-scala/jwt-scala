@@ -29,11 +29,11 @@ class Jwt(override val clock: Clock) extends JwtCore[JwtHeader, JwtClaim] {
       case name: String => Some(JwtAlgorithm.fromString(name))
     }
 
-  private val extractIssuerRegex = "\"iss\" *: *\"([\\-a-zA-Z0-9_]*)\"".r
+  private val extractIssuerRegex = "\"iss\" *: *\"([^\"]*)\"".r
   protected def extractIssuer(claim: String): Option[String] =
     (extractIssuerRegex.findFirstMatchIn(claim)).map(_.group(1))
 
-  private val extractSubjectRegex = "\"sub\" *: *\"([\\-a-zA-Z0-9_]*)\"".r
+  private val extractSubjectRegex = "\"sub\" *: *\"([^\"]*)\"".r
   protected def extractSubject(claim: String): Option[String] =
     (extractSubjectRegex.findFirstMatchIn(claim)).map(_.group(1))
 
@@ -49,7 +49,7 @@ class Jwt(override val clock: Clock) extends JwtCore[JwtHeader, JwtClaim] {
   protected def extractIssuedAt(claim: String): Option[Long] =
     (extractIssuedAtRegex.findFirstMatchIn(claim)).map(_.group(1)).map(_.toLong)
 
-  private val extractJwtIdRegex = "\"jti\" *: *\"([\\-a-zA-Z0-9_]*)\"".r
+  private val extractJwtIdRegex = "\"jti\" *: *\"([^\"]*)\"".r
   protected def extractJwtId(claim: String): Option[String] =
     (extractJwtIdRegex.findFirstMatchIn(claim)).map(_.group(1))
 
