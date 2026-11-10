@@ -10,7 +10,7 @@ val previousVersion = "9.4.0"
 val buildVersion = "9.4.1"
 
 val scala213 = "2.13.18"
-val scala3 = "3.3.7"
+val scala3 = "3.3.9"
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 versionScheme := Some("early-semver")
