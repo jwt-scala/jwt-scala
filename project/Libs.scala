@@ -3,7 +3,7 @@ import sbt.{given, *}
 object Versions {
   val munit = "1.1.0"
 
-  val bouncyCastle = "1.86"
+  val bouncyCastle = "1.87"
 
   val guice = "4.2.3"
 
