@@ -52,6 +52,19 @@ class JwtSpec extends munit.FunSuite with Fixture {
       case _            => fail("failed decoding token")
     }
   }
+
+  test("should decode URI-form registered claims") {
+    val payload =
+      """{"iss":"https://issuer.example.com","sub":"https://user.example.com","jti":"urn:example:token-id"}"""
+    Jwt.decode(validTimeJwt.encode(payload)) match {
+      case Success(jwt) =>
+        assertEquals(jwt.issuer, Option("https://issuer.example.com"))
+        assertEquals(jwt.subject, Option("https://user.example.com"))
+        assertEquals(jwt.jwtId, Option("urn:example:token-id"))
+        assertEquals(jwt.content, "{}")
+      case _ => fail("failed decoding token")
+    }
+  }
   test("should encode Hmac") {
     data.foreach { d => battleTestEncode(d, secretKey, validTimeJwt) }
   }
